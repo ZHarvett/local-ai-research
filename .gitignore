@@ -1,0 +1,30 @@
+# Large / external artefacts (step plan §8)
+models/
+third_party/
+.venv/
+
+# Caches, raw logs, harness state
+data/cache/
+data/logs/*/
+*.log
+.harness-state/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+build/
+dist/
+
+# Editors / OS
+.idea/
+.vscode/
+*.swp
+*~
+.DS_Store
+.Trash-*/

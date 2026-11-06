@@ -1,0 +1,775 @@
+# Step 0 Plan: Baseline Setup
+
+*Version 1.2 · 6 November 2026*
+*Part of "Local AI on a Small PC" (project plan dated 5 November 2026). This file is the reference for Step 0. Any change produces a new version, recorded in §14.*
+
+---
+
+## 1. Objective and scope
+
+Step 0 turns the project plan's pre-measurement estimates into measured facts. It delivers:
+
+- a working, documented llama.cpp setup for Ornith-1.5-35B-A3B on this PC;
+- a defined **stock** and **tuned** server configuration for each of 32K, 64K and 128K context;
+- the baseline numbers that every later step is compared against;
+- both harnesses (dsh and OpenCode) installed, pinned and smoke-tested against the local server.
+
+**In scope:**
+- the llama.cpp build;
+- model download and MTP-head verification;
+- endpoint health checks;
+- microbenchmarks (PCIe, RAM, NVMe);
+- engine sweeps: expert placement, expert cache, batch size, context, MTP, KV type and load mode;
+- harness setup;
+- a tagged baseline release.
+
+**Out of scope:**
+- Strata and Qwen3.8-Flash-Next (shelved);
+- quantization comparisons and task-success measurement (both Step 1);
+- Claude Code as a control harness (possibly a small cross-check in Step 1).
+
+---
+
+## 2. Success metric (fixed before anything is built)
+
+Step 0 is done when S1–S5 all hold. There are no hard speed targets.
+
+| ID | Criterion | Verified by |
+|---|---|---|
+| **S1 Coverage** | Every cell of the declared sweep design (§5.4) is either measured or recorded as "did not fit" with its error. Screening may use 2 repetitions. Every configuration that appears in reported results, or is recommended, has at least 5 repetitions with 95% CIs. Raw per-request data is committed. | Coverage report from the analysis tooling; JSONL record counts |
+| **S2 Reproducibility** | The headline numbers for stock-64K and tuned-64K (T_turn_400, fresh prefill at 32K, decode at 32K depth) are re-measured on a different day. Each falls inside its original 95% CI or within ±5%, whichever is wider. Every recommended config also launches from a clean shell using only the README commands. | Stage 4 run; README walkthrough log |
+| **S3 Decisions** | There is a stock and a tuned llama-server config for each of 32K, 64K and 128K. The tuned one is chosen by the pre-declared rule (§3.3). Each launches with `scripts/launch-server.sh`. | Config files; selection table in the report |
+| **S4 Health checks** | (a) The MTP head shows none of the known broken-head signatures in the tensor screen (WP4), and real draft acceptance is at least 50% at draft length 1 on the code workload (WP5). The acceptance test is what proves the head works; the tensor screen only rules out known failures before benchmarking. (b) Every endpoint and field in the project plan's Appendix B works on the pinned build, or the deviation is documented. (c) Greedy outputs with MTP on and off diverge only at near-tie tokens. (d) Every measured run has a complete environment snapshot and a warm-up. No selected or recommended configuration, and no headline number, rests on a measurement with an unresolved flag. Measurements that are still flagged after their retry stay in the report, marked as excluded diagnostic results. (e) OpenCode and dsh each complete the smoke task against the local server. | `data/health/*.json`; flags column in the report; smoke-test logs |
+| **S5 Release** | The release checklist (§9) is complete and v0.1.0 is tagged. | Checklist with evidence in the completion report |
+
+---
+
+## 3. Definitions
+
+### 3.1 Stock configuration (per context C)
+
+"Stock" means what a typical user would run, as confirmed by the executive chat:
+
+- the model card's recommended settings (sampling, template defaults);
+- llama.cpp's automatic placement (`--fit`, on by default). If `--fit` misbehaves, use the simplest `--n-cpu-moe N` that fits;
+- default batch sizes (`-b 2048 -ub 512`), FP16 KV, default flash attention (`auto`), default slot count, and no speculative decoding;
+- only `-m`, `-c C`, `--host` and `--port` set explicitly, plus `--metrics` and logging, which don't change inference;
+- OpenCode with its default settings as the stock harness.
+
+### 3.2 Tuned configuration (per context C)
+
+The tuned configuration is Step 0's best configuration for that context, chosen from the measured candidates by §3.3.
+
+### 3.3 Selection rule (declared before any speed measurement)
+
+A candidate is eligible for a context if it:
+- started without errors;
+- leaves at least 512 MiB of VRAM free after the longest request;
+- has no unresolved flags;
+- passes the output sanity check (§5.6).
+
+Among eligible candidates, pick the one with the lowest **mean T_turn_400** (the estimated standardised turn, §5.3) across the three depths of §5.3. Ties are broken in this order:
+1. If the 95% CI of the paired difference with the runner-up includes zero, prefer the lower **mean T_reread**.
+2. If still tied, prefer fewer moving parts: no MTP over MTP, and no expert cache over a cache.
+3. Then prefer lower VRAM use.
+
+### 3.4 Standardised turn workload
+
+The benchmark's standard turn is **3,000 new prompt tokens** appended to a cached context, followed by **400 generated tokens** (thinking included). It is fixed for Step 0 and used for configuration selection, so every configuration is compared on exactly the same turn.
+
+It is a standardised workload, not a model of real agent use. Real turns vary widely in how many tokens they add and generate, and Step 1 records those per request on real tasks. WP7's smoke task only proves that the harnesses work; its request pattern is reported as smoke-task data, never as representative of agent use.
+
+---
+
+## 4. Fixed decisions
+
+| Topic | Decision |
+|---|---|
+| Model | Ornith-1.5-35B-A3B, one Q4-class GGUF (Q4_K_M or UD-Q4_K_XL) from a reputable publisher. **Primary:** the official `ornith-ai/Ornith-1.5-35B-A3B-GGUF` Q4_K_M, at a revision from on or after 2026-08-23, when ornith-ai updated the MTP weights. **Fallback:** `bartowski/Ornith-1.5-35B-A3B-GGUF` Q4_K_M, only with Zack's approval. No quant sweep. |
+| Engine | Mainline llama.cpp, the newest release tag at build time (b12017 or later), pinned by commit. Built with CUDA and `CMAKE_CUDA_ARCHITECTURES=120`. |
+| Harnesses | Control: OpenCode, exact version pinned. Research: dsh, exact version pinned for both the CLI and its plugins. |
+| Languages | Bash for the launch and long-job scripts; Python managed with uv for everything else; TOML for configs. |
+| Repo | Umbrella repo `ZHarvett/local-ai-research`, private until release, located on the 256 GB SSD (exact path found in WP0). Claude Code may push to it; Zack makes it public and publishes releases. |
+| Licenses | MIT for code; CC BY 4.0 for data, report and write-up. Copyright holder: ZHarvett. |
+| Write-up | GitHub only: a short post, "What a 16 GB GPU actually does with a 35B MoE model". |
+| Storage | Repo, models and data on the 256 GB NVMe SSD. About 90 GB is available; Step 0 needs about 30 GB. |
+| Display | Both monitors on the motherboard outputs (iGPU), so the RTX 5060 Ti runs no display clients. |
+| Machine tuning | Frozen for the whole project and recorded with every run. Any change triggers a short re-check (the canary set). |
+| Long jobs | Claude Code may start them, always detached via `scripts/run-detached.sh`, logged, lock-protected and resumable. |
+| sudo | Never run by Claude Code. Claude Code proposes the exact commands, and Zack runs them. |
+
+---
+
+## 5. Measurement design
+
+### 5.1 Principles
+
+1. **llama-server's response `timings` are the authoritative speed source.** Client wall-clock times are recorded alongside them.
+2. **No random-token numbers for expert-cache or MTP results.** llama-bench builds its prompts from random token IDs, which distorts MoE routing (whole groups of experts go unused) and therefore cache hit rates and draft acceptance. All reported numbers come from llama-server with real, public coding prompts. llama-bench is used once, as a clearly labelled cross-check (Stage 2e).
+3. **Every server start gets a warm-up**, and every run records an environment snapshot and continuous telemetry.
+4. **Every long session is bracketed by a canary measurement**, run at the start and the end, to detect drift and heat soak.
+5. **Nothing is left implicit.** Every llama-server argument that matters is either set or deliberately left at its default, and the effective values are captured from `/props` and the startup log. The default port is 9931, so an explicit port is always set.
+
+### 5.2 Workloads (built in WP8)
+
+- **Sources:** two permissively licensed public repositories at pinned commits, one in Python and one in Rust or TypeScript.
+- **Prompt variant:** a system prompt, then real source files packed to an exact token length (counted with `/tokenize`), then an instruction that asks for code. Prompts follow the model's chat template.
+- **Append chunk:** about 3,000 tokens of tool-output-like text (for example a test log or file listing from the same repos), plus an instruction.
+- **Variants:** 5 per length; each repetition uses the next variant.
+- **Per-request nonces:** every fresh request (each Request A, the short point and the warm-up) starts with its own unique nonce at the very beginning of the system message. A per-repetition nonce would not be enough: the prompts for different depths of the same variant share their opening files, so a longer prompt could reuse a shorter one's cached prefix. The nonce also prevents matches against anything kept in the host-RAM prompt cache.
+- **Exact prefixes:** Request B (§5.3) must begin with Request A's exact token sequence, so token arrays are sent to `/completion`.
+- **BOS and special tokens:** llama-server adds BOS automatically only to string prompts, never to pure token-ID arrays. WP8 therefore reads the model's `add_bos_token` metadata, tokenizes with matching `/tokenize` settings (special tokens parsed), and checks that a token-array request matches the equivalent string request.
+- **What is committed:** only the recipes (repo, commit, file list, instruction, token count, and SHA-256 of the rendered text). The prompts themselves are regenerated deterministically.
+
+### 5.3 Per-cell protocol
+
+One server configuration is one **cell**. For each cell:
+
+1. **Preconditions.** The runner checks that:
+   - the GPU lock is free;
+   - no other GPU compute processes are running;
+   - no display clients are on the dGPU (warning only);
+   - `MemAvailable` is at least 24 GiB (warn below this) and at least 20 GiB (abort below this);
+   - the 1-minute load average is below 1.5.
+2. **Start the server.** Record load time, the startup log and the effective settings from `/props`.
+3. **Snapshot and telemetry.** Take an environment snapshot and start 2 Hz telemetry.
+4. **Warm-up.** Send 2 requests (8K-token prompt, 128 generated tokens) and discard them.
+5. **Repetitions.** For each repetition, with the depth order shuffled using a fixed seed:
+   - **Short point:** a fresh 2K-token prompt with up to 400 generated tokens.
+   - For each depth d in D(C):
+     - **Request A:** a fresh prompt of length d with `n_predict: 0`. The prompt is evaluated into the cache with no generated token, so the hybrid model's state ends exactly at A. The runner asserts `cache_n` ≤ 32, since only the template's fixed opening tokens may match. A larger value raises the `warm_prefill` flag, and that request is not used for PP_fresh or T_reread.
+     - **Request B:** the same tokens plus the 3,000-token append, with up to 400 generated tokens. The runner checks that `cache_n` ≈ d, raising the `cache_miss` flag otherwise.
+   - D(32K) = {8K, 16K, 24K}; D(64K) = {16K, 32K, 48K}; D(128K) = {32K, 64K, 96K}.
+6. **Clean shutdown** (SIGINT). Parse buffer sizes, placement decisions and expert-cache statistics from the log.
+
+**Sampling:** the model card's recommended parameters, with a fixed seed per request. Thinking stays at the template default, which is recorded. Greedy decoding is used only in the equivalence checks.
+
+**What T_turn_400 represents:** an *estimate* of the standardised turn: an ideal cache hit (the new tokens are a pure append) followed by exactly 400 generated tokens. `n_predict` is only a maximum, so the model may stop earlier. The actual `predicted_n` is therefore recorded for every request, and the measured time of each Request B (T_B) is reported alongside the estimate. WP8 chooses instructions so outputs normally reach 400 tokens. Real-world cache misses are measured in Step 2, and real agent turns in Step 1.
+
+**Derived metrics, per depth:**
+
+| Metric | Definition |
+|---|---|
+| PP_fresh(d) | Prefill tokens/s of Request A |
+| PP_inc(d) | Prefill tokens/s of Request B; expects `prompt_n` ≈ 3,000 and `cache_n` ≈ d |
+| TG(d) | Generated tokens/s of Request B |
+| T_turn_400(d) | **Estimated** standardised turn: prefill time of B, plus 400 × (time per generated token in B) |
+| T_B(d) | **Measured** time of Request B as it actually ran (prefill plus `predicted_n` generated tokens), always reported with `predicted_n` |
+| T_reread(d) | d / PP_fresh(d), the cost of a full cache miss at that depth |
+| Acceptance | `draft_n_accepted / draft_n` (MTP cells only) |
+| TTFT | Client-side time to the first streamed token of B |
+| Memory | VRAM after warm-up and at peak; server RSS; major page faults and swap-in per measured window |
+
+### 5.4 Sweep stages
+
+**Sweep defaults apply to candidate cells only:** 8-bit KV (`-ctk q8_0 -ctv q8_0`), `-fa on`, `-np 1` and an explicit port, unless a stage says otherwise.
+
+**Stock cells keep exactly the §3.1 settings in every stage:** FP16 KV, flash attention `auto`, the default slot count, `-b 2048 -ub 512` and no speculative decoding. Tuned configurations are therefore always compared against genuine stock.
+
+**Stage 1: Screening** (2 repetitions; WP11; about 6–8 hours)
+
+Run every placement below for each context C ∈ {32K, 64K, 128K} and each batch setting (b, ub) ∈ {(2048, 2048), (4096, 4096)}:
+
+| Cell | Placement |
+|---|---|
+| P1 | `--fit` with its default 1024 MiB margin |
+| P2 | `--fit --fit-target 256` |
+| P3–P5 | `--fit` plus `--moe-cache-mib` of 1024, 2048 and 4096 |
+| P6–P7 | `-cmoe` plus `--moe-cache-mib` at max-fit and at max-fit − 2048. Max-fit is found by binary search in 256 MiB steps, requiring at least 512 MiB free after the longest request. |
+| P8–P9 | `--n-cpu-moe` at N_fit and at N_fit − 2. N_fit is the number of expert layers that P1's fit placed on the CPU, read from its log; if it can't be derived, it is the smallest N that fits, found by binary search. |
+
+Add the stock configuration for each C, for 57 cells in total.
+
+Output: for each context, the top 2 placements by T_turn_400, plus VRAM breakdowns and expert-cache hit rates.
+
+**Stage 2: Features** (5 repetitions; WP12; about 4–5 hours)
+
+- **2a MTP.** Run the top placement for each C with MTP off and with draft lengths 1, 2 and 3. Then run the second-best placement with the best draft length. Cache sizes are re-probed with MTP on, because the head and its draft context cost VRAM. Record acceptance and the effect on decode **and on prefill**.
+- **2b KV type.** FP16 vs 8-bit KV at 64K, on the Stage 2a winner.
+- **2c Load mode.** `--load-mode` auto (mmap) vs none at 64K, with paging metrics.
+- **2d Threads (optional).** `-t 8` vs the default at 64K.
+- **2e llama-bench cross-check.** Run llama-bench at the 64K winner, labelled as a cross-check, to show how far random-token numbers differ from real-prompt numbers.
+
+**Stage 3: Final** (at least 5 repetitions, paired; WP13; about 1.5 hours)
+
+Stock-C vs tuned-C for each C, in one session bracketed by canaries.
+
+**Stage 4: Reproducibility** (on a different day; WP13; about 30 minutes)
+
+Stock-64K and tuned-64K, 5 repetitions each.
+
+### 5.5 Statistics
+
+- **Unit:** one repetition, which is one prompt variant.
+- **Per cell and metric:** report the mean, n, min and max, and a 95% percentile-bootstrap CI over repetitions (10,000 resamples, fixed seed). With n = 5, bootstrap intervals come out too narrow, so a t-interval is also computed and the wider of the two is reported.
+- **Paired comparisons** (tuned vs stock, MTP vs no MTP): compute per-repetition ratios on the same variants, then report the geometric mean with a bootstrap CI.
+- **Screening results** (2 repetitions) are used only for shortlisting. They appear in a clearly labelled appendix and are never reported as results.
+
+### 5.6 Flags and sanity checks
+
+| Flag | Trigger |
+|---|---|
+| thermal | A GPU thermal or hardware slowdown reason is active in more than 1% of samples in the measured window, or CPU Tctl reaches 95 °C in more than 1% of samples. The GPU power cap is recorded, not flagged. |
+| paging | llama-server has more than 1,000 major page faults, or any swap-in occurs, during a measured window. |
+| drift | A session's start and end canaries differ by more than max(their 95% CI, 5%). |
+| short_gen | Request B generates fewer than 100 tokens. Its generation speed and T_turn_400 are excluded, because too few tokens give an unstable per-token time; its prefill numbers are kept. |
+| warm_prefill | Request A (or another fresh request) reports `cache_n` > 32. |
+| cache_miss | Request B is served with `cache_n` < 0.95·d. |
+| did_not_fit | Startup failure or out-of-memory. |
+
+Flagged measurements are re-run once, except `short_gen`, which a seeded re-run would only repeat. If still flagged, they are excluded from selection and from headline numbers. They stay in the report as excluded diagnostic results, with the flag shown.
+
+**Output sanity check for final candidates:** greedy 512-token outputs on 3 fixed prompts, compared with the plain `--fit` reference for coherence and repetition (distinct 4-gram ratio). This matters because there is one unconfirmed report of the expert cache producing degenerate output.
+
+### 5.7 Machine state during sweeps
+
+- Monitors are on the iGPU, and machine tuning stays frozen.
+- The browser, games and VMs are closed, and the PC stays on mains power.
+- Every sweep is wrapped in `systemd-inhibit`, so the PC can't sleep mid-run.
+- Only one GPU job runs at a time, enforced by a lock file.
+
+---
+
+## 6. Work packages
+
+Each work package (WP) is sized for one Claude Code prompt in a fresh session. Before every prompt I state whether plan mode should be on and how long to expect it to run.
+
+| WP | Title | Plan mode | Expected length | Depends on |
+|---|---|---|---|---|
+| WP0 | Repo bootstrap | off | short (~10 min) | G0 |
+| WP1 | System inventory (read-only) | off | short (~10 min) | WP0 |
+| WP2 | Python skeleton, config schema, launch script, CI | **on** | medium (~45 min) | WP0 (can run during G1) |
+| — | **G1: Zack installs prerequisites, sets up the BIOS and moves the monitors** | — | — | WP1 |
+| WP3 | Build llama.cpp | off | **long** (detached build, 15–40 min) | G1, WP2 |
+| WP4 | Model download and verification | off | **long** (~22 GB download) | WP3 |
+| WP5 | Server bring-up and endpoint health checks | **on** | medium (~45 min) | WP4 |
+| WP6 | Telemetry, environment snapshot, microbenchmarks | off | medium (~45 min) | WP5 |
+| WP7 | Harness setup and smoke tests | **on** | medium (~1 h) | WP5 |
+| WP8 | Workloads | **on** | medium (~45 min) | WP5 |
+| WP9 | Sweep runner | **on** | medium–long (~1–1.5 h, including a mini-sweep) | WP6, WP8 |
+| WP10 | Analysis and report tooling | off | medium (~45 min) | WP9 |
+| WP11 | Stage 1 screening sweep | off | **long** (overnight, 6–8 h) | WP10, G3 |
+| WP12 | Stage 2 feature experiments | off | **long** (4–5 h) | WP11, G3 |
+| WP13 | Stage 3 final run and Stage 4 reproducibility | off | **long** (~2 h, then ~30 min on another day) | WP12, G3 |
+| WP14 | Release | off | medium (~1 h) | WP13, G2 |
+
+### WP0: Repo bootstrap
+
+**Goal:** create the umbrella repo with its conventions in place, so every later prompt can rely on them.
+
+**Tasks:**
+- Find the 256 GB SSD's mount point (read-only: `lsblk`, `findmnt`, `df`) and confirm it is not the 500 GB OS drive.
+- Create `local-ai-research` there and run `git init -b main`. If the mount point isn't writable without `sudo`, stop and give Zack the exact command instead.
+- Copy `project-plan.md` and the newest `step-0-baseline-v*.md` from `~/Downloads/local-ai-research/` to `docs/plans/project-plan.md` and `docs/plans/step-0-baseline.md`. The stable names keep references valid when the plan's version changes; the version is in the file header.
+- Write:
+  - `CLAUDE.md` (content in §12.3);
+  - `docs/progress-log.md` and `docs/decisions.md`;
+  - a stub `README.md`;
+  - `LICENSE` (MIT) and `LICENSE-DATA.md` (a CC BY 4.0 notice covering `data/` and `reports/`);
+  - `CHANGELOG.md` with an "Unreleased" section;
+  - `.gitignore` covering `models/`, `third_party/`, `.venv/`, `data/cache/`, raw logs and harness state directories.
+- Make the first commit.
+
+**Acceptance:**
+- `git log --oneline` shows the commit and `git status` is clean.
+- The files match the list above.
+- `CLAUDE.md` is at most 100 lines.
+- `findmnt` output shows the repo is on the 256 GB SSD.
+- Nothing was written outside the repo, apart from creating its directory.
+
+### WP1: System inventory (read-only)
+
+**Goal:** know exactly what is installed and what is missing, without changing anything.
+
+**Tasks:** write `scripts/inventory.sh` (read-only, no `sudo`). It produces `data/env/inventory-<UTC date>.json` and `docs/environment.md`, covering:
+- OS, kernel, CPU, RAM, swap/zram, transparent huge pages, memlock limit and `/dev/shm` size;
+- disks: mount points and free space, confirming that the repo sits on the 256 GB SSD;
+- GPU: driver, CUDA runtime, `nvcc` version and the gcc versions it supports as a host compiler, PCIe link, power limit, clocks, compute processes and any display clients on the dGPU;
+- CPU frequency governor, energy-performance preference (EPP) and amd-pstate mode;
+- tools: git, cmake, ninja, every installed gcc version, Python, uv, Node/npm, gh (with auth status) and curl;
+- existing llama.cpp installs on PATH or as packages, recorded only and never touched;
+- available hwmon sensors (k10temp for the CPU, nvme);
+- a "missing prerequisites" table giving the exact commands Zack would run. These are written down, not executed.
+
+**Acceptance:**
+- The script contains no `sudo`.
+- `git status` shows only the new files.
+- The JSON parses.
+- The report lists the gaps, or says "none".
+
+### WP2: Python skeleton, config schema, launch script, CI
+
+**Goal:** the code foundation that everything else plugs into.
+
+**Tasks:**
+- **Project files:** `pyproject.toml` (Python 3.12 or later; dependencies pydantic, httpx, numpy, gguf, matplotlib; dev dependencies pytest and ruff), `uv.lock`, and the package `src/smallpc/`.
+- **Config schema** (pydantic) for:
+  - `configs/machine.toml`: paths, port, GPU index, and manually recorded BIOS fields (EXPO, PBO/Eco mode);
+  - `configs/model.toml`;
+  - `configs/server/*.toml`: one file per server configuration, with a `profile` field marking it as stock, candidate or tuned;
+  - sweep specs.
+- **`smallpc.render`:** turns a server TOML into the llama-server argument list in a deterministic order. The stock profile emits only the agreed explicit flags.
+- **`scripts/launch-server.sh <config>`:**
+  - renders the arguments and runs llama-server by absolute path;
+  - logs to `data/logs/<run-id>/` and writes a pidfile;
+  - waits for `/health`, with a timeout;
+  - refuses to start if the GPU lock is held or the port is busy;
+  - `--dry-run` prints the argument list instead of starting.
+- **`scripts/stop-server.sh`:** sends SIGINT, waits, falls back to SIGKILL after a timeout, and records the exit status.
+- **`.github/workflows/ci.yml`:** `uv sync --frozen`, `ruff check`, `ruff format --check`, `pytest -m "not gpu"` and `shellcheck`.
+- **Tests:**
+  - golden argument lists for example configs (stock-64k, fit-64k-q8, cmoe-cache-64k, mtp-64k);
+  - validation errors;
+  - deterministic rendering.
+
+**Acceptance:**
+- Every CI command passes locally.
+- `launch-server.sh --dry-run` prints the expected argument list for each example config.
+- The stock example's argument list contains none of `-ctk`, `-ctv`, `-fa`, `-np`, `-b`, `-ub` or `--spec-type`.
+
+### WP3: Build llama.cpp
+
+**Goal:** a pinned, recorded CUDA build for compute capability 12.0.
+
+**Tasks:**
+- **`scripts/run-detached.sh`:** a generic long-job wrapper. It uses `setsid nohup`, writes a log file and a status file (start, end, exit code), and refuses to start a GPU job while the GPU lock is held.
+- **`scripts/build-llama.sh`:**
+  - clones into `third_party/llama.cpp` and checks out the newest release tag (b12017 or later);
+  - configures with `-DGGML_CUDA=ON -DCMAKE_CUDA_ARCHITECTURES=120 -DGGML_NATIVE=ON -DCMAKE_BUILD_TYPE=Release`, plus an explicit `CMAKE_CUDA_COMPILER` and `CMAKE_CUDA_HOST_COMPILER` (a gcc version the installed CUDA supports, as found in WP1);
+  - builds `llama-server`, `llama-bench` and `llama-cli` with at most 6 parallel jobs, because nvcc is memory-hungry;
+  - writes `data/env/build-info.json`: tag, commit, flags, nvcc version, host compiler and build duration.
+- Run the build detached and poll its status file.
+
+**Acceptance:**
+- `llama-server --version` matches the recorded commit.
+- `--help` lists `--moe-cache-mib`, `--fit`, `--slot-save-path` and `--reasoning-budget`, with `draft-mtp` among the speculative types.
+- `--list-devices` shows the RTX 5060 Ti.
+- `build-info.json` is committed.
+
+### WP4: Model download and verification
+
+**Goal:** the right model file, provably.
+
+**Tasks:**
+- **Pick the revision.** Query the official repo's commit history. Choose the newest revision, dated on or after 2026-08-23, in which the Q4_K_M file changed, and record it.
+- **Download.** Use a pinned `huggingface_hub` via `uvx` to download into `models/`. Record the size and SHA-256 in `configs/model.toml`, along with the repo, revision and license.
+- **Model card and template.** Fetch the model card and the official chat template from the base repo at a pinned revision. Record the recommended sampling settings in `configs/model.toml`.
+- **`smallpc.gguf_check`,** writing `data/health/model-check.json`:
+  - **Metadata:** architecture, block count and `nextn_predict_layers`, and a chat template that is present and identical, after whitespace normalization, to the official one.
+  - **MTP head layout:** in GGUF the head is the `blk.40.*` tensors. Record their names, shapes and count. This shows the head is present and complete. It cannot tell a trained head from a random one, because both have the same layout.
+  - **Known broken-head signatures:** dequantize the head and screen it. Any one of these signatures is a FAIL:
+    - non-finite values anywhere;
+    - norm weights with a median outside [0.2, 5], or any value above 1e4 in magnitude. This catches both ~0.02 norms and the reported ~1e31/NaN garbage.
+    - weight matrices that look freshly initialized: at least 90% of them with kurtosis within 3 ± 0.3 and a standard deviation within 0.015–0.025.
+  - **Diagnostics, not thresholds:** kurtosis, standard deviation and max/σ for every matrix are reported next to `blk.39`, a trained trunk layer, for comparison. A PASS here means "no known failure signature". Only WP5's acceptance and equivalence tests prove the head actually works.
+- **Load check.** Do a one-off load with `llama-server --check-tensors`.
+- **Tests, with synthetic tensors:**
+  - N(0, 0.02) → FAIL;
+  - Student-t → PASS;
+  - NaN or 1e31 norms → FAIL;
+  - norms around 0.02 → FAIL;
+  - mostly heavy-tailed matrices with a few near-Gaussian ones → PASS (no false rejection).
+
+**Acceptance:**
+- The verdict is PASS, with the stats table, template match and SHA-256 recorded.
+- On FAIL, Claude Code stops and reports. The fallback download needs Zack's approval.
+- Real draft acceptance is checked separately, in WP5.
+
+### WP5: Server bring-up and endpoint health checks
+
+**Goal:** prove that the pinned build does everything later steps rely on.
+
+**Tasks:** write `smallpc.health` and `scripts/healthcheck.sh`. Run them against a 64K server started with `--fit`, 8-bit KV, `-fa on`, `-np 1`, `--metrics` and `--slot-save-path /dev/shm/<repo>-slots`. The checks are:
+- **Basic endpoints:**
+  - `/health`;
+  - `/props`: n_ctx equals what was requested, the template hash matches WP4, and the model path is right.
+- **Tokenizing and templates:**
+  - `/tokenize` with `with_pieces`;
+  - `/apply-template` with tools.
+- **Completions and the prompt cache:**
+  - `/completion` returns the timings fields (`prompt_n`, `cache_n`, `predicted_n` and their times);
+  - a repeated prefix is reused (`cache_n` > 0);
+  - `cache_prompt: false` gives `cache_n` = 0;
+  - `n_probs` returns probabilities.
+- **Thinking budget:** a per-request thinking budget is honoured while the global `--reasoning-budget` is unset.
+- **Metrics:** `/metrics` responds.
+- **Slots:** `/slots` save, then restore, then continue. The continuation must match a run that was never saved and restored (greedy decoding, near-tie rule).
+- **MTP:**
+  - draft lengths 1 and 2 with `-np 1` give `draft_n` > 0, and acceptance at length 1 is at least 50% on a code prompt;
+  - with MTP and `-np 2`, record whether the server rejects it, since this matters for later steps;
+  - greedy equivalence with MTP on and off, on 3 prompts × 256 tokens, with near-tie analysis (a divergence only counts as a near tie when the top-2 log-probability gap is below 0.5 nats).
+- **MTP across save and restore** (llama.cpp #28619 concerns the draft context not being saved with slots):
+  - With MTP on (`-np 1`, draft length 2), run a short two-turn conversation that stays below `--checkpoint-min-step`, so no context checkpoint can help. Record any checkpoints the log reports.
+  - **Slot files:** save the slot, erase it, restore it, then send the third turn.
+  - **Host-RAM prompt cache:** switch to another conversation and back, so the prompt cache does the restore. Step 5 chooses between these two mechanisms, so both are tested.
+  - Compare each with an uninterrupted session:
+    - `cache_n` on the third turn must show the restored prefix was used; otherwise the restore wasn't exercised and the test is repeated;
+    - greedy tokens must match (near-tie rule);
+    - draft acceptance on the third turn must be compared too. Matching output alone can't reveal a lost draft state, because the target model verifies every drafted token; a lost state shows up as lower acceptance.
+  - A lost draft state is recorded as a finding for the executive chat, not as a Step 0 failure.
+- **Expert-cache statistics:**
+  - start with `-cmoe --moe-cache-mib 4096 -lv 4`, then shut down cleanly and confirm the statistics line is present and parses;
+  - run a quick A/B (3 repetitions) to see whether `-lv 4` slows decoding. The result decides how hit rates are collected in the sweeps.
+- **Fixtures and cleanup:** save scrubbed log excerpts as parser test fixtures, and remove everything from `/dev/shm` afterwards.
+
+**Acceptance:**
+- `data/health/endpoints-<date>.json` lists PASS or FAIL with evidence for each check, and every FAIL is explained.
+- The MTP save/restore result is recorded for both mechanisms, with acceptance figures.
+- The parsers pass on the fixtures.
+- `/dev/shm` is clean.
+
+### WP6: Telemetry, environment snapshot, microbenchmarks
+
+**Goal:** every number traceable to the machine state that produced it, plus calibration data for Step 6.
+
+**Tasks:**
+- **`smallpc.envsnap`** records:
+  - driver, CUDA and kernel versions;
+  - CPU governor and EPP;
+  - GPU power limit, clocks, PCIe link under load and temperatures;
+  - other GPU processes and display clients;
+  - `MemAvailable`, swap/zram use and transparent huge pages;
+  - build info, model SHA-256, harness versions and the manually recorded BIOS fields.
+- **`smallpc.telemetry`:** a 2 Hz sampler covering:
+  - nvidia-smi, including clock event reasons;
+  - hwmon CPU Tctl;
+  - llama-server RSS and page faults from `/proc`.
+
+  It also includes detectors for the §5.6 flags.
+- **`smallpc.scrub`:** replaces the username, hostname and home paths before anything is published.
+- **Microbenchmarks,** 5 repetitions each, with CIs:
+  - PCIe host↔device transfers (`tools/pcie_bw.cu`, pinned and pageable memory, 1.8 MB, 16 MB and 256 MB transfers);
+  - RAM bandwidth (STREAM, source pinned by hash, at 8 and 16 threads);
+  - NVMe direct read of the model file (`dd iflag=direct`, which bypasses the page cache without sudo).
+- **Expert size:** compute the exact per-expert size from the GGUF's expert tensors, replacing the project plan's ~1.8 MB estimate.
+- **Tests:** parsers on fixtures, the flag detectors and scrubbing.
+
+**Acceptance:**
+- `data/microbench/*.json` is committed.
+- The PCIe link shows Gen4 x8 under load.
+- There is a 60-second sampler CSV from a live server.
+- The tests pass.
+
+### WP7: Harness setup and smoke tests
+
+**Goal:** both harnesses pinned, isolated from Zack's own configs, and proven against the local server.
+
+**Tasks:**
+- **Install.** Check that Node is version 22 or later. Install exact versions into a local prefix, `third_party/node`:
+  - `opencode-ai`, at the newest stable version at install time;
+  - `@deepseek-ai/dsh`, at the version the `latest` dist-tag points to at install time;
+  - dsh's required plugins, at that same exact version, because plugin dist-tags have been unreliable.
+
+  Record all versions in `configs/harness.toml`.
+- **Configs.** Render them from templates, reading the context window from `/props`:
+  - **OpenCode,** via `OPENCODE_CONFIG`, with its state directory inside the repo (gitignored):
+    - an `@ai-sdk/openai-compatible` provider with base URL and model id;
+    - `limit.context` and `limit.output`;
+    - `enabled_providers` set to the local provider only;
+    - `autoupdate: false` and `share: "disabled"`;
+    - everything else left at its default, since this is the stock harness.
+  - **dsh,** via `DSH_HOME` inside the repo (gitignored): a custom provider with `api: openai-completions` and `contextWindow` from `/props`.
+- **Toy task.** Create `tests/fixtures/toy-task` (MIT, written by us): a small Python module with one failing test.
+- **OpenCode smoke test.** `scripts/smoke-opencode.sh` copies the toy task to a scratch directory under `/tmp`, runs `opencode run "<task>"`, and then runs pytest there. OpenCode's bash permission allows only pytest, ls and cat inside the scratch copy.
+- **dsh smoke test.** Use a headless mode if one exists (check `dsh --help`). Otherwise, write a manual procedure for Zack to follow.
+- **Request pattern.** From the server log, summarise the request pattern into `data/harness/request-pattern.json`: requests per turn, title or other auxiliary requests, and `prompt_n`, `cache_n` and `predicted_n`. Label it as smoke-task data: it shows how OpenCode behaves (for example, extra title requests), not what real agent turns look like (§3.4).
+
+**Acceptance:**
+- The OpenCode smoke test passes, with the tests green in the scratch copy.
+- The dsh smoke test passes, or a manual procedure is documented and Zack runs it.
+- All versions are pinned.
+- `~/.config/opencode` and `~/.dsh` are untouched, shown by listings and modification times taken before and after.
+- The request-pattern summary is committed.
+
+### WP8: Workloads
+
+**Goal:** the real, public prompt sets described in §5.2.
+
+**Tasks:**
+- Pick the two source repositories and record them, with their licenses.
+- Write `smallpc.workloads`. It builds prompt variants for lengths {2K, 8K, 16K, 24K, 32K, 48K, 64K, 96K}, plus the append chunks, packed to exact token counts with `/tokenize`.
+- Keep the manifest in `configs/workloads/`, and cache rendered prompts in a gitignored directory.
+- Make Request B begin with Request A's exact token sequence.
+- Give every fresh request its own nonce at the very start of the system message (§5.2).
+- Handle BOS and special tokens explicitly. Read `add_bos_token` from the model metadata, and tokenize with matching `/tokenize` settings, with special tokens parsed.
+- **Tests:** determinism (the same recipe gives the same hash), the manifest schema, and packing accuracy against a fake tokenizer.
+- **Live checks:**
+  - a token-array request and the equivalent string request give identical `prompt_n` and identical first 16 greedy tokens;
+  - every Request B variant reaches 400 generated tokens with the model card's sampling; variants that stop early are replaced.
+
+**Acceptance:**
+- The manifest is committed.
+- Regeneration reproduces every hash.
+- Token counts are verified against `/tokenize`.
+- Both live checks pass.
+
+### WP9: Sweep runner
+
+**Goal:** unattended, resumable, honest measurement.
+
+**Tasks:**
+- **`smallpc.sweep`** implements the §5.3 protocol for a sweep spec:
+  - the measurement steps: preconditions, launch, health check, snapshot, telemetry, warm-up, the protocol itself, then a clean shutdown with log parsing (buffers, placement, cache statistics);
+  - JSONL records, one per request, each carrying the config hash and an environment reference;
+  - resuming by (config hash, workload, repetition);
+  - recording "did not fit" cells;
+  - the `cache_n` assertions for Requests A and B (§5.3);
+  - max-fit probing and canary bracketing;
+  - `systemd-inhibit` wrapping.
+- **Scripts:** `scripts/run-sweep.sh` (which goes through `run-detached.sh`) and `scripts/sweep-status.sh`.
+- **Mock server:** a mock llama-server for the CI tests.
+
+**Acceptance:**
+- The tests pass. They cover resume, failure paths, the record schema, and the `warm_prefill` and `cache_miss` flags; the mock server can return a non-zero `cache_n` to trigger them.
+- A real mini-sweep (2 cells at 32K, 2 repetitions, about 15 minutes) completes.
+- Killing and resuming the mini-sweep creates no duplicate records.
+
+### WP10: Analysis and report tooling
+
+**Goal:** numbers, CIs, plots and the selection rule, all reproducible from the raw data.
+
+**Tasks:**
+- **`smallpc.stats`:** the statistics in §5.5.
+- **`smallpc.report`:** Markdown tables, a flags column, a coverage report, and SVG plots of:
+  - prefill speed vs prompt length;
+  - decode speed vs depth;
+  - T_turn_400 (estimated) and T_B (measured, with `predicted_n`) per configuration;
+  - VRAM breakdown per context;
+  - hit rate vs cache size.
+- **Selection:** implement the rule in §3.3 and a shortlist generator.
+- **Tests:**
+  - CI coverage on simulated data (about 95% ± 2%);
+  - a golden report rendered from fixture JSONL.
+
+**Acceptance:**
+- The tests pass.
+- The report renders from the mini-sweep data.
+
+### WP11: Stage 1 screening (overnight)
+
+**Tasks:**
+- Generate `configs/sweeps/stage1.toml` according to §5.4.
+- Zack readies the machine (G3), and the sweep runs detached.
+- In the next session:
+  - analyse the results and re-run any flagged cells;
+  - produce the shortlist, the VRAM breakdowns and the hit rates;
+  - update the progress log.
+
+**Acceptance:**
+- Coverage is complete and all flags are resolved.
+- The shortlist follows §3.3.
+- Everything is committed.
+
+### WP12: Stage 2 feature experiments
+
+**Tasks:** run Stages 2a–2e as described in §5.4, then recommend whether MTP belongs in the tuned configs.
+
+**Acceptance:**
+- All results have CIs.
+- MTP's effect on prefill is quantified.
+- The MTP recommendation is recorded in `docs/decisions.md`.
+
+### WP13: Final run and reproducibility
+
+**Tasks:**
+- Run Stage 3.
+- Write `configs/server/{stock,tuned}-{32k,64k,128k}.toml`.
+- Run Stage 4 on another day.
+- Walk through the README launch steps from a clean shell.
+
+**Acceptance:** S1–S4 are met, with evidence.
+
+### WP14: Release
+
+**Tasks:**
+- Write the README (contents in §9) and the `CHANGELOG.md` entry for v0.1.0.
+- Write the final report, `reports/baseline-report.md`, and the write-up draft, `reports/writeup.md`.
+- Run the scrub check over `data/` and `reports/`.
+- Push to the private GitHub repo and confirm CI is green (`gh run watch`).
+- Tag v0.1.0 and push the tag. Zack then publishes the release.
+
+**Acceptance:** the §9 checklist is complete, with evidence.
+
+---
+
+## 7. Things only Zack can do
+
+| Gate | When | What Zack does |
+|---|---|---|
+| **G0** | Before WP0 | Save the project plan and this plan as `~/Downloads/local-ai-research/project-plan.md` and `~/Downloads/local-ai-research/step-0-baseline-v1.2.md`. Open a fresh terminal and start Claude Code from your home directory. If WP0 reports that the SSD needs `sudo` for the repo directory, run the command it gives you. |
+| **G1** | After WP1 | Run the proposed sudo commands for any missing prerequisites. In the BIOS, enable the integrated graphics and note the EXPO and PBO/Eco-mode settings. Move both monitors to the motherboard outputs and reboot. Then tell me; WP1's script is re-run to confirm there are no display clients on the RTX 5060 Ti. |
+| **G2** | Before WP14 | Run `gh auth login` if that isn't done yet, and confirm that Claude Code may create and push to the private repo. |
+| **G3** | Before each long run | Close the browser, games and VMs, keep the PC on mains power, and OK the start. |
+| **G4** | After WP14 | Make the repo public and publish the release. File any upstream issue drafts. |
+| — | Only if WP4 fails | Approve the fallback model download. |
+
+**Money:** none expected. **Accounts:** GitHub only; Hugging Face isn't needed for public models.
+
+---
+
+## 8. Deliverables and repository layout
+
+Deliverables: the config files and launch script required by the project plan, plus everything below.
+
+```
+<repo>/
+├── README.md, LICENSE (MIT), LICENSE-DATA.md (CC BY 4.0), CHANGELOG.md, CLAUDE.md
+├── pyproject.toml, uv.lock
+├── .github/workflows/ci.yml
+├── docs/
+│   ├── plans/project-plan.md, plans/step-0-baseline.md
+│   ├── progress-log.md, decisions.md
+│   ├── environment.md          # hardware, BIOS, OS, drivers (scrubbed)
+│   └── methodology.md          # §5 in prose, for readers of the release
+├── configs/
+│   ├── machine.toml            # paths, port, GPU, manual BIOS fields
+│   ├── model.toml              # repo, revision, SHA-256, sampling defaults
+│   ├── harness.toml            # pinned OpenCode/dsh versions
+│   ├── server/                 # stock-*.toml, tuned-*.toml, examples
+│   ├── sweeps/                 # stage1.toml, stage2*.toml, stage3.toml, stage4.toml
+│   ├── workloads/              # recipes + manifest
+│   └── harness/                # OpenCode / dsh config templates
+├── scripts/                    # inventory, build-llama, launch-server, stop-server,
+│                               # healthcheck, run-detached, run-sweep, sweep-status,
+│                               # smoke-opencode (+ dsh procedure)
+├── src/smallpc/                # config, render, gguf_check, health, envsnap, telemetry,
+│                               # scrub, workloads, sweep, stats, report
+├── tools/                      # pcie_bw.cu, STREAM (pinned)
+├── tests/                      # unit tests, fixtures, mock server, toy-task
+├── data/                       # committed: raw/*.jsonl, env/, health/, microbench/,
+│                               # harness/, logs/ (compressed, scrubbed)
+├── reports/                    # baseline-report.md, figures/, writeup.md
+├── models/                     # gitignored
+└── third_party/                # gitignored: llama.cpp build, node prefix, harness state
+```
+
+---
+
+## 9. Release checklist (lighter standard agreed for Step 0)
+
+- [ ] v0.1.0 is tagged in the umbrella repo, with a matching `CHANGELOG.md` entry.
+- [ ] The README covers:
+  - what this is and the hardware it was measured on;
+  - quick start: prerequisites, build, download and verify, launch stock or tuned;
+  - how to rerun the sweep on your own 12–16 GB machine (via `machine.toml`);
+  - a results summary with CIs;
+  - limitations and licenses.
+- [ ] The stock and tuned configs for 32K, 64K and 128K are included, along with the launch script.
+- [ ] The sweep and analysis scripts are documented and parameterised, without extra packaging.
+- [ ] Unit tests pass locally, and CI (lint and unit tests, no GPU) is green on GitHub.
+- [ ] Raw JSONL, environment snapshots, microbenchmarks, health results and the baseline report with 95% CIs are included, along with the exact commands.
+- [ ] Provenance is recorded: llama.cpp tag, commit and build flags; model repo, revision and SHA-256; OpenCode and dsh versions.
+- [ ] Data is scrubbed (no username, hostname or home paths). Prompts are published only as recipes that point to the public sources.
+- [ ] The write-up draft is reviewed (GitHub only). It covers the problem, approach, results and what didn't work.
+- [ ] `LICENSE` (MIT) and `LICENSE-DATA.md` (CC BY 4.0) are present.
+- [ ] Any upstream bugs found are written up as issue drafts with evidence, for Zack to file.
+- [ ] The progress log is complete, and the step completion report has been delivered to the executive chat.
+
+---
+
+## 10. Risks
+
+| # | Risk | Likelihood / impact | Mitigation |
+|---|---|---|---|
+| 1 | The official GGUF still carries a bad or stripped MTP head | low / high | WP4 tensor check and WP5 acceptance test; fallback file only with approval |
+| 2 | CUDA and gcc version mismatch on Arch | medium / medium | Explicit host compiler; WP1 identifies a supported gcc; Zack installs it at G1 |
+| 3 | A regression in llama.cpp at the chosen tag | medium / medium | Pinned tag; WP5 catches it; step back one release tag if needed, recorded in decisions |
+| 4 | MTP limits: single slot, slower prefill, greedy mismatches | medium / medium | Measured in WP5 and Stage 2a; MTP joins the tuned configs only if it wins on T_turn_400 and passes the equivalence check |
+| 5 | The expert cache produces degenerate output | low / high | Output sanity check; such configs are excluded; upstream issue draft |
+| 6 | RAM pressure: 32 GB of RAM with a 22 GB memory-mapped model | medium / high | Idle preconditions, paging flag and the load-mode experiment; mlock only as a later, approved option |
+| 7 | Heat soak or drift during long sessions | medium / medium | Telemetry, thermal flags, canaries and re-runs |
+| 8 | Background noise from the desktop | medium / low | Idle checks, display on the iGPU, repetitions and CIs |
+| 9 | Trace logging (`-lv 4`) slows runs down | medium / low | WP5 A/B test decides; hit rates are collected in separate short runs if needed |
+| 10 | Claude Code's 10-minute limit on Bash calls | certain / low | All long jobs run detached, with status files |
+| 11 | dsh breaks (developer preview) or has no headless mode | medium / medium | Exact version pins; manual procedure; project decision point 4 (fall back to OpenCode) |
+| 12 | OpenCode's extra title request disturbs the prompt cache | likely / low | Recorded as stock behaviour; material for Step 2 |
+| 13 | Personal information ends up in published data | medium / medium | Scrub module plus a release check |
+| 14 | The executor model changes (Opus 5.5 → GLM 5.3) | possible / medium | Self-contained prompts; review based on evidence, not claims |
+| 15 | Upstream changes mid-step | likely / low | Everything pinned; upstream re-checked at the end of the step and noted in the completion report |
+
+---
+
+## 11. Confirmed decisions (6 Nov 2026)
+
+1. **Repo:** `ZHarvett/local-ai-research`, on the 256 GB SSD (exact path found in WP0), with `models/` inside it (gitignored).
+2. **LICENSE copyright holder:** ZHarvett.
+3. **Selection rule and turn workload:** §3.3 approved, with the 3,000 + 400 turn of §3.4 as a standardised benchmark workload, not a model of real agent use. `predicted_n` is recorded for every run, and the estimated 400-token turn (T_turn_400) is kept separate from measured times (T_B).
+
+---
+
+## 12. Working protocol with Claude Code
+
+### 12.1 Prompt header
+
+Every message from me that contains a prompt starts with one line, for example:
+**Plan mode: ON · Expected: long (~6 h, runs detached overnight)**
+
+The prompt follows in a single `~~~` block. If plan mode is ON, Zack sends me Claude Code's plan before approving it.
+
+### 12.2 Prompt rules
+
+- One WP per prompt, started in a fresh Claude Code session (`/clear`). WP0 runs from the home directory; every later session starts from inside the repo.
+- Every prompt is self-contained. It names the WP, points to the relevant section of `docs/plans/step-0-baseline.md`, lists the acceptance criteria, and requires the standard report.
+- Corrective prompts follow the same rules.
+
+### 12.3 CLAUDE.md contents (written in WP0; kept short)
+
+- **Project:** a one-paragraph summary, and where the plans live.
+- **Hard rules:**
+  - never use sudo or change system configuration; propose the commands instead;
+  - never delete or modify anything outside the repo, except scratch directories in `/tmp` and `/dev/shm/<repo>-*`;
+  - never modify existing installs, services, `~/.config/opencode` or `~/.dsh`;
+  - no downloads over 1 GB beyond those in the step plan without approval;
+  - only one GPU job at a time, enforced by the lock;
+  - anything that may take longer than about 8 minutes runs via `scripts/run-detached.sh`.
+- **Conventions:**
+  - uv, ruff, pytest (`-m "not gpu"` in CI) and shellcheck;
+  - TOML configs;
+  - llama-server is started only through `scripts/launch-server.sh`, with absolute paths and an explicit port;
+  - `data/raw/` is never edited by hand.
+- **Measurement rules:**
+  - no random-token numbers for cache or MTP results;
+  - a snapshot, warm-up and telemetry for every measured run;
+  - report raw evidence, not adjectives.
+- **Privacy:** public data only, and scrub before publishing.
+- **Workflow:**
+  - start by reading the WP's section of the step plan and the latest progress-log entry;
+  - at the end of each WP, commit and append a progress-log entry;
+  - finish with the standard report.
+- **Compaction:** when compacting, keep the WP id, the acceptance criteria, the modified files and the commands run.
+
+### 12.4 Standard report (the end of every prompt)
+
+1. A summary of what was done.
+2. Each acceptance criterion marked PASS or FAIL, with evidence.
+3. Files changed (`git diff --stat <start>..HEAD`).
+4. The commands that were run, with verbatim excerpts of their key output (tests, benchmarks).
+5. Anything that couldn't be done, was uncertain, or deviated from the plan.
+6. Suggested next steps.
+7. The commit hash, and confirmation that the progress-log entry was added.
+
+### 12.5 Progress-log entry format
+
+Each entry records the date, WP, status, commit, key results (with numbers) and open issues.
+
+---
+
+## 13. Notes for the executive chat
+
+- **MTP and parallel slots.** MTP may require a single server slot; WP5 confirms this on the pinned build. If it does, the "second server slot" designs in Steps 4 and 5 can't run alongside MTP.
+- **Control harness.** OpenCode was chosen; the project plan text still says "OpenCode or Claude Code".
+- **Sweep tooling.** Expert-cache and MTP results come from llama-server with real prompts, not llama-bench, because random-token benchmarks distort MoE routing. llama-bench is kept as a cross-check.
+- **Estimates to be replaced.** The plan's per-token KV size and per-expert size estimates will be replaced with measured values in WP6 and WP11. Any material difference will be reported.
+- **Release.** Step 0's release follows the lighter standard agreed earlier: a tagged baseline release in the umbrella repo.
+- **MTP state across save and restore.** WP5 tests whether the pinned build keeps the MTP draft state through `/slots` save/restore and through the host-RAM prompt cache. The result shows whether llama.cpp #28619 (a Step 3b starter PR that Step 5 depends on) is still open work.
+- **Real agent turns.** Step 0's 3,000 + 400 turn is a standardised workload. Step 1 should report per-turn new tokens and generated tokens from real tasks, to show how far real use is from it.
+
+---
+
+## 14. Change log
+
+| Version | Date | Change |
+|---|---|---|
+| 1.0 | 6 Nov 2026 | Initial plan |
+| 1.2 | 6 Nov 2026 | Zack's review: MTP draft state tested across slot save/restore and the host-RAM prompt cache (WP5, §13); the 3,000 + 400 turn is a standardised workload, and the smoke task's request pattern is no longer used to revise it (§3.4, WP7); T_turn renamed T_turn_400 and labelled an estimate, with measured T_B and `predicted_n` recorded, a `short_gen` flag, and a WP8 check that outputs reach 400 tokens (§5.3, §5.6, WP8, WP10); confirmed repo name, licence holder and WP0 setup (§4, §7, §11, WP0) |
+| 1.1 | 6 Nov 2026 | After external review: stock cells keep their §3.1 settings in every stage (§5.4, WP2); every fresh request gets its own nonce, plus `cache_n` assertions and a new `warm_prefill` flag (§5.2, §5.3, §5.6, WP8, WP9); explicit BOS/special-token handling for token arrays (§5.2, WP8); the MTP tensor check now screens for known broken-head signatures, with proof left to WP5's functional tests (S4, WP4); S4 and §5.6 agree on how flagged results are reported |
