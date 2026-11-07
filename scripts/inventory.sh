@@ -157,7 +157,7 @@ if have gh; then gh auth status >"$RAW/gh_auth" 2>&1 || true; else echo unavaila
 { systemctl list-units --type=service --state=running --no-legend --plain 2>/dev/null || echo unavailable; } >"$RAW/sys_services"
 { systemctl --user list-units --type=service --state=running --no-legend --plain 2>/dev/null || echo unavailable; } >"$RAW/user_services"
 { ps -eo pid,rss,comm --sort=-rss 2>/dev/null | head -n 16 || echo unavailable; } >"$RAW/top_rss"
-{ ps -eo pid,comm 2>/dev/null | grep -E 'llama-server|llama-cli|ollama|sunshine|libvirtd|virtqemud|qemu|vllm' | grep -v grep || true; } >"$RAW/watch_procs"
+{ pgrep -l 'llama-server|llama-cli|ollama|sunshine|libvirtd|virtqemud|qemu|vllm' 2>/dev/null || true; } >"$RAW/watch_procs"
 
 # ---- hwmon ----
 {
@@ -174,7 +174,8 @@ done >"$RAW/pacman_si"
 
 export RAW OUT_JSON OUT_MD STAMP_UTC DATE_UTC REPO HOME
 export USER_NAME_SCRUB="${USER:-$(id -un 2>/dev/null || true)}"
-export HOST_NAME_SCRUB="$( (hostname 2>/dev/null || cat /proc/sys/kernel/hostname 2>/dev/null) || true)"
+HOST_NAME_SCRUB="$( (hostname 2>/dev/null || cat /proc/sys/kernel/hostname 2>/dev/null) || true)"
+export HOST_NAME_SCRUB
 
 python3 -I - <<'PYEOF'
 import json, os, re, sys
@@ -448,8 +449,10 @@ if tools["node"]["version"] == U or tools["npm"]["version"] == U or vnum(tools["
 if tools["ninja"]["version"] == U: add("ninja", "optional", "missing", pm("ninja"), ["ninja"])
 prereq = {"rows": rows, "none_missing": not rows}
 
-bios = {"EXPO": "enabled (reported by user)", "PBO/Eco mode": "to be recorded at gate G1",
-        "iGPU status": "to be recorded at gate G1"}
+bios = {"EXPO": "enabled; configured speed confirmed at 6000 MT/s by `dmidecode -t memory` "
+                "(run by Zack, 2026-11-07)",
+        "iGPU": "BIOS left at its default; both displays are on the iGPU",
+        "PBO/Eco mode": "BIOS default, never changed by Zack; exact mode not recorded"}
 
 data = {"generated_utc": os.environ["STAMP_UTC"], "script": "scripts/inventory.sh",
         "privacy": "username, hostname scrubbed; home path written as ~",

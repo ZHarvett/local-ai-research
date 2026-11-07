@@ -48,3 +48,16 @@ Decisions are recorded with date and source. Source section numbers refer to
   compressed, scrubbed logs under `data/logs/` stay committable.
 - Harness state: `.harness-state/`, plus `third_party/` (per §8). Revisit when WP7 fixes the
   OpenCode state dir and `DSH_HOME` locations.
+
+## G1 decisions (2026-11-07)
+
+### Ollama disabled for the duration of the project
+- **What:** Zack ran `sudo systemctl disable --now ollama`. `ollama.service` is now inactive and
+  disabled; the packages (`ollama`, `ollama-cuda`) remain installed and untouched.
+- **Why:** to keep background GPU use out of the measurements.
+- **Source:** done by Zack at gate G1; confirmed by `systemctl is-active` / `is-enabled` on 2026-11-07.
+
+### Manual BIOS fields (recorded in `docs/environment.md`)
+- EXPO enabled, 6000 MT/s configured speed confirmed by `dmidecode -t memory` (run by Zack).
+- iGPU: BIOS left at its default; both displays are on the iGPU (card0, amdgpu).
+- PBO/Eco mode: BIOS default, never changed by Zack; exact mode not recorded.

@@ -1,0 +1,509 @@
+{
+  "generated_utc": "2026-11-07T08:23:33Z",
+  "script": "scripts/inventory.sh",
+  "privacy": "username, hostname scrubbed; home path written as ~",
+  "os": {
+    "pretty_name": "CachyOS",
+    "id": "cachyos",
+    "build_id": "rolling",
+    "kernel": "7.3.1-1-cachyos"
+  },
+  "cpu": {
+    "model": "AMD Ryzen 7 9700X 8-Core Processor",
+    "sockets": "1",
+    "cores_per_socket": "8",
+    "threads_per_core": "2",
+    "logical_cpus": "16",
+    "max_mhz": "5582.3008",
+    "avx512_flags": [
+      "avx512_bf16",
+      "avx512_bitalg",
+      "avx512_vbmi2",
+      "avx512_vnni",
+      "avx512_vp2intersect",
+      "avx512_vpopcntdq",
+      "avx512bw",
+      "avx512cd",
+      "avx512dq",
+      "avx512f",
+      "avx512ifma",
+      "avx512vbmi",
+      "avx512vl"
+    ],
+    "avx512_present": true,
+    "scaling_driver": "amd-pstate-epp",
+    "scaling_governor_cpu0": "performance",
+    "governors_all_cpus": "16 performance",
+    "epp_cpu0": "performance",
+    "epp_all_cpus": "16 performance",
+    "amd_pstate_status": "active",
+    "boost": "1"
+  },
+  "memory": {
+    "mem_total_gib": 30.46,
+    "mem_available_gib": 27.02,
+    "swap_total_gib": 30.46,
+    "swap_free_gib": 30.45,
+    "swapon": "NAME       TYPE       SIZE USED PRIO\n/dev/zram0 partition 30.5G 2.9M  100",
+    "zramctl": "NAME       ALGORITHM DISKSIZE DATA COMPR TOTAL STREAMS MOUNTPOINT\n/dev/zram0 zstd         30.5G 2.9M  468K  1.3M         [SWAP]",
+    "swappiness": "150",
+    "thp_enabled": "always",
+    "thp_defrag": "defer+madvise",
+    "ulimit_l_kib": "8192",
+    "dev_shm_size_gib": 15.23,
+    "ram_speed": "not readable without root; see optional command below",
+    "ram_speed_optional_command": "sudo dmidecode -t memory"
+  },
+  "disks": {
+    "lsblk": "NAME        MODEL                       SIZE TYPE FSTYPE MOUNTPOINTS\nzram0                                  30.5G disk swap   [SWAP]\nnvme1n1     WD Green SN3000 500GB     465.8G disk        \n\u251c\u2500nvme1n1p1                               4G part vfat   /boot\n\u251c\u2500nvme1n1p2                              80G part btrfs  /var/log\n\u2502                                                        /var/tmp\n\u2502                                                        /var/cache\n\u2502                                                        /srv\n\u2502                                                        /root\n\u2502                                                        /\n\u2514\u2500nvme1n1p3                           381.8G part btrfs  /home\nnvme0n1     BC711 NVMe SK hynix 256GB 238.5G disk        \n\u2514\u2500nvme0n1p1                           238.5G part btrfs  /mnt/data",
+    "findmnt": "TARGET                                        SOURCE                  FSTYPE          OPTIONS\n/                                             /dev/nvme1n1p2[/@]      btrfs           rw,noatime,compress=zstd:1,ssd,discard=async,space_cache=v2,subvolid=477,subvol=/@\n\u251c\u2500/dev                                        devtmpfs                devtmpfs        rw,nosuid,size=15848568k,nr_inodes=3962142,mode=755,inode64,huge=advise\n\u2502 \u251c\u2500/dev/hugepages                            hugetlbfs               hugetlbfs       rw,nosuid,nodev,relatime,pagesize=2M\n\u2502 \u251c\u2500/dev/mqueue                               mqueue                  mqueue          rw,nosuid,nodev,noexec,relatime\n\u2502 \u251c\u2500/dev/shm                                  tmpfs                   tmpfs           rw,nosuid,nodev,inode64,huge=advise,usrquota\n\u2502 \u2514\u2500/dev/pts                                  devpts                  devpts          rw,nosuid,noexec,relatime,gid=5,mode=600,ptmxmode=000\n\u251c\u2500/sys                                        sysfs                   sysfs           rw,nosuid,nodev,noexec,relatime\n\u2502 \u251c\u2500/sys/kernel/debug                         debugfs                 debugfs         rw,nosuid,nodev,noexec,relatime\n\u2502 \u251c\u2500/sys/kernel/tracing                       tracefs                 tracefs         rw,nosuid,nodev,noexec,relatime\n\u2502 \u251c\u2500/sys/kernel/config                        configfs                configfs        rw,nosuid,nodev,noexec,relatime\n\u2502 \u251c\u2500/sys/kernel/security                      securityfs              securityfs      rw,nosuid,nodev,noexec,relatime\n\u2502 \u251c\u2500/sys/fs/cgroup                            cgroup2                 cgroup2         rw,nosuid,nodev,noexec,relatime,nsdelegate,memory_recursiveprot,memory_hugetlb_accounting\n\u2502 \u251c\u2500/sys/fs/pstore                            none                    pstore          rw,nosuid,nodev,noexec,relatime\n\u2502 \u251c\u2500/sys/firmware/efi/efivars                 efivarfs                efivarfs        rw,nosuid,nodev,noexec,relatime\n\u2502 \u251c\u2500/sys/fs/bpf                               bpf                     bpf             rw,nosuid,nodev,noexec,relatime,mode=700\n\u2502 \u2514\u2500/sys/fs/fuse/connections                  fusectl                 fusectl         rw,nosuid,nodev,noexec,relatime\n\u251c\u2500/proc                                       proc                    proc            rw,nosuid,nodev,noexec,relatime\n\u2502 \u2514\u2500/proc/sys/fs/binfmt_misc                  systemd-1               autofs          rw,relatime,fd=44,pgrp=1,timeout=0,minproto=5,maxproto=5,direct,pipe_ino=17506\n\u2502   \u2514\u2500/proc/sys/fs/binfmt_misc                binfmt_misc             binfmt_misc     rw,nosuid,nodev,noexec,relatime\n\u251c\u2500/run                                        tmpfs                   tmpfs           rw,nosuid,nodev,size=6387464k,nr_inodes=819200,mode=755,inode64,huge=advise\n\u2502 \u251c\u2500/run/credentials/systemd-journald.service none                    tmpfs           ro,nosuid,nodev,noexec,relatime,nosymfollow,size=1024k,nr_inodes=1024,mode=700,inode64,huge=advise,noswap\n\u2502 \u251c\u2500/run/credentials/systemd-resolved.service none                    tmpfs           ro,nosuid,nodev,noexec,relatime,nosymfollow,size=1024k,nr_inodes=1024,mode=700,inode64,huge=advise,noswap\n\u2502 \u251c\u2500/run/credentials/libvirtd.service         none                    tmpfs           ro,nosuid,nodev,noexec,relatime,nosymfollow,size=1024k,nr_inodes=1024,mode=700,inode64,huge=advise,noswap\n\u2502 \u2514\u2500/run/user/1000                            tmpfs                   tmpfs           rw,nosuid,nodev,relatime,size=3193728k,nr_inodes=798432,mode=700,uid=1000,gid=1000,inode64,huge=advise\n\u2502   \u251c\u2500/run/user/1000/gvfs                     gvfsd-fuse              fuse.gvfsd-fuse rw,nosuid,nodev,relatime,user_id=1000,group_id=1000\n\u2502   \u2514\u2500/run/user/1000/doc                      portal                  fuse.portal     rw,nosuid,nodev,relatime,user_id=1000,group_id=1000\n\u251c\u2500/root                                       /dev/nvme1n1p2[/@root]  btrfs           rw,noatime,compress=zstd:1,ssd,discard=async,space_cache=v2,subvolid=257,subvol=/@root\n\u251c\u2500/tmp                                        tmpfs                   tmpfs           rw,noatime,inode64,huge=advise\n\u251c\u2500/srv                                        /dev/nvme1n1p2[/@srv]   btrfs           rw,noatime,compress=zstd:1,ssd,discard=async,space_cache=v2,subvolid=258,subvol=/@srv\n\u251c\u2500/var/cache                                  /dev/nvme1n1p2[/@cache] btrfs           rw,noatime,compress=zstd:1,ssd,discard=async,space_cache=v2,subvolid=259,subvol=/@cache\n\u251c\u2500/var/log                                    /dev/nvme1n1p2[/@log]   btrfs           rw,noatime,compress=zstd:1,ssd,discard=async,space_cache=v2,subvolid=261,subvol=/@log\n\u251c\u2500/var/tmp                                    /dev/nvme1n1p2[/@tmp]   btrfs           rw,noatime,compress=zstd:1,ssd,discard=async,space_cache=v2,subvolid=260,subvol=/@tmp\n\u251c\u2500/mnt/data                                   /dev/nvme0n1p1          btrfs           rw,noatime,compress=zstd:1,ssd,discard=async,space_cache=v2,subvolid=5,subvol=/\n\u251c\u2500/home                                       /dev/nvme1n1p3          btrfs           rw,noatime,compress=zstd:1,ssd,discard=async,space_cache=v2,subvolid=5,subvol=/\n\u2514\u2500/boot                                       /dev/nvme1n1p1          vfat            rw,relatime,fmask=0077,dmask=0077,codepage=437,iocharset=ascii,shortname=mixed,utf8,errors=remount-ro",
+    "df": "Filesystem      Size  Used Avail Use% Mounted on\n/dev/nvme1n1p2   80G   35G   41G  47% /\ndevtmpfs         16G     0   16G   0% /dev\ntmpfs            16G  1.2M   16G   1% /dev/shm\nefivarfs        256K   48K  204K  20% /sys/firmware/efi/efivars\ntmpfs           6.1G  2.4M  6.1G   1% /run\nnone            1.0M     0  1.0M   0% /run/credentials/systemd-journald.service\nnone            1.0M     0  1.0M   0% /run/credentials/systemd-resolved.service\n/dev/nvme1n1p2   80G   35G   41G  47% /root\ntmpfs            16G   12K   16G   1% /tmp\n/dev/nvme1n1p2   80G   35G   41G  47% /srv\n/dev/nvme1n1p2   80G   35G   41G  47% /var/cache\n/dev/nvme1n1p2   80G   35G   41G  47% /var/tmp\n/dev/nvme1n1p2   80G   35G   41G  47% /var/log\n/dev/nvme0n1p1  239G   73G  165G  31% /mnt/data\n/dev/nvme1n1p3  382G  240G  139G  64% /home\n/dev/nvme1n1p1  4.0G  532M  3.5G  14% /boot\nnone            1.0M  4.0K 1020K   1% /run/credentials/libvirtd.service\ntmpfs           3.1G  108K  3.1G   1% /run/user/1000",
+    "repo_mount": "/mnt/data /dev/nvme0n1p1 btrfs  rw,noatime,compress=zstd:1,ssd,discard=async,space_cache=v2,subvolid=5,subvol=/",
+    "mnt_data_mount": "/mnt/data /dev/nvme0n1p1 btrfs  rw,noatime,compress=zstd:1,ssd,discard=async,space_cache=v2,subvolid=5,subvol=/",
+    "repo_df": "Filesystem      Size Avail Mounted on\n/dev/nvme0n1p1  239G  165G /mnt/data",
+    "repo_on_mnt_data_nvme1n1p1": false,
+    "btrfs_options_mnt_data": "rw,noatime,compress=zstd:1,ssd,discard=async,space_cache=v2,subvolid=5,subvol=/",
+    "btrfs_compress_zstd1": true,
+    "downloads_is_symlink": true,
+    "downloads_target": "/mnt/data/downloads",
+    "downloads_points_to_mnt_data_downloads": true
+  },
+  "gpu": {
+    "name": "NVIDIA GeForce RTX 5060 Ti",
+    "driver_version": "615.78.08",
+    "pcie_gen_current": "2",
+    "pcie_gen_max": "4",
+    "pcie_width_current": "8",
+    "pcie_width_max": "8",
+    "power_limit": "180.00 W",
+    "power_default_limit": "180.00 W",
+    "power_max_limit": "180.00 W",
+    "clock_graphics": "892 MHz",
+    "clock_graphics_max": "3090 MHz",
+    "clock_memory": "810 MHz",
+    "clock_memory_max": "14001 MHz",
+    "temperature_c": "24",
+    "persistence_mode": "Disabled",
+    "memory_total": "16311 MiB",
+    "memory_used": "522 MiB",
+    "pstate": "P5",
+    "driver_supports_cuda": "13.4",
+    "pcie_note": "The PCIe link may downshift at idle (current gen can be below max); WP6 measures the link under load.",
+    "compute_processes": "1718, cosmic-app-library, 36 MiB\n1719, cosmic-launcher, 34 MiB\n2139, /usr/lib/xdg-desktop-portal-cosmic, 34 MiB\n3096, missioncenter, 46 MiB",
+    "processes_from_nvidia_smi": [
+      {
+        "pid": "1649",
+        "type": "G",
+        "name": "cosmic-comp",
+        "mem": "55MiB"
+      },
+      {
+        "pid": "1698",
+        "type": "G",
+        "name": "Xwayland",
+        "mem": "3MiB"
+      },
+      {
+        "pid": "1718",
+        "type": "C+G",
+        "name": "cosmic-app-library",
+        "mem": "36MiB"
+      },
+      {
+        "pid": "1719",
+        "type": "C+G",
+        "name": "cosmic-launcher",
+        "mem": "34MiB"
+      },
+      {
+        "pid": "2139",
+        "type": "C+G",
+        "name": "...lib/xdg-desktop-portal-cosmic",
+        "mem": "34MiB"
+      },
+      {
+        "pid": "2349",
+        "type": "G",
+        "name": "...rack-uuid=3190708988185955192",
+        "mem": "31MiB"
+      },
+      {
+        "pid": "2614",
+        "type": "G",
+        "name": "ghostty",
+        "mem": "95MiB"
+      },
+      {
+        "pid": "3096",
+        "type": "C+G",
+        "name": "missioncenter",
+        "mem": "46MiB"
+      }
+    ],
+    "graphics_processes": [
+      {
+        "pid": "1649",
+        "type": "G",
+        "name": "cosmic-comp",
+        "mem": "55MiB"
+      },
+      {
+        "pid": "1698",
+        "type": "G",
+        "name": "Xwayland",
+        "mem": "3MiB"
+      },
+      {
+        "pid": "1718",
+        "type": "C+G",
+        "name": "cosmic-app-library",
+        "mem": "36MiB"
+      },
+      {
+        "pid": "1719",
+        "type": "C+G",
+        "name": "cosmic-launcher",
+        "mem": "34MiB"
+      },
+      {
+        "pid": "2139",
+        "type": "C+G",
+        "name": "...lib/xdg-desktop-portal-cosmic",
+        "mem": "34MiB"
+      },
+      {
+        "pid": "2349",
+        "type": "G",
+        "name": "...rack-uuid=3190708988185955192",
+        "mem": "31MiB"
+      },
+      {
+        "pid": "2614",
+        "type": "G",
+        "name": "ghostty",
+        "mem": "95MiB"
+      },
+      {
+        "pid": "3096",
+        "type": "C+G",
+        "name": "missioncenter",
+        "mem": "46MiB"
+      }
+    ],
+    "compute_type_processes": [],
+    "nvidia_smi_q_excerpt": "Driver Version                                         : 615.78.08 [Deprecated; will be removed in CUDA 14.0. Use KMD Version instead]\nCUDA Version                                           : 13.4 [Deprecated; will be removed in CUDA 14.0. Use CUDA UMD Version instead]\n    Product Name                                       : NVIDIA GeForce RTX 5060 Ti\n    Display Mode                                       : Requested functionality has been deprecated\n    Display Active                                     : Disabled\n    Persistence Mode                                   : Disabled\n        Current                                        : N/A\n        Current                                        : N/A\n        Current                                        : N/A\n                Current                                : 2\n                Device Current                         : 2\n            Link Width\n                Current                                : 8x\n    Performance State                                  : P5\n    Compute Mode                                       : Default\n        Memory                                         : 13 %\n        Current                                        : Disabled\n        Current                                        : N/A\n        Unrepairable Memory                            : N/A\n        GPU Current Temp                               : 24 C\n        GPU Current Max Temp                           : N/A\n        GPU Current T.Limit Temp                       : 63 C\n        Memory Current Temp                            : N/A\n        GPU Ceiling Power Limit\n            Current Power Limit                        : 180.00 W\n            Requested Power Limit                      : 180.00 W\n            Default Power Limit                        : 180.00 W\n            Current Base Power                         : N/A\n        Min Power Limit                                : 150.00 W\n        Max Power Limit                                : 180.00 W\n        Current Power Limit                            : N/A\n        Requested Power Limit                          : N/A\n        Default Power Limit                            : N/A\n        Min Power Limit                                : N/A\n        Max Power Limit                                : N/A\n        Graphics                                       : 892 MHz\n        Memory                                         : 810 MHz\n        Graphics                                       : Requested functionality has been deprecated\n        Memory                                         : Requested functionality has been deprecated\n        Graphics                                       : Requested functionality has been deprecated\n        Memory                                         : Requested functionality has been deprecated\n        Memory                                         : N/A\n        Graphics                                       : 3090 MHz\n        Memory                                         : 14001 MHz\n        Graphics                                       : N/A\n            Used GPU Memory               : 55 MiB\n            Used GPU Memory               : 3 MiB\n            Used GPU Memory               : 36 MiB\n            Used GPU Memory               : 34 MiB\n            Used GPU Memory               : 34 MiB\n            Used GPU Memory               : 31 MiB\n            Used GPU Memory               : 95 MiB\n            Used GPU Memory               : 46 MiB"
+  },
+  "display": {
+    "connectors": [
+      {
+        "connector": "card0-DP-4",
+        "card": "card0",
+        "status": "disconnected",
+        "vendor_id": "0x1002",
+        "gpu": "AMD (amdgpu iGPU)",
+        "driver": "amdgpu",
+        "pci": "0000:11:00.0"
+      },
+      {
+        "connector": "card0-DP-5",
+        "card": "card0",
+        "status": "connected",
+        "vendor_id": "0x1002",
+        "gpu": "AMD (amdgpu iGPU)",
+        "driver": "amdgpu",
+        "pci": "0000:11:00.0"
+      },
+      {
+        "connector": "card0-DP-6",
+        "card": "card0",
+        "status": "disconnected",
+        "vendor_id": "0x1002",
+        "gpu": "AMD (amdgpu iGPU)",
+        "driver": "amdgpu",
+        "pci": "0000:11:00.0"
+      },
+      {
+        "connector": "card0-HDMI-A-2",
+        "card": "card0",
+        "status": "connected",
+        "vendor_id": "0x1002",
+        "gpu": "AMD (amdgpu iGPU)",
+        "driver": "amdgpu",
+        "pci": "0000:11:00.0"
+      },
+      {
+        "connector": "card0-Writeback-1",
+        "card": "card0",
+        "status": "unknown",
+        "vendor_id": "0x1002",
+        "gpu": "AMD (amdgpu iGPU)",
+        "driver": "amdgpu",
+        "pci": "0000:11:00.0"
+      },
+      {
+        "connector": "card1-DP-1",
+        "card": "card1",
+        "status": "disconnected",
+        "vendor_id": "0x10de",
+        "gpu": "NVIDIA (RTX dGPU)",
+        "driver": "nvidia",
+        "pci": "0000:01:00.0"
+      },
+      {
+        "connector": "card1-DP-2",
+        "card": "card1",
+        "status": "disconnected",
+        "vendor_id": "0x10de",
+        "gpu": "NVIDIA (RTX dGPU)",
+        "driver": "nvidia",
+        "pci": "0000:01:00.0"
+      },
+      {
+        "connector": "card1-DP-3",
+        "card": "card1",
+        "status": "disconnected",
+        "vendor_id": "0x10de",
+        "gpu": "NVIDIA (RTX dGPU)",
+        "driver": "nvidia",
+        "pci": "0000:01:00.0"
+      },
+      {
+        "connector": "card1-HDMI-A-1",
+        "card": "card1",
+        "status": "disconnected",
+        "vendor_id": "0x10de",
+        "gpu": "NVIDIA (RTX dGPU)",
+        "driver": "nvidia",
+        "pci": "0000:01:00.0"
+      }
+    ],
+    "connected_on_nvidia": [],
+    "connected_on_amdgpu": [
+      "card0-DP-5",
+      "card0-HDMI-A-2"
+    ],
+    "display_attached_to_rtx_5060_ti": false,
+    "finding": "NO: no connected display is attached to the NVIDIA GPU; all connected displays are on the iGPU."
+  },
+  "cuda_toolchain": {
+    "nvcc_paths": "/opt/cuda/bin/nvcc",
+    "nvcc_version": "nvcc: NVIDIA (R) Cuda compiler driver\nCopyright (c) 2005-2026 NVIDIA Corporation\nBuilt on Tue_Sep_01_08:45:21_PDT_2026\nCuda compilation tools, release 13.4, V13.4.92\nBuild cuda_13.4.r13.4/compiler.38855100_0",
+    "cuda_release": "13.4",
+    "nvcc_list_gpu_arch": "compute_75\ncompute_80\ncompute_86\ncompute_87\ncompute_88\ncompute_89\ncompute_90\ncompute_100\ncompute_110\ncompute_103\ncompute_120\ncompute_121\ncompute_107",
+    "supports_sm_120": true,
+    "pacman_cuda_gcc": "cuda 13.4.3-1\ngcc 16.2.1+r23+gd564253eb6c8-3",
+    "gcc_binaries": [
+      {
+        "path": "/usr/bin/gcc",
+        "full_version": "16.2.1",
+        "major": 16
+      },
+      {
+        "path": "/usr/bin/g++",
+        "full_version": "16.2.1",
+        "major": 16
+      },
+      {
+        "path": "/usr/bin/x86_64-pc-linux-gnu-gcc-16",
+        "full_version": "16.2.1",
+        "major": 16
+      }
+    ],
+    "host_config_h": "/opt/cuda/include/crt/host_config.h",
+    "host_config_gnuc_lines": "135:#if __GNUC__ > 16\n138:#endif /* __GNUC__ > 16 */",
+    "host_config_gnuc_block": "135: #if __GNUC__ > 16\n136: \n137: \n138: #endif /* __GNUC__ > 16 */",
+    "max_supported_gcc_major": 16,
+    "gcc_guard_has_error_line": false,
+    "usable_gcc_majors": [
+      16
+    ],
+    "conclusion": "CUDA 13.4 (nvcc at /opt/cuda/bin/nvcc). sm_120 (compute capability 12.0) is SUPPORTED by this nvcc (--list-gpu-arch). CUDA headers guard host compilers at GCC > 16 (newest accepted major = 16); note the #error line inside that guard is empty/absent in this header, so the limit is not enforced by the header text. Installed gcc majors acceptable as host compiler: 16 -> usable as CMAKE_CUDA_HOST_COMPILER (e.g. /usr/bin/gcc)."
+  },
+  "tools": {
+    "git": {
+      "version": "git version 2.56.0",
+      "path": "/usr/bin/git"
+    },
+    "cmake": {
+      "version": "cmake version 4.4.5",
+      "path": "/usr/bin/cmake"
+    },
+    "ninja": {
+      "version": "1.13.2",
+      "path": "/usr/bin/ninja"
+    },
+    "make": {
+      "version": "GNU Make 4.4.1",
+      "path": "/usr/bin/make"
+    },
+    "python3": {
+      "version": "Python 3.14.9",
+      "path": "/usr/bin/python3"
+    },
+    "uv": {
+      "version": "uv 0.13.7 (316c827e0 2026-11-03 x86_64-unknown-linux-gnu)",
+      "path": "/usr/bin/uv"
+    },
+    "node": {
+      "version": "v26.13.0",
+      "path": "/usr/bin/node"
+    },
+    "npm": {
+      "version": "12.2.1",
+      "path": "/usr/bin/npm"
+    },
+    "gh": {
+      "version": "gh version 2.102.1 (2026-10-21)",
+      "path": "/usr/bin/gh"
+    },
+    "curl": {
+      "version": "curl 8.23.0 (x86_64-pc-linux-gnu) libcurl/8.23.0 OpenSSL/3.6.5 zlib/1.3.1.zlib-ng brotli/1.2.1 zstd/1.5.7 libidn2/2.3.8 libpsl/0.21.5 libssh2/1.11.1 nghttp2/1.70.0 ngtcp2/1.25.0 nghttp3/1.18.0 mit-krb5/1.22.2",
+      "path": "/usr/bin/curl"
+    },
+    "shellcheck": {
+      "version": "ShellCheck - shell script analysis tool",
+      "path": "/usr/bin/shellcheck"
+    },
+    "docker": {
+      "version": "unavailable",
+      "path": "unavailable"
+    },
+    "podman": {
+      "version": "unavailable",
+      "path": "unavailable"
+    },
+    "gh_auth_status": "You are not logged into any GitHub hosts. To log in, run: gh auth login"
+  },
+  "existing_llama_ollama": {
+    "llama_server_on_path": "unavailable",
+    "llama_cli_on_path": "unavailable",
+    "ollama_on_path": "/usr/bin/ollama",
+    "pacman_llama": "local/ollama 0.40.13-1.1\n    Create, run and share large language models (LLMs)\nlocal/ollama-cuda 0.40.13-1.1\n    Create, run and share large language models (LLMs) with CUDA",
+    "pacman_ollama": "local/ollama 0.40.13-1.1\n    Create, run and share large language models (LLMs)\nlocal/ollama-cuda 0.40.13-1.1\n    Create, run and share large language models (LLMs) with CUDA",
+    "directories_depth3": [
+      "~/gate0/llama.cpp",
+      "/mnt/data/models/ollama"
+    ],
+    "found_any": true
+  },
+  "background_load": {
+    "system_services_running_count": 27,
+    "user_services_running_count": 21,
+    "system_services_of_interest": [
+      "libvirtd.service"
+    ],
+    "user_services_of_interest": [],
+    "system_services_all": [
+      "ananicy-cpp.service",
+      "avahi-daemon.service",
+      "bluetooth.service",
+      "cosmic-greeter-daemon.service",
+      "cosmic-greeter.service",
+      "cups.service",
+      "dbus-broker.service",
+      "dnscrypt-proxy.service",
+      "keyd.service",
+      "libvirtd.service",
+      "NetworkManager.service",
+      "polkit.service",
+      "postgresql.service",
+      "power-profiles-daemon.service",
+      "proton.VPN.service",
+      "rtkit-daemon.service",
+      "systemd-journald.service",
+      "systemd-logind.service",
+      "systemd-machined.service",
+      "systemd-oomd.service",
+      "systemd-resolved.service",
+      "systemd-timesyncd.service",
+      "systemd-udevd.service",
+      "systemd-userdbd.service",
+      "udisks2.service",
+      "upower.service",
+      "user@1000.service"
+    ],
+    "user_services_all": [
+      "app-geoclue\\x2ddemo\\x2dagent@autostart.service",
+      "app-limine\\x2dsnapper\\x2dnotify@autostart.service",
+      "app-print\\x2dapplet@autostart.service",
+      "at-spi-dbus-bus.service",
+      "dbus-:1.47-org.a11y.atspi.Registry@0.service",
+      "dbus-broker.service",
+      "dconf.service",
+      "gnome-keyring-daemon.service",
+      "gvfs-daemon.service",
+      "gvfs-metadata.service",
+      "gvfs-udisks2-volume-monitor.service",
+      "org.freedesktop.impl.portal.desktop.cosmic.service",
+      "pipewire-pulse.service",
+      "pipewire.service",
+      "run-p2288-i53309.service",
+      "run-p2609-i24635.service",
+      "wireplumber.service",
+      "xdg-desktop-portal-gtk.service",
+      "xdg-desktop-portal.service",
+      "xdg-document-portal.service",
+      "xdg-permission-store.service"
+    ],
+    "watched_processes": "922 libvirtd",
+    "top_processes_by_rss": "PID   RSS COMMAND\n   2293 539420 chrome\n   1649 488672 cosmic-comp\n   2403 428668 chrome\n   2841 329904 claude\n   2349 295280 chrome\n   3096 275004 missioncenter\n   2384 255012 chrome\n   2614 226756 ghostty\n   1698 170504 Xwayland\n   2580 166336 chrome\n   2494 157256 chrome\n    923 155120 python3\n   2139 149840 xdg-desktop-por\n   1719 145836 cosmic-launcher\n   1718 144984 cosmic-app-libr"
+  },
+  "hwmon": {
+    "entries": [
+      {
+        "hwmon": "hwmon0",
+        "name": "acpitz"
+      },
+      {
+        "hwmon": "hwmon1",
+        "name": "nvme"
+      },
+      {
+        "hwmon": "hwmon2",
+        "name": "nvme"
+      },
+      {
+        "hwmon": "hwmon3",
+        "name": "k10temp"
+      },
+      {
+        "hwmon": "hwmon4",
+        "name": "gigabyte_wmi"
+      },
+      {
+        "hwmon": "hwmon5",
+        "name": "spd5118"
+      },
+      {
+        "hwmon": "hwmon6",
+        "name": "spd5118"
+      },
+      {
+        "hwmon": "hwmon7",
+        "name": "iwlwifi_1"
+      },
+      {
+        "hwmon": "hwmon8",
+        "name": "amdgpu"
+      }
+    ],
+    "names": [
+      "acpitz",
+      "amdgpu",
+      "gigabyte_wmi",
+      "iwlwifi_1",
+      "k10temp",
+      "nvme",
+      "spd5118"
+    ]
+  },
+  "missing_prerequisites": {
+    "rows": [],
+    "none_missing": true
+  },
+  "manual_bios_fields": {
+    "EXPO": "enabled; configured speed confirmed at 6000 MT/s by `dmidecode -t memory` (run by Zack, 2026-11-07)",
+    "iGPU": "BIOS left at its default; both displays are on the iGPU",
+    "PBO/Eco mode": "BIOS default, never changed by Zack; exact mode not recorded"
+  }
+}
