@@ -1,0 +1,5 @@
+# Stock (step plan §3.1): only -m, -c, --host, --port, plus --metrics. Anything else is a
+# validation error, so stock can never inherit the §5.4 sweep defaults.
+profile = "stock"
+context = 65536
+metrics = true

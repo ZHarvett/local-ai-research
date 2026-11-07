@@ -1,0 +1,20 @@
+# Machine config (step plan §8). Paths are absolute. The llama-server binary does not exist
+# until WP3 builds it; it is checked only at launch, never at load time.
+
+[paths]
+llama_server  = "/mnt/data/local-ai-research/third_party/llama.cpp/build/bin/llama-server"
+models_dir    = "/mnt/data/local-ai-research/models"
+slot_save_dir = "/dev/shm/local-ai-research-slots"
+
+[server]
+host = "127.0.0.1"
+port = 8080          # explicit; llama-server's default (9931) is never relied on
+
+[gpu]
+index = 0            # exported as CUDA_VISIBLE_DEVICES by launch-server.sh
+
+# Manually recorded BIOS fields (docs/environment.md, recorded at gate G1, 2026-11-07).
+[bios]
+expo         = "enabled; configured speed confirmed at 6000 MT/s by dmidecode (run by Zack, 2026-11-07)"
+igpu         = "BIOS left at its default; both displays are on the iGPU"
+pbo_eco_mode = "BIOS default, never changed by Zack; exact mode not recorded"

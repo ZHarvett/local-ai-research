@@ -1,0 +1,8 @@
+# Stage 1 cell P1: --fit with its default 1024 MiB margin. 8-bit KV, -fa on and -np 1 come from
+# the §5.4 sweep defaults (candidate/tuned only).
+profile = "candidate"
+context = 65536
+fit = "on"
+batch = 2048
+ubatch = 2048
+metrics = true

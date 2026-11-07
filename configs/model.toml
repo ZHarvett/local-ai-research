@@ -1,0 +1,12 @@
+# Model config. PLACEHOLDERS until WP4 fills in the verified values; every field is optional.
+# `file` is used for `-m` when a server config does not set `model`.
+
+# repo     = "ornith-ai/Ornith-1.5-35B-A3B-GGUF"
+# revision = ""        # WP4
+file       = "Ornith-1.5-35B-A3B-Q4_K_M.gguf"   # PLACEHOLDER name, verified in WP4
+# size_bytes = 0       # WP4
+# sha256     = ""      # WP4
+# license    = ""      # WP4
+
+# Recommended sampling from the model card (WP4).
+[sampling]

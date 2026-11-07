@@ -28,3 +28,6 @@ dist/
 *~
 .DS_Store
 .Trash-*/
+
+# GPU lock (scripts/with-gpu-lock.sh)
+.locks/

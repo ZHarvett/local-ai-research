@@ -1,0 +1,12 @@
+# Test machine: fixed fake paths so goldens do not depend on where the repo lives.
+[paths]
+llama_server  = "/opt/smallpc/llama.cpp/build/bin/llama-server"
+models_dir    = "/opt/smallpc/models"
+slot_save_dir = "/dev/shm/local-ai-research-slots"
+
+[server]
+host = "127.0.0.1"
+port = 8080
+
+[gpu]
+index = 0

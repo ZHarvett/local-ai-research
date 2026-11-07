@@ -1,0 +1,9 @@
+# Stage 1 cells P3-P7 style: all experts on the CPU plus a GPU expert cache.
+profile = "candidate"
+context = 65536
+cpu_moe = true
+moe_cache_mib = 2048
+batch = 2048
+ubatch = 2048
+metrics = true
+log_verbosity = 4    # expert-cache statistics (WP5 A/B-tests the cost of -lv 4)

@@ -1,0 +1,10 @@
+/opt/smallpc/llama.cpp/build/bin/llama-server
+-m
+/opt/smallpc/models/test-model-Q4_K_M.gguf
+--host
+127.0.0.1
+--port
+8080
+-c
+65536
+--metrics

@@ -1,0 +1,11 @@
+# Stage 2a style: --fit placement plus MTP draft length 2, with slot saving for the
+# save/restore tests (WP5).
+profile = "candidate"
+context = 65536
+fit = "on"
+batch = 2048
+ubatch = 2048
+spec_type = "draft-mtp"
+spec_draft_n_max = 2
+metrics = true
+slot_save_path = "/dev/shm/local-ai-research-slots"
