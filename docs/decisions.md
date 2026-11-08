@@ -200,3 +200,30 @@ Decisions are recorded with date and source. Source section numbers refer to
   set by Zack in the BIOS around 2026-11-08 (exact date unknown, previous values unknown). EXPO =
   enabled, and Zack re-checked it after the BIOS change: `dmidecode` shows 6000 MT/s configured speed.
   PBO/Eco mode is still "BIOS default, not recorded". `inventory.sh` was edited but not re-run.
+
+## WP6 decisions (2026-11-08)
+
+### Hit-rate collection: every sweep cell runs with `-lv 4`
+- **Decision:** every sweep cell, stock included, runs with `-lv 4` (`log_verbosity = 4`).
+- **Reasons (WP5):** the expert-cache statistics line is printed at clean shutdown only at `-lv 4`.
+  It covers decode-sized batches (ubatch <= 8) with hits, misses and a hit rate; prefill-sized
+  batches print no hit/miss line, only a count of experts copied from the cache. The fit trace and
+  buffer sizes also appear only at `-lv 4`. The `-lv 4` vs default A/B gave +0.61% decode speed,
+  which is not a measurable cost. Logging does not change inference, and plan section 3.1 allows it.
+- **Limitation (WP9 and the report must state it):** hit rates in the sweeps are decode-batch hit
+  rates plus the large-batch copy counts. There is no prefill hit rate.
+
+### For the executive chat
+- **Chat template** (recorded in WP5 above): the embedded template is used throughout Step 0; Steps 1
+  and 2 must decide which template to use.
+- **MTP with `-np 2`** is accepted on b12208 (2 slots of 32768 at `-c 65536`, both drafting), so the
+  single-slot constraint behind the Step 4 and 5 designs does not apply, but the context is split
+  between the slots.
+- **MTP draft state across restore:** on b12208 neither slot-file restore nor prompt-cache restore
+  lost the MTP draft state (equal `draft_n` and `draft_n_accepted` at 181 and 3191 tokens of history,
+  and the log shows the draft state saved and restored). Caveats: no negative control, no history
+  above 8192 tokens. llama.cpp #28619 may already be fixed; Step 3b and Step 5 should verify it.
+- **Context checkpoints** are created at prompt ends at any length, not only above
+  `--checkpoint-min-step`; the WP5 plan's premise was wrong. The turn-3 restore still used no checkpoint.
+- **MTP acceptance source:** it was measured on llama.cpp's own source code, which the model may have
+  seen in training, so rates on unseen code may be lower. Stage 2a re-measures on the WP8 workloads.
