@@ -1,0 +1,363 @@
+{
+  "microbench": "stream",
+  "started_utc": "2026-11-08T17:39:10Z",
+  "environment": {
+    "snapshot_id": "6b3015e09e8e9b87",
+    "file": "data/microbench/env-snapshot.json"
+  },
+  "label": "STREAM-based measurement: unmodified stream.c 5.10 (pinned), array size and NTIMES set on the compile line; not submitted to the STREAM site and not claimed to follow the Run Rules beyond the array-size rule (licence: tools/stream/MANIFEST.json)",
+  "source": {
+    "source": "https://github.com/jeffhammond/STREAM",
+    "commit": "6703f7504a38a8da96b353cadafa64d3c2d7a2d3",
+    "sha256": "c388924eb140fda95f534cdb808ae7f1f8ebb18da41d8aec1b512a3c8d303c9b"
+  },
+  "build_command": "gcc -O3 -march=native -fopenmp -mcmodel=medium -DSTREAM_ARRAY_SIZE=100000000 -DNTIMES=20 /mnt/data/local-ai-research/tools/stream/stream.c -o /mnt/data/local-ai-research/build/tools/stream",
+  "array_elements": 100000000,
+  "array_bytes_each": 800000000,
+  "ntimes": 20,
+  "rate_unit": "MB/s (1e6 bytes/s) as printed by STREAM: best of NTIMES-1 iterations",
+  "theoretical_peak_gb_s": 96.0,
+  "theoretical_peak_note": "dual-channel DDR5-6000: 6000 MT/s x 8 B x 2 channels = 96 GB/s",
+  "repetitions": 5,
+  "warm_up": "one discarded run per thread count",
+  "thread_settings": {
+    "8": {
+      "OMP_NUM_THREADS": "8",
+      "OMP_PROC_BIND": "spread",
+      "OMP_PLACES": "cores"
+    },
+    "16": {
+      "OMP_NUM_THREADS": "16",
+      "OMP_PROC_BIND": "spread",
+      "OMP_PLACES": "threads"
+    }
+  },
+  "configs": [
+    {
+      "threads": 8,
+      "env": {
+        "OMP_NUM_THREADS": "8",
+        "OMP_PROC_BIND": "spread",
+        "OMP_PLACES": "cores"
+      },
+      "raw": [
+        {
+          "best_mb_s": {
+            "Copy": 52335.6,
+            "Scale": 42486.3,
+            "Add": 46792.7,
+            "Triad": 47009.0
+          },
+          "validated": true
+        },
+        {
+          "best_mb_s": {
+            "Copy": 52308.2,
+            "Scale": 42471.8,
+            "Add": 46751.9,
+            "Triad": 47019.1
+          },
+          "validated": true
+        },
+        {
+          "best_mb_s": {
+            "Copy": 52236.2,
+            "Scale": 42399.9,
+            "Add": 46627.3,
+            "Triad": 47005.3
+          },
+          "validated": true
+        },
+        {
+          "best_mb_s": {
+            "Copy": 52224.4,
+            "Scale": 42354.9,
+            "Add": 46612.7,
+            "Triad": 47019.1
+          },
+          "validated": true
+        },
+        {
+          "best_mb_s": {
+            "Copy": 52255.3,
+            "Scale": 42459.5,
+            "Add": 46618.3,
+            "Triad": 47026.4
+          },
+          "validated": true
+        }
+      ],
+      "kernels": {
+        "Copy": {
+          "n": 5,
+          "mean": 52271.94,
+          "min": 52224.4,
+          "max": 52335.6,
+          "bootstrap_ci": [
+            52235.3,
+            52310.240000000005
+          ],
+          "t_ci": [
+            52212.46076815969,
+            52331.419231840315
+          ],
+          "ci": [
+            52212.46076815969,
+            52331.419231840315
+          ],
+          "ci_method": "t",
+          "pct_of_theoretical_peak": 54.449937500000004
+        },
+        "Scale": {
+          "n": 5,
+          "mean": 42434.479999999996,
+          "min": 42354.9,
+          "max": 42486.3,
+          "bootstrap_ci": [
+            42387.28,
+            42475.14
+          ],
+          "t_ci": [
+            42365.82561934251,
+            42503.13438065748
+          ],
+          "ci": [
+            42365.82561934251,
+            42503.13438065748
+          ],
+          "ci_method": "t",
+          "pct_of_theoretical_peak": 44.20258333333333
+        },
+        "Add": {
+          "n": 5,
+          "mean": 46680.58,
+          "min": 46612.7,
+          "max": 46792.7,
+          "bootstrap_ci": [
+            46617.86,
+            46749.659999999996
+          ],
+          "t_ci": [
+            46574.90462569712,
+            46786.255374302884
+          ],
+          "ci": [
+            46574.90462569712,
+            46786.255374302884
+          ],
+          "ci_method": "t",
+          "pct_of_theoretical_peak": 48.62560416666666
+        },
+        "Triad": {
+          "n": 5,
+          "mean": 47015.780000000006,
+          "min": 47005.3,
+          "max": 47026.4,
+          "bootstrap_ci": [
+            47009.52,
+            47022.020000000004
+          ],
+          "t_ci": [
+            47005.19786760968,
+            47026.362132390335
+          ],
+          "ci": [
+            47005.19786760968,
+            47026.362132390335
+          ],
+          "ci_method": "t",
+          "pct_of_theoretical_peak": 48.974770833333345
+        }
+      }
+    },
+    {
+      "threads": 16,
+      "env": {
+        "OMP_NUM_THREADS": "16",
+        "OMP_PROC_BIND": "spread",
+        "OMP_PLACES": "threads"
+      },
+      "raw": [
+        {
+          "best_mb_s": {
+            "Copy": 52448.9,
+            "Scale": 41346.9,
+            "Add": 46038.8,
+            "Triad": 46337.4
+          },
+          "validated": true
+        },
+        {
+          "best_mb_s": {
+            "Copy": 52469.4,
+            "Scale": 41302.1,
+            "Add": 46027.2,
+            "Triad": 46314.1
+          },
+          "validated": true
+        },
+        {
+          "best_mb_s": {
+            "Copy": 52491.5,
+            "Scale": 41171.3,
+            "Add": 45955.7,
+            "Triad": 46282.8
+          },
+          "validated": true
+        },
+        {
+          "best_mb_s": {
+            "Copy": 52452.2,
+            "Scale": 41294.5,
+            "Add": 46046.6,
+            "Triad": 46364.3
+          },
+          "validated": true
+        },
+        {
+          "best_mb_s": {
+            "Copy": 52445.2,
+            "Scale": 41339.2,
+            "Add": 46062.8,
+            "Triad": 46350.0
+          },
+          "validated": true
+        }
+      ],
+      "kernels": {
+        "Copy": {
+          "n": 5,
+          "mean": 52461.44,
+          "min": 52445.2,
+          "max": 52491.5,
+          "bootstrap_ci": [
+            52448.08,
+            52478.56
+          ],
+          "t_ci": [
+            52437.613800451574,
+            52485.26619954843
+          ],
+          "ci": [
+            52437.613800451574,
+            52485.26619954843
+          ],
+          "ci_method": "t",
+          "pct_of_theoretical_peak": 54.647333333333336
+        },
+        "Scale": {
+          "n": 5,
+          "mean": 41290.8,
+          "min": 41171.3,
+          "max": 41346.9,
+          "bootstrap_ci": [
+            41229.52,
+            41334.88
+          ],
+          "t_ci": [
+            41203.20983137179,
+            41378.39016862822
+          ],
+          "ci": [
+            41203.20983137179,
+            41378.39016862822
+          ],
+          "ci_method": "t",
+          "pct_of_theoretical_peak": 43.011250000000004
+        },
+        "Add": {
+          "n": 5,
+          "mean": 46026.22000000001,
+          "min": 45955.7,
+          "max": 46062.8,
+          "bootstrap_ci": [
+            45988.18000000001,
+            46052.439999999995
+          ],
+          "t_ci": [
+            45974.71144155768,
+            46077.72855844234
+          ],
+          "ci": [
+            45974.71144155768,
+            46077.72855844234
+          ],
+          "ci_method": "t",
+          "pct_of_theoretical_peak": 47.94397916666668
+        },
+        "Triad": {
+          "n": 5,
+          "mean": 46329.719999999994,
+          "min": 46282.8,
+          "max": 46364.3,
+          "bootstrap_ci": [
+            46302.5,
+            46353.2
+          ],
+          "t_ci": [
+            46289.91798731633,
+            46369.52201268366
+          ],
+          "ci": [
+            46289.91798731633,
+            46369.52201268366
+          ],
+          "ci_method": "t",
+          "pct_of_theoretical_peak": 48.260124999999995
+        }
+      }
+    }
+  ],
+  "telemetry": {
+    "csv": "data/microbench/telemetry-stream.csv",
+    "rows": 57,
+    "detectors": {
+      "thermal": {
+        "flag": null,
+        "n_samples": 57,
+        "gpu_slowdown_samples": 0,
+        "gpu_slowdown_by_reason": {
+          "reason_hw_slowdown": 0,
+          "reason_hw_thermal_slowdown": 0,
+          "reason_sw_thermal_slowdown": 0,
+          "reason_hw_power_brake_slowdown": 0
+        },
+        "tctl_ge_95_samples": 0,
+        "sw_power_cap_samples": 0,
+        "max_tctl_c": 56.5,
+        "max_gpu_temp_c": 30.0
+      },
+      "paging": {
+        "flag": "paging",
+        "major_faults": 0,
+        "swap_in_pages": 925,
+        "process_samples": 0
+      }
+    },
+    "sampler_overhead": {
+      "wall_s": 44.45762039300007,
+      "python_cpu_s": 0.09570186300000016,
+      "nvidia_smi_cpu_s": 0.08,
+      "python_core_fraction": 0.002152653744262673,
+      "nvidia_smi_core_fraction": 0.0017994665322347335,
+      "total_core_fraction": 0.0039521202764974065,
+      "n_rows": 57
+    }
+  },
+  "preconditions": {
+    "ok": true,
+    "aborts": [],
+    "warnings": [],
+    "values": {
+      "gpu_lock_held": true,
+      "lock_expected_held_by_wrapper": true,
+      "gpu_compute_processes": 0,
+      "gpu_graphics_processes": 0,
+      "connected_on_nvidia": [],
+      "mem_available_gib": 26.01,
+      "loadavg_1m": 1.36
+    },
+    "waited_for_load_s": 0.1
+  },
+  "finished_utc": "2026-11-08T17:39:55Z"
+}

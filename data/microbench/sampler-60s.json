@@ -1,0 +1,265 @@
+{
+  "started_utc": "20261108T174556Z",
+  "server_config": "configs/server/health-64k.toml",
+  "snapshot_id": "6b3015e09e8e9b87",
+  "preconditions": {
+    "ok": true,
+    "aborts": [],
+    "warnings": [],
+    "values": {
+      "gpu_lock_held": true,
+      "lock_expected_held_by_wrapper": true,
+      "gpu_compute_processes": 0,
+      "gpu_graphics_processes": 0,
+      "connected_on_nvidia": [],
+      "mem_available_gib": 26.21,
+      "loadavg_1m": 1.18
+    },
+    "waited_for_load_s": 0.1
+  },
+  "server_started": true,
+  "launch_output": "server healthy: pid=70597 http://127.0.0.1:8080\nrun-dir: /mnt/data/local-ai-research/data/logs/health-20261108T174556Z-livecheck-sampler60",
+  "prompts": [
+    {
+      "repo": "ggml-org/llama.cpp (MIT)",
+      "commit": "57d04820dfef7a3519aac276d018a6fd71251895",
+      "file": "common/fit.cpp",
+      "lines_kept": 361,
+      "code_tokens": 3994,
+      "prompt_tokens": 4068,
+      "prompt_sha256": "6ec8766299ebb60486139c5a52378509c49e723294b1df4fb13b163b35d46f84"
+    },
+    {
+      "repo": "ggml-org/llama.cpp (MIT)",
+      "commit": "57d04820dfef7a3519aac276d018a6fd71251895",
+      "file": "ggml/src/ggml-cuda/mmvq.cu",
+      "lines_kept": 272,
+      "code_tokens": 3992,
+      "prompt_tokens": 4075,
+      "prompt_sha256": "190fb1b155f50f5dde67d6d9be836a46318589f8f27aa948ce79afb28cdbd677"
+    },
+    {
+      "repo": "ggml-org/llama.cpp (MIT)",
+      "commit": "57d04820dfef7a3519aac276d018a6fd71251895",
+      "file": "convert_lora_to_gguf.py",
+      "lines_kept": 387,
+      "code_tokens": 3977,
+      "prompt_tokens": 4055,
+      "prompt_sha256": "8c47aff2ea03db790d4abf591c9a012adcdc4fd654667de562b4e506d87bb30e"
+    }
+  ],
+  "sampler_overhead": {
+    "method": "utime+stime from /proc/<pid>/stat of the separate sampler process and its nvidia-smi child, read about 0.5 s and 57 s after it started",
+    "window_s": 57.0,
+    "python_cpu_s": 0.06,
+    "nvidia_smi_cpu_s": 0.03,
+    "python_core_fraction": 0.001052615497383284,
+    "nvidia_smi_core_fraction": 0.000526307748691642,
+    "total_core_fraction": 0.0015789232460749261,
+    "sampler_self_report": {
+      "wall_s": 60.00070248799966,
+      "python_cpu_s": 0.058241839000000004,
+      "nvidia_smi_cpu_s": 0.03,
+      "python_core_fraction": 0.0009706859517461244,
+      "nvidia_smi_core_fraction": 0.0004999941460018755,
+      "total_core_fraction": 0.0014706800977479998,
+      "n_rows": 120
+    },
+    "sampler_exit_code": 0
+  },
+  "requests": [
+    {
+      "file": "common/fit.cpp",
+      "t_start_epoch": 1794159960.3557055,
+      "t_end_epoch": 1794159967.4937067,
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 4068,
+        "prompt_ms": 4224.61,
+        "prompt_per_second": 962.9291224515399,
+        "predicted_n": 256,
+        "predicted_ms": 2908.538,
+        "predicted_per_second": 87.67291333309038
+      }
+    },
+    {
+      "file": "ggml/src/ggml-cuda/mmvq.cu",
+      "t_start_epoch": 1794159967.4937162,
+      "t_end_epoch": 1794159974.53869,
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 4075,
+        "prompt_ms": 4120.19,
+        "prompt_per_second": 989.0320592011534,
+        "predicted_n": 256,
+        "predicted_ms": 2908.042,
+        "predicted_per_second": 87.6878669565295
+      }
+    },
+    {
+      "file": "convert_lora_to_gguf.py",
+      "t_start_epoch": 1794159974.5386965,
+      "t_end_epoch": 1794159981.5688174,
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 4055,
+        "prompt_ms": 4100.516,
+        "prompt_per_second": 988.8999335693362,
+        "predicted_n": 256,
+        "predicted_ms": 2911.37,
+        "predicted_per_second": 87.58763056567871
+      }
+    },
+    {
+      "file": "common/fit.cpp",
+      "t_start_epoch": 1794159981.5688226,
+      "t_end_epoch": 1794159988.6923554,
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 4068,
+        "prompt_ms": 4182.603,
+        "prompt_per_second": 972.600077033369,
+        "predicted_n": 256,
+        "predicted_ms": 2913.47,
+        "predicted_per_second": 87.52449827868487
+      }
+    },
+    {
+      "file": "ggml/src/ggml-cuda/mmvq.cu",
+      "t_start_epoch": 1794159988.6923625,
+      "t_end_epoch": 1794159995.754334,
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 4075,
+        "prompt_ms": 4120.584,
+        "prompt_per_second": 988.9374904139802,
+        "predicted_n": 256,
+        "predicted_ms": 2914.502,
+        "predicted_per_second": 87.49350660936243
+      }
+    },
+    {
+      "file": "convert_lora_to_gguf.py",
+      "t_start_epoch": 1794159995.7543387,
+      "t_end_epoch": 1794160002.789043,
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 4055,
+        "prompt_ms": 4099.352,
+        "prompt_per_second": 989.1807290518112,
+        "predicted_n": 256,
+        "predicted_ms": 2907.093,
+        "predicted_per_second": 87.71649204205026
+      }
+    },
+    {
+      "file": "common/fit.cpp",
+      "t_start_epoch": 1794160002.7890477,
+      "t_end_epoch": 1794160009.9107583,
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 4068,
+        "prompt_ms": 4183.488,
+        "prompt_per_second": 972.3943274129147,
+        "predicted_n": 256,
+        "predicted_ms": 2910.474,
+        "predicted_per_second": 87.61459473611515
+      }
+    }
+  ],
+  "rows": 120,
+  "duration_s": 59.54200005531311,
+  "detectors": {
+    "thermal": {
+      "flag": null,
+      "n_samples": 120,
+      "gpu_slowdown_samples": 0,
+      "gpu_slowdown_by_reason": {
+        "reason_hw_slowdown": 0,
+        "reason_hw_thermal_slowdown": 0,
+        "reason_sw_thermal_slowdown": 0,
+        "reason_hw_power_brake_slowdown": 0
+      },
+      "tctl_ge_95_samples": 0,
+      "sw_power_cap_samples": 0,
+      "max_tctl_c": 67.5,
+      "max_gpu_temp_c": 54.0
+    },
+    "paging": {
+      "flag": "paging",
+      "major_faults": 0.0,
+      "swap_in_pages": 12.0,
+      "process_samples": 120
+    }
+  },
+  "gpu_busy_samples": 102,
+  "link_under_load": {
+    "all_samples": {
+      "gen4x8": 120
+    },
+    "util_ge_10pct": {
+      "gen4x8": 102
+    }
+  },
+  "peaks": {
+    "gpu_util_pct": 99.0,
+    "gpu_power_w": 97.58,
+    "gpu_temp_c": 54.0,
+    "gpu_mem_used_mib": 14982.0,
+    "tctl_c": 67.5,
+    "server_rss_kib": 21799884.0
+  },
+  "request_flags": [
+    {
+      "file": "common/fit.cpp",
+      "flags": []
+    },
+    {
+      "file": "ggml/src/ggml-cuda/mmvq.cu",
+      "flags": []
+    },
+    {
+      "file": "convert_lora_to_gguf.py",
+      "flags": []
+    },
+    {
+      "file": "common/fit.cpp",
+      "flags": []
+    },
+    {
+      "file": "ggml/src/ggml-cuda/mmvq.cu",
+      "flags": []
+    },
+    {
+      "file": "convert_lora_to_gguf.py",
+      "flags": []
+    },
+    {
+      "file": "common/fit.cpp",
+      "flags": []
+    }
+  ],
+  "did_not_fit": {
+    "flag": null,
+    "startup_exit_code": null,
+    "log_matches": []
+  },
+  "stop_status": {
+    "stopped_utc": "2026-11-08T17:47:00Z",
+    "pid": 70597,
+    "method": "sigint",
+    "exit_code": 0,
+    "waited_s": 1,
+    "sigint_timeout_s": 90
+  },
+  "cleanup": {
+    "removed": [
+      "local-ai-research-livecheck-20261108T174556Z",
+      "local-ai-research-slots"
+    ],
+    "left": [],
+    "servers_running": []
+  },
+  "servers_left": [],
+  "vram_mib_after": 2
+}

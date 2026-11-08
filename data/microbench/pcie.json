@@ -1,0 +1,2269 @@
+{
+  "microbench": "pcie",
+  "started_utc": "2026-11-08T17:36:48Z",
+  "environment": {
+    "snapshot_id": "6b3015e09e8e9b87",
+    "file": "data/microbench/env-snapshot.json"
+  },
+  "tool": "tools/pcie_bw.cu",
+  "build_command": "/opt/cuda/bin/nvcc -ccbin /usr/bin/g++ -gencode arch=compute_120,code=sm_120 -O2 -o /mnt/data/local-ai-research/build/tools/pcie_bw /mnt/data/local-ai-research/tools/pcie_bw.cu",
+  "repetitions": 5,
+  "warm_up": "one discarded invocation per configuration, plus >= 0.7 s of untimed copies inside every invocation",
+  "bandwidth_unit": "decimal GB/s (1e9 bytes/s), CUDA events",
+  "sizes_bytes": {
+    "expert": 1904640,
+    "16MiB": 16777216,
+    "256MiB": 268435456
+  },
+  "expert_size_note": "mean bytes per expert over the 40 trunk layers (model-sizes.json); layers range from 1769472 to 2039808 bytes",
+  "reference_gbps": 14.3,
+  "configs": [
+    {
+      "size": "expert",
+      "dir": "h2d",
+      "mem": "pinned",
+      "bytes": 1904640,
+      "mode": "bulk",
+      "raw": [
+        {
+          "gpu": "NVIDIA GeForce RTX 5060 Ti",
+          "cuda_runtime": 13040,
+          "dir": "h2d",
+          "mem": "pinned",
+          "bytes": 1904640,
+          "mode": "bulk",
+          "iters": 2100,
+          "elapsed_ms": 279.8676,
+          "gb_per_s": 14.2916,
+          "t_active_start": 1794159410.788,
+          "t_timed_start": 1794159411.49,
+          "t_end": 1794159411.769
+        },
+        {
+          "gpu": "NVIDIA GeForce RTX 5060 Ti",
+          "cuda_runtime": 13040,
+          "dir": "h2d",
+          "mem": "pinned",
+          "bytes": 1904640,
+          "mode": "bulk",
+          "iters": 2100,
+          "elapsed_ms": 279.8948,
+          "gb_per_s": 14.2902,
+          "t_active_start": 1794159411.956,
+          "t_timed_start": 1794159412.656,
+          "t_end": 1794159412.936
+        },
+        {
+          "gpu": "NVIDIA GeForce RTX 5060 Ti",
+          "cuda_runtime": 13040,
+          "dir": "h2d",
+          "mem": "pinned",
+          "bytes": 1904640,
+          "mode": "bulk",
+          "iters": 2100,
+          "elapsed_ms": 279.9113,
+          "gb_per_s": 14.2893,
+          "t_active_start": 1794159413.122,
+          "t_timed_start": 1794159413.823,
+          "t_end": 1794159414.103
+        },
+        {
+          "gpu": "NVIDIA GeForce RTX 5060 Ti",
+          "cuda_runtime": 13040,
+          "dir": "h2d",
+          "mem": "pinned",
+          "bytes": 1904640,
+          "mode": "bulk",
+          "iters": 2100,
+          "elapsed_ms": 279.8759,
+          "gb_per_s": 14.2911,
+          "t_active_start": 1794159414.288,
+          "t_timed_start": 1794159414.99,
+          "t_end": 1794159415.27
+        },
+        {
+          "gpu": "NVIDIA GeForce RTX 5060 Ti",
+          "cuda_runtime": 13040,
+          "dir": "h2d",
+          "mem": "pinned",
+          "bytes": 1904640,
+          "mode": "bulk",
+          "iters": 2100,
+          "elapsed_ms": 279.8691,
+          "gb_per_s": 14.2915,
+          "t_active_start": 1794159415.457,
+          "t_timed_start": 1794159416.158,
+          "t_end": 1794159416.438
+        }
+      ],
+      "gb_per_s": {
+        "n": 5,
+        "mean": 14.29074,
+        "min": 14.2893,
+        "max": 14.2916,
+        "bootstrap_ci": [
+          14.28992,
+          14.29146
+        ],
+        "t_ci": [
+          14.289528060585013,
+          14.291951939414986
+        ],
+        "ci": [
+          14.289528060585013,
+          14.291951939414986
+        ],
+        "ci_method": "t"
+      },
+      "link_during_transfers": {
+        "gen4x8": 11
+      },
+      "gpu_clock_gr_mhz_during": [
+        2842.0
+      ],
+      "pstate_during": [
+        "P0",
+        "P1"
+      ],
+      "vs_reference_pct": -0.06475524475525284
+    },
+    {
+      "size": "expert",
+      "dir": "h2d",
+      "mem": "pageable",
+      "bytes": 1904640,
+      "mode": "bulk",
+      "raw": [
+        {
+          "gpu": "NVIDIA GeForce RTX 5060 Ti",
+          "cuda_runtime": 13040,
+          "dir": "h2d",
+          "mem": "pageable",
+          "bytes": 1904640,
+          "mode": "bulk",
+          "iters": 2100,
+          "elapsed_ms": 281.5782,
+          "gb_per_s": 14.2047,
+          "t_active_start": 1794159417.806,
+          "t_timed_start": 1794159418.507,
+          "t_end": 1794159418.789
+        },
+        {
+          "gpu": "NVIDIA GeForce RTX 5060 Ti",
+          "cuda_runtime": 13040,
+          "dir": "h2d",
+          "mem": "pageable",
+          "bytes": 1904640,
+          "mode": "bulk",
+          "iters": 2100,
+          "elapsed_ms": 281.5645,
+          "gb_per_s": 14.2054,
+          "t_active_start": 1794159418.974,
+          "t_timed_start": 1794159419.675,
+          "t_end": 1794159419.956
+        },
+        {
+          "gpu": "NVIDIA GeForce RTX 5060 Ti",
+          "cuda_runtime": 13040,
+          "dir": "h2d",
+          "mem": "pageable",
+          "bytes": 1904640,
+          "mode": "bulk",
+          "iters": 2100,
+          "elapsed_ms": 281.5724,
+          "gb_per_s": 14.205,
+          "t_active_start": 1794159420.142,
+          "t_timed_start": 1794159420.843,
+          "t_end": 1794159421.124
+        },
+        {
+          "gpu": "NVIDIA GeForce RTX 5060 Ti",
+          "cuda_runtime": 13040,
+          "dir": "h2d",
+          "mem": "pageable",
+          "bytes": 1904640,
+          "mode": "bulk",
+          "iters": 2100,
+          "elapsed_ms": 281.5866,
+          "gb_per_s": 14.2043,
+          "t_active_start": 1794159421.312,
+          "t_timed_start": 1794159422.013,
+          "t_end": 1794159422.294
+        },
+        {
+          "gpu": "NVIDIA GeForce RTX 5060 Ti",
+          "cuda_runtime": 13040,
+          "dir": "h2d",
+          "mem": "pageable",
+          "bytes": 1904640,
+          "mode": "bulk",
+          "iters": 2100,
+          "elapsed_ms": 281.5716,
+          "gb_per_s": 14.2051,
+          "t_active_start": 1794159422.479,
+          "t_timed_start": 1794159423.181,
+          "t_end": 1794159423.462
+        }
+      ],
+      "gb_per_s": {
+        "n": 5,
+        "mean": 14.2049,
+        "min": 14.2043,
+        "max": 14.2054,
+        "bootstrap_ci": [
+          14.20454,
+          14.2052
+        ],
+        "t_ci": [
+          14.204380657954717,
+          14.205419342045284
+        ],
+        "ci": [
+          14.204380657954717,
+          14.205419342045284
+        ],
+        "ci_method": "t"
+      },
+      "link_during_transfers": {
+        "gen4x8": 11
+      },
+      "gpu_clock_gr_mhz_during": [
+        2842.0
+      ],
+      "pstate_during": [
+        "P0",
+        "P1"
+      ],
+      "vs_reference_pct": -0.6650349650349678
+    },
+    {
+      "size": "expert",
+      "dir": "d2h",
+      "mem": "pinned",
+      "bytes": 1904640,
+      "mode": "bulk",
+      "raw": [
+        {
+          "gpu": "NVIDIA GeForce RTX 5060 Ti",
+          "cuda_runtime": 13040,
+          "dir": "d2h",
+          "mem": "pinned",
+          "bytes": 1904640,
+          "mode": "bulk",
+          "iters": 2100,
+          "elapsed_ms": 275.7362,
+          "gb_per_s": 14.5057,
+          "t_active_start": 1794159424.809,
+          "t_timed_start": 1794159425.51,
+          "t_end": 1794159425.786
+        },
+        {
+          "gpu": "NVIDIA GeForce RTX 5060 Ti",
+          "cuda_runtime": 13040,
+          "dir": "d2h",
+          "mem": "pinned",
+          "bytes": 1904640,
+          "mode": "bulk",
+          "iters": 2100,
+          "elapsed_ms": 275.7339,
+          "gb_per_s": 14.5058,
+          "t_active_start": 1794159425.973,
+          "t_timed_start": 1794159426.674,
+          "t_end": 1794159426.95
+        },
+        {
+          "gpu": "NVIDIA GeForce RTX 5060 Ti",
+          "cuda_runtime": 13040,
+          "dir": "d2h",
+          "mem": "pinned",
+          "bytes": 1904640,
+          "mode": "bulk",
+          "iters": 2100,
+          "elapsed_ms": 275.7372,
+          "gb_per_s": 14.5056,
+          "t_active_start": 1794159427.134,
+          "t_timed_start": 1794159427.836,
+          "t_end": 1794159428.112
+        },
+        {
+          "gpu": "NVIDIA GeForce RTX 5060 Ti",
+          "cuda_runtime": 13040,
+          "dir": "d2h",
+          "mem": "pinned",
+          "bytes": 1904640,
+          "mode": "bulk",
+          "iters": 2100,
+          "elapsed_ms": 275.7346,
+          "gb_per_s": 14.5058,
+          "t_active_start": 1794159428.297,
+          "t_timed_start": 1794159428.998,
+          "t_end": 1794159429.274
+        },
+        {
+          "gpu": "NVIDIA GeForce RTX 5060 Ti",
+          "cuda_runtime": 13040,
+          "dir": "d2h",
+          "mem": "pinned",
+          "bytes": 1904640,
+          "mode": "bulk",
+          "iters": 2100,
+          "elapsed_ms": 275.7351,
+          "gb_per_s": 14.5057,
+          "t_active_start": 1794159429.461,
+          "t_timed_start": 1794159430.163,
+          "t_end": 1794159430.438
+        }
+      ],
+      "gb_per_s": {
+        "n": 5,
+        "mean": 14.50572,
+        "min": 14.5056,
+        "max": 14.5058,
+        "bootstrap_ci": [
+          14.505659999999997,
+          14.505779999999998
+        ],
+        "t_ci": [
+          14.505616131590942,
+          14.505823868409058
+        ],
+        "ci": [
+          14.505616131590942,
+          14.505823868409058
+        ],
+        "ci_method": "t"
+      },
+      "link_during_transfers": {
+        "gen4x8": 11
+      },
+      "gpu_clock_gr_mhz_during": [
+        2842.0
+      ],
+      "pstate_during": [
+        "P0",
+        "P1"
+      ],
+      "vs_reference_pct": 1.4386013986013948
+    },
+    {
+      "size": "expert",
+      "dir": "d2h",
+      "mem": "pageable",
+      "bytes": 1904640,
+      "mode": "bulk",
+      "raw": [
+        {
+          "gpu": "NVIDIA GeForce RTX 5060 Ti",
+          "cuda_runtime": 13040,
+          "dir": "d2h",
+          "mem": "pageable",
+          "bytes": 1904640,
+          "mode": "bulk",
+          "iters": 2100,
+          "elapsed_ms": 342.283,
+          "gb_per_s": 11.6855,
+          "t_active_start": 1794159431.865,
+          "t_timed_start": 1794159432.566,
+          "t_end": 1794159432.908
+        },
+        {
+          "gpu": "NVIDIA GeForce RTX 5060 Ti",
+          "cuda_runtime": 13040,
+          "dir": "d2h",
+          "mem": "pageable",
+          "bytes": 1904640,
+          "mode": "bulk",
+          "iters": 2100,
+          "elapsed_ms": 343.9133,
+          "gb_per_s": 11.6301,
+          "t_active_start": 1794159433.094,
+          "t_timed_start": 1794159433.796,
+          "t_end": 1794159434.14
+        },
+        {
+          "gpu": "NVIDIA GeForce RTX 5060 Ti",
+          "cuda_runtime": 13040,
+          "dir": "d2h",
+          "mem": "pageable",
+          "bytes": 1904640,
+          "mode": "bulk",
+          "iters": 2100,
+          "elapsed_ms": 354.0602,
+          "gb_per_s": 11.2968,
+          "t_active_start": 1794159434.326,
+          "t_timed_start": 1794159435.028,
+          "t_end": 1794159435.382
+        },
+        {
+          "gpu": "NVIDIA GeForce RTX 5060 Ti",
+          "cuda_runtime": 13040,
+          "dir": "d2h",
+          "mem": "pageable",
+          "bytes": 1904640,
+          "mode": "bulk",
+          "iters": 2100,
+          "elapsed_ms": 353.8898,
+          "gb_per_s": 11.3022,
+          "t_active_start": 1794159435.618,
+          "t_timed_start": 1794159436.32,
+          "t_end": 1794159436.674
+        },
+        {
+          "gpu": "NVIDIA GeForce RTX 5060 Ti",
+          "cuda_runtime": 13040,
+          "dir": "d2h",
+          "mem": "pageable",
+          "bytes": 1904640,
+          "mode": "bulk",
+          "iters": 2100,
+          "elapsed_ms": 352.8927,
+          "gb_per_s": 11.3342,
+          "t_active_start": 1794159436.865,
+          "t_timed_start": 1794159437.566,
+          "t_end": 1794159437.918
+        }
+      ],
+      "gb_per_s": {
+        "n": 5,
+        "mean": 11.449760000000001,
+        "min": 11.2968,
+        "max": 11.6855,
+        "bootstrap_ci": [
+          11.306439999999998,
+          11.597759999999997
+        ],
+        "t_ci": [
+          11.212074824000972,
+          11.68744517599903
+        ],
+        "ci": [
+          11.212074824000972,
+          11.68744517599903
+        ],
+        "ci_method": "t"
+      },
+      "link_during_transfers": {
+        "gen4x8": 12
+      },
+      "gpu_clock_gr_mhz_during": [
+        2842.0
+      ],
+      "pstate_during": [
+        "P0",
+        "P1"
+      ],
+      "vs_reference_pct": -19.931748251748246
+    },
+    {
+      "size": "16MiB",
+      "dir": "h2d",
+      "mem": "pinned",
+      "bytes": 16777216,
+      "mode": "bulk",
+      "raw": [
+        {
+          "gpu": "NVIDIA GeForce RTX 5060 Ti",
+          "cuda_runtime": 13040,
+          "dir": "h2d",
+          "mem": "pinned",
+          "bytes": 16777216,
+          "mode": "bulk",
+          "iters": 238,
+          "elapsed_ms": 277.779,
+          "gb_per_s": 14.3747,
+          "t_active_start": 1794159439.283,
+          "t_timed_start": 1794159439.993,
+          "t_end": 1794159440.271
+        },
+        {
+          "gpu": "NVIDIA GeForce RTX 5060 Ti",
+          "cuda_runtime": 13040,
+          "dir": "h2d",
+          "mem": "pinned",
+          "bytes": 16777216,
+          "mode": "bulk",
+          "iters": 238,
+          "elapsed_ms": 277.7634,
+          "gb_per_s": 14.3755,
+          "t_active_start": 1794159440.461,
+          "t_timed_start": 1794159441.171,
+          "t_end": 1794159441.449
+        },
+        {
+          "gpu": "NVIDIA GeForce RTX 5060 Ti",
+          "cuda_runtime": 13040,
+          "dir": "h2d",
+          "mem": "pinned",
+          "bytes": 16777216,
+          "mode": "bulk",
+          "iters": 238,
+          "elapsed_ms": 277.7697,
+          "gb_per_s": 14.3751,
+          "t_active_start": 1794159441.637,
+          "t_timed_start": 1794159442.347,
+          "t_end": 1794159442.625
+        },
+        {
+          "gpu": "NVIDIA GeForce RTX 5060 Ti",
+          "cuda_runtime": 13040,
+          "dir": "h2d",
+          "mem": "pinned",
+          "bytes": 16777216,
+          "mode": "bulk",
+          "iters": 238,
+          "elapsed_ms": 277.7862,
+          "gb_per_s": 14.3743,
+          "t_active_start": 1794159442.815,
+          "t_timed_start": 1794159443.525,
+          "t_end": 1794159443.803
+        },
+        {
+          "gpu": "NVIDIA GeForce RTX 5060 Ti",
+          "cuda_runtime": 13040,
+          "dir": "h2d",
+          "mem": "pinned",
+          "bytes": 16777216,
+          "mode": "bulk",
+          "iters": 238,
+          "elapsed_ms": 277.781,
+          "gb_per_s": 14.3746,
+          "t_active_start": 1794159443.991,
+          "t_timed_start": 1794159444.701,
+          "t_end": 1794159444.979
+        }
+      ],
+      "gb_per_s": {
+        "n": 5,
+        "mean": 14.374839999999997,
+        "min": 14.3743,
+        "max": 14.3755,
+        "bootstrap_ci": [
+          14.374500000000001,
+          14.37524
+        ],
+        "t_ci": [
+          14.374260354182622,
+          14.375419645817372
+        ],
+        "ci": [
+          14.374260354182622,
+          14.375419645817372
+        ],
+        "ci_method": "t"
+      },
+      "link_during_transfers": {
+        "gen4x8": 12
+      },
+      "gpu_clock_gr_mhz_during": [
+        2842.0
+      ],
+      "pstate_during": [
+        "P0",
+        "P1"
+      ],
+      "vs_reference_pct": 0.5233566433566186
+    },
+    {
+      "size": "16MiB",
+      "dir": "h2d",
+      "mem": "pageable",
+      "bytes": 16777216,
+      "mode": "bulk",
+      "raw": [
+        {
+          "gpu": "NVIDIA GeForce RTX 5060 Ti",
+          "cuda_runtime": 13040,
+          "dir": "h2d",
+          "mem": "pageable",
+          "bytes": 16777216,
+          "mode": "bulk",
+          "iters": 238,
+          "elapsed_ms": 280.7791,
+          "gb_per_s": 14.2211,
+          "t_active_start": 1794159446.336,
+          "t_timed_start": 1794159447.054,
+          "t_end": 1794159447.335
+        },
+        {
+          "gpu": "NVIDIA GeForce RTX 5060 Ti",
+          "cuda_runtime": 13040,
+          "dir": "h2d",
+          "mem": "pageable",
+          "bytes": 16777216,
+          "mode": "bulk",
+          "iters": 238,
+          "elapsed_ms": 280.7981,
+          "gb_per_s": 14.2201,
+          "t_active_start": 1794159447.522,
+          "t_timed_start": 1794159448.222,
+          "t_end": 1794159448.503
+        },
+        {
+          "gpu": "NVIDIA GeForce RTX 5060 Ti",
+          "cuda_runtime": 13040,
+          "dir": "h2d",
+          "mem": "pageable",
+          "bytes": 16777216,
+          "mode": "bulk",
+          "iters": 238,
+          "elapsed_ms": 280.7714,
+          "gb_per_s": 14.2215,
+          "t_active_start": 1794159448.69,
+          "t_timed_start": 1794159449.408,
+          "t_end": 1794159449.689
+        },
+        {
+          "gpu": "NVIDIA GeForce RTX 5060 Ti",
+          "cuda_runtime": 13040,
+          "dir": "h2d",
+          "mem": "pageable",
+          "bytes": 16777216,
+          "mode": "bulk",
+          "iters": 238,
+          "elapsed_ms": 280.8398,
+          "gb_per_s": 14.218,
+          "t_active_start": 1794159449.875,
+          "t_timed_start": 1794159450.575,
+          "t_end": 1794159450.856
+        },
+        {
+          "gpu": "NVIDIA GeForce RTX 5060 Ti",
+          "cuda_runtime": 13040,
+          "dir": "h2d",
+          "mem": "pageable",
+          "bytes": 16777216,
+          "mode": "bulk",
+          "iters": 238,
+          "elapsed_ms": 280.7867,
+          "gb_per_s": 14.2207,
+          "t_active_start": 1794159451.045,
+          "t_timed_start": 1794159451.763,
+          "t_end": 1794159452.044
+        }
+      ],
+      "gb_per_s": {
+        "n": 5,
+        "mean": 14.220280000000002,
+        "min": 14.218,
+        "max": 14.2215,
+        "bootstrap_ci": [
+          14.219040000000001,
+          14.22118
+        ],
+        "t_ci": [
+          14.218572365086327,
+          14.221987634913678
+        ],
+        "ci": [
+          14.218572365086327,
+          14.221987634913678
+        ],
+        "ci_method": "t"
+      },
+      "link_during_transfers": {
+        "gen4x8": 11
+      },
+      "gpu_clock_gr_mhz_during": [
+        2842.0
+      ],
+      "pstate_during": [
+        "P0",
+        "P1"
+      ],
+      "vs_reference_pct": -0.5574825174825051
+    },
+    {
+      "size": "16MiB",
+      "dir": "d2h",
+      "mem": "pinned",
+      "bytes": 16777216,
+      "mode": "bulk",
+      "raw": [
+        {
+          "gpu": "NVIDIA GeForce RTX 5060 Ti",
+          "cuda_runtime": 13040,
+          "dir": "d2h",
+          "mem": "pinned",
+          "bytes": 16777216,
+          "mode": "bulk",
+          "iters": 238,
+          "elapsed_ms": 275.2519,
+          "gb_per_s": 14.5066,
+          "t_active_start": 1794159453.403,
+          "t_timed_start": 1794159454.107,
+          "t_end": 1794159454.382
+        },
+        {
+          "gpu": "NVIDIA GeForce RTX 5060 Ti",
+          "cuda_runtime": 13040,
+          "dir": "d2h",
+          "mem": "pinned",
+          "bytes": 16777216,
+          "mode": "bulk",
+          "iters": 238,
+          "elapsed_ms": 275.2538,
+          "gb_per_s": 14.5065,
+          "t_active_start": 1794159454.571,
+          "t_timed_start": 1794159455.275,
+          "t_end": 1794159455.55
+        },
+        {
+          "gpu": "NVIDIA GeForce RTX 5060 Ti",
+          "cuda_runtime": 13040,
+          "dir": "d2h",
+          "mem": "pinned",
+          "bytes": 16777216,
+          "mode": "bulk",
+          "iters": 238,
+          "elapsed_ms": 275.2544,
+          "gb_per_s": 14.5065,
+          "t_active_start": 1794159455.739,
+          "t_timed_start": 1794159456.442,
+          "t_end": 1794159456.718
+        },
+        {
+          "gpu": "NVIDIA GeForce RTX 5060 Ti",
+          "cuda_runtime": 13040,
+          "dir": "d2h",
+          "mem": "pinned",
+          "bytes": 16777216,
+          "mode": "bulk",
+          "iters": 238,
+          "elapsed_ms": 275.2544,
+          "gb_per_s": 14.5065,
+          "t_active_start": 1794159456.908,
+          "t_timed_start": 1794159457.611,
+          "t_end": 1794159457.887
+        },
+        {
+          "gpu": "NVIDIA GeForce RTX 5060 Ti",
+          "cuda_runtime": 13040,
+          "dir": "d2h",
+          "mem": "pinned",
+          "bytes": 16777216,
+          "mode": "bulk",
+          "iters": 238,
+          "elapsed_ms": 275.2537,
+          "gb_per_s": 14.5065,
+          "t_active_start": 1794159458.076,
+          "t_timed_start": 1794159458.78,
+          "t_end": 1794159459.055
+        }
+      ],
+      "gb_per_s": {
+        "n": 5,
+        "mean": 14.50652,
+        "min": 14.5065,
+        "max": 14.5066,
+        "bootstrap_ci": [
+          14.506499999999999,
+          14.506560000000002
+        ],
+        "t_ci": [
+          14.50646448,
+          14.50657552
+        ],
+        "ci": [
+          14.50646448,
+          14.50657552
+        ],
+        "ci_method": "t"
+      },
+      "link_during_transfers": {
+        "gen4x8": 11
+      },
+      "gpu_clock_gr_mhz_during": [
+        2842.0
+      ],
+      "pstate_during": [
+        "P0",
+        "P1"
+      ],
+      "vs_reference_pct": 1.4441958041957998
+    },
+    {
+      "size": "16MiB",
+      "dir": "d2h",
+      "mem": "pageable",
+      "bytes": 16777216,
+      "mode": "bulk",
+      "raw": [
+        {
+          "gpu": "NVIDIA GeForce RTX 5060 Ti",
+          "cuda_runtime": 13040,
+          "dir": "d2h",
+          "mem": "pageable",
+          "bytes": 16777216,
+          "mode": "bulk",
+          "iters": 238,
+          "elapsed_ms": 284.6586,
+          "gb_per_s": 14.0273,
+          "t_active_start": 1794159460.425,
+          "t_timed_start": 1794159461.133,
+          "t_end": 1794159461.418
+        },
+        {
+          "gpu": "NVIDIA GeForce RTX 5060 Ti",
+          "cuda_runtime": 13040,
+          "dir": "d2h",
+          "mem": "pageable",
+          "bytes": 16777216,
+          "mode": "bulk",
+          "iters": 238,
+          "elapsed_ms": 284.3526,
+          "gb_per_s": 14.0423,
+          "t_active_start": 1794159461.604,
+          "t_timed_start": 1794159462.312,
+          "t_end": 1794159462.596
+        },
+        {
+          "gpu": "NVIDIA GeForce RTX 5060 Ti",
+          "cuda_runtime": 13040,
+          "dir": "d2h",
+          "mem": "pageable",
+          "bytes": 16777216,
+          "mode": "bulk",
+          "iters": 238,
+          "elapsed_ms": 285.7816,
+          "gb_per_s": 13.9721,
+          "t_active_start": 1794159462.783,
+          "t_timed_start": 1794159463.494,
+          "t_end": 1794159463.78
+        },
+        {
+          "gpu": "NVIDIA GeForce RTX 5060 Ti",
+          "cuda_runtime": 13040,
+          "dir": "d2h",
+          "mem": "pageable",
+          "bytes": 16777216,
+          "mode": "bulk",
+          "iters": 238,
+          "elapsed_ms": 285.1212,
+          "gb_per_s": 14.0045,
+          "t_active_start": 1794159464.017,
+          "t_timed_start": 1794159464.727,
+          "t_end": 1794159465.012
+        },
+        {
+          "gpu": "NVIDIA GeForce RTX 5060 Ti",
+          "cuda_runtime": 13040,
+          "dir": "d2h",
+          "mem": "pageable",
+          "bytes": 16777216,
+          "mode": "bulk",
+          "iters": 238,
+          "elapsed_ms": 284.4467,
+          "gb_per_s": 14.0377,
+          "t_active_start": 1794159465.199,
+          "t_timed_start": 1794159465.906,
+          "t_end": 1794159466.191
+        }
+      ],
+      "gb_per_s": {
+        "n": 5,
+        "mean": 14.01678,
+        "min": 13.9721,
+        "max": 14.0423,
+        "bootstrap_ci": [
+          13.9917,
+          14.03746
+        ],
+        "t_ci": [
+          13.98087027517156,
+          14.052689724828442
+        ],
+        "ci": [
+          13.98087027517156,
+          14.052689724828442
+        ],
+        "ci_method": "t"
+      },
+      "link_during_transfers": {
+        "gen4x8": 11
+      },
+      "gpu_clock_gr_mhz_during": [
+        2842.0
+      ],
+      "pstate_during": [
+        "P0",
+        "P1"
+      ],
+      "vs_reference_pct": -1.9805594405594409
+    },
+    {
+      "size": "256MiB",
+      "dir": "h2d",
+      "mem": "pinned",
+      "bytes": 268435456,
+      "mode": "bulk",
+      "raw": [
+        {
+          "gpu": "NVIDIA GeForce RTX 5060 Ti",
+          "cuda_runtime": 13040,
+          "dir": "h2d",
+          "mem": "pinned",
+          "bytes": 268435456,
+          "mode": "bulk",
+          "iters": 14,
+          "elapsed_ms": 261.2512,
+          "gb_per_s": 14.385,
+          "t_active_start": 1794159467.805,
+          "t_timed_start": 1794159468.702,
+          "t_end": 1794159468.963
+        },
+        {
+          "gpu": "NVIDIA GeForce RTX 5060 Ti",
+          "cuda_runtime": 13040,
+          "dir": "h2d",
+          "mem": "pinned",
+          "bytes": 268435456,
+          "mode": "bulk",
+          "iters": 14,
+          "elapsed_ms": 261.2325,
+          "gb_per_s": 14.386,
+          "t_active_start": 1794159469.197,
+          "t_timed_start": 1794159470.094,
+          "t_end": 1794159470.355
+        },
+        {
+          "gpu": "NVIDIA GeForce RTX 5060 Ti",
+          "cuda_runtime": 13040,
+          "dir": "h2d",
+          "mem": "pinned",
+          "bytes": 268435456,
+          "mode": "bulk",
+          "iters": 14,
+          "elapsed_ms": 261.2293,
+          "gb_per_s": 14.3862,
+          "t_active_start": 1794159470.584,
+          "t_timed_start": 1794159471.48,
+          "t_end": 1794159471.742
+        },
+        {
+          "gpu": "NVIDIA GeForce RTX 5060 Ti",
+          "cuda_runtime": 13040,
+          "dir": "h2d",
+          "mem": "pinned",
+          "bytes": 268435456,
+          "mode": "bulk",
+          "iters": 14,
+          "elapsed_ms": 261.2537,
+          "gb_per_s": 14.3849,
+          "t_active_start": 1794159471.968,
+          "t_timed_start": 1794159472.864,
+          "t_end": 1794159473.125
+        },
+        {
+          "gpu": "NVIDIA GeForce RTX 5060 Ti",
+          "cuda_runtime": 13040,
+          "dir": "h2d",
+          "mem": "pinned",
+          "bytes": 268435456,
+          "mode": "bulk",
+          "iters": 14,
+          "elapsed_ms": 261.229,
+          "gb_per_s": 14.3862,
+          "t_active_start": 1794159473.357,
+          "t_timed_start": 1794159474.253,
+          "t_end": 1794159474.514
+        }
+      ],
+      "gb_per_s": {
+        "n": 5,
+        "mean": 14.385660000000001,
+        "min": 14.3849,
+        "max": 14.3862,
+        "bootstrap_ci": [
+          14.385159999999999,
+          14.38616
+        ],
+        "t_ci": [
+          14.384847812419697,
+          14.386472187580306
+        ],
+        "ci": [
+          14.384847812419697,
+          14.386472187580306
+        ],
+        "ci_method": "t"
+      },
+      "link_during_transfers": {
+        "gen4x8": 14
+      },
+      "gpu_clock_gr_mhz_during": [
+        2842.0
+      ],
+      "pstate_during": [
+        "P0",
+        "P1"
+      ],
+      "vs_reference_pct": 0.5990209790209841
+    },
+    {
+      "size": "256MiB",
+      "dir": "h2d",
+      "mem": "pageable",
+      "bytes": 268435456,
+      "mode": "bulk",
+      "raw": [
+        {
+          "gpu": "NVIDIA GeForce RTX 5060 Ti",
+          "cuda_runtime": 13040,
+          "dir": "h2d",
+          "mem": "pageable",
+          "bytes": 268435456,
+          "mode": "bulk",
+          "iters": 14,
+          "elapsed_ms": 264.2866,
+          "gb_per_s": 14.2198,
+          "t_active_start": 1794159476.093,
+          "t_timed_start": 1794159477.0,
+          "t_end": 1794159477.264
+        },
+        {
+          "gpu": "NVIDIA GeForce RTX 5060 Ti",
+          "cuda_runtime": 13040,
+          "dir": "h2d",
+          "mem": "pageable",
+          "bytes": 268435456,
+          "mode": "bulk",
+          "iters": 14,
+          "elapsed_ms": 264.451,
+          "gb_per_s": 14.2109,
+          "t_active_start": 1794159477.465,
+          "t_timed_start": 1794159478.372,
+          "t_end": 1794159478.637
+        },
+        {
+          "gpu": "NVIDIA GeForce RTX 5060 Ti",
+          "cuda_runtime": 13040,
+          "dir": "h2d",
+          "mem": "pageable",
+          "bytes": 268435456,
+          "mode": "bulk",
+          "iters": 14,
+          "elapsed_ms": 268.3227,
+          "gb_per_s": 14.0059,
+          "t_active_start": 1794159478.839,
+          "t_timed_start": 1794159479.745,
+          "t_end": 1794159480.014
+        },
+        {
+          "gpu": "NVIDIA GeForce RTX 5060 Ti",
+          "cuda_runtime": 13040,
+          "dir": "h2d",
+          "mem": "pageable",
+          "bytes": 268435456,
+          "mode": "bulk",
+          "iters": 14,
+          "elapsed_ms": 264.3048,
+          "gb_per_s": 14.2188,
+          "t_active_start": 1794159480.215,
+          "t_timed_start": 1794159481.122,
+          "t_end": 1794159481.386
+        },
+        {
+          "gpu": "NVIDIA GeForce RTX 5060 Ti",
+          "cuda_runtime": 13040,
+          "dir": "h2d",
+          "mem": "pageable",
+          "bytes": 268435456,
+          "mode": "bulk",
+          "iters": 14,
+          "elapsed_ms": 264.2969,
+          "gb_per_s": 14.2192,
+          "t_active_start": 1794159481.588,
+          "t_timed_start": 1794159482.495,
+          "t_end": 1794159482.759
+        }
+      ],
+      "gb_per_s": {
+        "n": 5,
+        "mean": 14.17492,
+        "min": 14.0059,
+        "max": 14.2198,
+        "bootstrap_ci": [
+          14.089676999999998,
+          14.21936
+        ],
+        "t_ci": [
+          14.057533092279291,
+          14.29230690772071
+        ],
+        "ci": [
+          14.057533092279291,
+          14.29230690772071
+        ],
+        "ci_method": "t"
+      },
+      "link_during_transfers": {
+        "gen4x8": 13
+      },
+      "gpu_clock_gr_mhz_during": [
+        2842.0
+      ],
+      "pstate_during": [
+        "P0",
+        "P1"
+      ],
+      "vs_reference_pct": -0.8746853146853183
+    },
+    {
+      "size": "256MiB",
+      "dir": "d2h",
+      "mem": "pinned",
+      "bytes": 268435456,
+      "mode": "bulk",
+      "raw": [
+        {
+          "gpu": "NVIDIA GeForce RTX 5060 Ti",
+          "cuda_runtime": 13040,
+          "dir": "d2h",
+          "mem": "pinned",
+          "bytes": 268435456,
+          "mode": "bulk",
+          "iters": 14,
+          "elapsed_ms": 259.0691,
+          "gb_per_s": 14.5062,
+          "t_active_start": 1794159484.362,
+          "t_timed_start": 1794159485.251,
+          "t_end": 1794159485.51
+        },
+        {
+          "gpu": "NVIDIA GeForce RTX 5060 Ti",
+          "cuda_runtime": 13040,
+          "dir": "d2h",
+          "mem": "pinned",
+          "bytes": 268435456,
+          "mode": "bulk",
+          "iters": 14,
+          "elapsed_ms": 259.0704,
+          "gb_per_s": 14.5061,
+          "t_active_start": 1794159485.74,
+          "t_timed_start": 1794159486.629,
+          "t_end": 1794159486.888
+        },
+        {
+          "gpu": "NVIDIA GeForce RTX 5060 Ti",
+          "cuda_runtime": 13040,
+          "dir": "d2h",
+          "mem": "pinned",
+          "bytes": 268435456,
+          "mode": "bulk",
+          "iters": 14,
+          "elapsed_ms": 259.067,
+          "gb_per_s": 14.5063,
+          "t_active_start": 1794159487.119,
+          "t_timed_start": 1794159488.008,
+          "t_end": 1794159488.267
+        },
+        {
+          "gpu": "NVIDIA GeForce RTX 5060 Ti",
+          "cuda_runtime": 13040,
+          "dir": "d2h",
+          "mem": "pinned",
+          "bytes": 268435456,
+          "mode": "bulk",
+          "iters": 14,
+          "elapsed_ms": 259.0683,
+          "gb_per_s": 14.5062,
+          "t_active_start": 1794159488.497,
+          "t_timed_start": 1794159489.386,
+          "t_end": 1794159489.645
+        },
+        {
+          "gpu": "NVIDIA GeForce RTX 5060 Ti",
+          "cuda_runtime": 13040,
+          "dir": "d2h",
+          "mem": "pinned",
+          "bytes": 268435456,
+          "mode": "bulk",
+          "iters": 14,
+          "elapsed_ms": 259.0665,
+          "gb_per_s": 14.5063,
+          "t_active_start": 1794159489.879,
+          "t_timed_start": 1794159490.767,
+          "t_end": 1794159491.027
+        }
+      ],
+      "gb_per_s": {
+        "n": 5,
+        "mean": 14.506219999999999,
+        "min": 14.5061,
+        "max": 14.5063,
+        "bootstrap_ci": [
+          14.50616,
+          14.506279999999999
+        ],
+        "t_ci": [
+          14.506116131590943,
+          14.506323868409055
+        ],
+        "ci": [
+          14.506116131590943,
+          14.506323868409055
+        ],
+        "ci_method": "t"
+      },
+      "link_during_transfers": {
+        "gen4x8": 14
+      },
+      "gpu_clock_gr_mhz_during": [
+        2842.0
+      ],
+      "pstate_during": [
+        "P0",
+        "P1"
+      ],
+      "vs_reference_pct": 1.4420979020978901
+    },
+    {
+      "size": "256MiB",
+      "dir": "d2h",
+      "mem": "pageable",
+      "bytes": 268435456,
+      "mode": "bulk",
+      "raw": [
+        {
+          "gpu": "NVIDIA GeForce RTX 5060 Ti",
+          "cuda_runtime": 13040,
+          "dir": "d2h",
+          "mem": "pageable",
+          "bytes": 268435456,
+          "mode": "bulk",
+          "iters": 14,
+          "elapsed_ms": 259.8788,
+          "gb_per_s": 14.461,
+          "t_active_start": 1794159492.588,
+          "t_timed_start": 1794159493.479,
+          "t_end": 1794159493.739
+        },
+        {
+          "gpu": "NVIDIA GeForce RTX 5060 Ti",
+          "cuda_runtime": 13040,
+          "dir": "d2h",
+          "mem": "pageable",
+          "bytes": 268435456,
+          "mode": "bulk",
+          "iters": 14,
+          "elapsed_ms": 259.8711,
+          "gb_per_s": 14.4614,
+          "t_active_start": 1794159493.94,
+          "t_timed_start": 1794159494.831,
+          "t_end": 1794159495.091
+        },
+        {
+          "gpu": "NVIDIA GeForce RTX 5060 Ti",
+          "cuda_runtime": 13040,
+          "dir": "d2h",
+          "mem": "pageable",
+          "bytes": 268435456,
+          "mode": "bulk",
+          "iters": 14,
+          "elapsed_ms": 259.8875,
+          "gb_per_s": 14.4605,
+          "t_active_start": 1794159495.291,
+          "t_timed_start": 1794159496.183,
+          "t_end": 1794159496.442
+        },
+        {
+          "gpu": "NVIDIA GeForce RTX 5060 Ti",
+          "cuda_runtime": 13040,
+          "dir": "d2h",
+          "mem": "pageable",
+          "bytes": 268435456,
+          "mode": "bulk",
+          "iters": 14,
+          "elapsed_ms": 260.2784,
+          "gb_per_s": 14.4388,
+          "t_active_start": 1794159496.645,
+          "t_timed_start": 1794159497.537,
+          "t_end": 1794159497.797
+        },
+        {
+          "gpu": "NVIDIA GeForce RTX 5060 Ti",
+          "cuda_runtime": 13040,
+          "dir": "d2h",
+          "mem": "pageable",
+          "bytes": 268435456,
+          "mode": "bulk",
+          "iters": 14,
+          "elapsed_ms": 259.9324,
+          "gb_per_s": 14.458,
+          "t_active_start": 1794159497.996,
+          "t_timed_start": 1794159498.888,
+          "t_end": 1794159499.148
+        }
+      ],
+      "gb_per_s": {
+        "n": 5,
+        "mean": 14.455940000000002,
+        "min": 14.4388,
+        "max": 14.4614,
+        "bootstrap_ci": [
+          14.44716,
+          14.46106
+        ],
+        "t_ci": [
+          14.44393188262709,
+          14.467948117372913
+        ],
+        "ci": [
+          14.44393188262709,
+          14.467948117372913
+        ],
+        "ci_method": "t"
+      },
+      "link_during_transfers": {
+        "gen4x8": 13
+      },
+      "gpu_clock_gr_mhz_during": [
+        2842.0
+      ],
+      "pstate_during": [
+        "P0",
+        "P1"
+      ],
+      "vs_reference_pct": 1.0904895104895178
+    },
+    {
+      "size": "expert_series200",
+      "dir": "h2d",
+      "mem": "pinned",
+      "bytes": 1904640,
+      "mode": "series200",
+      "raw": [
+        {
+          "gpu": "NVIDIA GeForce RTX 5060 Ti",
+          "cuda_runtime": 13040,
+          "dir": "h2d",
+          "mem": "pinned",
+          "bytes": 1904640,
+          "mode": "series",
+          "copies": 200,
+          "elapsed_ms": 26.7422,
+          "gb_per_s": 14.2444,
+          "latency_us": {
+            "mean": 133.711,
+            "min": 133.6,
+            "p50": 133.664,
+            "p95": 133.952,
+            "max": 136.48
+          },
+          "t_active_start": 1794159500.364,
+          "t_timed_start": 1794159501.065,
+          "t_end": 1794159501.092
+        },
+        {
+          "gpu": "NVIDIA GeForce RTX 5060 Ti",
+          "cuda_runtime": 13040,
+          "dir": "h2d",
+          "mem": "pinned",
+          "bytes": 1904640,
+          "mode": "series",
+          "copies": 200,
+          "elapsed_ms": 26.741,
+          "gb_per_s": 14.2451,
+          "latency_us": {
+            "mean": 133.705,
+            "min": 133.504,
+            "p50": 133.664,
+            "p95": 133.952,
+            "max": 136.192
+          },
+          "t_active_start": 1794159501.343,
+          "t_timed_start": 1794159502.045,
+          "t_end": 1794159502.071
+        },
+        {
+          "gpu": "NVIDIA GeForce RTX 5060 Ti",
+          "cuda_runtime": 13040,
+          "dir": "h2d",
+          "mem": "pinned",
+          "bytes": 1904640,
+          "mode": "series",
+          "copies": 200,
+          "elapsed_ms": 26.732,
+          "gb_per_s": 14.2499,
+          "latency_us": {
+            "mean": 133.66,
+            "min": 133.344,
+            "p50": 133.664,
+            "p95": 133.888,
+            "max": 136.0
+          },
+          "t_active_start": 1794159502.324,
+          "t_timed_start": 1794159503.025,
+          "t_end": 1794159503.052
+        },
+        {
+          "gpu": "NVIDIA GeForce RTX 5060 Ti",
+          "cuda_runtime": 13040,
+          "dir": "h2d",
+          "mem": "pinned",
+          "bytes": 1904640,
+          "mode": "series",
+          "copies": 200,
+          "elapsed_ms": 26.7414,
+          "gb_per_s": 14.2449,
+          "latency_us": {
+            "mean": 133.707,
+            "min": 133.6,
+            "p50": 133.664,
+            "p95": 133.952,
+            "max": 135.872
+          },
+          "t_active_start": 1794159503.305,
+          "t_timed_start": 1794159504.006,
+          "t_end": 1794159504.033
+        },
+        {
+          "gpu": "NVIDIA GeForce RTX 5060 Ti",
+          "cuda_runtime": 13040,
+          "dir": "h2d",
+          "mem": "pinned",
+          "bytes": 1904640,
+          "mode": "series",
+          "copies": 200,
+          "elapsed_ms": 26.7354,
+          "gb_per_s": 14.2481,
+          "latency_us": {
+            "mean": 133.677,
+            "min": 133.408,
+            "p50": 133.664,
+            "p95": 133.92,
+            "max": 135.68
+          },
+          "t_active_start": 1794159504.286,
+          "t_timed_start": 1794159504.987,
+          "t_end": 1794159505.014
+        }
+      ],
+      "gb_per_s": {
+        "n": 5,
+        "mean": 14.246480000000002,
+        "min": 14.2444,
+        "max": 14.2499,
+        "bootstrap_ci": [
+          14.244740000000002,
+          14.24854
+        ],
+        "t_ci": [
+          14.243499966909178,
+          14.249460033090825
+        ],
+        "ci": [
+          14.243499966909178,
+          14.249460033090825
+        ],
+        "ci_method": "t"
+      },
+      "link_during_transfers": {
+        "gen4x8": 10
+      },
+      "gpu_clock_gr_mhz_during": [
+        2842.0
+      ],
+      "pstate_during": [
+        "P0",
+        "P1"
+      ],
+      "latency_mean_us": {
+        "n": 5,
+        "mean": 133.692,
+        "min": 133.66,
+        "max": 133.711,
+        "bootstrap_ci": [
+          133.6728,
+          133.7082
+        ],
+        "t_ci": [
+          133.66421225386614,
+          133.71978774613387
+        ],
+        "ci": [
+          133.66421225386614,
+          133.71978774613387
+        ],
+        "ci_method": "t"
+      },
+      "latency_p50_us": {
+        "n": 5,
+        "mean": 133.664,
+        "min": 133.664,
+        "max": 133.664,
+        "bootstrap_ci": [
+          133.664,
+          133.664
+        ],
+        "t_ci": [
+          133.664,
+          133.664
+        ],
+        "ci": [
+          133.664,
+          133.664
+        ],
+        "ci_method": "t"
+      },
+      "latency_p95_us": {
+        "n": 5,
+        "mean": 133.9328,
+        "min": 133.888,
+        "max": 133.952,
+        "bootstrap_ci": [
+          133.90720000000002,
+          133.952
+        ],
+        "t_ci": [
+          133.8972672,
+          133.96833279999998
+        ],
+        "ci": [
+          133.8972672,
+          133.96833279999998
+        ],
+        "ci_method": "t"
+      },
+      "copies_per_s": {
+        "n": 5,
+        "mean": 7479.87929289846,
+        "min": 7478.816252963481,
+        "max": 7481.6699087236275,
+        "bootstrap_ci": [
+          7478.972870191845,
+          7480.953632959495
+        ],
+        "t_ci": [
+          7478.324469976763,
+          7481.434115820158
+        ],
+        "ci": [
+          7478.324469976763,
+          7481.434115820158
+        ],
+        "ci_method": "t"
+      },
+      "vs_reference_pct": -0.37426573426572657
+    },
+    {
+      "size": "expert_series200",
+      "dir": "h2d",
+      "mem": "pageable",
+      "bytes": 1904640,
+      "mode": "series200",
+      "raw": [
+        {
+          "gpu": "NVIDIA GeForce RTX 5060 Ti",
+          "cuda_runtime": 13040,
+          "dir": "h2d",
+          "mem": "pageable",
+          "bytes": 1904640,
+          "mode": "series",
+          "copies": 200,
+          "elapsed_ms": 26.9505,
+          "gb_per_s": 14.1344,
+          "latency_us": {
+            "mean": 134.752,
+            "min": 134.464,
+            "p50": 134.56,
+            "p95": 134.656,
+            "max": 174.848
+          },
+          "t_active_start": 1794159506.218,
+          "t_timed_start": 1794159506.918,
+          "t_end": 1794159506.945
+        },
+        {
+          "gpu": "NVIDIA GeForce RTX 5060 Ti",
+          "cuda_runtime": 13040,
+          "dir": "h2d",
+          "mem": "pageable",
+          "bytes": 1904640,
+          "mode": "series",
+          "copies": 200,
+          "elapsed_ms": 26.9529,
+          "gb_per_s": 14.1331,
+          "latency_us": {
+            "mean": 134.765,
+            "min": 134.464,
+            "p50": 134.528,
+            "p95": 134.592,
+            "max": 178.4
+          },
+          "t_active_start": 1794159507.152,
+          "t_timed_start": 1794159507.853,
+          "t_end": 1794159507.879
+        },
+        {
+          "gpu": "NVIDIA GeForce RTX 5060 Ti",
+          "cuda_runtime": 13040,
+          "dir": "h2d",
+          "mem": "pageable",
+          "bytes": 1904640,
+          "mode": "series",
+          "copies": 200,
+          "elapsed_ms": 26.9591,
+          "gb_per_s": 14.1298,
+          "latency_us": {
+            "mean": 134.796,
+            "min": 134.368,
+            "p50": 134.528,
+            "p95": 134.656,
+            "max": 178.912
+          },
+          "t_active_start": 1794159508.087,
+          "t_timed_start": 1794159508.788,
+          "t_end": 1794159508.815
+        },
+        {
+          "gpu": "NVIDIA GeForce RTX 5060 Ti",
+          "cuda_runtime": 13040,
+          "dir": "h2d",
+          "mem": "pageable",
+          "bytes": 1904640,
+          "mode": "series",
+          "copies": 200,
+          "elapsed_ms": 26.9503,
+          "gb_per_s": 14.1345,
+          "latency_us": {
+            "mean": 134.751,
+            "min": 134.464,
+            "p50": 134.528,
+            "p95": 134.624,
+            "max": 175.296
+          },
+          "t_active_start": 1794159509.023,
+          "t_timed_start": 1794159509.723,
+          "t_end": 1794159509.75
+        },
+        {
+          "gpu": "NVIDIA GeForce RTX 5060 Ti",
+          "cuda_runtime": 13040,
+          "dir": "h2d",
+          "mem": "pageable",
+          "bytes": 1904640,
+          "mode": "series",
+          "copies": 200,
+          "elapsed_ms": 26.9479,
+          "gb_per_s": 14.1357,
+          "latency_us": {
+            "mean": 134.74,
+            "min": 134.464,
+            "p50": 134.528,
+            "p95": 134.624,
+            "max": 173.472
+          },
+          "t_active_start": 1794159509.957,
+          "t_timed_start": 1794159510.657,
+          "t_end": 1794159510.684
+        }
+      ],
+      "gb_per_s": {
+        "n": 5,
+        "mean": 14.133500000000002,
+        "min": 14.1298,
+        "max": 14.1357,
+        "bootstrap_ci": [
+          14.131400000000003,
+          14.134960000000001
+        ],
+        "t_ci": [
+          14.130689514205695,
+          14.136310485794308
+        ],
+        "ci": [
+          14.130689514205695,
+          14.136310485794308
+        ],
+        "ci_method": "t"
+      },
+      "link_during_transfers": {
+        "gen4x8": 9
+      },
+      "gpu_clock_gr_mhz_during": [
+        2835.0,
+        2842.0
+      ],
+      "pstate_during": [
+        "P1"
+      ],
+      "latency_mean_us": {
+        "n": 5,
+        "mean": 134.7608,
+        "min": 134.74,
+        "max": 134.796,
+        "bootstrap_ci": [
+          134.74679999999998,
+          134.78079999999997
+        ],
+        "t_ci": [
+          134.7340090830198,
+          134.78759091698018
+        ],
+        "ci": [
+          134.7340090830198,
+          134.78759091698018
+        ],
+        "ci_method": "t"
+      },
+      "latency_p50_us": {
+        "n": 5,
+        "mean": 134.5344,
+        "min": 134.528,
+        "max": 134.56,
+        "bootstrap_ci": [
+          134.528,
+          134.5472
+        ],
+        "t_ci": [
+          134.5166336,
+          134.5521664
+        ],
+        "ci": [
+          134.5166336,
+          134.5521664
+        ],
+        "ci_method": "t"
+      },
+      "latency_p95_us": {
+        "n": 5,
+        "mean": 134.6304,
+        "min": 134.592,
+        "max": 134.656,
+        "bootstrap_ci": [
+          134.6112,
+          134.64960000000002
+        ],
+        "t_ci": [
+          134.59716210910182,
+          134.6636378908982
+        ],
+        "ci": [
+          134.59716210910182,
+          134.6636378908982
+        ],
+        "ci_method": "t"
+      },
+      "copies_per_s": {
+        "n": 5,
+        "mean": 7420.561188209086,
+        "min": 7418.645281185203,
+        "max": 7421.728594807017,
+        "bootstrap_ci": [
+          7419.471062287988,
+          7421.321050461074
+        ],
+        "t_ci": [
+          7419.100464153946,
+          7422.021912264227
+        ],
+        "ci": [
+          7419.100464153946,
+          7422.021912264227
+        ],
+        "ci_method": "t"
+      },
+      "vs_reference_pct": -1.1643356643356588
+    },
+    {
+      "size": "expert_series200",
+      "dir": "d2h",
+      "mem": "pinned",
+      "bytes": 1904640,
+      "mode": "series200",
+      "raw": [
+        {
+          "gpu": "NVIDIA GeForce RTX 5060 Ti",
+          "cuda_runtime": 13040,
+          "dir": "d2h",
+          "mem": "pinned",
+          "bytes": 1904640,
+          "mode": "series",
+          "copies": 200,
+          "elapsed_ms": 26.3376,
+          "gb_per_s": 14.4633,
+          "latency_us": {
+            "mean": 131.688,
+            "min": 131.584,
+            "p50": 131.648,
+            "p95": 131.936,
+            "max": 132.96
+          },
+          "t_active_start": 1794159511.895,
+          "t_timed_start": 1794159512.596,
+          "t_end": 1794159512.622
+        },
+        {
+          "gpu": "NVIDIA GeForce RTX 5060 Ti",
+          "cuda_runtime": 13040,
+          "dir": "d2h",
+          "mem": "pinned",
+          "bytes": 1904640,
+          "mode": "series",
+          "copies": 200,
+          "elapsed_ms": 26.3338,
+          "gb_per_s": 14.4654,
+          "latency_us": {
+            "mean": 131.669,
+            "min": 131.584,
+            "p50": 131.648,
+            "p95": 131.808,
+            "max": 132.864
+          },
+          "t_active_start": 1794159512.871,
+          "t_timed_start": 1794159513.571,
+          "t_end": 1794159513.598
+        },
+        {
+          "gpu": "NVIDIA GeForce RTX 5060 Ti",
+          "cuda_runtime": 13040,
+          "dir": "d2h",
+          "mem": "pinned",
+          "bytes": 1904640,
+          "mode": "series",
+          "copies": 200,
+          "elapsed_ms": 26.3369,
+          "gb_per_s": 14.4637,
+          "latency_us": {
+            "mean": 131.684,
+            "min": 131.584,
+            "p50": 131.648,
+            "p95": 131.904,
+            "max": 133.152
+          },
+          "t_active_start": 1794159513.852,
+          "t_timed_start": 1794159514.552,
+          "t_end": 1794159514.579
+        },
+        {
+          "gpu": "NVIDIA GeForce RTX 5060 Ti",
+          "cuda_runtime": 13040,
+          "dir": "d2h",
+          "mem": "pinned",
+          "bytes": 1904640,
+          "mode": "series",
+          "copies": 200,
+          "elapsed_ms": 26.3366,
+          "gb_per_s": 14.4638,
+          "latency_us": {
+            "mean": 131.683,
+            "min": 131.584,
+            "p50": 131.648,
+            "p95": 131.84,
+            "max": 133.344
+          },
+          "t_active_start": 1794159514.829,
+          "t_timed_start": 1794159515.53,
+          "t_end": 1794159515.556
+        },
+        {
+          "gpu": "NVIDIA GeForce RTX 5060 Ti",
+          "cuda_runtime": 13040,
+          "dir": "d2h",
+          "mem": "pinned",
+          "bytes": 1904640,
+          "mode": "series",
+          "copies": 200,
+          "elapsed_ms": 26.3355,
+          "gb_per_s": 14.4644,
+          "latency_us": {
+            "mean": 131.678,
+            "min": 131.584,
+            "p50": 131.648,
+            "p95": 131.904,
+            "max": 133.12
+          },
+          "t_active_start": 1794159515.81,
+          "t_timed_start": 1794159516.511,
+          "t_end": 1794159516.537
+        }
+      ],
+      "gb_per_s": {
+        "n": 5,
+        "mean": 14.46412,
+        "min": 14.4633,
+        "max": 14.4654,
+        "bootstrap_ci": [
+          14.463560000000001,
+          14.464859999999998
+        ],
+        "t_ci": [
+          14.463106094738942,
+          14.465133905261057
+        ],
+        "ci": [
+          14.463106094738942,
+          14.465133905261057
+        ],
+        "ci_method": "t"
+      },
+      "link_during_transfers": {
+        "gen4x8": 10
+      },
+      "gpu_clock_gr_mhz_during": [
+        2835.0
+      ],
+      "pstate_during": [
+        "P0",
+        "P1"
+      ],
+      "latency_mean_us": {
+        "n": 5,
+        "mean": 131.6804,
+        "min": 131.669,
+        "max": 131.688,
+        "bootstrap_ci": [
+          131.6738,
+          131.6854
+        ],
+        "t_ci": [
+          131.67133645565136,
+          131.68946354434863
+        ],
+        "ci": [
+          131.67133645565136,
+          131.68946354434863
+        ],
+        "ci_method": "t"
+      },
+      "latency_p50_us": {
+        "n": 5,
+        "mean": 131.648,
+        "min": 131.648,
+        "max": 131.648,
+        "bootstrap_ci": [
+          131.648,
+          131.648
+        ],
+        "t_ci": [
+          131.648,
+          131.648
+        ],
+        "ci": [
+          131.648,
+          131.648
+        ],
+        "ci_method": "t"
+      },
+      "latency_p95_us": {
+        "n": 5,
+        "mean": 131.8784,
+        "min": 131.808,
+        "max": 131.936,
+        "bootstrap_ci": [
+          131.8336,
+          131.91680000000002
+        ],
+        "t_ci": [
+          131.8131220781507,
+          131.9436779218493
+        ],
+        "ci": [
+          131.8131220781507,
+          131.9436779218493
+        ],
+        "ci_method": "t"
+      },
+      "copies_per_s": {
+        "n": 5,
+        "mean": 7594.1446299840445,
+        "min": 7593.706336188568,
+        "max": 7594.80211743083,
+        "bootstrap_ci": [
+          7593.844735025991,
+          7594.525275915515
+        ],
+        "t_ci": [
+          7593.613999813854,
+          7594.675260154235
+        ],
+        "ci": [
+          7593.613999813854,
+          7594.675260154235
+        ],
+        "ci_method": "t"
+      },
+      "vs_reference_pct": 1.1476923076922987
+    },
+    {
+      "size": "expert_series200",
+      "dir": "d2h",
+      "mem": "pageable",
+      "bytes": 1904640,
+      "mode": "series200",
+      "raw": [
+        {
+          "gpu": "NVIDIA GeForce RTX 5060 Ti",
+          "cuda_runtime": 13040,
+          "dir": "d2h",
+          "mem": "pageable",
+          "bytes": 1904640,
+          "mode": "series",
+          "copies": 200,
+          "elapsed_ms": 33.6269,
+          "gb_per_s": 11.3281,
+          "latency_us": {
+            "mean": 168.135,
+            "min": 163.328,
+            "p50": 167.04,
+            "p95": 177.248,
+            "max": 182.528
+          },
+          "t_active_start": 1794159517.701,
+          "t_timed_start": 1794159518.402,
+          "t_end": 1794159518.436
+        },
+        {
+          "gpu": "NVIDIA GeForce RTX 5060 Ti",
+          "cuda_runtime": 13040,
+          "dir": "d2h",
+          "mem": "pageable",
+          "bytes": 1904640,
+          "mode": "series",
+          "copies": 200,
+          "elapsed_ms": 33.6616,
+          "gb_per_s": 11.3164,
+          "latency_us": {
+            "mean": 168.308,
+            "min": 165.44,
+            "p50": 167.456,
+            "p95": 175.36,
+            "max": 181.184
+          },
+          "t_active_start": 1794159518.693,
+          "t_timed_start": 1794159519.395,
+          "t_end": 1794159519.429
+        },
+        {
+          "gpu": "NVIDIA GeForce RTX 5060 Ti",
+          "cuda_runtime": 13040,
+          "dir": "d2h",
+          "mem": "pageable",
+          "bytes": 1904640,
+          "mode": "series",
+          "copies": 200,
+          "elapsed_ms": 33.4973,
+          "gb_per_s": 11.3719,
+          "latency_us": {
+            "mean": 167.487,
+            "min": 164.736,
+            "p50": 167.04,
+            "p95": 171.648,
+            "max": 176.544
+          },
+          "t_active_start": 1794159519.686,
+          "t_timed_start": 1794159520.387,
+          "t_end": 1794159520.421
+        },
+        {
+          "gpu": "NVIDIA GeForce RTX 5060 Ti",
+          "cuda_runtime": 13040,
+          "dir": "d2h",
+          "mem": "pageable",
+          "bytes": 1904640,
+          "mode": "series",
+          "copies": 200,
+          "elapsed_ms": 33.4101,
+          "gb_per_s": 11.4016,
+          "latency_us": {
+            "mean": 167.051,
+            "min": 164.96,
+            "p50": 166.976,
+            "p95": 168.48,
+            "max": 172.448
+          },
+          "t_active_start": 1794159520.634,
+          "t_timed_start": 1794159521.336,
+          "t_end": 1794159521.369
+        },
+        {
+          "gpu": "NVIDIA GeForce RTX 5060 Ti",
+          "cuda_runtime": 13040,
+          "dir": "d2h",
+          "mem": "pageable",
+          "bytes": 1904640,
+          "mode": "series",
+          "copies": 200,
+          "elapsed_ms": 33.3768,
+          "gb_per_s": 11.413,
+          "latency_us": {
+            "mean": 166.884,
+            "min": 165.152,
+            "p50": 166.816,
+            "p95": 168.352,
+            "max": 171.36
+          },
+          "t_active_start": 1794159521.577,
+          "t_timed_start": 1794159522.277,
+          "t_end": 1794159522.311
+        }
+      ],
+      "gb_per_s": {
+        "n": 5,
+        "mean": 11.366200000000001,
+        "min": 11.3164,
+        "max": 11.413,
+        "bootstrap_ci": [
+          11.33218,
+          11.40022
+        ],
+        "t_ci": [
+          11.31277537694703,
+          11.419624623052972
+        ],
+        "ci": [
+          11.31277537694703,
+          11.419624623052972
+        ],
+        "ci_method": "t"
+      },
+      "link_during_transfers": {
+        "gen4x8": 9
+      },
+      "gpu_clock_gr_mhz_during": [
+        2835.0
+      ],
+      "pstate_during": [
+        "P1"
+      ],
+      "latency_mean_us": {
+        "n": 5,
+        "mean": 167.573,
+        "min": 166.884,
+        "max": 168.308,
+        "bootstrap_ci": [
+          167.07139999999998,
+          168.07459999999998
+        ],
+        "t_ci": [
+          166.7852149246806,
+          168.36078507531943
+        ],
+        "ci": [
+          166.7852149246806,
+          168.36078507531943
+        ],
+        "ci_method": "t"
+      },
+      "latency_p50_us": {
+        "n": 5,
+        "mean": 167.0656,
+        "min": 166.816,
+        "max": 167.456,
+        "bootstrap_ci": [
+          166.9056,
+          167.2768
+        ],
+        "t_ci": [
+          166.77178220099768,
+          167.3594177990023
+        ],
+        "ci": [
+          166.77178220099768,
+          167.3594177990023
+        ],
+        "ci_method": "t"
+      },
+      "latency_p95_us": {
+        "n": 5,
+        "mean": 172.2176,
+        "min": 168.352,
+        "max": 177.248,
+        "bootstrap_ci": [
+          169.0624,
+          175.3728
+        ],
+        "t_ci": [
+          167.23560555332344,
+          177.19959444667657
+        ],
+        "ci": [
+          167.23560555332344,
+          177.19959444667657
+        ],
+        "ci_method": "t"
+      },
+      "copies_per_s": {
+        "n": 5,
+        "mean": 5967.627589663267,
+        "min": 5941.48822397034,
+        "max": 5992.18618920927,
+        "bootstrap_ci": [
+          5949.769110004212,
+          5985.486069322322
+        ],
+        "t_ci": [
+          5939.58322317455,
+          5995.671956151984
+        ],
+        "ci": [
+          5939.58322317455,
+          5995.671956151984
+        ],
+        "ci_method": "t"
+      },
+      "vs_reference_pct": -20.516083916083915
+    }
+  ],
+  "link": {
+    "during_all_transfers": {
+      "gen4x8": 182
+    },
+    "idle_before_transfers": {
+      "gen1x8": 2
+    },
+    "note": "pcie.link.gen/width.current from nvidia-smi at 2 Hz. The link downshifts at idle (Gen1 in P8), so only the 'during' histogram says what transfers ran at."
+  },
+  "telemetry": {
+    "csv": "data/microbench/telemetry-pcie.csv",
+    "rows": 231,
+    "detectors": {
+      "thermal": {
+        "flag": null,
+        "n_samples": 231,
+        "gpu_slowdown_samples": 0,
+        "gpu_slowdown_by_reason": {
+          "reason_hw_slowdown": 0,
+          "reason_hw_thermal_slowdown": 0,
+          "reason_sw_thermal_slowdown": 0,
+          "reason_hw_power_brake_slowdown": 0
+        },
+        "tctl_ge_95_samples": 0,
+        "sw_power_cap_samples": 0,
+        "max_tctl_c": 62.375,
+        "max_gpu_temp_c": 34.0
+      },
+      "paging": {
+        "flag": "paging",
+        "major_faults": 0,
+        "swap_in_pages": 390,
+        "process_samples": 0
+      }
+    },
+    "sampler_overhead": {
+      "wall_s": 115.40701392599931,
+      "python_cpu_s": 0.14563662899999996,
+      "nvidia_smi_cpu_s": 0.05,
+      "python_core_fraction": 0.0012619391494990446,
+      "nvidia_smi_core_fraction": 0.0004332492306928654,
+      "total_core_fraction": 0.0016951883801919099,
+      "n_rows": 231
+    }
+  },
+  "preconditions": {
+    "ok": true,
+    "aborts": [],
+    "warnings": [],
+    "values": {
+      "gpu_lock_held": true,
+      "lock_expected_held_by_wrapper": true,
+      "gpu_compute_processes": 0,
+      "gpu_graphics_processes": 0,
+      "connected_on_nvidia": [],
+      "mem_available_gib": 26.01,
+      "loadavg_1m": 0.12
+    }
+  },
+  "finished_utc": "2026-11-08T17:38:44Z"
+}

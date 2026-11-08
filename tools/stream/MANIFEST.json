@@ -1,0 +1,11 @@
+{
+  "file": "stream.c",
+  "source": "https://github.com/jeffhammond/STREAM",
+  "commit": "6703f7504a38a8da96b353cadafa64d3c2d7a2d3",
+  "raw_url": "https://raw.githubusercontent.com/jeffhammond/STREAM/6703f7504a38a8da96b353cadafa64d3c2d7a2d3/stream.c",
+  "sha256": "c388924eb140fda95f534cdb808ae7f1f8ebb18da41d8aec1b512a3c8d303c9b",
+  "version_in_header": "stream.c 5.10 (2013/01/17), John D. McCalpin",
+  "downloaded_utc": "2026-11-08",
+  "license": "McCalpin's STREAM licence, in the file header (not an OSI licence): free to use and redistribute; free to modify for own use; free to publish results, but (3a) only runs that follow the STREAM Run Rules may be called 'STREAM benchmark results', and (3b) results from modified source or runs not following the Run Rules must be clearly labelled, e.g. 'based on a variant of the STREAM benchmark code'. Use constitutes acceptance. No warranty.",
+  "how_we_use_it": "Source unmodified (hash verified on every build). Array size and NTIMES are set with -D on the compile line, which the header allows. Results are published as 'STREAM-based measurement (unmodified stream.c 5.10, array size and thread binding as recorded), not submitted to the STREAM site', not as official STREAM benchmark results."
+}

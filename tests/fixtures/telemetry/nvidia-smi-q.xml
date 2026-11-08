@@ -1,0 +1,28 @@
+<?xml version="1.0" ?>
+<nvidia_smi_log>
+	<driver_version>000.00</driver_version>
+	<cuda_version>13.4</cuda_version>
+	<gpu id="00000000:01:00.0">
+		<processes>
+			<process_info>
+				<gpu_instance>N/A</gpu_instance>
+				<pid>1111</pid>
+				<type>C</type>
+				<process_name>/usr/bin/python3</process_name>
+				<used_memory>2048 MiB</used_memory>
+			</process_info>
+			<process_info>
+				<pid>2222</pid>
+				<type>C+G</type>
+				<process_name>/usr/bin/desktop-app</process_name>
+				<used_memory>36 MiB</used_memory>
+			</process_info>
+			<process_info>
+				<pid>3333</pid>
+				<type>G</type>
+				<process_name>/usr/bin/compositor</process_name>
+				<used_memory>55 MiB</used_memory>
+			</process_info>
+		</processes>
+	</gpu>
+</nvidia_smi_log>

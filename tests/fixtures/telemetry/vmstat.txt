@@ -1,0 +1,4 @@
+nr_free_pages 4200000
+pgmajfault 90777
+pswpin 75641
+pswpout 462512

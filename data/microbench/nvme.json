@@ -1,0 +1,149 @@
+{
+  "microbench": "nvme",
+  "started_utc": "2026-11-08T17:42:47Z",
+  "environment": {
+    "snapshot_id": "6b3015e09e8e9b87",
+    "file": "data/microbench/env-snapshot.json"
+  },
+  "file": "Ornith-1.5-35B-Q4_K_M.gguf",
+  "command": "dd if=<model> of=/dev/null iflag=direct bs=16M count=512",
+  "bytes_per_repetition": 8589934592,
+  "rate_unit": "MB/s (1e6 bytes/s) = bytes / elapsed reported by dd",
+  "repetitions": 5,
+  "filesystem_at_model": "btrfs rw,noatime,compress=zstd:1,ssd,discard=async,space_cache=v2,subvolid=5,subvol=/",
+  "kind": "sequential read upper bound (one stream, 16 MiB blocks, queue depth 1 at the block layer); not a random-read or mixed-load number",
+  "warm_up": {
+    "bytes": 8589934592,
+    "seconds": 4.64469,
+    "mb_s": 1849.409668244813,
+    "cached_before_kib": 24593424,
+    "cached_after_kib": 24601888,
+    "cached_growth_bytes": 8667136
+  },
+  "raw": [
+    {
+      "bytes": 8589934592,
+      "seconds": 4.55633,
+      "mb_s": 1885.2749015106456,
+      "cached_before_kib": 24601888,
+      "cached_after_kib": 24601984,
+      "cached_growth_bytes": 98304
+    },
+    {
+      "bytes": 8589934592,
+      "seconds": 4.58173,
+      "mb_s": 1874.8233946566033,
+      "cached_before_kib": 24601984,
+      "cached_after_kib": 24602932,
+      "cached_growth_bytes": 970752
+    },
+    {
+      "bytes": 8589934592,
+      "seconds": 4.55945,
+      "mb_s": 1883.9848209762142,
+      "cached_before_kib": 24602932,
+      "cached_after_kib": 24606232,
+      "cached_growth_bytes": 3379200
+    },
+    {
+      "bytes": 8589934592,
+      "seconds": 4.57922,
+      "mb_s": 1875.85103838645,
+      "cached_before_kib": 24606232,
+      "cached_after_kib": 24606236,
+      "cached_growth_bytes": 4096
+    },
+    {
+      "bytes": 8589934592,
+      "seconds": 4.5568,
+      "mb_s": 1885.0804494382023,
+      "cached_before_kib": 24606236,
+      "cached_after_kib": 24606284,
+      "cached_growth_bytes": 49152
+    }
+  ],
+  "mb_s": {
+    "n": 5,
+    "mean": 1881.002920993623,
+    "min": 1874.8233946566033,
+    "max": 1885.2749015106456,
+    "bootstrap_ci": [
+      1877.0667374124641,
+      1884.939104574782
+    ],
+    "t_ci": [
+      1874.5372772015473,
+      1887.4685647856988
+    ],
+    "ci": [
+      1874.5372772015473,
+      1887.4685647856988
+    ],
+    "ci_method": "t"
+  },
+  "page_cache_check": {
+    "method": "'Cached' in /proc/meminfo before and after each dd; growth of about the amount read means the data went through the page cache",
+    "warm_up_growth_bytes": 8667136,
+    "growth_bytes_per_rep": [
+      98304,
+      970752,
+      3379200,
+      4096,
+      49152
+    ],
+    "buffered_reps": 0,
+    "verdict": "DIRECT: the page cache did not grow, so the reads bypassed it"
+  },
+  "telemetry": {
+    "csv": "data/microbench/telemetry-nvme.csv",
+    "rows": 55,
+    "detectors": {
+      "thermal": {
+        "flag": null,
+        "n_samples": 55,
+        "gpu_slowdown_samples": 0,
+        "gpu_slowdown_by_reason": {
+          "reason_hw_slowdown": 0,
+          "reason_hw_thermal_slowdown": 0,
+          "reason_sw_thermal_slowdown": 0,
+          "reason_hw_power_brake_slowdown": 0
+        },
+        "tctl_ge_95_samples": 0,
+        "sw_power_cap_samples": 0,
+        "max_tctl_c": 50.375,
+        "max_gpu_temp_c": 27.0
+      },
+      "paging": {
+        "flag": "paging",
+        "major_faults": 0,
+        "swap_in_pages": 2,
+        "process_samples": 0
+      }
+    },
+    "sampler_overhead": {
+      "wall_s": 27.484353247999024,
+      "python_cpu_s": 0.02201728100000011,
+      "nvidia_smi_cpu_s": 0.02,
+      "python_core_fraction": 0.0008010841951175642,
+      "nvidia_smi_core_fraction": 0.0007276867612468226,
+      "total_core_fraction": 0.001528770956364387,
+      "n_rows": 55
+    }
+  },
+  "preconditions": {
+    "ok": true,
+    "aborts": [],
+    "warnings": [],
+    "values": {
+      "gpu_lock_held": true,
+      "lock_expected_held_by_wrapper": true,
+      "gpu_compute_processes": 0,
+      "gpu_graphics_processes": 0,
+      "connected_on_nvidia": [],
+      "mem_available_gib": 26.09,
+      "loadavg_1m": 1.47
+    },
+    "waited_for_load_s": 172.4
+  },
+  "finished_utc": "2026-11-08T17:43:15Z"
+}
