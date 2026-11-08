@@ -16,5 +16,5 @@ index = 0            # exported as CUDA_VISIBLE_DEVICES by launch-server.sh
 # Manually recorded BIOS fields (docs/environment.md, recorded at gate G1, 2026-11-07).
 [bios]
 expo         = "enabled; configured speed confirmed at 6000 MT/s by dmidecode (run by Zack, 2026-11-07)"
-igpu         = "BIOS left at its default; both displays are on the iGPU"
+igpu         = "BIOS (Gigabyte board): Settings > IO Ports > Integrated Graphics = Forced, Initial Display Output = IGD Video, UMA Mode = Auto (set by Zack, his own statement); both monitors are plugged into the motherboard outputs"
 pbo_eco_mode = "BIOS default, never changed by Zack; exact mode not recorded"

@@ -268,19 +268,19 @@ hwmon0=acpitz, hwmon1=nvme, hwmon2=nvme, hwmon3=k10temp, hwmon4=gigabyte_wmi, hw
 | Field | Value |
 |---|---|
 | EXPO | enabled; configured speed confirmed at 6000 MT/s by `dmidecode -t memory` (run by Zack, 2026-11-07) |
-| iGPU | BIOS left at its default; both displays are on the iGPU |
+| iGPU | BIOS (Gigabyte board): Settings > IO Ports > Integrated Graphics = Forced, Initial Display Output = IGD Video, UMA Mode = Auto (set by Zack, his own statement); both monitors are plugged into the motherboard outputs |
 | PBO/Eco mode | BIOS default, never changed by Zack; exact mode not recorded |
 
 ## Desktop GPU steering
 
-Recorded read-only in WP3; the full decision is in `docs/decisions.md`.
+Recorded in WP3; mechanism and undo updated in WP4 from Zack's answer; the full decision is in `docs/decisions.md`.
 
 | Item | Record |
 |---|---|
-| done | after WP2 (2026-11-07) and before WP3 (2026-11-08); exact time not recorded. Done by Zack, who did not say how (Zack's own statement; Claude Code did not do or verify the change). |
-| mechanism | NOT IDENTIFIED. No GPU-selection variable or setting was found in ~/.config/environment.d (absent), ~/.config/cosmic, ~/.config/fish, ~/.config/systemd/user, ~/.zprofile, ~/.profile, ~/.zshenv, the systemd user manager environment, the session environment, the cosmic-comp process environment, /etc/environment, /etc/profile.d or /etc/udev/rules.d (DRI_PRIME, __NV_PRIME_RENDER_OFFLOAD, __GLX_VENDOR_LIBRARY_NAME, VK_ICD_FILENAMES, VK_DRIVER_FILES, MESA_VK_DEVICE_SELECT, WLR_DRM_DEVICES, AQ_DRM_DEVICES, EGL vendor and similar were searched). The only file under those directories modified in the last 3 days is ~/.config/cosmic/com.system76.CosmicPortal/v1/screenshot (unrelated). |
+| done | BIOS change made by Zack, applied by a reboot (Zack: "I just rebooted my PC to change the setting to start working here"). The exact date/time was not recorded; the steered state was already observed in WP3 (2026-11-08). Done by Zack; Claude Code did not do or verify the BIOS change. |
+| mechanism | BIOS, not a software setting. Settings > IO Ports on the Gigabyte board: Integrated Graphics = Forced, Initial Display Output = IGD Video, UMA Mode = Auto; both monitors on the motherboard outputs. This is consistent with the WP3 read-only search, which found no GPU-selection variable or setting in the user session, systemd or /etc (DRI_PRIME, __NV_PRIME_RENDER_OFFLOAD, __GLX_VENDOR_LIBRARY_NAME, VK_ICD_FILENAMES, VK_DRIVER_FILES, MESA_VK_DEVICE_SELECT, WLR_DRM_DEVICES, AQ_DRM_DEVICES and similar were searched; the only recently modified file, ~/.config/cosmic/com.system76.CosmicPortal/v1/screenshot, is unrelated). |
 | observed | cosmic-launcher and Xwayland hold the iGPU render node (renderD129, amdgpu); cosmic-comp holds both GPUs' nodes (card1/renderD128 = NVIDIA, card2 = amdgpu). DRM card numbering is not stable (card0/card1 at G1, card1/card2 now). |
-| undo | Description only, not run: remove or revert whatever Zack set (to be named by Zack); the desktop then returns to the G1 state, in which 8 desktop processes held contexts on the RTX 5060 Ti (514 MiB used). |
+| undo | Description only, not run: reboot into the BIOS and set Settings > IO Ports > Integrated Graphics back from Forced (to Auto), Initial Display Output from IGD Video back to the PCIe/discrete-card entry, and UMA Mode back to its previous value, then plug the monitors back into the RTX 5060 Ti. Zack did not record the previous values, so the originals are unknown and must be confirmed in the BIOS. The desktop then returns to showing on the RTX 5060 Ti (the pre-G1 state). Any such change triggers the canary re-check. |
 | vram | 2 MiB of 16311 MiB used (nvidia-smi, 2026-11-08); no compute or graphics processes listed (`--query-compute-apps` empty, `nvidia-smi -q` Processes: None). cosmic-comp, cosmic-workspaces and Mission Center have /dev/nvidia* open without a VRAM allocation. Zack saw about 371 MiB right after the change, so this figure drifts with desktop activity. |
-| games | Games and other apps now render on the iGPU; to use the RTX 5060 Ti a game needs a per-app launch option (the PRIME-offload variables of the chosen mechanism). |
+| games | The RTX 5060 Ti is still present as a render device. Which GPU a given game defaults to was not tested; if one picks the iGPU, a per-application launch option (for example the PRIME offload variables) selects the RTX 5060 Ti. |
 | frozen | This state is part of the frozen machine tuning (step plan section 4). Any change to it triggers the short re-check (the canary set). |
