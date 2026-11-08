@@ -180,3 +180,22 @@ Newest entry last. Each entry: date, WP, status, commit, key results, open issue
   - A proxy cannot see traffic that ignores proxy settings (`strace` is not installed); the network namespace is the real containment.
   - Smoke runs have a snapshot and telemetry but no warm-up (not measured runs); `/v1/models` reports the model path as its id, so the OpenCode model key is the full path.
   - For WP8/WP9: `smallpc.requests` parses per-request lines only at `-lv 4`; the harness env and sandbox helper are reusable for Step 1 harness runs; `limit.output`/`maxTokens` are derived from the per-slot context.
+
+---
+
+## 2026-11-08 — WP8: Workloads
+
+- **Status:** done. All acceptance criteria pass; CI commands pass locally (407 tests, ruff check and format, shellcheck, `scrub --check` 0 findings in 885 files).
+- **Commits:** `69c89db` (`WP8: record decisions`), `ba7ce1b` (`WP8: workloads`), then `WP8: progress log` (this entry).
+- **Sources** (shallow clones, depth 100, gitignored in `third_party/workload-sources/`; 17 MB and 4.0 MB): `python-poetry/poetry` tag 2.5.1 `94b6e35b9091991887aa54feeb3771a86d3bd692`, MIT (`LICENSE` SHA-256 `1786f071...`), 645,819 hand-written tokens in 309 files; `tokio-rs/axum` tag `axum-v0.8.9` `c59208c86fded335cd85e388030ad59347b0e5ae`, MIT (no root license at the tag; four per-crate files, hashes in the manifest), 346,356 tokens in 256 files.
+- **Manifest** (`configs/workloads/manifest.json`, 235 KB, recipes only; inputs in `recipe.toml`): 83 prompt entries (A 35, B 35, short 5, warm-up 2, sanity 3, equivalence 3) and 5 append chunks; every prompt is exactly its length (K = 1024) and every append exactly 3,000 tokens. 27 special-token strings (read from the vocabulary) are excluded from sources and command output.
+- **Verify** (`python -m smallpc.workloads run verify`, `data/workloads/verify-2026-11-08.json`): 16 of 16 checks PASS: 48 prompts regenerated from the manifest with 1,550,336 tokens counted by `/tokenize` and every text and token hash reproduced, 5 appends, 35 prefix checks against the real `/apply-template` and whole-text `/tokenize`, context-fit table, nonce uniqueness (42 fresh requests of the 5-repetition plan).
+- **Live checks** (`data/workloads/live-check-2026-11-08.json`, `workload-check-128k.toml`, one clean run after an earlier scratch run with the same result): equivalence at 2K, 8K and 32K PASS (`prompt_n` equal, first 16 tokens equal). All 35 pairs PASS: Request A `prompt_n` = d, `cache_n` 0; Request B `prompt_n` 3,000, `cache_n` = d, `predicted_n` 400, `stop_type` limit, at every depth (8K to 96K) and variant. The five short points each generated 400 tokens (limit). Findings: none. Rejected recipes: none (wording W0 was enough for all variants).
+- **Server stopped** by SIGINT (exit 0); no llama-server left, GPU lock free, `/dev/shm/local-ai-research-*` clean, VRAM 2 MiB.
+- **For WP9:** `from smallpc.workloads import get_workload` (documented in `smallpc/workloads/api.py`): `get_workload("pair", d, repetition=r)` returns `a_tokens`, `b_tokens`, nonce, seed and `expected` (including `processed_plus_cached`). Send token arrays to `/completion`. Request A with `n_predict` 0 reports `predicted_n` 1 and `stop_type` limit on this build, yet B then reuses exactly d tokens. Repetitions 5 and above are built on demand (the manifest covers 0 to 4). Cache misses need `base_url` of a running server for rebuilding.
+- **Open issues:**
+  - Clone depth is 100 (not 1) so the append chunks can use git history; recorded in `docs/decisions.md`.
+  - The pairs, short points and equivalence checks ran on one server configuration (`-np 1`, 128K). Stock (`-np` auto, 4 slots) and other configs may behave differently; WP9 asserts the same invariants on every cell.
+  - Instruction wording reached 400 tokens at every depth here with thinking on; other configs or seeds could still stop early (the `short_gen` flag covers that in the sweep).
+  - The live-check file's timings are incidental (the check is not a benchmark and is not used for any speed claim).
+  - No test needs the GPU, so none carries the `gpu` marker; the live behaviour is covered by the CLI checks.
