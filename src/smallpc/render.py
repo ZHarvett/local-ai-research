@@ -2,7 +2,8 @@
 
 The field-to-flag mapping lives in one table, ``FLAG_TABLE``. The order of that table IS the
 order of the rendered argv, so rendering is deterministic. Flag names are the current upstream
-names and are verified against the real ``llama-server --help`` in WP3.
+names, verified in WP3 against ``llama-server --help`` of build b12208
+(``data/env/llama-server-help.txt``; ``tests/test_flag_table.py`` guards against drift).
 
 CLI::
 

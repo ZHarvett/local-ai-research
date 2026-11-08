@@ -1,0 +1,34 @@
+{
+  "tag": "b12208",
+  "commit": "57d04820dfef7a3519aac276d018a6fd71251895",
+  "newest_stable_tag": "v0.9.0",
+  "stable_tag_note": "semver tag recorded only; the newest bNNNNN tag is what is built",
+  "remote": "https://github.com/ggml-org/llama.cpp",
+  "build_date": "2026-11-08T15:42:22Z",
+  "cmake_flags": [
+    "-G",
+    "Ninja",
+    "-DGGML_CUDA=ON",
+    "-DCMAKE_CUDA_ARCHITECTURES=120",
+    "-DGGML_NATIVE=ON",
+    "-DCMAKE_BUILD_TYPE=Release",
+    "-DCMAKE_CUDA_COMPILER=/opt/cuda/bin/nvcc",
+    "-DCMAKE_CUDA_HOST_COMPILER=/usr/bin/g++"
+  ],
+  "path_prefix_in_script": "/opt/cuda/bin",
+  "tools": {
+    "cmake": "cmake version 4.4.5",
+    "ninja": "ninja 1.13.2",
+    "nvcc": "Cuda compilation tools, release 13.4, V13.4.92 Build cuda_13.4.r13.4/compiler.38855100_0",
+    "gcc": "gcc (GCC) 16.2.1 20260810",
+    "g++ (CUDA host compiler)": "g++ (GCC) 16.2.1 20260810"
+  },
+  "parallel_jobs": 6,
+  "oom_retry": false,
+  "build_duration_seconds": 262,
+  "binaries_sha256": {
+    "llama-server": "c6b14a4bb904b323d927254ba8b092296d57a4eaddffa38f2e88f21865144e0b",
+    "llama-bench": "bb692e886be18c1603e1b3b1f04ebb6cbf4a1cee6092495e2f3ac2f22bd86ca9",
+    "llama-cli": "44b6f66c6d47af38a19bfa6f0a59088e7dc4a2ae471d3a6ef793136b49bc1b2c"
+  }
+}

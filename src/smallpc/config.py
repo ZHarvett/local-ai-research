@@ -17,8 +17,22 @@ Profile = Literal["stock", "candidate", "tuned"]
 OnOffAuto = Literal["on", "off", "auto"]
 OnOff = Literal["on", "off"]
 KvType = Literal["f32", "f16", "bf16", "q8_0", "q5_1", "q5_0", "q4_1", "q4_0", "iq4_nl"]
-SpecType = Literal["none", "draft-mtp"]
-LoadMode = Literal["auto", "none"]
+# Accepted values below are taken from `llama-server --help` of the pinned build (WP3,
+# data/env/llama-server-help.txt); tests/test_flag_table.py fails if they drift apart.
+SpecType = Literal[
+    "none",
+    "draft-simple",
+    "draft-eagle3",
+    "draft-mtp",
+    "draft-dflash",
+    "draft-dspark",
+    "ngram-simple",
+    "ngram-map-k",
+    "ngram-map-k4v",
+    "ngram-mod",
+    "ngram-cache",
+]
+LoadMode = Literal["auto", "none", "mmap", "mlock", "mmap+mlock", "dio"]
 
 PosInt = Annotated[int, Field(ge=1)]
 NonNegInt = Annotated[int, Field(ge=0)]
@@ -169,7 +183,7 @@ class ServerConfig(_Strict):
     load_mode: LoadMode | None = None
     metrics: bool | None = None
     slot_save_path: str | None = None
-    log_verbosity: Annotated[int, Field(ge=0, le=4)] | None = None
+    log_verbosity: Annotated[int, Field(ge=0, le=5)] | None = None
 
     @field_validator("slot_save_path")
     @classmethod

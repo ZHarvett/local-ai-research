@@ -182,3 +182,18 @@ def test_sweep_spec_invalid(tmp_path, text):
     p.write_text(text)
     with pytest.raises(ValidationError):
         load_sweep(p)
+
+
+@pytest.mark.parametrize(
+    "field,value",
+    [
+        ("spec_type", "draft-mtp"),
+        ("spec_type", "ngram-mod"),
+        ("load_mode", "mmap"),
+        ("load_mode", "mmap+mlock"),
+        ("load_mode", "dio"),
+        ("log_verbosity", 5),
+    ],
+)
+def test_values_added_in_wp3_accepted(field, value):
+    ServerConfig.model_validate({"profile": "candidate", field: value})

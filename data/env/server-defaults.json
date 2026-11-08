@@ -1,0 +1,102 @@
+{
+  "source": "llama-server --help, build b12208 (57d04820dfef7a3519aac276d018a6fd71251895); data/env/llama-server-help.txt",
+  "note": "Defaults as printed by --help. These are what the stock configuration gets implicitly (stock configs set only model, context, host, port, metrics, log_verbosity). Values resolved at runtime (slot count under -np -1, context fitted by --fit, layer placement) are NOT in --help and must be read from the server log/props in WP5.",
+  "defaults": {
+    "port": {
+      "flag": "--port",
+      "value": 9931,
+      "note": "never relied on; launch-server.sh always passes an explicit port"
+    },
+    "fit": {
+      "flag": "-fit/--fit [on|off]",
+      "value": "on"
+    },
+    "fit_target": {
+      "flag": "-fitt/--fit-target MiB0,MiB1,...",
+      "value": 1024,
+      "unit": "MiB per device (single value is broadcast)"
+    },
+    "fit_ctx": {
+      "flag": "-fitc/--fit-ctx",
+      "value": 4096,
+      "note": "minimum ctx --fit may reduce to (extra field, not requested)"
+    },
+    "ctx_size": {
+      "flag": "-c/--ctx-size",
+      "value": 0,
+      "note": "0 = loaded from the model; stock configs always pass -c explicitly"
+    },
+    "batch": {
+      "flag": "-b/--batch-size",
+      "value": 2048
+    },
+    "ubatch": {
+      "flag": "-ub/--ubatch-size",
+      "value": 512
+    },
+    "parallel_slots": {
+      "flag": "-np/--parallel",
+      "value": -1,
+      "note": "-1 = auto; the resolved slot count appears only at runtime"
+    },
+    "kv_unified": {
+      "flag": "-kvu/--kv-unified",
+      "value": "enabled if the number of slots is auto"
+    },
+    "flash_attn": {
+      "flag": "-fa/--flash-attn [on|off|auto]",
+      "value": "auto"
+    },
+    "cache_type_k": {
+      "flag": "-ctk",
+      "value": "f16"
+    },
+    "cache_type_v": {
+      "flag": "-ctv",
+      "value": "f16"
+    },
+    "ctx_checkpoints": {
+      "flag": "-ctxcp/--ctx-checkpoints",
+      "value": 32,
+      "note": "per slot"
+    },
+    "checkpoint_min_step": {
+      "flag": "-cms/--checkpoint-min-step",
+      "value": 8192,
+      "unit": "tokens (0 = no minimum)"
+    },
+    "cache_ram": {
+      "flag": "-cram/--cache-ram",
+      "value": 8192,
+      "unit": "MiB (-1 no limit, 0 disable)"
+    },
+    "spec_type": {
+      "flag": "--spec-type",
+      "value": "none"
+    },
+    "spec_draft_n_max": {
+      "flag": "--spec-draft-n-max",
+      "value": 3
+    },
+    "load_mode": {
+      "flag": "-lm/--load-mode",
+      "value": "auto",
+      "note": "auto = mmap unless a device does not support it"
+    },
+    "reasoning_budget": {
+      "flag": "--reasoning-budget",
+      "value": -1,
+      "note": "-1 = unrestricted"
+    },
+    "n_gpu_layers": {
+      "flag": "-ngl",
+      "value": "auto",
+      "note": "extra field"
+    },
+    "moe_cache_mib": {
+      "flag": "--moe-cache-mib",
+      "value": 0,
+      "note": "0 = disabled (extra field)"
+    }
+  }
+}
