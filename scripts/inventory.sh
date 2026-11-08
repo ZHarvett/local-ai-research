@@ -454,12 +454,45 @@ bios = {"EXPO": "enabled; configured speed confirmed at 6000 MT/s by `dmidecode 
         "iGPU": "BIOS left at its default; both displays are on the iGPU",
         "PBO/Eco mode": "BIOS default, never changed by Zack; exact mode not recorded"}
 
+# Hand-recorded in WP3 (read-only investigation; nothing was changed). Re-check with
+# nvidia-smi before relying on the VRAM figures.
+steering = {
+    "done": "after WP2 (2026-11-07) and before WP3 (2026-11-08); exact time not recorded. Done by "
+            "Zack, who did not say how (Zack's own statement; Claude Code did not do or verify the change).",
+    "mechanism": "NOT IDENTIFIED. No GPU-selection variable or setting was found in "
+                 "~/.config/environment.d (absent), ~/.config/cosmic, ~/.config/fish, "
+                 "~/.config/systemd/user, ~/.zprofile, ~/.profile, ~/.zshenv, the systemd user "
+                 "manager environment, the session environment, the cosmic-comp process "
+                 "environment, /etc/environment, /etc/profile.d or /etc/udev/rules.d "
+                 "(DRI_PRIME, __NV_PRIME_RENDER_OFFLOAD, __GLX_VENDOR_LIBRARY_NAME, "
+                 "VK_ICD_FILENAMES, VK_DRIVER_FILES, MESA_VK_DEVICE_SELECT, WLR_DRM_DEVICES, "
+                 "AQ_DRM_DEVICES, EGL vendor and similar were searched). The only file under "
+                 "those directories modified in the last 3 days is "
+                 "~/.config/cosmic/com.system76.CosmicPortal/v1/screenshot (unrelated).",
+    "observed": "cosmic-launcher and Xwayland hold the iGPU render node (renderD129, amdgpu); "
+                "cosmic-comp holds both GPUs' nodes (card1/renderD128 = NVIDIA, card2 = amdgpu). "
+                "DRM card numbering is not stable (card0/card1 at G1, card1/card2 now).",
+    "undo": "Description only, not run: remove or revert whatever Zack set (to be named by Zack); "
+            "the desktop then returns to the G1 state, in which 8 desktop processes held "
+            "contexts on the RTX 5060 Ti (514 MiB used).",
+    "vram": "2 MiB of 16311 MiB used (nvidia-smi, 2026-11-08); no compute or graphics "
+            "processes listed (`--query-compute-apps` empty, `nvidia-smi -q` Processes: None). "
+            "cosmic-comp, cosmic-workspaces and Mission Center have /dev/nvidia* open "
+            "without a VRAM allocation. Zack saw about 371 MiB right after the change, so "
+            "this figure drifts with desktop activity.",
+    "games": "Games and other apps now render on the iGPU; to use the RTX 5060 Ti a game needs "
+             "a per-app launch option (the PRIME-offload variables of the chosen mechanism).",
+    "frozen": "This state is part of the frozen machine tuning (step plan section 4). Any change "
+              "to it triggers the short re-check (the canary set).",
+}
+
 data = {"generated_utc": os.environ["STAMP_UTC"], "script": "scripts/inventory.sh",
         "privacy": "username, hostname scrubbed; home path written as ~",
         "os": os_info, "cpu": cpu, "memory": memory, "disks": disks, "gpu": gpu, "display": display,
         "cuda_toolchain": cuda, "tools": tools, "existing_llama_ollama": llama,
         "background_load": background, "hwmon": {"entries": hwmon, "names": hwmon_names},
-        "missing_prerequisites": prereq, "manual_bios_fields": bios}
+        "missing_prerequisites": prereq, "manual_bios_fields": bios,
+        "desktop_gpu_steering": steering}
 
 with open(os.environ["OUT_JSON"], "w") as f:
     json.dump(data, f, indent=2, sort_keys=False); f.write("\n")
@@ -559,6 +592,12 @@ a(", ".join("%s=%s" % (h["hwmon"], h["name"]) for h in hwmon) or U); a("")
 a("## Manual BIOS fields\n")
 a("| Field | Value |"); a("|---|---|")
 for k, v in bios.items(): a("| %s | %s |" % (k, v))
+a("")
+
+a("## Desktop GPU steering\n")
+a("Recorded read-only in WP3; the full decision is in `docs/decisions.md`.\n")
+a("| Item | Record |"); a("|---|---|")
+for k, v in steering.items(): a("| %s | %s |" % (k, v))
 a("")
 
 with open(os.environ["OUT_MD"], "w") as f:
