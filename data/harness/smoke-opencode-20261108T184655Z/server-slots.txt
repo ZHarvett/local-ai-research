@@ -1,0 +1,3 @@
+0.00.224.391 I srv  server_prepa: n_parallel is set to auto, using n_parallel = 4 and kv_unified = true
+0.02.938.926 I llama_context: kv_unified            = true
+0.03.033.863 I srv    load_model: initializing, n_slots = 4, n_ctx_slot = 65536, kv_unified = 'true'

@@ -1,0 +1,63 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "autoupdate": false,
+  "share": "disabled",
+  "enabled_providers": [
+    "llamacpp"
+  ],
+  "model": "llamacpp/fake-model",
+  "provider": {
+    "llamacpp": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "llama.cpp (local)",
+      "options": {
+        "baseURL": "http://127.0.0.1:33915/v1"
+      },
+      "models": {
+        "fake-model": {
+          "name": "fake-model",
+          "limit": {
+            "context": 65536,
+            "output": 16384
+          }
+        }
+      }
+    }
+  },
+  "permission": {
+    "*": "deny",
+    "read": {
+      "*": "allow",
+      "*.env": "deny",
+      "*.env.*": "deny"
+    },
+    "glob": "allow",
+    "grep": "allow",
+    "list": "allow",
+    "todowrite": "allow",
+    "edit": "allow",
+    "bash": {
+      "*": "deny",
+      "pytest": "allow",
+      "pytest *": "allow",
+      "python -m pytest": "allow",
+      "python -m pytest *": "allow",
+      "ls": "allow",
+      "ls *": "allow",
+      "cat *": "allow",
+      "cat /*": "deny",
+      "cat ~*": "deny",
+      "ls /*": "deny",
+      "ls ~*": "deny",
+      "*..*": "deny"
+    },
+    "external_directory": "deny",
+    "webfetch": "deny",
+    "websearch": "deny",
+    "task": "deny",
+    "skill": "deny",
+    "lsp": "deny",
+    "question": "deny",
+    "doom_loop": "deny"
+  }
+}

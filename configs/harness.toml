@@ -1,0 +1,106 @@
+# Pinned harnesses (WP7). Everything here is exact; scripts/install-harnesses.sh reproduces the
+# install from configs/harness/package-lock.json. Read by smallpc.envsnap (harness versions) and
+# validated by smallpc.config.HarnessConfig. The pinning rule is in docs/decisions.md (WP7).
+schema_version = 1
+
+[runtime]
+node = "26.13.0"
+npm = "12.2.1"
+node_min = "22.0.0"        # the step plan's floor
+dsh_node_min = "24.9.0"    # dsh declares engines.node >=24.9.0
+
+[install]
+prefix = "third_party/node"
+package_json = "configs/harness/package.json"
+lockfile = "configs/harness/package-lock.json"
+lockfile_sha256 = "d21af6e8f2daea1e6903e42b81268f4fde9385fbade49e78eec7d190e79ccb77"
+command = "scripts/install-harnesses.sh && scripts/install-harnesses.sh --rebuild"
+npm_ci_command = "npm ci --ignore-scripts --prefix third_party/node"
+installed_utc = "2026-11-08T18:25:11Z"
+before_utc = "2026-11-01T18:25:11Z"   # npm install --before: exactly 7 days before the install
+sandbox = "scripts/_sandbox.sh: bubblewrap (read-only file system, /home and /tmp empty, only third_party/harness-state, third_party/npm-cache and third_party/node writable), env -i, repo-local HOME/XDG/TMPDIR/npm cache, empty npm user and global config; install scripts run with --no-net"
+
+[age_check]
+rule_days = 7
+cutoff_utc = "2026-11-01T18:25:11Z"
+packages_checked = 643
+too_new = 0
+overrides = []   # none needed: no package in the final tree was published after the cutoff
+newest_published_utc = "2026-11-01T11:29:55.052Z"
+newest_package = "http2-wrapper@2.2.4"
+evidence_file = "data/harness/lockfile-ages.json"
+
+[[packages]]
+name = "opencode-ai"
+version = "1.19.5"
+published_utc = "2026-10-28T06:17:11.100Z"
+integrity = "sha512-tEqMvQahfhdDj8vceYpXtoIrvjPXm5XRfetWnPN5YISueU7adNx9JcUA3zZ+2GKuDVgDpGdQe1ZLtCZDjqodvA=="
+role = "OpenCode CLI, legacy 1.x line (chosen by Zack on 2026-11-08; the current README names @opencode/cli)"
+latest_tag_at_install = "1.19.5"
+latest_tag_published_utc = "2026-10-28T06:17:11.100Z"
+pin_rule_result = "latest dist-tag, 11 days old at install (>= 7): used as is. npm view opencode-ai deprecated was empty, and latest points to opencode-ai itself."
+
+[[packages]]
+name = "@deepseek-ai/dsh"
+version = "0.2.1-rc.5"
+published_utc = "2026-10-29T14:15:23.355Z"
+integrity = "sha512-WkyJZv4zl9sCAxSzRctGm58m0rilGqwR6pniBiLOz5CPDfHfDuAUicg0AAazXI7oj/Cph6/cjNTncA/rpLTXpw=="
+role = "dsh CLI (developer preview), research harness"
+latest_tag_at_install = "0.2.2-rc.1"
+latest_tag_published_utc = "2026-11-04T09:20:32.310Z"
+pin_rule_result = "latest dist-tag was 4 days old (< 7): used the newest version by publish time that is at least 7 days old, 0.2.1-rc.5 (10 days). 0.2.2-alpha.2 (10-27) is older by publish time and an alpha."
+
+[plugins]
+package_glob = "@deepseek-ai/dsh-*"
+version = "0.2.1-rc.5"
+count = 295
+note = "The README names no separate plugin packages. dsh depends on its plugins at exactly its own version (78 direct, the rest transitive); every one of them resolves to this version in the lockfile (tests/test_harness_config.py)."
+
+[rebuild]
+
+[[rebuild.packages]]
+name = "opencode-ai"
+version = "1.19.5"
+script = "postinstall: node ./postinstall.mjs"
+reason = "Hard-links the platform binary (opencode-linux-x64, already installed) to bin/opencode.exe. Without it the bin is a stub that exits 1. Source read before running; run offline (--no-net)."
+
+[[rebuild.denied]]
+name = "@deepseek-ai/dsh-subprocess-local"
+version = "0.2.1-rc.5"
+script = "postinstall: node scripts/ensure-spawn-helper.mjs"
+reason = "chmod +x of node-pty's spawn-helper, which exists only in the macOS/Windows prebuilds. dsh --version and --help run without it."
+
+[[rebuild.denied]]
+name = "node-pty"
+version = "1.2.0-beta.15"
+script = "install: node scripts/prebuild.js || node-gyp rebuild"
+reason = "The linux-x64 prebuild (pty.node) is shipped, so the check would exit 0 and nothing is built; the fallback (node-gyp) would download headers and compile."
+
+[[rebuild.denied]]
+name = "koffi"
+version = "3.1.1"
+script = "install: node ./cnoke.cjs -P . -D src/koffi --prebuild --release"
+reason = "Would build a native module from source. Not needed for --version/--help; re-evaluated if dsh headless needs it."
+
+[[rebuild.denied]]
+name = "@google/genai"
+version = "2.21.0"
+script = "preinstall: echo 'preinstall: no-op'"
+reason = "No-op."
+
+[[rebuild.denied]]
+name = "protobufjs"
+version = "7.6.6"
+script = "postinstall: node scripts/postinstall"
+reason = "Only prints a version-scheme warning."
+
+[binaries]
+opencode = "/mnt/data/local-ai-research/third_party/node/node_modules/opencode-ai/bin/opencode.exe"
+dsh = "/mnt/data/local-ai-research/third_party/node/node_modules/@deepseek-ai/dsh/lib/bin.js"
+node = "/usr/bin/node"
+
+[context_policy]
+context_source = "GET /props: default_generation_settings.n_ctx (per slot); the top-level n_ctx is recorded next to it"
+output_cap = 16384
+output_divisor = 4
+note = "limit.output = min(output_cap, per_slot_ctx // output_divisor): 16384 at 64K, 8192 at 32K. max_tokens is a ceiling, and OpenCode subtracts it from the context when it decides to compact."

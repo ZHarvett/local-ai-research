@@ -1,0 +1,2 @@
+server healthy: pid=95758 http://127.0.0.1:8080
+run-dir: /mnt/data/local-ai-research/data/logs/smoke-dsh-20261108T184731Z

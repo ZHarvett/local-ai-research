@@ -1,0 +1,8 @@
+{
+  "stopped_utc": "2026-11-08T18:48:14Z",
+  "pid": 95758,
+  "method": "sigint",
+  "exit_code": 0,
+  "waited_s": 0,
+  "sigint_timeout_s": 90
+}

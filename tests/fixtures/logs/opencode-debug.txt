@@ -1,0 +1,4 @@
+timestamp=2026-11-08T18:32:08.782Z level=INFO run=ab message=loop session.id=ses_1 step=0
+timestamp=2026-11-08T18:32:09.058Z level=INFO run=ab message=stream providerID=llamacpp modelID=m.gguf session.id=ses_1 small=true agent=title mode=primary
+timestamp=2026-11-08T18:32:09.249Z level=INFO run=ab message=stream providerID=llamacpp modelID=m.gguf session.id=ses_1 small=false agent=build mode=primary
+timestamp=2026-11-08T18:32:19.249Z level=INFO run=ab message=stream providerID=llamacpp modelID=m.gguf session.id=ses_1 small=false agent=build mode=primary

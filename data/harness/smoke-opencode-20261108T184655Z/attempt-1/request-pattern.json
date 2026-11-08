@@ -1,0 +1,147 @@
+{
+  "label": "smoke-task data, not representative of real agent turns",
+  "run_id": "smoke-opencode-20261108T184659Z-attempt-1",
+  "harness": "opencode",
+  "requests": [
+    {
+      "task": 0,
+      "slot": 0,
+      "prompt_n": 593,
+      "cache_n": 0,
+      "prompt_total": 593,
+      "predicted_n": 79,
+      "prompt_ms": 8560.97,
+      "predicted_ms": 2009.93,
+      "time_ms": 10570.9,
+      "truncated": false,
+      "kind": "auxiliary",
+      "agent": "title",
+      "classified_by": "opencode debug log (k-th model call = k-th server task)",
+      "order": 1
+    },
+    {
+      "task": 2,
+      "slot": 1,
+      "prompt_n": 5988,
+      "cache_n": 0,
+      "prompt_total": 5988,
+      "predicted_n": 45,
+      "prompt_ms": 8537.01,
+      "predicted_ms": 772.49,
+      "time_ms": 9309.5,
+      "truncated": false,
+      "kind": "main",
+      "agent": "build",
+      "classified_by": "opencode debug log (k-th model call = k-th server task)",
+      "order": 2
+    },
+    {
+      "task": 57,
+      "slot": 1,
+      "prompt_n": 51,
+      "cache_n": 6032,
+      "prompt_total": 6083,
+      "predicted_n": 91,
+      "prompt_ms": 387.71,
+      "predicted_ms": 1221.66,
+      "time_ms": 1609.37,
+      "truncated": false,
+      "kind": "main",
+      "agent": "build",
+      "classified_by": "opencode debug log (k-th model call = k-th server task)",
+      "order": 3
+    },
+    {
+      "task": 150,
+      "slot": 1,
+      "prompt_n": 409,
+      "cache_n": 6079,
+      "prompt_total": 6488,
+      "predicted_n": 118,
+      "prompt_ms": 647.55,
+      "predicted_ms": 1406.13,
+      "time_ms": 2053.68,
+      "truncated": false,
+      "kind": "main",
+      "agent": "build",
+      "classified_by": "opencode debug log (k-th model call = k-th server task)",
+      "order": 4
+    },
+    {
+      "task": 270,
+      "slot": 1,
+      "prompt_n": 20,
+      "cache_n": 6605,
+      "prompt_total": 6625,
+      "predicted_n": 80,
+      "prompt_ms": 110.57,
+      "predicted_ms": 939.01,
+      "time_ms": 1049.58,
+      "truncated": false,
+      "kind": "main",
+      "agent": "build",
+      "classified_by": "opencode debug log (k-th model call = k-th server task)",
+      "order": 5
+    },
+    {
+      "task": 352,
+      "slot": 1,
+      "prompt_n": 34,
+      "cache_n": 6704,
+      "prompt_total": 6738,
+      "predicted_n": 73,
+      "prompt_ms": 132.05,
+      "predicted_ms": 854.83,
+      "time_ms": 986.88,
+      "truncated": false,
+      "kind": "main",
+      "agent": "build",
+      "classified_by": "opencode debug log (k-th model call = k-th server task)",
+      "order": 6
+    }
+  ],
+  "turn_definition": "one turn = the single smoke prompt, from the user message to the final answer; it holds the main-loop requests (one per step) and any auxiliary requests",
+  "per_turn": {
+    "turns": 1,
+    "requests_per_turn": 6,
+    "main_requests_per_turn": 5,
+    "auxiliary_requests_per_turn": 1,
+    "totals": {
+      "all": {
+        "requests": 6,
+        "prompt_n": 7095,
+        "cache_n": 25420,
+        "predicted_n": 486,
+        "time_ms": 25579.91
+      },
+      "main": {
+        "requests": 5,
+        "prompt_n": 6502,
+        "cache_n": 25420,
+        "predicted_n": 407,
+        "time_ms": 15009.01
+      },
+      "auxiliary": {
+        "requests": 1,
+        "prompt_n": 593,
+        "cache_n": 0,
+        "predicted_n": 79,
+        "time_ms": 10570.9
+      },
+      "unclassified": {
+        "requests": 0,
+        "prompt_n": 0,
+        "cache_n": 0,
+        "predicted_n": 0,
+        "time_ms": 0
+      }
+    }
+  },
+  "classification": {
+    "main_min_prompt_tokens": 5988,
+    "auxiliary_max_prompt_tokens": 593,
+    "classes_separate_by_prompt_size": true
+  },
+  "any_request_truncated": false,
+  "source": "llama-server log (print_timing, new prompt); cache_n = task.n_tokens - prompt_n"
+}

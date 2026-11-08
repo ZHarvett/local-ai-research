@@ -1,0 +1,19 @@
+{
+  "name": "smallpc-harnesses",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Pinned harness CLIs for the Local AI on a Small PC baseline (WP7). Installed into third_party/node by scripts/install-harnesses.sh from the committed package-lock.json.",
+  "license": "MIT",
+  "dependencies": {
+    "@deepseek-ai/dsh": "0.2.1-rc.5",
+    "opencode-ai": "1.19.5"
+  },
+  "allowScripts": {
+    "opencode-ai@1.19.5": true,
+    "@deepseek-ai/dsh-subprocess-local": false,
+    "@google/genai": false,
+    "koffi": false,
+    "node-pty": false,
+    "protobufjs": false
+  }
+}

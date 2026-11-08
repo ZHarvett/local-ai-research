@@ -191,3 +191,17 @@ def test_health_config_golden_argv():
     assert cfg.profile == "candidate"
     # the chat template is never overridden (docs/decisions.md, WP5)
     assert "--chat-template-file" not in argv and "--jinja" not in argv
+
+
+def test_smoke_stock_config_is_stock_64k_plus_verbosity_only():
+    """The WP7 smoke config differs from the stock example by `-lv 4` and nothing else."""
+    from conftest import REPO
+    from smallpc.config import load_server
+
+    smoke = load_server(REPO / "configs/server/smoke-stock-64k.toml")
+    stock = load_server(REPO / "configs/server/examples/stock-64k.toml")
+    assert smoke.profile == "stock"  # the stock-field whitelist is enforced on it
+    a = smoke.model_dump(exclude_none=True)
+    b = stock.model_dump(exclude_none=True)
+    assert a.pop("log_verbosity") == 4 and "log_verbosity" not in b
+    assert a == b

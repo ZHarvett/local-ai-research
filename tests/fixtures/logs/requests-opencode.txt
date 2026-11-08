@@ -1,0 +1,18 @@
+0.10.000.100 I slot launch_slot_: id  3 | task 0 | processing task, is_child = 0
+0.10.000.110 I slot   operator(): id  3 | task 0 | new prompt, n_ctx_slot = 65536, n_keep = 0, task.n_tokens = 410
+0.10.000.200 I slot launch_slot_: id  2 | task 2 | processing task, is_child = 0
+0.10.000.210 I slot   operator(): id  2 | task 2 | new prompt, n_ctx_slot = 65536, n_keep = 0, task.n_tokens = 9021
+0.10.500.000 I slot print_timing: id  3 | task 0 | prompt eval time =     300.00 ms /   410 tokens (    0.73 ms per token,  1366.67 tokens per second)
+0.10.500.001 I slot print_timing: id  3 | task 0 |        eval time =     400.00 ms /    20 tokens (   20.00 ms per token,    50.00 tokens per second)
+0.10.500.002 I slot print_timing: id  3 | task 0 |       total time =     700.00 ms /   430 tokens
+0.10.500.010 I slot      release: id  3 | task 0 | stop processing: n_tokens = 429, truncated = 0
+0.12.000.000 I slot print_timing: id  2 | task 2 | prompt eval time =    9000.00 ms /  9021 tokens (    1.00 ms per token,  1002.33 tokens per second)
+0.12.000.001 I slot print_timing: id  2 | task 2 | eval time =    2000.00 ms /   100 tokens (   20.00 ms per token,    50.00 tokens per second)
+0.12.000.002 I slot print_timing: id  2 | task 2 |       total time =   11000.00 ms /  9121 tokens
+0.12.000.010 I slot      release: id  2 | task 2 | stop processing: n_tokens = 9120, truncated = 0
+0.13.000.000 I slot launch_slot_: id  2 | task 105 | processing task, is_child = 0
+0.13.000.010 I slot   operator(): id  2 | task 105 | new prompt, n_ctx_slot = 65536, n_keep = 0, task.n_tokens = 9400
+0.13.500.000 I slot print_timing: id  2 | task 105 | prompt eval time =     400.00 ms /   379 tokens (    1.05 ms per token,   947.50 tokens per second)
+0.13.500.001 I slot print_timing: id  2 | task 105 |        eval time =    1000.00 ms /    50 tokens (   20.00 ms per token,    50.00 tokens per second)
+0.13.500.002 I slot print_timing: id  2 | task 105 |       total time =    1400.00 ms /   429 tokens
+0.13.500.010 I slot      release: id  2 | task 105 | stop processing: n_tokens = 9449, truncated = 1

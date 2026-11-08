@@ -298,9 +298,46 @@ def model_info(root: Path) -> dict:
     }
 
 
+def _installed_version(root: Path, prefix: str, name: str) -> str:
+    """Version in the installed package's own package.json, or "unavailable" if not installed."""
+    try:
+        data = json.loads((root / prefix / "node_modules" / name / "package.json").read_text())
+    except (OSError, ValueError):
+        return U
+    return str(data.get("version", U))
+
+
 def harness_info(root: Path) -> dict:
+    """Harness versions from configs/harness.toml (pinned) and from the installed packages."""
     h = load_toml(root / "configs/harness.toml")
-    return h if h is not None else {"status": U, "note": "configs/harness.toml is created in WP7"}
+    if not h:
+        return {"status": U, "note": "configs/harness.toml is missing or does not parse"}
+    try:
+        prefix = h["install"]["prefix"]
+        pins = {p["name"]: p for p in h["packages"]}
+        out: dict = {
+            "node": h["runtime"]["node"],
+            "npm": h["runtime"]["npm"],
+            "lockfile_sha256": h["install"]["lockfile_sha256"],
+            "plugins_version": h["plugins"]["version"],
+            "plugins_count": h["plugins"]["count"],
+            "age_check": {
+                "cutoff_utc": h["age_check"]["cutoff_utc"],
+                "packages_checked": h["age_check"]["packages_checked"],
+                "too_new": h["age_check"]["too_new"],
+            },
+        }
+        for key, name in (("opencode", "opencode-ai"), ("dsh", "@deepseek-ai/dsh")):
+            out[key] = {
+                "package": name,
+                "pinned_version": pins[name]["version"],
+                "published_utc": pins[name]["published_utc"],
+                "integrity": pins[name]["integrity"],
+                "installed_version": _installed_version(root, prefix, name),
+            }
+        return out
+    except (KeyError, TypeError) as e:
+        return {"status": U, "note": f"configs/harness.toml is incomplete: {e!r}"}
 
 
 def bios_info(root: Path) -> dict:

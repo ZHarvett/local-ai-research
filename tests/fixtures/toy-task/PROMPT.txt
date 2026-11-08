@@ -1,0 +1,1 @@
+The test test_moving_average_covers_every_window in test_movavg.py fails. Fix the bug in movavg.py so that it passes. Do not edit the test file. Run pytest to confirm the test passes.

@@ -1,0 +1,298 @@
+{
+  "kind": "opencode",
+  "checks": [
+    {
+      "check": "every scripted tool call reached the harness",
+      "expected": 17,
+      "actual": 17,
+      "pass": true
+    },
+    {
+      "check": "pytest",
+      "expected": "ok",
+      "actual": "ok",
+      "pass": true
+    },
+    {
+      "check": "python -m pytest",
+      "expected": "ok",
+      "actual": "ok",
+      "pass": true
+    },
+    {
+      "check": "ls",
+      "expected": "ok",
+      "actual": "ok",
+      "pass": true
+    },
+    {
+      "check": "cat a.py",
+      "expected": "ok",
+      "actual": "ok",
+      "pass": true
+    },
+    {
+      "check": "curl",
+      "expected": "denied",
+      "actual": "denied",
+      "pass": true
+    },
+    {
+      "check": "rm",
+      "expected": "denied",
+      "actual": "denied",
+      "pass": true
+    },
+    {
+      "check": "pytest && rm",
+      "expected": "denied",
+      "actual": "denied",
+      "pass": true
+    },
+    {
+      "check": "cat absolute path",
+      "expected": "denied",
+      "actual": "denied",
+      "pass": true
+    },
+    {
+      "check": "cat parent path",
+      "expected": "denied",
+      "actual": "denied",
+      "pass": true
+    },
+    {
+      "check": "command substitution",
+      "expected": "denied",
+      "actual": "denied",
+      "pass": true
+    },
+    {
+      "check": "pipe",
+      "expected": "denied",
+      "actual": "denied",
+      "pass": true
+    },
+    {
+      "check": "python -c",
+      "expected": "denied",
+      "actual": "denied",
+      "pass": true
+    },
+    {
+      "check": "webfetch",
+      "expected": "denied",
+      "actual": "denied",
+      "pass": true
+    },
+    {
+      "check": "write outside the project",
+      "expected": "denied",
+      "actual": "denied",
+      "pass": true
+    },
+    {
+      "check": "write inside the project",
+      "expected": "ok",
+      "actual": "ok",
+      "pass": true
+    },
+    {
+      "check": "read outside the project",
+      "expected": "denied",
+      "actual": "denied",
+      "pass": true
+    },
+    {
+      "check": "task",
+      "expected": "denied",
+      "actual": "denied",
+      "pass": true
+    },
+    {
+      "check": "permission prompts raised",
+      "expected": 0,
+      "actual": 0,
+      "pass": true
+    }
+  ],
+  "summary": {
+    "tool_uses": [
+      {
+        "tool": "bash",
+        "input": {
+          "command": "pytest -q",
+          "description": "t"
+        },
+        "status": "completed",
+        "error": null,
+        "output_head": "F                                                                        [100%]\n=================================== FAILURES ===================================\n___________________ test_moving_average"
+      },
+      {
+        "tool": "bash",
+        "input": {
+          "command": "python -m pytest -q",
+          "description": "t"
+        },
+        "status": "completed",
+        "error": null,
+        "output_head": "F                                                                        [100%]\n=================================== FAILURES ===================================\n___________________ test_moving_average"
+      },
+      {
+        "tool": "bash",
+        "input": {
+          "command": "ls",
+          "description": "t"
+        },
+        "status": "completed",
+        "error": null,
+        "output_head": "PROMPT.txt\n__pycache__\nmovavg.py\ntest_movavg.py\n"
+      },
+      {
+        "tool": "bash",
+        "input": {
+          "command": "cat a.py",
+          "description": "t"
+        },
+        "status": "completed",
+        "error": null,
+        "output_head": "cat: a.py: No such file or directory\n"
+      },
+      {
+        "tool": "bash",
+        "input": {
+          "command": "curl -s https://example.com",
+          "description": "t"
+        },
+        "status": "error",
+        "error": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"*\",\"action\":\"deny\",\"pattern\":\"*\"},{\"permission\":\"bash\",\"pattern\":\"*\",\"action\":\"deny\"},{\"permission\":\"bash\",\"pattern\":\"pytest\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"pytest *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"python -m pytest\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"python -m pytest *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"ls\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"ls *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"cat *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"cat /*\",\"action\":\"deny\"},{\"permission\":\"bash\",\"pattern\":\"cat ~*\",\"action\":\"deny\"},{\"permission\":\"bash\",\"pattern\":\"ls /*\",\"action\":\"deny\"},{\"permission\":\"bash\",\"pattern\":\"ls ~*\",\"action\":\"deny\"},{\"permission\":\"bash\",\"pattern\":\"*..*\",\"action\":\"deny\"}]",
+        "output_head": null
+      },
+      {
+        "tool": "bash",
+        "input": {
+          "command": "rm -f a.py",
+          "description": "t"
+        },
+        "status": "error",
+        "error": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"*\",\"action\":\"deny\",\"pattern\":\"*\"},{\"permission\":\"bash\",\"pattern\":\"*\",\"action\":\"deny\"},{\"permission\":\"bash\",\"pattern\":\"pytest\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"pytest *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"python -m pytest\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"python -m pytest *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"ls\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"ls *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"cat *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"cat /*\",\"action\":\"deny\"},{\"permission\":\"bash\",\"pattern\":\"cat ~*\",\"action\":\"deny\"},{\"permission\":\"bash\",\"pattern\":\"ls /*\",\"action\":\"deny\"},{\"permission\":\"bash\",\"pattern\":\"ls ~*\",\"action\":\"deny\"},{\"permission\":\"bash\",\"pattern\":\"*..*\",\"action\":\"deny\"}]",
+        "output_head": null
+      },
+      {
+        "tool": "bash",
+        "input": {
+          "command": "pytest -q && rm -f a.py",
+          "description": "t"
+        },
+        "status": "error",
+        "error": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"*\",\"action\":\"deny\",\"pattern\":\"*\"},{\"permission\":\"bash\",\"pattern\":\"*\",\"action\":\"deny\"},{\"permission\":\"bash\",\"pattern\":\"pytest\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"pytest *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"python -m pytest\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"python -m pytest *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"ls\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"ls *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"cat *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"cat /*\",\"action\":\"deny\"},{\"permission\":\"bash\",\"pattern\":\"cat ~*\",\"action\":\"deny\"},{\"permission\":\"bash\",\"pattern\":\"ls /*\",\"action\":\"deny\"},{\"permission\":\"bash\",\"pattern\":\"ls ~*\",\"action\":\"deny\"},{\"permission\":\"bash\",\"pattern\":\"*..*\",\"action\":\"deny\"}]",
+        "output_head": null
+      },
+      {
+        "tool": "bash",
+        "input": {
+          "command": "cat /etc/hostname",
+          "description": "t"
+        },
+        "status": "error",
+        "error": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"*\",\"action\":\"ask\"},{\"permission\":\"external_directory\",\"pattern\":\"/mnt/data/local-ai-research/third_party/harness-state/opencode/data/opencode/tool-output/*\",\"action\":\"allow\"},{\"permission\":\"external_directory\",\"pattern\":\"/mnt/data/local-ai-research/third_party/harness-state/opencode/tmp/opencode/*\",\"action\":\"allow\"},{\"permission\":\"*\",\"action\":\"deny\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"action\":\"deny\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"/mnt/data/local-ai-research/third_party/harness-state/opencode/data/opencode/tool-output/*\",\"action\":\"allow\"}]",
+        "output_head": null
+      },
+      {
+        "tool": "bash",
+        "input": {
+          "command": "cat ../x",
+          "description": "t"
+        },
+        "status": "error",
+        "error": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"*\",\"action\":\"ask\"},{\"permission\":\"external_directory\",\"pattern\":\"/mnt/data/local-ai-research/third_party/harness-state/opencode/data/opencode/tool-output/*\",\"action\":\"allow\"},{\"permission\":\"external_directory\",\"pattern\":\"/mnt/data/local-ai-research/third_party/harness-state/opencode/tmp/opencode/*\",\"action\":\"allow\"},{\"permission\":\"*\",\"action\":\"deny\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"action\":\"deny\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"/mnt/data/local-ai-research/third_party/harness-state/opencode/data/opencode/tool-output/*\",\"action\":\"allow\"}]",
+        "output_head": null
+      },
+      {
+        "tool": "bash",
+        "input": {
+          "command": "cat $(echo a.py)",
+          "description": "t"
+        },
+        "status": "error",
+        "error": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"*\",\"action\":\"deny\",\"pattern\":\"*\"},{\"permission\":\"bash\",\"pattern\":\"*\",\"action\":\"deny\"},{\"permission\":\"bash\",\"pattern\":\"pytest\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"pytest *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"python -m pytest\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"python -m pytest *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"ls\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"ls *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"cat *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"cat /*\",\"action\":\"deny\"},{\"permission\":\"bash\",\"pattern\":\"cat ~*\",\"action\":\"deny\"},{\"permission\":\"bash\",\"pattern\":\"ls /*\",\"action\":\"deny\"},{\"permission\":\"bash\",\"pattern\":\"ls ~*\",\"action\":\"deny\"},{\"permission\":\"bash\",\"pattern\":\"*..*\",\"action\":\"deny\"}]",
+        "output_head": null
+      },
+      {
+        "tool": "bash",
+        "input": {
+          "command": "ls | head",
+          "description": "t"
+        },
+        "status": "error",
+        "error": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"*\",\"action\":\"deny\",\"pattern\":\"*\"},{\"permission\":\"bash\",\"pattern\":\"*\",\"action\":\"deny\"},{\"permission\":\"bash\",\"pattern\":\"pytest\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"pytest *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"python -m pytest\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"python -m pytest *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"ls\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"ls *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"cat *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"cat /*\",\"action\":\"deny\"},{\"permission\":\"bash\",\"pattern\":\"cat ~*\",\"action\":\"deny\"},{\"permission\":\"bash\",\"pattern\":\"ls /*\",\"action\":\"deny\"},{\"permission\":\"bash\",\"pattern\":\"ls ~*\",\"action\":\"deny\"},{\"permission\":\"bash\",\"pattern\":\"*..*\",\"action\":\"deny\"}]",
+        "output_head": null
+      },
+      {
+        "tool": "bash",
+        "input": {
+          "command": "python -c 'print(1)'",
+          "description": "t"
+        },
+        "status": "error",
+        "error": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"*\",\"action\":\"deny\",\"pattern\":\"*\"},{\"permission\":\"bash\",\"pattern\":\"*\",\"action\":\"deny\"},{\"permission\":\"bash\",\"pattern\":\"pytest\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"pytest *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"python -m pytest\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"python -m pytest *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"ls\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"ls *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"cat *\",\"action\":\"allow\"},{\"permission\":\"bash\",\"pattern\":\"cat /*\",\"action\":\"deny\"},{\"permission\":\"bash\",\"pattern\":\"cat ~*\",\"action\":\"deny\"},{\"permission\":\"bash\",\"pattern\":\"ls /*\",\"action\":\"deny\"},{\"permission\":\"bash\",\"pattern\":\"ls ~*\",\"action\":\"deny\"},{\"permission\":\"bash\",\"pattern\":\"*..*\",\"action\":\"deny\"}]",
+        "output_head": null
+      },
+      {
+        "tool": "webfetch",
+        "input": {
+          "url": "https://example.com",
+          "format": "text"
+        },
+        "status": "error",
+        "error": "Model tried to call unavailable tool 'invalid'. Available tools: bash, edit, glob, grep, read, todowrite, write.",
+        "output_head": null
+      },
+      {
+        "tool": "write",
+        "input": {
+          "filePath": "/tmp/outside-probe.txt",
+          "content": "x"
+        },
+        "status": "error",
+        "error": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"*\",\"action\":\"ask\"},{\"permission\":\"external_directory\",\"pattern\":\"/mnt/data/local-ai-research/third_party/harness-state/opencode/data/opencode/tool-output/*\",\"action\":\"allow\"},{\"permission\":\"external_directory\",\"pattern\":\"/mnt/data/local-ai-research/third_party/harness-state/opencode/tmp/opencode/*\",\"action\":\"allow\"},{\"permission\":\"*\",\"action\":\"deny\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"action\":\"deny\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"/mnt/data/local-ai-research/third_party/harness-state/opencode/data/opencode/tool-output/*\",\"action\":\"allow\"}]",
+        "output_head": null
+      },
+      {
+        "tool": "write",
+        "input": {
+          "filePath": "b.py",
+          "content": "print(1)\n"
+        },
+        "status": "completed",
+        "error": null,
+        "output_head": "Wrote file successfully."
+      },
+      {
+        "tool": "read",
+        "input": {
+          "filePath": "/etc/hostname"
+        },
+        "status": "error",
+        "error": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"*\",\"action\":\"ask\"},{\"permission\":\"external_directory\",\"pattern\":\"/mnt/data/local-ai-research/third_party/harness-state/opencode/data/opencode/tool-output/*\",\"action\":\"allow\"},{\"permission\":\"external_directory\",\"pattern\":\"/mnt/data/local-ai-research/third_party/harness-state/opencode/tmp/opencode/*\",\"action\":\"allow\"},{\"permission\":\"*\",\"action\":\"deny\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"action\":\"deny\",\"pattern\":\"*\"},{\"permission\":\"external_directory\",\"pattern\":\"/mnt/data/local-ai-research/third_party/harness-state/opencode/data/opencode/tool-output/*\",\"action\":\"allow\"}]",
+        "output_head": null
+      },
+      {
+        "tool": "task",
+        "input": {
+          "description": "d",
+          "prompt": "p",
+          "subagent_type": "general"
+        },
+        "status": "error",
+        "error": "Model tried to call unavailable tool 'invalid'. Available tools: bash, edit, glob, grep, read, todowrite, write.",
+        "output_head": null
+      }
+    ],
+    "steps": 18,
+    "final_text": "done",
+    "permission_asks": 0,
+    "auto_rejected": 0,
+    "rule_denials": 10
+  }
+}

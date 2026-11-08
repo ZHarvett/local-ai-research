@@ -1,0 +1,141 @@
+{
+  "label": "smoke-task data, not representative of real agent turns",
+  "run_id": "smoke-dsh-20261108T184731Z-attempt-1",
+  "harness": "dsh",
+  "requests": [
+    {
+      "task": 0,
+      "slot": 0,
+      "prompt_n": 193,
+      "cache_n": 0,
+      "prompt_total": 193,
+      "predicted_n": 81,
+      "prompt_ms": 5272.39,
+      "predicted_ms": 3904.74,
+      "time_ms": 9177.12,
+      "truncated": false,
+      "kind": "auxiliary",
+      "classified_by": "5 main-loop steps from the JSON events; the 5 largest prompts are main, the rest auxiliary",
+      "order": 1
+    },
+    {
+      "task": 2,
+      "slot": 1,
+      "prompt_n": 5587,
+      "cache_n": 0,
+      "prompt_total": 5587,
+      "predicted_n": 60,
+      "prompt_ms": 7407.52,
+      "predicted_ms": 1026.77,
+      "time_ms": 8434.3,
+      "truncated": false,
+      "kind": "main",
+      "classified_by": "5 main-loop steps from the JSON events; the 5 largest prompts are main, the rest auxiliary",
+      "order": 2
+    },
+    {
+      "task": 74,
+      "slot": 1,
+      "prompt_n": 24,
+      "cache_n": 5646,
+      "prompt_total": 5670,
+      "predicted_n": 89,
+      "prompt_ms": 142.36,
+      "predicted_ms": 1097.64,
+      "time_ms": 1240.0,
+      "truncated": false,
+      "kind": "main",
+      "classified_by": "5 main-loop steps from the JSON events; the 5 largest prompts are main, the rest auxiliary",
+      "order": 3
+    },
+    {
+      "task": 165,
+      "slot": 1,
+      "prompt_n": 405,
+      "cache_n": 5666,
+      "prompt_total": 6071,
+      "predicted_n": 274,
+      "prompt_ms": 641.24,
+      "predicted_ms": 3205.65,
+      "time_ms": 3846.89,
+      "truncated": false,
+      "kind": "main",
+      "classified_by": "5 main-loop steps from the JSON events; the 5 largest prompts are main, the rest auxiliary",
+      "order": 4
+    },
+    {
+      "task": 441,
+      "slot": 1,
+      "prompt_n": 40,
+      "cache_n": 6344,
+      "prompt_total": 6384,
+      "predicted_n": 92,
+      "prompt_ms": 317.06,
+      "predicted_ms": 1079.63,
+      "time_ms": 1396.69,
+      "truncated": false,
+      "kind": "main",
+      "classified_by": "5 main-loop steps from the JSON events; the 5 largest prompts are main, the rest auxiliary",
+      "order": 5
+    },
+    {
+      "task": 535,
+      "slot": 1,
+      "prompt_n": 148,
+      "cache_n": 6475,
+      "prompt_total": 6623,
+      "predicted_n": 117,
+      "prompt_ms": 487.73,
+      "predicted_ms": 1356.99,
+      "time_ms": 1844.72,
+      "truncated": false,
+      "kind": "main",
+      "classified_by": "5 main-loop steps from the JSON events; the 5 largest prompts are main, the rest auxiliary",
+      "order": 6
+    }
+  ],
+  "turn_definition": "one turn = the single smoke prompt, from the user message to the final answer; it holds the main-loop requests (one per step) and any auxiliary requests",
+  "per_turn": {
+    "turns": 1,
+    "requests_per_turn": 6,
+    "main_requests_per_turn": 5,
+    "auxiliary_requests_per_turn": 1,
+    "totals": {
+      "all": {
+        "requests": 6,
+        "prompt_n": 6397,
+        "cache_n": 24131,
+        "predicted_n": 713,
+        "time_ms": 25939.72
+      },
+      "main": {
+        "requests": 5,
+        "prompt_n": 6204,
+        "cache_n": 24131,
+        "predicted_n": 632,
+        "time_ms": 16762.6
+      },
+      "auxiliary": {
+        "requests": 1,
+        "prompt_n": 193,
+        "cache_n": 0,
+        "predicted_n": 81,
+        "time_ms": 9177.12
+      },
+      "unclassified": {
+        "requests": 0,
+        "prompt_n": 0,
+        "cache_n": 0,
+        "predicted_n": 0,
+        "time_ms": 0
+      }
+    }
+  },
+  "classification": {
+    "main_min_prompt_tokens": 5587,
+    "auxiliary_max_prompt_tokens": 193,
+    "classes_separate_by_prompt_size": true
+  },
+  "any_request_truncated": false,
+  "source": "llama-server log (print_timing, new prompt); cache_n = task.n_tokens - prompt_n"
+}

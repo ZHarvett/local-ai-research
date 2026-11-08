@@ -1,0 +1,10 @@
+--- a/movavg.py
++++ b/movavg.py
+@@ -5,6 +5,6 @@
+ def moving_average(values, window):
+     """Return the mean of every run of `window` consecutive values."""
+     out = []
+-    for i in range(len(values) - window):
++    for i in range(len(values) - window + 1):
+         out.append(sum(values[i : i + window]) / window)
+     return out

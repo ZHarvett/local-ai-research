@@ -1,0 +1,3 @@
+timestamp=2026-11-08T18:37:35.509Z level=WARN run=4ab5cee7 message="background dependency install failed" dir=/mnt/data/local-ai-research/third_party/harness-state/opencode/config/opencode error="Cause([Fail(NpmInstallFailedError (cause: E1: 403 Forbidden - GET https://registry.npmjs.org/@opencode-ai%2fplugin))])"
+timestamp=2026-11-08T18:37:35.735Z level=INFO run=4ab5cee7 message=asking id=per_1bc739c770011MAZe1DRh7sFWW permission=bash patterns="[\"curl -s http://127.0.0.1:1/x\"]"
+[93m[1m! [0mpermission requested: bash (curl -s http://127.0.0.1:1/x); auto-rejecting

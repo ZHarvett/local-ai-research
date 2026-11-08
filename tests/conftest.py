@@ -17,3 +17,8 @@ def free_port() -> int:
     with socket.socket() as s:
         s.bind(("127.0.0.1", 0))
         return s.getsockname()[1]
+
+
+# The toy task contains one deliberately failing test; it is run only by tests/test_toy_task.py,
+# in a scratch copy, never by the main suite.
+collect_ignore_glob = ["fixtures/toy-task/*"]

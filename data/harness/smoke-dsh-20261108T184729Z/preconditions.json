@@ -1,0 +1,14 @@
+{
+  "ok": true,
+  "aborts": [],
+  "warnings": [],
+  "values": {
+    "gpu_lock_held": true,
+    "lock_expected_held_by_wrapper": true,
+    "gpu_compute_processes": 0,
+    "gpu_graphics_processes": 0,
+    "connected_on_nvidia": [],
+    "mem_available_gib": 25.98,
+    "loadavg_1m": 1.35
+  }
+}

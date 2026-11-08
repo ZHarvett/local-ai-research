@@ -1,0 +1,9 @@
+# WP7 smoke runs: the stock-64k configuration plus log_verbosity = 4, and nothing else.
+# At the default log level llama-server's per-request lines carry prompt_n and the timings but not
+# the prompt length, so cache_n (prompt length - prompt_n) cannot be derived (first smoke run,
+# data/harness/smoke-opencode-20261108T184602Z). -lv 4 is a logging flag that does not change
+# inference; step plan 3.1 allows it and the WP6 decision already runs every sweep cell with it.
+profile = "stock"
+context = 65536
+metrics = true
+log_verbosity = 4

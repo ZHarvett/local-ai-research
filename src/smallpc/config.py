@@ -7,6 +7,7 @@ file that was asked for: paths (for example the llama-server binary) are only ch
 from __future__ import annotations
 
 import os
+import re
 import tomllib
 from pathlib import Path
 from typing import Annotated, Literal, Self
@@ -291,3 +292,126 @@ class SweepSpec(_Strict):
 
 def load_sweep(path: str | Path) -> SweepSpec:
     return SweepSpec.model_validate(_load_toml(path))
+
+
+# --------------------------------------------------------------------------- harness (WP7)
+
+
+class HarnessRuntime(_Strict):
+    node: str = Field(pattern=r"^\d+\.\d+\.\d+$")
+    npm: str = Field(pattern=r"^\d+\.\d+\.\d+$")
+    node_min: str = Field(pattern=r"^\d+\.\d+\.\d+$")  # the step plan's floor
+    dsh_node_min: str = Field(pattern=r"^\d+\.\d+\.\d+$")  # dsh's own `engines.node`
+
+
+class HarnessInstall(_Strict):
+    prefix: str  # install prefix, relative to the repo root
+    package_json: str
+    lockfile: str
+    lockfile_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+    command: str  # the reproducible install, run from the repo root
+    npm_ci_command: str  # what the command runs for the packages
+    installed_utc: str  # when `--lock` resolved the tree
+    before_utc: str  # the `--before` cutoff: exactly 7 days earlier
+    sandbox: str  # how every npm/harness run is isolated
+
+
+class HarnessAgeCheck(_Strict):
+    """Result of the whole-tree 7-day rule (``smallpc.lockage``)."""
+
+    rule_days: int = Field(ge=1)
+    cutoff_utc: str
+    packages_checked: int = Field(ge=1)
+    too_new: int = Field(ge=0)  # packages published after the cutoff in the final lockfile
+    overrides: list[
+        str
+    ] = []  # npm `overrides` entries added to package.json (none needed if empty)
+    newest_published_utc: str
+    newest_package: str
+    evidence_file: str  # every name@version with its publish time
+
+
+class HarnessPackage(_Strict):
+    name: str
+    version: str  # exact, never a range
+    published_utc: str
+    integrity: str = Field(pattern=r"^sha512-[A-Za-z0-9+/=]+$")
+    role: str
+    latest_tag_at_install: str  # what the `latest` dist-tag pointed to
+    latest_tag_published_utc: str
+    pin_rule_result: str  # why this version and not the tag
+
+
+class HarnessPlugins(_Strict):
+    """dsh's plugin packages come in as dependencies of the CLI, at exactly the CLI's version."""
+
+    package_glob: str
+    version: str
+    count: int = Field(ge=1)
+    note: str
+
+
+class HarnessScriptEntry(_Strict):
+    name: str
+    version: str
+    script: str
+    reason: str
+
+
+class HarnessRebuild(_Strict):
+    """Install scripts: only `packages` are run (``npm rebuild``); `denied` stay blocked."""
+
+    packages: list[HarnessScriptEntry] = []
+    denied: list[HarnessScriptEntry] = []
+
+
+class HarnessBinaries(_Strict):
+    opencode: str  # absolute
+    dsh: str  # absolute path of the JavaScript entry, started with `node`
+    node: str
+
+    @field_validator("opencode", "dsh", "node")
+    @classmethod
+    def _abs(cls, v: str) -> str:
+        return _absolute(v)
+
+
+class HarnessContextPolicy(_Strict):
+    """How the harness limits are derived from the server's /props (never hard-coded)."""
+
+    context_source: str
+    output_cap: PosInt
+    output_divisor: PosInt
+    note: str
+
+
+class HarnessConfig(_Strict):
+    schema_version: Literal[1]
+    runtime: HarnessRuntime
+    install: HarnessInstall
+    age_check: HarnessAgeCheck
+    packages: Annotated[list[HarnessPackage], Field(min_length=2)]
+    plugins: HarnessPlugins
+    rebuild: HarnessRebuild
+    binaries: HarnessBinaries
+    context_policy: HarnessContextPolicy
+
+    @model_validator(mode="after")
+    def _exact_versions(self) -> Self:
+        for p in self.packages:
+            if not re.fullmatch(r"\d+\.\d+\.\d+(-[0-9A-Za-z.-]+)?", p.version):
+                raise ValueError(f"{p.name}: version must be exact, got {p.version!r}")
+        names = {p.name for p in self.packages}
+        if not {"opencode-ai", "@deepseek-ai/dsh"} <= names:
+            raise ValueError("packages must include opencode-ai and @deepseek-ai/dsh")
+        dsh = next(p for p in self.packages if p.name == "@deepseek-ai/dsh")
+        if self.plugins.version != dsh.version:
+            raise ValueError("dsh plugins must have exactly the dsh CLI version")
+        return self
+
+    def package(self, name: str) -> HarnessPackage:
+        return next(p for p in self.packages if p.name == name)
+
+
+def load_harness(path: str | Path | None = None) -> HarnessConfig:
+    return HarnessConfig.model_validate(_load_toml(path or repo_root() / "configs/harness.toml"))

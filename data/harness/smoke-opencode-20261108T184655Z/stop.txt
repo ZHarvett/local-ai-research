@@ -1,0 +1,1 @@
+stopped: method=sigint exit_code=0 (/mnt/data/local-ai-research/data/logs/smoke-opencode-20261108T184659Z/stop-status.json)

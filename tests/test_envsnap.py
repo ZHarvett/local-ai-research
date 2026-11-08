@@ -136,7 +136,9 @@ def test_snapshot_records_the_required_sections(monkeypatch, quiet):
     assert set(idn["llama_cpp"]["binaries_sha256"]) >= {"llama-server"}
     assert idn["model"]["sha256"] and idn["model"]["revision"]
     assert "igpu" in idn["bios_manual_fields"]
-    assert idn["harnesses"]["status"] == "unavailable" or "opencode" in json.dumps(idn["harnesses"])
+    h = idn["harnesses"]
+    assert h.get("status") != "unavailable"  # configs/harness.toml exists since WP7
+    assert h["opencode"]["pinned_version"] and h["dsh"]["pinned_version"]
     for k in ("memory", "gpu_processes", "gpu_lock", "loadavg", "desktop_gpu_steering"):
         assert k in st
     assert st["desktop_gpu_steering"]["memory_used_mib_before_any_server"] == "2"
@@ -289,3 +291,67 @@ def test_llama_server_on_the_card_is_not_part_of_the_machine_state(monkeypatch, 
         envsnap, "gpu_processes", lambda: [proc(5, "C", "/opt/x/llama-server", 14000.0)]
     )
     assert envsnap.snapshot()["snapshot_id"] == a
+
+
+# ------------------------------------------------------------------ harness versions (WP7)
+
+
+def _harness_root(tmp_path, installed: dict[str, str]):
+    """A fake repo root with a minimal configs/harness.toml and the given installed packages."""
+    (tmp_path / "configs").mkdir()
+    (tmp_path / "configs/harness.toml").write_text(
+        """
+schema_version = 1
+[runtime]
+node = "26.13.0"
+npm = "12.2.1"
+[install]
+prefix = "third_party/node"
+lockfile_sha256 = "ab"
+[plugins]
+version = "0.2.1-rc.5"
+count = 295
+[age_check]
+cutoff_utc = "2026-11-01T18:25:11Z"
+packages_checked = 643
+too_new = 0
+[[packages]]
+name = "opencode-ai"
+version = "1.19.5"
+published_utc = "2026-10-28T06:17:11.100Z"
+integrity = "sha512-aaa"
+[[packages]]
+name = "@deepseek-ai/dsh"
+version = "0.2.1-rc.5"
+published_utc = "2026-10-29T14:15:23.355Z"
+integrity = "sha512-bbb"
+"""
+    )
+    for name, version in installed.items():
+        d = tmp_path / "third_party/node/node_modules" / name
+        d.mkdir(parents=True)
+        (d / "package.json").write_text(json.dumps({"name": name, "version": version}))
+    return tmp_path
+
+
+def test_harness_info_reports_pinned_and_installed_versions(tmp_path):
+    root = _harness_root(tmp_path, {"opencode-ai": "1.19.5", "@deepseek-ai/dsh": "0.2.1-rc.5"})
+    h = envsnap.harness_info(root)
+    assert h["node"] == "26.13.0" and h["npm"] == "12.2.1"
+    assert h["opencode"]["pinned_version"] == h["opencode"]["installed_version"] == "1.19.5"
+    assert h["dsh"]["pinned_version"] == h["dsh"]["installed_version"] == "0.2.1-rc.5"
+    assert h["plugins_version"] == "0.2.1-rc.5" and h["age_check"]["too_new"] == 0
+
+
+def test_harness_info_says_unavailable_not_a_guess(tmp_path):
+    assert envsnap.harness_info(tmp_path)["status"] == "unavailable"  # no harness.toml
+    root = _harness_root(tmp_path, {"opencode-ai": "1.19.4"})  # dsh missing, opencode drifted
+    h = envsnap.harness_info(root)
+    assert h["dsh"]["installed_version"] == "unavailable"
+    assert h["opencode"]["installed_version"] == "1.19.4" != h["opencode"]["pinned_version"]
+
+
+def test_harness_info_incomplete_toml_is_unavailable(tmp_path):
+    (tmp_path / "configs").mkdir()
+    (tmp_path / "configs/harness.toml").write_text("[runtime]\nnode = '1'\n")
+    assert envsnap.harness_info(tmp_path)["status"] == "unavailable"

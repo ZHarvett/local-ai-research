@@ -1,0 +1,16 @@
+{
+  "pytest_returncode": 0,
+  "pytest_green": true,
+  "pytest_tail": [
+    ".                                                                        [100%]",
+    "1 passed in 0.00s"
+  ],
+  "test_file_byte_identical": true,
+  "test_file_sha256_original": "916cd5aa8f1342402e8d5a1e927c722b467deab9603ea2aff5fecf06d81e410f",
+  "test_file_sha256_scratch": "916cd5aa8f1342402e8d5a1e927c722b467deab9603ea2aff5fecf06d81e410f",
+  "changed_files": [
+    "movavg.py"
+  ],
+  "extra_files": [],
+  "pass": true
+}

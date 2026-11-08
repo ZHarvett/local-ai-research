@@ -272,3 +272,36 @@ Decisions are recorded with date and source. Source section numbers refer to
 - Network behaviour is observed with a local logging proxy. A proxy cannot see traffic that ignores
   the proxy settings; if the control run shows no attempt, network behaviour is reported as
   "not verified".
+
+### WP7 results recorded after the install and the smoke runs (2026-11-08)
+- **Whole-tree 7-day rule (result):** installed with `--before=2026-11-01T18:25:11Z` (install
+  2026-11-08T18:25:11Z). The final lockfile has 643 distinct name@version pairs; **none** was published
+  after the cutoff (newest: `http2-wrapper@2.2.4`, 2026-11-01T11:29Z), so no `overrides` were needed.
+  The checker was proven with a positive control (a later cutoff lists AWS SDK packages). Evidence:
+  `data/harness/lockfile-ages.json`, `configs/harness.toml [age_check]`.
+- **Pins:** `opencode-ai` 1.19.5 (the `latest` tag, 11 days old) and `@deepseek-ai/dsh` 0.2.1-rc.5
+  (`latest` was `0.2.2-rc.1`, 4 days old; "newest" read as newest by publish time). 295 `@deepseek-ai/dsh-*`
+  packages in the tree, all at 0.2.1-rc.5.
+- **Install scripts:** npm 12 blocks dependency install scripts unless `allowScripts` in `package.json`
+  approves them. Only `opencode-ai@1.19.5` (its postinstall hard-links the platform binary) is approved
+  and was run, offline. `node-pty`, `koffi`, `@google/genai`, `protobufjs` and
+  `@deepseek-ai/dsh-subprocess-local` stay blocked; dsh runs without them.
+- **Smoke server config:** the first OpenCode run used `stock-64k.toml` exactly. At default log
+  verbosity llama-server does not log the prompt length, so `cache_n` could not be derived. The
+  committed request pattern comes from re-runs with `configs/server/smoke-stock-64k.toml` = stock-64k
+  plus `log_verbosity = 4` (a logging flag, allowed by 3.1 and already used for every sweep cell by the
+  WP6 decision; a test pins the difference to that one field). Both runs are kept.
+- **Stock server in /props:** `total_slots = 4`, `kv_unified = true`, per-slot
+  `default_generation_settings.n_ctx = 65536`, no top-level `n_ctx`. So the per-slot and total context
+  do not differ here, and `limit.context = 65536`, `limit.output = 16384`.
+- **Environment switches** (OpenCode): `OPENCODE_DISABLE_AUTOUPDATE`, `_MODELS_FETCH`, `_DEFAULT_PLUGINS`,
+  `_LSP_DOWNLOAD` = 1. No switch exists for the unconditional background install of
+  `@opencode-ai/plugin`; the deny-all proxy refuses it. (dsh): `DSH_TELEMETRY_MODE=DISABLED`,
+  `DSH_PERMISSION_MODE=workspace-write`, a placeholder `DSH_LOCAL_API_KEY`, web tools disabled in the
+  profile patch.
+- **Sandbox goes beyond the amendment:** dsh's own permission settings do not restrict bash network
+  access or `/tmp` (probed), so the smoke runs also use a private network namespace with only the
+  server and the proxy bridged in (`_sandbox.sh --bridge`, `smallpc.netbridge`). OpenCode runs in the same.
+- **A denied tool call does not fail a smoke run; a permission prompt does.** (The plan text said both.)
+  Denials are counted and reported. In `opencode run` a prompt is auto-rejected ("permission requested;
+  auto-rejecting", probed), never approved, and never hangs.

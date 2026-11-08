@@ -1,0 +1,42 @@
+{
+  "kind": "opencode-ask",
+  "checks": [
+    {
+      "check": "every scripted tool call reached the harness",
+      "expected": 1,
+      "actual": 1,
+      "pass": true
+    },
+    {
+      "check": "ask in a non-interactive run",
+      "expected": "rejected",
+      "actual": "rejected",
+      "pass": true
+    },
+    {
+      "check": "permission prompts raised",
+      "expected": 1,
+      "actual": 1,
+      "pass": true
+    }
+  ],
+  "summary": {
+    "tool_uses": [
+      {
+        "tool": "bash",
+        "input": {
+          "command": "curl -s http://127.0.0.1:1/x",
+          "description": "t"
+        },
+        "status": "error",
+        "error": "The user rejected permission to use this specific tool call.",
+        "output_head": null
+      }
+    ],
+    "steps": 1,
+    "final_text": null,
+    "permission_asks": 1,
+    "auto_rejected": 1,
+    "rule_denials": 0
+  }
+}

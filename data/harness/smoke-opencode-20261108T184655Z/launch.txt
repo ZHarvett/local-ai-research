@@ -1,0 +1,2 @@
+server healthy: pid=94817 http://127.0.0.1:8080
+run-dir: /mnt/data/local-ai-research/data/logs/smoke-opencode-20261108T184659Z

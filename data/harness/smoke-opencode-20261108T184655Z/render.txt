@@ -1,0 +1,1 @@
+{"props": {"n_ctx_slot": 65536, "n_ctx_total": null, "total_slots": 4, "model_id": "/mnt/data/local-ai-research/models/Ornith-1.5-35B-Q4_K_M.gguf", "model_path": "/mnt/data/local-ai-research/models/Ornith-1.5-35B-Q4_K_M.gguf"}, "out": "/mnt/data/local-ai-research/data/harness/smoke-opencode-20261108T184655Z/opencode.json"}

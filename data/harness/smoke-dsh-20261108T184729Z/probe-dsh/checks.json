@@ -1,0 +1,102 @@
+{
+  "kind": "dsh",
+  "checks": [
+    {
+      "check": "every scripted tool call reached the harness",
+      "expected": 5,
+      "actual": 5,
+      "pass": true
+    },
+    {
+      "check": "ls",
+      "expected": "ok",
+      "actual": "ok",
+      "pass": true
+    },
+    {
+      "check": "write inside the workspace",
+      "expected": "ok",
+      "actual": "ok",
+      "pass": true
+    },
+    {
+      "check": "operation that needs approval (no approver in headless)",
+      "expected": "rejected",
+      "actual": "rejected",
+      "pass": true
+    },
+    {
+      "check": "write into the repo",
+      "expected": "denied",
+      "actual": "denied",
+      "pass": true
+    },
+    {
+      "check": "network, proxy bypassed",
+      "expected": "denied",
+      "actual": "denied",
+      "pass": true
+    }
+  ],
+  "summary": {
+    "tool_uses": [
+      {
+        "tool": "bash",
+        "input": {
+          "command": "ls",
+          "description": "t"
+        },
+        "callId": "call_0",
+        "status": "completed",
+        "result_head": "PROMPT.txt\nmovavg.py\ntest_movavg.py\n"
+      },
+      {
+        "tool": "write",
+        "input": {
+          "file_path": "b.py",
+          "content": "print(1)\n"
+        },
+        "callId": "call_1",
+        "status": "completed",
+        "result_head": "<path>/tmp/local-ai-research-smoke-UYTS41/b.py</path>\n<type>file</type>\n<content>\nCreated file\n</content>"
+      },
+      {
+        "tool": "write",
+        "input": {
+          "file_path": "/mnt/data/local-ai-research/DSH-APPROVAL-PROBE",
+          "content": "x",
+          "sandbox_permissions": "danger-full-access",
+          "justification": "probe"
+        },
+        "callId": "call_2",
+        "status": "error",
+        "result_head": "Error: sandbox escalation to \"danger-full-access\" requires approval, but no approval channel is available"
+      },
+      {
+        "tool": "bash",
+        "input": {
+          "command": "touch /mnt/data/local-ai-research/DSH-PROBE2",
+          "description": "t"
+        },
+        "callId": "call_3",
+        "status": "completed",
+        "result_head": "[stderr]\ntouch: cannot touch '/mnt/data/local-ai-research/DSH-PROBE2': Read-only file system\n[sandbox: file access denied under workspace-write mode]\n[sandbox: escalation available \u2014 retry this exact command once with sandbox_permissions (the narrowest wider mode that suffices) + justification; the "
+      },
+      {
+        "tool": "bash",
+        "input": {
+          "command": "curl -s --noproxy '*' --max-time 5 https://example.com",
+          "description": "t"
+        },
+        "callId": "call_4",
+        "status": "completed",
+        "result_head": "(no output)\n[exit code: 7]"
+      }
+    ],
+    "steps": 6,
+    "final_text": "done",
+    "turn_end": {
+      "kind": "completed"
+    }
+  }
+}

@@ -1,0 +1,30 @@
+# dsh profile patch for the WP7 smoke run (rendered by smallpc.harness; do not edit the output).
+# Local llama-server as an OpenAI-compatible route with a placeholder key, no web tools, no
+# telemetry off via DSH_TELEMETRY_MODE=DISABLED in the environment. Approvals keep the shipped
+# policy "ask": headless has no answerer, so anything needing approval fails closed (dsh-user-approval
+# README; probed in scripts/smoke-dsh.sh). Everything else is the shipped profile.
+- id: llm-pi-ai
+  config:
+    providers:
+      "@@PROVIDER_ID@@":
+        displayName: llama.cpp (local)
+        api: openai-completions
+        baseURL: "http://@@HOST@@:@@PORT@@/v1"
+        apiKeyEnv: DSH_LOCAL_API_KEY
+        models:
+          - id: "@@MODEL_ID@@"
+            name: "@@MODEL_ID@@"
+            contextWindow: @@CONTEXT@@
+            maxTokens: @@OUTPUT@@
+- id: agent-default-model
+  config:
+    provider: "@@PROVIDER_ID@@"
+    model: "@@MODEL_ID@@"
+- id: tool-web
+  disabled: true
+- id: web-search-deepseek
+  disabled: true
+- id: web-deepseek-api
+  disabled: true
+- id: web-fetch-http
+  disabled: true
