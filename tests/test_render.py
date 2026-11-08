@@ -193,6 +193,26 @@ def test_health_config_golden_argv():
     assert "--chat-template-file" not in argv and "--jinja" not in argv
 
 
+def test_workload_check_config_golden_argv():
+    cfg = load_server(REPO / "configs/server/workload-check-128k.toml")
+    argv = render_argv(cfg, load_machine(MACHINE), load_model(MODEL))
+    assert argv == golden("workload-check-128k")
+    assert cfg.profile == "candidate"
+    # 128K context, --fit on, 8-bit KV, -fa on, -np 1, --metrics, -lv 4; no slot-save path
+    for flag, value in (
+        ("-c", "131072"),
+        ("--fit", "on"),
+        ("-ctk", "q8_0"),
+        ("-ctv", "q8_0"),
+        ("-fa", "on"),
+        ("-np", "1"),
+        ("-lv", "4"),
+    ):
+        assert argv[argv.index(flag) + 1] == value
+    assert "--metrics" in argv and "--slot-save-path" not in argv
+    assert "--chat-template-file" not in argv and "--jinja" not in argv
+
+
 def test_smoke_stock_config_is_stock_64k_plus_verbosity_only():
     """The WP7 smoke config differs from the stock example by `-lv 4` and nothing else."""
     from conftest import REPO

@@ -1,0 +1,85 @@
+{
+ "ok": true,
+ "checks": [
+  {
+   "name": "manifest holds no long strings",
+   "status": "PASS",
+   "detail": "235324 bytes, strings <= 200 chars"
+  },
+  {
+   "name": "tokenize settings match the GGUF",
+   "status": "PASS",
+   "detail": "add_bos_token=False bos=248044 parse_special=True"
+  },
+  {
+   "name": "model and template identity",
+   "status": "PASS",
+   "detail": "model 42739874cc2c, template 241770246d95"
+  },
+  {
+   "name": "recipe and manifest agree",
+   "status": "PASS",
+   "detail": "seed smallpc-wp8-v1, K 1024, append 3000"
+  },
+  {
+   "name": "special-token strings from the vocabulary",
+   "status": "PASS",
+   "detail": "33 candidates, 27 parsed as control tokens"
+  },
+  {
+   "name": "poetry: pinned commit and license files",
+   "status": "PASS",
+   "detail": "94b6e35b9091, 1 license file(s) MIT"
+  },
+  {
+   "name": "poetry: eligible files and pools reproduced",
+   "status": "PASS",
+   "detail": "309 files, 645819 tokens, 6 pools"
+  },
+  {
+   "name": "axum: pinned commit and license files",
+   "status": "PASS",
+   "detail": "c59208c86fde, 4 license file(s) MIT"
+  },
+  {
+   "name": "axum: eligible files and pools reproduced",
+   "status": "PASS",
+   "detail": "256 files, 346356 tokens, 6 pools"
+  },
+  {
+   "name": "prompt texts, token counts and hashes reproduced",
+   "status": "PASS",
+   "detail": "48 prompts, 1550336 tokens counted with /tokenize"
+  },
+  {
+   "name": "append chunks reproduced",
+   "status": "PASS",
+   "detail": "5 chunks of exactly 3000 tokens"
+  },
+  {
+   "name": "prefix property: A is a prefix of B, B adds exactly 3000 tokens",
+   "status": "PASS",
+   "detail": "35 pairs checked with /apply-template and whole-text /tokenize"
+  },
+  {
+   "name": "context-fit table",
+   "status": "PASS",
+   "detail": "d + 3000 + 400 <= C for C=32768: 27976, C=65536: 52552, C=131072: 101704"
+  },
+  {
+   "name": "nonces unique over the planned 5-repetition sweep",
+   "status": "PASS",
+   "detail": "42 fresh requests, 42 distinct"
+  },
+  {
+   "name": "nonces unique in the manifest",
+   "status": "PASS",
+   "detail": "48 prompts"
+  },
+  {
+   "name": "summary counts",
+   "status": "PASS",
+   "detail": "{'A': 35, 'B': 35, 'short': 5, 'warmup': 2, 'sanity': 3, 'equiv': 3}"
+  }
+ ]
+}

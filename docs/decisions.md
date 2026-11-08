@@ -324,3 +324,73 @@ Decisions are recorded with date and source. Source section numbers refer to
 ### Variant policy
 - Repetition r uses variant `r mod 5`. The 2-repetition screening therefore uses variants 0 and 1, and a
   5-repetition run uses all five.
+
+### WP8 workloads: sources, design and findings (2026-11-08)
+
+**Source repositories** (`configs/workloads/recipe.toml`, `configs/workloads/manifest.json`). Both are
+public, one per language, neither is llama.cpp nor this repository. The license is the text read from the
+clone, not the GitHub label.
+
+| | Python | Rust |
+|---|---|---|
+| Repository | `python-poetry/poetry` | `tokio-rs/axum` |
+| Pin (release tag, full commit) | 2.5.1, `94b6e35b9091991887aa54feeb3771a86d3bd692` | `axum-v0.8.9`, `c59208c86fded335cd85e388030ad59347b0e5ae` |
+| License (SPDX) | MIT (root `LICENSE`, SHA-256 `1786f071a510648a24695f295117f02bae0bbf0fb7c6730aafe9c93a3e4bf7ee`) | MIT |
+| License file(s) | `LICENSE` | no root `LICENSE` at this tag; one per crate: `axum/LICENSE` SHA-256 `6a13bc24a100a6812f053879ec51b126b103af7cda6dbf48c4188722da44da9f` (primary); `axum-core`, `axum-extra`, `axum-macros` `LICENSE` all `2c417b11aaf663ec7cbc8c8127afd748bfbb4de78df864395866897daaca71fa` |
+| Hand-written tokens (`/tokenize`) | 645,819 in 309 `.py` files | 346,356 in 256 `.rs` files |
+| Excluded | 77 files in excluded directories (`fixtures`, `docs`, ...), 65 by size | 40 by size (under 200 bytes) |
+| Shallow clone | depth 100, 17 MB | depth 100, 4.0 MB |
+
+- The four axum license files are all MIT text but are **not byte-identical** (different copyright line and
+  line wrapping), so the plan's "assert they are equal" was replaced by recording every hash and verifying
+  each in `verify`. SPDX id `MIT` was read from the license text itself.
+- Both repositories are popular public code the model may have seen in training; MTP acceptance and other
+  content-dependent numbers measured on them need the same caveat as the WP5 llama.cpp-source figures.
+- **Clone depth 100, not 1** (deviation to flag): depth 1 has no history, so `git log --stat` and
+  `git diff HEAD~N HEAD` could not be used for the append chunks. Clones are in the gitignored
+  `third_party/workload-sources/`. Nothing else was downloaded.
+- Eligibility rules (recipe `[exclusions]`): extension, no vendor/fixtures/generated/build directories,
+  200 to 200,000 bytes, UTF-8 without NUL or CR, no generated-file marker, no line over 1,000 characters.
+  Pools: files sorted by size into six disjoint pools (variants 0 to 4 plus a reserve pool for warm-up,
+  equivalence and sanity prompts), then shuffled with a fixed seed. Pool sizes: poetry about 107.6K tokens,
+  axum about 57.7K tokens each (the 96K prompt needs about 49K per repository).
+
+**Special-token strings (Zack's amendment).** A source file or command-output line that contains a literal
+control-token string would turn into a control token when prompts are tokenized with special tokens parsed.
+The strings are read from the model's vocabulary (GGUF `tokenizer.ggml.tokens` with `token_type` control or
+user-defined: 33 candidates), then kept only if `/tokenize` turns the string into one token with special
+parsing on and into something else with it off (27 strings; list and SHA-256 `f63d81b1cce154fe...` in the
+manifest). Files and command-output lines containing one are excluded; a second guard rejects any file whose
+token count differs between the two parsing modes. In the real sources no file was excluded for this reason
+(a test with a fake file proves the exclusion works).
+
+**Token accounting (Zack's amendment).** `prompt_n` counts tokens processed and `cache_n` tokens reused.
+Invariants: Request A `prompt_n + cache_n == d` and `cache_n <= 32`; Request B
+`prompt_n + cache_n == d + 3000` and `cache_n >= 0.95 d`; the equivalence check compares `prompt_n` of the
+string and token-array requests. Any other result is a finding and no threshold is adjusted. The WP9
+interface carries them as `expected.processed_plus_cached`.
+
+**Committed data holds no text (Zack's amendment).** `data/workloads/live-check-<date>.json` and the manifest
+contain counts, token ids, hashes, stop types and timings only; a test rejects any string over 200
+characters. Instruction wording is kept in `recipe.toml` and referenced from the manifest by id and SHA-256.
+
+**Design as built.**
+- Prompt: `<|im_start|>system\n{nonce}\n{system prompt}<|im_end|>\n<|im_start|>user\n{files}\n\n{instruction}<|im_end|>\n`,
+  plus the generation prompt `<|im_start|>assistant\n<think>\n` for single-turn kinds (short points, warm-up,
+  sanity, equivalence). Request A has no generation prompt. Thinking stays at the template default (on).
+  Files alternate by repository section (first half poetry, second half axum), so both appear at every length.
+- Request B appends, for exactly 3,000 tokens including wrapper and generation prompt: an assistant stub,
+  a `tool` message with tool-like output from git commands (`git log --stat`, `git diff`, `git grep -n`,
+  `git ls-tree -r -l`), a final user instruction, then the generation prompt. The rendering was taken from the
+  server's `/apply-template`; A's tokens are an exact prefix of B's (checked per pair against the real
+  renderer and by tokenizing B whole).
+- Nonce `[nonce <16 hex>]` is the first text in the system message, derived from `sha256(seed|kind|variant|length|repetition)`.
+  Packing always runs on the complete text, so the nonce's token cost (it varies) cannot change the length.
+  The manifest covers repetitions 0 to 4 (variant = repetition); larger repetitions are built on demand.
+- BOS: the GGUF has `add_bos_token = false` (BOS id 248044), so token arrays and string prompts carry no BOS;
+  the code prepends and counts it if a model sets it.
+- Live-check server: `configs/server/workload-check-128k.toml` (candidate profile, 131072 context, `--fit on`,
+  8-bit KV, `-fa on`, `-np 1`, `--metrics`, `-lv 4`), golden argv in `tests/golden/`.
+
+**Rejected recipes.** None. All five variants reached 400 tokens with the first wording (W0) at every depth
+and as short points; W1 and W2 in `recipe.toml` were never needed.
