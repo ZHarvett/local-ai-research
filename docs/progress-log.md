@@ -88,3 +88,25 @@ Newest entry last. Each entry: date, WP, status, commit, key results, open issue
   - The actual slot count under `-np -1` and the fitted context are runtime values; read them in WP5.
   - A WP0 entry in `docs/decisions.md` contained the account name; scrubbed in the working tree, but it remains in git history (commit `b2debca` or earlier). Rewrite history before any public push.
   - The semver tags upstream (`v0.x.0`) are not obviously a "stable" channel; recorded only, as instructed.
+
+---
+
+## 2026-11-08 — WP4: Model download and verification
+
+- **Status:** done. All acceptance criteria pass; CI commands pass locally (148 tests, ruff, shellcheck).
+- **Commits:** `5182616` (`WP4: record desktop GPU steering mechanism`), `1660428` (`WP4: model download and verification`), then `WP4: progress log` (this entry).
+- **Key results:**
+  - Desktop GPU steering (asked of Zack): a Gigabyte BIOS setting, Settings > IO Ports > Integrated Graphics = Forced, Initial Display Output = IGD Video, UMA Mode = Auto, monitors on the motherboard outputs; recorded with an undo description in `docs/environment.md`, `docs/decisions.md`, `configs/machine.toml` and `scripts/inventory.sh`. The two open items (WP14 history scan, WP12 load-mode meanings) are in `docs/decisions.md`.
+  - Model: `ornith-ai/Ornith-1.5-35B-A3B-GGUF`, `Ornith-1.5-35B-Q4_K_M.gguf`, 21,713,463,040 bytes, revision `f60452672689e0040be350560267a614cc172a18` (2026-08-24 03:38:27 UTC; newest commit that changed the file's content, checked at all 17 commits). SHA-256 `42739874cc2ccfdb8523b23fbe52e29b2a7555c8176737ca9ca0b5d59859d41f`: published by Hugging Face and computed locally, identical. License `mit`.
+  - Download: huggingface_hub 2.4.0 via uvx, 15:53:22Z to 16:27:52Z = **34 min 30 s** (about 10.5 MB/s), detached, exit code 0. `git ls-files models` is empty.
+  - Base repo `ornith-ai/Ornith-1.5-35B-A3B` at `10fbf86fed7ecee4a061f8b499a618f46001cac1` (identified from the card's links; the GGUF card has no `base_model`). Sampling recorded verbatim: general temperature 0.6 / top_p 0.95 / top_k 20; benchmarks temperature 1.0; no thinking/non-thinking/coding split.
+  - `smallpc.gguf_check`: verdict **PASS** (`data/health/model-check.json`): `qwen35moe`, block_count 41, `nextn_predict_layers` = 1, 256 experts / 8 used; 20 `blk.40.*` tensors (16 trunk-shaped + 4 `nextn.*`), 0 of 12 matrices fresh-init-like, no non-finite values, all norm medians inside [0.2, 5]. The smallest norm median is `nextn.enorm` at 0.2734, close to the lower bound but inside it. PASS means only "no known failure signature". 26 synthetic-tensor tests (incl. no false rejection).
+  - Load check (`--check-tensors`, `-ngl 0`, `-c 2048`, port 8191, GPU lock): no tensor errors. Without MTP, `blk.40.*` are skipped as "unused" and not validated, so a second load with `--spec-type draft-mtp` covered the head: no errors, MTP draft context created. VRAM: 2 MiB before, 422 MiB (load 1) / 698 MiB (load 2) while up, 2 MiB after. Excerpt: `data/health/load-check-excerpt.txt`.
+- **Open issues:**
+  - **Chat template (Zack to decide):** the template embedded in the GGUF is not identical to the official one (modified variant, "Unsloth fixes - developer role, tool calling"; 18 changes). llama-server uses the embedded one unless `--chat-template-file` is given. Nothing changed; decide before WP5/WP7 and keep it the same in every stage (`docs/decisions.md`).
+  - The head is only screened, not proven: WP5's draft-acceptance (>= 50% at draft length 1) and equivalence tests are what prove it works.
+  - `--check-tensors` validates only the fp16 scales and float values, not the quantized integers, and no negative control was run.
+  - The base repo's `license_link` points to a LICENSE file that is not in its file list.
+  - The BIOS change date is not recorded (WP3 already observed the steered state).
+  - uvx cached its tool environment under `~/.cache/uv` (uv's normal cache); the Hugging Face cache and download metadata stayed under `models/`.
+  - WP12: choose the load-mode comparison from the six accepted values. WP14: scan the full git history for the account name, hostname and home paths.
