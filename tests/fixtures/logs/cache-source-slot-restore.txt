@@ -1,0 +1,16 @@
+# excerpt of a real llama-server b12208 log (C-short-slotfiles), home paths as ~
+0.02.895.035 I srv    load_model: context checkpoints enabled, max = 32, min spacing = 8192
+0.03.464.538 I slot create_check: id  0 | task 0 | created context checkpoint 1 of 32 (pos_min = 46, pos_max = 46, n_tokens = 47, size = 62.821 MiB)
+0.03.869.635 I slot print_timing: id  0 | task 0 | draft acceptance = 0.93333 (   28 accepted /    30 generated), mean len =  2.87
+0.03.869.653 I spec common_specu: statistics        draft-mtp: #calls(b,g,a) =    1     15     15, #gen drafts =     15, #acc drafts =    14, #gen tokens =     30, #acc tokens =    28, #mean acc len = 2.87, #acc rate/pos = (0.933, 0.933), dur(b,g,a) = 0.015, 52.050, 0.003 ms
+0.03.879.146 I slot create_check: id  0 | task 18 | created context checkpoint 2 of 32 (pos_min = 93, pos_max = 93, n_tokens = 94, size = 62.821 MiB)
+0.03.964.490 I slot create_check: id  0 | task 18 | created context checkpoint 3 of 32 (pos_min = 117, pos_max = 117, n_tokens = 118, size = 62.821 MiB)
+0.04.486.530 I slot print_timing: id  0 | task 18 | draft acceptance = 0.95000 (   38 accepted /    40 generated), mean len =  2.90
+0.04.486.545 I spec common_specu: statistics        draft-mtp: #calls(b,g,a) =    2     35     35, #gen drafts =     35, #acc drafts =    33, #gen tokens =     70, #acc tokens =    66, #mean acc len = 2.89, #acc rate/pos = (0.943, 0.943), dur(b,g,a) = 0.029, 113.260, 0.011 ms
+0.04.532.939 I slot save_slot_ch: id  0 | task -1 | appended 3 context checkpoint(s) (188.463 MiB) to '/dev/shm/local-ai-research-slots/wp5-c8-short-slotfiles.bin'
+0.04.562.475 I slot load_slot_ch: id  0 | task -1 | restored 3 context checkpoint(s) from '/dev/shm/local-ai-research-slots/wp5-c8-short-slotfiles.bin'
+0.04.562.679 I slot load_slot_dr: id  0 | task -1 | restored the draft state (0.364 MiB) from '/dev/shm/local-ai-research-slots/wp5-c8-short-slotfiles.bin'
+0.04.572.443 I slot create_check: id  0 | task 44 | created context checkpoint 4 of 32 (pos_min = 179, pos_max = 179, n_tokens = 180, size = 62.821 MiB)
+0.04.654.180 I slot create_check: id  0 | task 44 | created context checkpoint 5 of 32 (pos_min = 200, pos_max = 200, n_tokens = 201, size = 62.821 MiB)
+0.05.307.859 I slot print_timing: id  0 | task 44 | draft acceptance = 0.91304 (   42 accepted /    46 generated), mean len =  2.83
+0.05.307.872 I spec common_specu: statistics        draft-mtp: #calls(b,g,a) =    3     58     58, #gen drafts =     58, #acc drafts =    55, #gen tokens =    116, #acc tokens =   108, #mean acc len = 2.86, #acc rate/pos = (0.948, 0.914), dur(b,g,a) = 0.043, 184.627, 0.020 ms

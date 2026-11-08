@@ -1,0 +1,16 @@
+# WP5 health-check server: the Stage 1 P1 style --fit placement at 64K with the §5.4 sweep
+# defaults written out explicitly (8-bit KV, -fa on, -np 1), plus --metrics and slot saving.
+# `smallpc.health` derives its other servers (MTP, -np 2, expert cache, --cache-ram 0) from this
+# file by overriding fields. log_verbosity = 4 is needed to see the --fit placement, buffer sizes
+# and the prompt-cache / checkpoint trace lines in the log (at the default level 3 they are absent);
+# it is a logging flag and does not change inference. Chat template: the one embedded in the GGUF (docs/decisions.md).
+profile = "candidate"
+context = 65536
+fit = "on"
+cache_type_k = "q8_0"
+cache_type_v = "q8_0"
+flash_attn = "on"
+parallel = 1
+metrics = true
+slot_save_path = "/dev/shm/local-ai-research-slots"
+log_verbosity = 4

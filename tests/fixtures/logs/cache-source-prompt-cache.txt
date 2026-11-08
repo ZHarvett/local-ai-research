@@ -1,0 +1,39 @@
+# excerpt of a real llama-server b12208 log (C-short-promptcache), home paths as ~
+0.02.908.308 I srv    load_model: context checkpoints enabled, max = 32, min spacing = 8192
+0.03.107.872 I srv  get_availabl: updating prompt cache
+0.03.107.876 I srv          load:  - looking for better prompt, base f_keep = -1.000, f_sim = 0.000
+0.03.107.880 I srv        update:  - cache state: 0 prompts, 0.000 MiB (limits: 8192.000 MiB, 65536 tokens, 8589934592 est)
+0.03.107.881 I srv  get_availabl: prompt cache update took 0.01 ms
+0.03.459.804 I slot create_check: id  0 | task 0 | created context checkpoint 1 of 32 (pos_min = 46, pos_max = 46, n_tokens = 47, size = 62.821 MiB)
+0.03.864.546 I slot print_timing: id  0 | task 0 | draft acceptance = 0.93333 (   28 accepted /    30 generated), mean len =  2.87
+0.03.864.563 I spec common_specu: statistics        draft-mtp: #calls(b,g,a) =    1     15     15, #gen drafts =     15, #acc drafts =    14, #gen tokens =     30, #acc tokens =    28, #mean acc len = 2.87, #acc rate/pos = (0.933, 0.933), dur(b,g,a) = 0.016, 52.222, 0.011 ms
+0.03.874.144 I slot create_check: id  0 | task 18 | created context checkpoint 2 of 32 (pos_min = 93, pos_max = 93, n_tokens = 94, size = 62.821 MiB)
+0.03.959.422 I slot create_check: id  0 | task 18 | created context checkpoint 3 of 32 (pos_min = 117, pos_max = 117, n_tokens = 118, size = 62.821 MiB)
+0.04.481.777 I slot print_timing: id  0 | task 18 | draft acceptance = 0.95000 (   38 accepted /    40 generated), mean len =  2.90
+0.04.481.791 I spec common_specu: statistics        draft-mtp: #calls(b,g,a) =    2     35     35, #gen drafts =     35, #acc drafts =    33, #gen tokens =     70, #acc tokens =    66, #mean acc len = 2.89, #acc rate/pos = (0.943, 0.943), dur(b,g,a) = 0.030, 113.827, 0.023 ms
+0.04.483.323 I srv  get_availabl: updating prompt cache
+0.04.483.405 I srv   prompt_save:  - saving prompt with length 180, total state size = 65.041 MiB (draft: 0.356 MiB)
+0.04.492.365 I srv          load:  - looking for better prompt, base f_keep = 0.022, f_sim = 0.089
+0.04.492.370 I srv        update:  - cache state: 1 prompts, 253.504 MiB (limits: 8192.000 MiB, 65536 tokens, 65536 est)
+0.04.492.371 I srv        update:    - prompt 0x5575602d8050:     180 tokens, checkpoints:  3,   253.504 MiB
+0.04.492.372 I srv  get_availabl: prompt cache update took 9.05 ms
+0.04.492.406 I slot   operator(): id  0 | task 41 | checking checkpoint with [117, 117] against 4...
+0.04.492.407 I slot   operator(): id  0 | task 41 | checking checkpoint with [93, 93] against 4...
+0.04.492.407 I slot   operator(): id  0 | task 41 | checking checkpoint with [46, 46] against 4...
+0.04.492.408 I slot   operator(): id  0 | task 41 | erased invalidated context checkpoint (pos_min = 46, pos_max = 46, n_tokens = 47, n_swa = 0, pos_next = 0, size = 62.821 MiB)
+0.04.492.411 I slot   operator(): id  0 | task 41 | erased invalidated context checkpoint (pos_min = 93, pos_max = 93, n_tokens = 94, n_swa = 0, pos_next = 0, size = 62.821 MiB)
+0.04.492.411 I slot   operator(): id  0 | task 41 | erased invalidated context checkpoint (pos_min = 117, pos_max = 117, n_tokens = 118, n_swa = 0, pos_next = 0, size = 62.821 MiB)
+0.04.764.817 I slot create_check: id  0 | task 41 | created context checkpoint 1 of 32 (pos_min = 40, pos_max = 40, n_tokens = 41, size = 62.821 MiB)
+0.05.200.930 I slot print_timing: id  0 | task 41 | draft acceptance = 0.76471 (   26 accepted /    34 generated), mean len =  2.53
+0.05.200.944 I spec common_specu: statistics        draft-mtp: #calls(b,g,a) =    3     52     52, #gen drafts =     52, #acc drafts =    48, #gen tokens =    104, #acc tokens =    92, #mean acc len = 2.77, #acc rate/pos = (0.923, 0.846), dur(b,g,a) = 0.047, 167.213, 0.031 ms
+0.05.202.659 I srv  get_availabl: updating prompt cache
+0.05.202.729 I srv   prompt_save:  - saving prompt with length 88, total state size = 63.903 MiB (draft: 0.174 MiB)
+0.05.210.701 I srv          load:  - looking for better prompt, base f_keep = 0.045, f_sim = 0.020
+0.05.210.704 I srv          load:  - found better prompt with f_keep = 1.000, f_sim = 0.878
+0.05.215.905 I srv        update:  - cache state: 1 prompts, 126.724 MiB (limits: 8192.000 MiB, 65536 tokens, 65536 est)
+0.05.215.906 I srv        update:    - prompt 0x55754de3a050:      88 tokens, checkpoints:  1,   126.724 MiB
+0.05.215.907 I srv  get_availabl: prompt cache update took 13.25 ms
+0.05.223.552 I slot create_check: id  0 | task 61 | created context checkpoint 4 of 32 (pos_min = 179, pos_max = 179, n_tokens = 180, size = 62.821 MiB)
+0.05.306.085 I slot create_check: id  0 | task 61 | created context checkpoint 5 of 32 (pos_min = 200, pos_max = 200, n_tokens = 201, size = 62.821 MiB)
+0.05.957.177 I slot print_timing: id  0 | task 61 | draft acceptance = 0.91304 (   42 accepted /    46 generated), mean len =  2.83
+0.05.957.191 I spec common_specu: statistics        draft-mtp: #calls(b,g,a) =    4     75     75, #gen drafts =     75, #acc drafts =    70, #gen tokens =    150, #acc tokens =   134, #mean acc len = 2.79, #acc rate/pos = (0.933, 0.853), dur(b,g,a) = 0.061, 238.630, 0.040 ms

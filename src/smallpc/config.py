@@ -218,6 +218,9 @@ class ServerConfig(_Strict):
     # Misc
     threads: PosInt | None = None
     load_mode: LoadMode | None = None
+    # Host-RAM prompt cache size in MiB (-cram): -1 = no limit, 0 = disabled. Candidate/tuned only
+    # (WP5 needs 0 to separate slot restore from prompt-cache loads); stock keeps the default.
+    cache_ram: Annotated[int, Field(ge=-1)] | None = None
     metrics: bool | None = None
     slot_save_path: str | None = None
     log_verbosity: Annotated[int, Field(ge=0, le=5)] | None = None

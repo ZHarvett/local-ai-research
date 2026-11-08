@@ -1,0 +1,178 @@
+# excerpt of a real llama-server b12208 log (C-mtp-d2), home paths as ~
+0.00.241.177 I srv    load_model: loading model '/mnt/data/local-ai-research/models/Ornith-1.5-35B-Q4_K_M.gguf'
+0.00.241.178 I srv    load_model: local path '/mnt/data/local-ai-research/models/Ornith-1.5-35B-Q4_K_M.gguf'
+0.00.241.191 I cmn  common_fit_a: fitting params to device memory ...
+0.00.241.191 I cmn  common_fit_a: (for bugs during this step try to reproduce them with -fit off, or provide --verbose logs if the bug only occurs with -fit on)
+0.00.241.215 I common_params_fit_impl: getting device memory data for initial parameters:
+0.00.509.425 I common_params_fit_impl: projected to use 21775 MiB of device memory vs. 15803 MiB of free device memory
+0.00.509.428 I common_params_fit_impl: cannot meet free memory target of 1024 MiB, need to reduce device memory by 6995 MiB
+0.00.509.428 I common_params_fit_impl: context size set by user to 65536 -> no change
+0.00.509.434 I common_params_fit_impl: getting device memory data with all MoE tensors moved to system memory:
+0.00.641.047 I common_params_fit_impl: with only dense weights in device memory there is a total surplus of 11838 MiB
+0.00.641.050 I common_params_fit_impl: id=0, target=14779 MiB
+0.00.767.557 I common_params_fit_impl: memory for test allocation by device:
+0.00.767.561 I common_params_fit_impl: id=0, n_layer= 0, n_part= 0, overflow_type=4, mem=   627 MiB
+0.00.767.562 I common_params_fit_impl: filling dense-only layers back-to-front:
+0.00.939.000 I common_params_fit_impl: memory for test allocation by device:
+0.00.939.005 I common_params_fit_impl: id=0, n_layer=42, n_part=41, overflow_type=4, mem=  3439 MiB
+0.00.939.007 I common_params_fit_impl: set ngl_per_device[0].n_layer=42
+0.00.939.008 I common_params_fit_impl:   - CUDA0 (NVIDIA GeForce RTX 5060 Ti): 42 layers,   3439 MiB used,  12364 MiB free
+0.00.939.008 I common_params_fit_impl: converting dense-only layers to full layers and filling them front-to-back with overflow to next device/system memory:
+0.01.063.629 I common_params_fit_impl: memory for test allocation by device:
+0.01.063.633 I common_params_fit_impl: id=0, n_layer=42, n_part= 0, overflow_type=4, mem= 21775 MiB
+0.01.213.041 I common_params_fit_impl: memory for test allocation by device:
+0.01.213.044 I common_params_fit_impl: id=0, n_layer=42, n_part=16, overflow_type=4, mem= 14807 MiB
+0.01.213.046 I common_params_fit_impl: set ngl_per_device_high[0].(n_layer, n_part)=(42, 16), id_dense_start_high=0
+0.01.359.262 I common_params_fit_impl: memory for test allocation by device:
+0.01.359.267 I common_params_fit_impl: id=0, n_layer=42, n_part=17, overflow_type=4, mem= 14309 MiB
+0.01.359.268 I common_params_fit_impl: set ngl_per_device[0].(n_layer, n_part)=(42, 17), id_dense_start=0
+0.01.359.269 I common_params_fit_impl: trying to fit one extra layer with overflow_type=LAYER_FRACTION_UP
+0.01.502.321 I common_params_fit_impl: memory for test allocation by device:
+0.01.502.325 I common_params_fit_impl: id=0, n_layer=42, n_part=17, overflow_type=2, mem= 14558 MiB
+0.01.502.326 I common_params_fit_impl: set ngl_per_device[0].(n_layer, n_part, overflow_type)=(42, 17, UP), id_dense_start=0
+0.01.502.327 I common_params_fit_impl: trying to fit one extra layer with overflow_type=LAYER_FRACTION_GATE
+0.01.646.920 I common_params_fit_impl: memory for test allocation by device:
+0.01.646.924 I common_params_fit_impl: id=0, n_layer=42, n_part=17, overflow_type=3, mem= 14596 MiB
+0.01.646.927 I common_params_fit_impl: set ngl_per_device[0].(n_layer, n_part, overflow_type)=(42, 17, GATE), id_dense_start=0
+0.01.646.928 I common_params_fit_impl:   - CUDA0 (NVIDIA GeForce RTX 5060 Ti): 42 layers (17 overflowing),  14596 MiB used,   1207 MiB free
+0.01.646.931 I common_fit_params: successfully fit params to free device memory
+0.01.646.934 I common_fit_params: fitting params to free memory took 1.41 seconds
+0.01.751.155 I load_tensors: loading model tensors, this can take a while... (load_mode = mmap)
+0.01.920.742 I load_tensors: offloading output layer to GPU
+0.01.920.744 I load_tensors: offloading 40 repeating layers to GPU
+0.01.920.745 I load_tensors: offloaded 42/42 layers to GPU
+0.01.920.750 I load_tensors:   CPU_Mapped model buffer size =   272.81 MiB
+0.01.920.751 I load_tensors:   CPU_Mapped model buffer size =   210.82 MiB
+0.01.920.751 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.01.920.752 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.01.920.752 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.01.920.752 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.01.920.753 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.01.920.753 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.01.920.753 I load_tensors:   CPU_Mapped model buffer size =   210.00 MiB
+0.01.920.754 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.01.920.754 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.01.920.754 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.01.920.754 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.01.920.755 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.01.920.755 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.01.920.755 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.01.920.755 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.01.920.756 I load_tensors:   CPU_Mapped model buffer size =   210.00 MiB
+0.01.920.756 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.01.920.756 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.01.920.756 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.01.920.756 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.01.920.757 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.01.920.757 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.01.920.757 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.01.920.757 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.01.920.758 I load_tensors:   CPU_Mapped model buffer size =   210.00 MiB
+0.01.920.758 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.01.920.758 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.01.920.758 I load_tensors:   CPU_Mapped model buffer size =   210.00 MiB
+0.01.920.759 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.01.920.759 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.01.920.759 I load_tensors:   CPU_Mapped model buffer size =   210.00 MiB
+0.01.920.759 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.01.920.760 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.01.920.760 I load_tensors:   CPU_Mapped model buffer size =   210.00 MiB
+0.01.920.760 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.01.920.760 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.01.920.760 I load_tensors:   CPU_Mapped model buffer size =   210.00 MiB
+0.01.920.761 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.01.920.761 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.01.920.761 I load_tensors:   CPU_Mapped model buffer size =   210.00 MiB
+0.01.920.761 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.01.920.762 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.01.920.762 I load_tensors:   CPU_Mapped model buffer size =   210.00 MiB
+0.01.920.762 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.01.920.762 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.01.920.763 I load_tensors:        CUDA0 model buffer size = 13139.46 MiB
+0.02.913.394 I llama_context: constructing llama_context
+0.02.913.397 I llama_context: n_seq_max             = 1
+0.02.913.397 I llama_context: n_ctx                 = 65536
+0.02.913.397 I llama_context: n_ctx_seq             = 65536
+0.02.913.397 I llama_context: n_batch               = 2048
+0.02.913.398 I llama_context: n_ubatch              = 512
+0.02.913.398 I llama_context: causal_attn           = 1
+0.02.913.398 I llama_context: flash_attn            = enabled
+0.02.913.399 I llama_context: kv_unified            = false
+0.02.913.402 I llama_context: freq_base             = 10000000.0
+0.02.913.402 I llama_context: freq_scale            = 1
+0.02.913.403 I llama_context: n_rs_seq              = 2
+0.02.913.403 I llama_context: n_outputs_max         = 3
+0.02.913.403 I llama_context: n_outputs_max_per_seq = 3
+0.02.913.403 I llama_context: n_ctx_seq (65536) < n_ctx_train (262144) -- the full capacity of the model will not be utilized
+0.02.913.821 I llama_context:  CUDA_Host  output buffer size =     0.95 MiB
+0.02.915.752 I llama_kv_cache:      CUDA0 KV buffer size =   680.00 MiB
+0.02.915.755 I llama_kv_cache: size =  680.00 MiB ( 65536 cells,  10 layers,  1/1 seqs), K (q8_0):  340.00 MiB, V (q8_0):  340.00 MiB
+0.02.915.757 I llama_kv_cache: n_rot_k = 256, n_embd_head_k_all = 256
+0.02.915.757 I llama_kv_cache: n_rot_v = 64, n_embd_head_k_all = 256
+0.02.916.783 I llama_memory_recurrent:      CUDA0 RS buffer size =   188.44 MiB
+0.02.916.787 I llama_memory_recurrent: size =  188.44 MiB (     1 cells,  40 layers,  1 seqs  2 rs_seq), R (f32):    8.44 MiB, S (f32):  180.00 MiB, P (f32):    0.00 MiB
+0.02.916.791 I sched_reserve: reserving ...
+0.02.930.454 I sched_reserve:      CUDA0 compute buffer size =   350.02 MiB
+0.02.930.457 I sched_reserve:  CUDA_Host compute buffer size =    80.02 MiB
+0.02.930.459 I sched_reserve: graph (pp bs=512, tg bs=1): nodes = 4059 / 4059, splits = 45 / 34, input objects = 4 / 4, input tensors = 10 / 10
+0.02.930.460 I sched_reserve: reserve took 13.67 ms, sched copies = 1
+0.02.975.803 I common_speculative_init_result: creating MTP draft context against the target model '/mnt/data/local-ai-research/models/Ornith-1.5-35B-Q4_K_M.gguf'
+0.02.975.823 I llama_context: constructing llama_context
+0.02.975.825 I llama_context: n_seq_max             = 1
+0.02.975.825 I llama_context: n_ctx                 = 65536
+0.02.975.826 I llama_context: n_ctx_seq             = 65536
+0.02.975.826 I llama_context: n_batch               = 2048
+0.02.975.826 I llama_context: n_ubatch              = 512
+0.02.975.826 I llama_context: causal_attn           = 1
+0.02.975.827 I llama_context: flash_attn            = enabled
+0.02.975.827 I llama_context: kv_unified            = false
+0.02.975.831 I llama_context: freq_base             = 10000000.0
+0.02.975.831 I llama_context: freq_scale            = 1
+0.02.975.832 I llama_context: n_rs_seq              = 0
+0.02.975.832 I llama_context: n_outputs_max         = 1
+0.02.975.832 I llama_context: n_outputs_max_per_seq = 1
+0.02.975.832 I llama_context: n_ctx_seq (65536) < n_ctx_train (262144) -- the full capacity of the model will not be utilized
+0.02.975.877 I llama_context:  CUDA_Host  output buffer size =     0.95 MiB
+0.02.976.872 I llama_kv_cache:      CUDA0 KV buffer size =   128.00 MiB
+0.02.976.874 I llama_kv_cache: size =  128.00 MiB ( 65536 cells,   1 layers,  1/1 seqs), K (f16):   64.00 MiB, V (f16):   64.00 MiB
+0.02.976.876 I llama_kv_cache: n_rot_k = 0, n_embd_head_k_all = 256
+0.02.976.876 I llama_kv_cache: n_rot_v = 0, n_embd_head_k_all = 256
+0.02.976.880 I sched_reserve: reserving ...
+0.02.984.695 I sched_reserve:      CUDA0 compute buffer size =   259.54 MiB
+0.02.984.697 I sched_reserve:  CUDA_Host compute buffer size =    72.02 MiB
+0.02.984.699 I sched_reserve: graph (pp bs=512, tg bs=1): nodes = 86 / 86, splits = 5 / 4, input objects = 4 / 4, input tensors = 7 / 7
+0.02.984.699 I sched_reserve: reserve took 7.82 ms, sched copies = 1
+0.02.984.894 I srv    load_model: initializing, n_slots = 1, n_ctx_slot = 65536, kv_unified = 'false'
+0.02.984.911 I spec common_specu: adding speculative implementation 'draft-mtp'
+0.02.984.913 I spec common_specu: - n_max=2, n_min=0, p_min=0.00, n_embd=2048, backend_sampling=1
+0.02.984.914 I spec common_specu: - gpu_layers=-1, cache_k=f16, cache_v=f16, ctx_tgt=yes, ctx_dft=yes, devices=[default]
+0.02.985.479 I sched_reserve: reserving ...
+0.02.999.239 I sched_reserve:      CUDA0 compute buffer size =   259.54 MiB
+0.02.999.242 I sched_reserve:  CUDA_Host compute buffer size =    72.02 MiB
+0.02.999.243 I sched_reserve: graph (pp bs=512, tg bs=1): nodes = 92 / 92, splits = 5 / 4, input objects = 5 / 5, input tensors = 7 / 7
+0.02.999.244 I sched_reserve: reserve took 13.76 ms, sched copies = 1
+0.03.006.634 I srv    load_model: speculative decoding context initialized
+0.03.006.639 I slot   load_model: id  0 | task -1 | new slot, n_ctx = 65536
+0.03.006.659 I srv    load_model: prompt cache is enabled, size limit: 8192 MiB
+0.03.006.659 I srv    load_model: use `--cache-ram 0` to disable the prompt cache
+0.03.006.660 I srv    load_model: for more info see https://github.com/ggml-org/llama.cpp/pull/16391
+0.03.006.660 I srv    load_model: context checkpoints enabled, max = 32, min spacing = 8192
+0.03.221.509 I sched_reserve: reserving ...
+0.03.239.535 I sched_reserve:      CUDA0 compute buffer size =   350.02 MiB
+0.03.239.537 I sched_reserve:  CUDA_Host compute buffer size =    80.02 MiB
+0.03.239.539 I sched_reserve: graph (pp bs=512, tg bs=1): nodes = 4058 / 4058, splits = 46 / 34, input objects = 4 / 4, input tensors = 10 / 10
+0.03.239.541 I sched_reserve: reserve took 18.02 ms, sched copies = 1
+0.03.472.692 I spec common_specu: statistics        draft-mtp: #calls(b,g,a) =    1      6      6, #gen drafts =      6, #acc drafts =     4, #gen tokens =     11, #acc tokens =     8, #mean acc len = 2.33, #acc rate/pos = (0.667, 0.667), dur(b,g,a) = 0.015, 24.349, 0.006 ms
+0.09.144.999 I spec common_specu: statistics        draft-mtp: #calls(b,g,a) =    2     28     28, #gen drafts =     28, #acc drafts =    25, #gen tokens =     55, #acc tokens =    49, #mean acc len = 2.75, #acc rate/pos = (0.893, 0.857), dur(b,g,a) = 0.029, 93.762, 0.018 ms
+0.19.049.924 I spec common_specu: statistics        draft-mtp: #calls(b,g,a) =    3    223    223, #gen drafts =    223, #acc drafts =   198, #gen tokens =    445, #acc tokens =   364, #mean acc len = 2.63, #acc rate/pos = (0.888, 0.744), dur(b,g,a) = 0.043, 704.216, 0.115 ms
+0.28.608.254 I spec common_specu: statistics        draft-mtp: #calls(b,g,a) =    4    406    406, #gen drafts =    406, #acc drafts =   375, #gen tokens =    810, #acc tokens =   692, #mean acc len = 2.70, #acc rate/pos = (0.924, 0.781), dur(b,g,a) = 0.057, 1267.836, 0.210 ms
+0.38.399.949 I spec common_specu: statistics        draft-mtp: #calls(b,g,a) =    5    603    603, #gen drafts =    603, #acc drafts =   549, #gen tokens =   1203, #acc tokens =  1006, #mean acc len = 2.67, #acc rate/pos = (0.910, 0.758), dur(b,g,a) = 0.071, 1875.635, 0.302 ms
+0.48.283.442 I spec common_specu: statistics        draft-mtp: #calls(b,g,a) =    6    799    799, #gen drafts =    799, #acc drafts =   722, #gen tokens =   1595, #acc tokens =  1320, #mean acc len = 2.65, #acc rate/pos = (0.904, 0.748), dur(b,g,a) = 0.085, 2484.407, 0.368 ms
+0.57.810.533 I spec common_specu: statistics        draft-mtp: #calls(b,g,a) =    7    981    981, #gen drafts =    981, #acc drafts =   899, #gen tokens =   1958, #acc tokens =  1649, #mean acc len = 2.68, #acc rate/pos = (0.916, 0.765), dur(b,g,a) = 0.099, 3044.553, 0.441 ms
+1.07.740.761 I spec common_specu: statistics        draft-mtp: #calls(b,g,a) =    8   1188   1188, #gen drafts =   1188, #acc drafts =  1072, #gen tokens =   2372, #acc tokens =  1949, #mean acc len = 2.64, #acc rate/pos = (0.902, 0.738), dur(b,g,a) = 0.113, 3681.503, 0.505 ms
+1.17.587.028 I spec common_specu: statistics        draft-mtp: #calls(b,g,a) =    9   1382   1382, #gen drafts =   1382, #acc drafts =  1243, #gen tokens =   2760, #acc tokens =  2266, #mean acc len = 2.64, #acc rate/pos = (0.899, 0.740), dur(b,g,a) = 0.127, 4284.746, 0.579 ms
+1.27.330.617 I spec common_specu: statistics        draft-mtp: #calls(b,g,a) =   10   1575   1575, #gen drafts =   1575, #acc drafts =  1421, #gen tokens =   3146, #acc tokens =  2583, #mean acc len = 2.64, #acc rate/pos = (0.902, 0.738), dur(b,g,a) = 0.141, 4893.309, 0.657 ms
+1.37.209.252 I spec common_specu: statistics        draft-mtp: #calls(b,g,a) =   11   1772   1772, #gen drafts =   1772, #acc drafts =  1592, #gen tokens =   3540, #acc tokens =  2896, #mean acc len = 2.63, #acc rate/pos = (0.898, 0.736), dur(b,g,a) = 0.155, 5517.758, 0.724 ms
+1.44.955.439 I spec common_specu: statistics        draft-mtp: #calls(b,g,a) =   12   1868   1868, #gen drafts =   1868, #acc drafts =  1677, #gen tokens =   3731, #acc tokens =  3054, #mean acc len = 2.63, #acc rate/pos = (0.898, 0.737), dur(b,g,a) = 0.169, 5823.221, 0.760 ms
+1.52.447.336 I spec common_specu: statistics        draft-mtp: #calls(b,g,a) =   13   1959   1959, #gen drafts =   1959, #acc drafts =  1764, #gen tokens =   3913, #acc tokens =  3218, #mean acc len = 2.64, #acc rate/pos = (0.900, 0.742), dur(b,g,a) = 0.184, 6108.377, 0.786 ms
+2.00.087.936 I spec common_specu: statistics        draft-mtp: #calls(b,g,a) =   14   2059   2059, #gen drafts =   2059, #acc drafts =  1851, #gen tokens =   4112, #acc tokens =  3373, #mean acc len = 2.64, #acc rate/pos = (0.899, 0.739), dur(b,g,a) = 0.199, 6422.216, 0.822 ms

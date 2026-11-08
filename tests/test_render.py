@@ -68,6 +68,7 @@ def test_flag_table_names_are_unique_and_known():
         "--spec-draft-n-max",
         "-t",
         "--load-mode",
+        "--cache-ram",
         "--metrics",
         "--slot-save-path",
         "-lv",
@@ -99,6 +100,17 @@ def test_candidate_gets_sweep_defaults_in_argv():
     argv = render_example("fit-64k-q8")
     for flag, value in [("-ctk", "q8_0"), ("-ctv", "q8_0"), ("-fa", "on"), ("-np", "1")]:
         assert argv[argv.index(flag) + 1] == value
+
+
+def test_cache_ram_zero_is_rendered_for_candidate_only(tmp_path):
+    machine, model = load_machine(MACHINE), load_model(MODEL)
+    for value in (0, -1, 4096):
+        cfg = ServerConfig(profile="candidate", context=1024, cache_ram=value)
+        argv = render_argv(cfg, machine, model)
+        assert argv[argv.index("--cache-ram") + 1] == str(value)
+    assert "--cache-ram" not in render_argv(ServerConfig(profile="candidate"), machine, model)
+    with pytest.raises(ValueError):
+        ServerConfig(profile="candidate", cache_ram=-2)
 
 
 def test_explicit_port_always_present():
@@ -170,3 +182,12 @@ def test_cli_validation_error_exits_2(tmp_path):
     r = cli("--machine", str(MACHINE), "--model-config", str(MODEL), str(bad))
     assert r.returncode == 2 and "stock config may set only" in r.stderr
     assert r.stdout == ""
+
+
+def test_health_config_golden_argv():
+    cfg = load_server(REPO / "configs/server/health-64k.toml")
+    argv = render_argv(cfg, load_machine(MACHINE), load_model(MODEL))
+    assert argv == golden("health-64k")
+    assert cfg.profile == "candidate"
+    # the chat template is never overridden (docs/decisions.md, WP5)
+    assert "--chat-template-file" not in argv and "--jinja" not in argv

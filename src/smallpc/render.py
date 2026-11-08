@@ -58,6 +58,7 @@ FLAG_TABLE: tuple[tuple[str, str, Kind], ...] = (
     ("spec_draft_n_max", "--spec-draft-n-max", "value"),
     ("threads", "-t", "value"),
     ("load_mode", "--load-mode", "value"),
+    ("cache_ram", "--cache-ram", "value"),
     ("metrics", "--metrics", "switch"),
     ("slot_save_path", "--slot-save-path", "value"),
     ("log_verbosity", "-lv", "value"),

@@ -70,6 +70,7 @@ def test_unknown_field_rejected_in_machine(tmp_path):
         ("spec_type", "draft-mtp"),
         ("fit", "on"),
         ("threads", 8),
+        ("cache_ram", 0),
     ],
 )
 def test_stock_cannot_set_forbidden_field(field, value):

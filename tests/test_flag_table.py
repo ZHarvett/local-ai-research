@@ -30,6 +30,13 @@ def test_flag_in_help(help_text, field, flag, kind):
     assert has_flag(help_text, flag), f"{flag} ({field}) not found in {HELP.name}"
 
 
+def test_cache_ram_flag_and_semantics_match_help(help_text):
+    block = re.search(r"-cram, --cache-ram N.*?\(env: LLAMA_ARG_CACHE_RAM\)", help_text, re.S)
+    assert block
+    assert "-1 - no limit" in block.group(0) and "0 - disable" in block.group(0)
+    assert ("cache_ram", "--cache-ram", "value") in FLAG_TABLE
+
+
 def test_table_has_no_duplicate_flags():
     flags = [f for _, f, _ in FLAG_TABLE]
     assert len(flags) == len(set(flags))
