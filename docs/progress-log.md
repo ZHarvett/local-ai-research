@@ -159,3 +159,24 @@ Newest entry last. Each entry: date, WP, status, commit, key results, open issue
   - The 8-vs-16-thread STREAM comparison uses `OMP_PROC_BIND=spread` with `OMP_PLACES=cores` (8) and `threads` (16); other bindings were not tried. Results are "STREAM-based" (the licence's labelling rule), not official STREAM results.
   - `configs/harness.toml` does not exist yet (WP7); the snapshot records the harnesses as "unavailable".
   - PCIe tool timings use the mean expert size; per-layer sizes differ by 15% (1.77 to 2.04 MB).
+
+---
+
+## 2026-11-08 — WP7: Harness setup and smoke tests
+
+- **Status:** done. Both smoke tests pass; all CI commands pass locally (379 tests, ruff, shellcheck).
+- **Commits:** `c700849` (`WP7: record decisions`), `2b8c5a4` (`WP7: harness setup and smoke tests`), then `WP7: progress log` (this entry).
+- **Pinned:** `opencode-ai` **1.19.5** (2026-10-28, `latest`, Zack chose this line over `@opencode/cli`) and `@deepseek-ai/dsh` **0.2.1-rc.5** (2026-10-29; `latest` 0.2.2-rc.1 was 4 days old). 295 dsh plugin packages, all at 0.2.1-rc.5. Whole tree (643 name@version) installed with `--before=2026-11-01T18:25:11Z`: none newer than the cutoff, no overrides. `npm ci --ignore-scripts` reproduces it (`scripts/install-harnesses.sh`, lockfile sha256 `d21af6e8...`); only `opencode-ai`'s postinstall was run (offline); five other install scripts stay blocked by `allowScripts`.
+- **Isolation:** every harness execution goes through `scripts/_sandbox.sh` (bubblewrap, empty `/home` and `/tmp`, read-only file system, `env -i`, repo-local HOME/XDG/TMPDIR/npm cache, private network namespace with only the server and a deny-all logging proxy bridged in). `data/harness/isolation-check.txt`: the six personal paths listed before and after are byte-identical (only `~/.npm` exists, 9,318 lines each).
+- **OpenCode smoke:** PASS, 17 s, attempt 1 of 2 (`data/harness/smoke-opencode-20261108T184655Z`). Independent pytest green, test file byte-identical, 5 steps, 6 requests, 0 permission prompts, 0 rule denials. A first run against the unmodified stock-64k config also passed (20 s) but could not derive `cache_n` at default log verbosity, so the pattern comes from `configs/server/smoke-stock-64k.toml` (= stock + `-lv 4`).
+- **dsh smoke:** PASS, 18 s, attempt 1 (`data/harness/smoke-dsh-20261108T184729Z`), headless profile, same checks, 5 steps, 6 requests. dsh has a headless mode, so no manual procedure was needed.
+- **Stock server in /props:** 4 slots, kv-unified, per-slot n_ctx 65536 (no top-level n_ctx). `limit.context` 65536, `limit.output` `min(16384, ctx // 4)` = 16384.
+- **Request pattern** (`data/harness/request-pattern.json`, labelled smoke-task data): OpenCode 1 title + 5 main requests, totals prompt_n 7,095 / cache_n 25,420 / predicted_n 486; dsh 1 title + 5 main, prompt_n 6,397 / cache_n 24,131 / predicted_n 713. The title request appeared in both harnesses; it ran on slot 0 while all main requests used slot 1, and each main request reused its own previous prefix (cache_n 6,032 / 6,079 / 6,605 / 6,704 for OpenCode, equal to OpenCode's own `cache.read`). With 4 slots the title request did not change main-loop cache reuse; a single-slot server was not tested.
+- **Permission probes** (scripted fake model, no GPU): OpenCode 17 tool calls (4 allowed, 13 denied: curl, rm, `&&`, pipe, `$(...)`, `python -c`, absolute and parent paths, webfetch, write/read outside the project, task), 0 prompts; an `ask` is auto-rejected in `opencode run`. dsh: approvals fail closed; dsh's own sandbox does not stop bash network or `/tmp` writes, so the network namespace does.
+- **Network/file writes:** `data/harness/network-observed.md`. Notable: OpenCode fetches `models.opencode.ai/api.json` unless `OPENCODE_DISABLE_MODELS_FETCH=1`, and always tries to install `@opencode-ai/plugin` from npm (no switch; refused by the proxy, harmless WARN); dsh telemetry defaults to a DeepSeek collector in `FEEDBACK_ONLY` mode (set `DISABLED`).
+- **Open issues:**
+  - `opencode-ai` has no repository or provenance metadata on npm; its identity rests on the shared maintainer with `@opencode/cli`, download counts and the lack of any deprecation. The official docs now name `@opencode/cli` (OpenCode v2 config schema); Step 1/2 may want to revisit.
+  - The dsh pin is a pre-release, chosen by publish time; 0.2.2-rc.1 qualifies from 2026-11-11.
+  - A proxy cannot see traffic that ignores proxy settings (`strace` is not installed); the network namespace is the real containment.
+  - Smoke runs have a snapshot and telemetry but no warm-up (not measured runs); `/v1/models` reports the model path as its id, so the OpenCode model key is the full path.
+  - For WP8/WP9: `smallpc.requests` parses per-request lines only at `-lv 4`; the harness env and sandbox helper are reusable for Step 1 harness runs; `limit.output`/`maxTokens` are derived from the per-slot context.
