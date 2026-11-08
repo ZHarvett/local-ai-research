@@ -305,3 +305,22 @@ Decisions are recorded with date and source. Source section numbers refer to
 - **A denied tool call does not fail a smoke run; a permission prompt does.** (The plan text said both.)
   Denials are counted and reported. In `opencode run` a prompt is auto-rejected ("permission requested;
   auto-rejecting", probed), never approved, and never hangs.
+
+## WP8 decisions (2026-11-08)
+
+### For the executive chat
+- **Title request and slots.** In both harnesses (WP7 smoke runs) the title request ran on a different slot
+  from the main loop, because stock uses 4 automatic slots. Candidate configs use `-np 1`, so the title
+  request would share the main slot and could disturb cache reuse; Step 2 should test this.
+- **OpenCode package.** The current OpenCode docs name `@opencode/cli`, not `opencode-ai`. Step 1 or 2 should
+  decide whether to move, since the config schema differs.
+- **OpenCode and npm.** OpenCode always tries to fetch a plugin package from npm at startup and has no switch
+  to stop it; the private network namespace blocked it and OpenCode carried on.
+
+### K = 1024 tokens
+- In the workloads, K is 1024 tokens throughout: 2K = 2,048, 8K = 8,192, 16K = 16,384, 24K = 24,576,
+  32K = 32,768, 48K = 49,152, 64K = 65,536, 96K = 98,304.
+
+### Variant policy
+- Repetition r uses variant `r mod 5`. The 2-repetition screening therefore uses variants 0 and 1, and a
+  5-repetition run uses all five.
