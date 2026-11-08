@@ -1,0 +1,48 @@
+# One-off load check, WP4 (2026-11-08). Log excerpts, home paths scrubbed to ~.
+# Binary: llama-server b12208 (commit 57d04820d), GPU lock held via run-detached.sh --gpu, port 8191, -ngl 0, -c 2048, --fit off, --no-warmup, --check-tensors
+# nvidia-smi memory.used: before 2 MiB; load 1 (no MTP) 422 MiB while up; load 2 (--spec-type draft-mtp) 698 MiB while up; after stop 2 MiB
+
+## Load 1: --check-tensors (as specified). blk.40.* are 'unused' without MTP, so NOT loaded and NOT validated.
+0.00.195.809 I srv  llama_server: initializing ...
+0.00.195.823 I cmn  common_param: common_params_print_info: verbosity = 3 (adjust with the `-lv N` CLI arg)
+0.00.196.135 W srv  server_setup: security: no API key is set and CORS allows all origins (see https://github.com/ggml-org/llama.cpp/pull/25655)
+0.00.197.688 I srv    load_model: loading model '/mnt/data/local-ai-research/models/Ornith-1.5-35B-Q4_K_M.gguf'
+0.00.385.206 W model has unused tensor blk.40.attn_norm.weight (size = 8192 bytes) -- ignoring
+0.00.385.211 W model has unused tensor blk.40.post_attention_norm.weight (size = 8192 bytes) -- ignoring
+0.00.385.217 W model has unused tensor blk.40.attn_q.weight (size = 9437184 bytes) -- ignoring
+0.00.385.219 W model has unused tensor blk.40.attn_k.weight (size = 589824 bytes) -- ignoring
+0.00.385.222 W model has unused tensor blk.40.attn_v.weight (size = 860160 bytes) -- ignoring
+0.00.385.228 W model has unused tensor blk.40.attn_output.weight (size = 4718592 bytes) -- ignoring
+0.00.385.231 W model has unused tensor blk.40.attn_q_norm.weight (size = 1024 bytes) -- ignoring
+0.00.385.233 W model has unused tensor blk.40.attn_k_norm.weight (size = 1024 bytes) -- ignoring
+0.00.385.236 W model has unused tensor blk.40.ffn_gate_inp.weight (size = 2097152 bytes) -- ignoring
+0.00.385.238 W model has unused tensor blk.40.ffn_down_exps.weight (size = 220200960 bytes) -- ignoring
+0.00.385.243 W model has unused tensor blk.40.ffn_gate_exps.weight (size = 150994944 bytes) -- ignoring
+0.00.385.246 W model has unused tensor blk.40.ffn_up_exps.weight (size = 150994944 bytes) -- ignoring
+0.00.385.249 W model has unused tensor blk.40.ffn_gate_inp_shexp.weight (size = 8192 bytes) -- ignoring
+0.00.385.251 W model has unused tensor blk.40.ffn_gate_shexp.weight (size = 589824 bytes) -- ignoring
+0.00.385.254 W model has unused tensor blk.40.ffn_up_shexp.weight (size = 589824 bytes) -- ignoring
+0.00.385.256 W model has unused tensor blk.40.ffn_down_shexp.weight (size = 860160 bytes) -- ignoring
+0.00.385.259 W model has unused tensor blk.40.nextn.eh_proj.weight (size = 4718592 bytes) -- ignoring
+0.00.385.263 W model has unused tensor blk.40.nextn.enorm.weight (size = 8192 bytes) -- ignoring
+0.00.385.266 W model has unused tensor blk.40.nextn.hnorm.weight (size = 8192 bytes) -- ignoring
+0.00.385.273 W model has unused tensor blk.40.nextn.shared_head_norm.weight (size = 8192 bytes) -- ignoring
+0.11.282.435 I cmn          init: llama threadpool init, n_threads = 8
+0.11.370.936 I srv    load_model: initializing, n_slots = 4, n_ctx_slot = 2048, kv_unified = 'true'
+0.11.374.648 W srv          init: chat template supports preserving reasoning, it is enabled by default (may use more tokens, disable via --no-reasoning-preserve)
+0.11.374.685 I srv  server_run_i: model loaded
+0.11.374.690 I srv  server_on_li: listening on http://127.0.0.1:8191
+0.33.220.556 I srv    operator(): operator(): cleaning up before exit...
+
+## Load 2: --check-tensors --spec-type draft-mtp. blk.40.* loaded and validated; MTP draft context created.
+0.00.168.302 I srv  llama_server: initializing ...
+0.00.168.313 I cmn  common_param: common_params_print_info: verbosity = 3 (adjust with the `-lv N` CLI arg)
+0.00.168.541 W srv  server_setup: security: no API key is set and CORS allows all origins (see https://github.com/ggml-org/llama.cpp/pull/25655)
+0.00.170.062 I srv    load_model: loading model '/mnt/data/local-ai-research/models/Ornith-1.5-35B-Q4_K_M.gguf'
+0.00.869.298 I cmn          init: llama threadpool init, n_threads = 8
+0.00.869.698 I common_speculative_init_result: creating MTP draft context against the target model '/mnt/data/local-ai-research/models/Ornith-1.5-35B-Q4_K_M.gguf'
+0.00.873.623 I srv    load_model: initializing, n_slots = 4, n_ctx_slot = 2048, kv_unified = 'true'
+0.00.897.672 W srv          init: chat template supports preserving reasoning, it is enabled by default (may use more tokens, disable via --no-reasoning-preserve)
+0.00.897.706 I srv  server_run_i: model loaded
+0.00.897.711 I srv  server_on_li: listening on http://127.0.0.1:8191
+0.23.319.963 I srv    operator(): operator(): cleaning up before exit...

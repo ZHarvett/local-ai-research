@@ -126,6 +126,7 @@ def test_real_configs_render_all_examples():
     for name in EXAMPLE_NAMES:
         argv = render_argv(load_server(EXAMPLES / f"{name}.toml"), machine, model)
         assert argv[0] == machine.paths.llama_server and "--port" in argv
+        assert argv[argv.index("-m") + 1] == f"{machine.paths.models_dir}/{model.file}"
 
 
 # ------------------------------------------------------------------ CLI

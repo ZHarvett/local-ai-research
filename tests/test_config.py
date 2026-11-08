@@ -197,3 +197,24 @@ def test_sweep_spec_invalid(tmp_path, text):
 )
 def test_values_added_in_wp3_accepted(field, value):
     ServerConfig.model_validate({"profile": "candidate", field: value})
+
+
+# ------------------------------------------------------------------ real model.toml (WP4)
+
+
+def test_real_model_config_is_complete_and_template_matches():
+    import hashlib
+    import re
+
+    m = load_model(REPO / "configs/model.toml")
+    assert m.file == "Ornith-1.5-35B-Q4_K_M.gguf"
+    assert m.repo == "ornith-ai/Ornith-1.5-35B-A3B-GGUF"
+    assert re.fullmatch(r"[0-9a-f]{40}", m.revision or "")
+    assert re.fullmatch(r"[0-9a-f]{40}", m.base.revision or "")
+    assert m.revision_date and m.revision_date >= "2026-08-23"
+    assert m.size_bytes and m.sha256 and m.license
+    assert m.sampling.general and m.sampling.general.wording and m.sampling.general.source
+    assert m.sampling.benchmark and m.sampling.generation_config
+    tpl = (REPO / m.chat_template.file).read_text(encoding="utf-8")
+    norm = re.sub(r"\s+", " ", tpl).strip()
+    assert hashlib.sha256(norm.encode()).hexdigest() == m.chat_template.normalized_sha256

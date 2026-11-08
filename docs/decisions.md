@@ -104,6 +104,58 @@ Decisions are recorded with date and source. Source section numbers refer to
 - Build choices: newest b-tag built (b12208); upstream's newest semver tag
   (v0.9.0) is recorded in `build-info.json` only; CMake rewrote `CMAKE_CUDA_ARCHITECTURES=120` to `120a`.
 
+## WP4 decisions (2026-11-08)
+
+### Model revision
+- Official repo `ornith-ai/Ornith-1.5-35B-A3B-GGUF`, file `Ornith-1.5-35B-Q4_K_M.gguf` (21,713,463,040
+  bytes). Pinned to commit `f60452672689e0040be350560267a614cc172a18` ("Upload
+  Ornith-1.5-35B-Q4_K_M.gguf", 2026-08-24 03:38:27 UTC): the newest commit that changed the file's
+  content (LFS sha256 `ca6ea263...` before it, `42739874...` at it and in every later commit, checked
+  at all 17 commits). Dated after the required 2026-08-23. The repo also has BF16, Q5_K_M, Q6_K, Q8_0
+  and an mmproj file; none were downloaded. There are no separate MTP files: the head is `blk.40.*`.
+- Downloaded with huggingface_hub 2.4.0 (`uvx --from huggingface_hub==2.4.0 hf download ...`,
+  `--local-dir models/`), `HF_HOME` pointed into `models/.hf-home` so nothing went to
+  `~/.cache/huggingface`. uvx's own tool environment is cached by uv under `~/.cache/uv` (uv's normal
+  cache, as for the project environment).
+- Base repo: the GGUF card has no `base_model` field. `ornith-ai/Ornith-1.5-35B-A3B` was taken from
+  the card's `license_link` and chat-template link; pinned at its newest commit
+  `10fbf86fed7ecee4a061f8b499a618f46001cac1` (2026-08-23). The base README differs from the GGUF
+  README only by one blank line and the trailing newline.
+- License: `mit` (card front matter). Its `license_link` points to a LICENSE file in the base repo
+  that is not in that repo's file list.
+- Sampling: the card gives two settings (general tasks: temperature 0.6, top_p 0.95, top_k 20;
+  benchmark reproduction: temperature 1.0) and nothing for thinking vs non-thinking or coding. Both
+  are recorded verbatim; the base `generation_config.json` (1.0 / 0.95 / 20) is recorded separately.
+
+### Embedded chat template differs from the official one (decision for Zack)
+- `gguf_check` compared the GGUF's `tokenizer.chat_template` with the official base-repo template
+  after whitespace normalisation: **not identical** (7828 vs 7536 bytes, 18 changes). The embedded
+  one is a modified variant marked `Unsloth fixes - developer role, tool calling`: it accepts the
+  `developer` role, merges the first two system/developer messages, renders tool-call arguments
+  differently (`tojson | safe` for mappings and sequences) and no longer raises on an unexpected role
+  or a system message that is not first.
+- llama-server uses the embedded template unless `--chat-template-file` is given, and the plan fixes
+  stock configs to the section 3.1 flags. Nothing was changed. To decide before WP5/WP7: measure with
+  the embedded template (what a user gets), or point all configs at the official file
+  (`configs/model/chat_template.jinja`) and say so in the report. This affects how the harnesses'
+  system prompts and tool calls are rendered, so it must be the same in every stage.
+
+### One-off load check (exception to "llama-server only through launch-server.sh")
+- Run by absolute path through `scripts/run-detached.sh --gpu` (GPU lock), port 8191, `-ngl 0`,
+  `-c 2048`, `--fit off`, `--no-warmup`, `--check-tensors`, stopped with SIGINT. Exception recorded as
+  required by the WP4 prompt; no other server was started.
+- Load 1 (the specified command): loads and listens, but every `blk.40.*` tensor is reported as
+  "unused tensor ... -- ignoring" because MTP is not enabled, so the loader does not load or validate
+  the head. Load 2 repeated it with `--spec-type draft-mtp` (a deviation, to cover the head): no
+  unused-tensor warnings, an MTP draft context is created, no errors.
+- What `--check-tensors` validates (source, `llama-model-loader.cpp` / `ggml-quants.c`): for each
+  loaded tensor, `ggml_validate_row_data`; for the quantized types this checks the fp16 scales
+  (NaN/Inf) and float tensors for NaN/Inf, not the quantized integers. A failure prints
+  `ggml_validate_row_data: found nan/inf value ...` and aborts with "tensor ... has invalid data".
+  Neither appeared. No negative control was run.
+- nvidia-smi `memory.used`: before 2 MiB, load 1 up 422 MiB (process 412 MiB), load 2 up 698 MiB
+  (process 688 MiB), after SIGINT 2 MiB. Excerpt: `data/health/load-check-excerpt.txt`.
+
 ## Open items (added in WP4)
 
 - **WP14:** before the repository is made public, scan the whole git history (all commits, all

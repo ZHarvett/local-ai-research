@@ -105,7 +105,9 @@ def load_machine(path: str | Path | None = None) -> MachineConfig:
 # --------------------------------------------------------------------------- model
 
 
-class Sampling(_Strict):
+class SamplingSet(_Strict):
+    """One set of sampling settings, with the model card's own wording and where it came from."""
+
     temperature: float | None = None
     top_p: float | None = None
     top_k: int | None = None
@@ -113,17 +115,52 @@ class Sampling(_Strict):
     presence_penalty: float | None = None
     frequency_penalty: float | None = None
     repeat_penalty: float | None = None
+    wording: str | None = None  # exactly as the source states it
+    source: str | None = None  # URL (with revision) of the source
 
 
-class ModelConfig(_Strict):
-    """Placeholders until WP4: every field is optional."""
+class Sampling(_Strict):
+    """Recommended sampling, one named set per context the source distinguishes.
+
+    The model card gives ``general`` and ``benchmark`` (and no separate thinking, non-thinking or
+    coding values); ``generation_config`` is the base repository's generation_config.json.
+    """
+
+    general: SamplingSet | None = None
+    benchmark: SamplingSet | None = None
+    generation_config: SamplingSet | None = None
+
+
+class BaseRepo(_Strict):
+    """The non-GGUF base repository (model card and chat template source)."""
 
     repo: str | None = None
     revision: str | None = None
+    revision_date: str | None = None
+    how_identified: str | None = None
+
+
+class ChatTemplate(_Strict):
+    file: str | None = None  # repository-relative path of the official template
+    source: str | None = None  # URL (with revision) it was fetched from
+    normalized_sha256: str | None = Field(default=None, pattern=r"^[0-9a-f]{64}$")
+    normalization: str | None = None
+    embedded_note: str | None = None  # how the template embedded in the GGUF differs, if it does
+
+
+class ModelConfig(_Strict):
+    """Model identity and sampling. Every field is optional (tests use a minimal fixture)."""
+
+    repo: str | None = None
+    revision: str | None = None
+    revision_date: str | None = None
     file: str | None = None
     size_bytes: PosInt | None = None
     sha256: str | None = Field(default=None, pattern=r"^[0-9a-f]{64}$")
     license: str | None = None
+    license_source: str | None = None
+    base: BaseRepo = BaseRepo()
+    chat_template: ChatTemplate = ChatTemplate()
     sampling: Sampling = Sampling()
 
 

@@ -1,0 +1,1427 @@
+{
+  "file": "Ornith-1.5-35B-Q4_K_M.gguf",
+  "file_size_bytes": 21713463040,
+  "metadata": {
+    "architecture": "qwen35moe",
+    "block_count": 41,
+    "nextn_predict_layers_key": "qwen35moe.nextn_predict_layers",
+    "nextn_predict_layers": 1,
+    "expert_keys": {
+      "qwen35moe.expert_count": 256,
+      "qwen35moe.expert_used_count": 8,
+      "qwen35moe.expert_feed_forward_length": 512,
+      "qwen35moe.expert_shared_feed_forward_length": 512
+    },
+    "file_type": 15,
+    "chat_template_embedded": true,
+    "full_attention_interval": 4
+  },
+  "limits": {
+    "pass_means": "PASS means only: no known failure signature was found. It does not show that the MTP head is trained or works. The layout of a trained head and a random one is identical; WP5's draft-acceptance and equivalence tests are what prove the head works.",
+    "layout_means": "The blk.<head> tensor list shows the head is present and complete (same tensors as the last trunk layer plus the nextn.* ones). It cannot tell a trained head from a random one."
+  },
+  "chat_template": {
+    "embedded": true,
+    "identical": false,
+    "n_changes": 18,
+    "words_official": 873,
+    "words_embedded": 929,
+    "diff": [
+      "insert official[230:230] -> embedded[230:319]: '' => 'set num_sys = 0 %} {%- set merged_system = '' %} {%- if messages[0].role == 'system' or messages[0].role == 'developer' %} {%- set first = render_content(messages[0].content, false, true)|trim %} {%- if messages|length > 1 and (messages[1].... [539 chars]'",
+      "replace official[372:387] -> embedded[461:462]: 'messages[0].role == 'system' %} {%- set content = render_content(messages[0].content, false, true)|trim %} {%- if content' => 'merged_system'",
+      "replace official[391:392] -> embedded[466:467]: 'content' => 'merged_system'",
+      "delete official[393:396] -> embedded[468:468]: '{%- endif %}' => ''",
+      "replace official[407:418] -> embedded[479:480]: 'messages[0].role == 'system' %} {%- set content = render_content(messages[0].content, false, true)|trim' => 'merged_system'",
+      "replace official[422:423] -> embedded[484:485]: 'content' => 'merged_system'",
+      "delete official[500:515] -> embedded[562:562]: 'if ns.multi_step_tool %} {{- raise_exception('No user query found in messages.') }} {%- endif %} {%-' => ''",
+      "insert official[519:519] -> embedded[566:580]: '' => '%} {%- if loop.index0 >= num_sys and message.role != \"system\" and message.role != \"developer\"'",
+      "delete official[529:552] -> embedded[590:590]: 'message.role == \"system\" %} {%- if not loop.first %} {{- raise_exception('System message must be at the beginning.') }} {%- endif %} {%- elif' => ''",
+      "replace official[718:719] -> embedded[756:757]: 'defined' => 'mapping'",
+      "replace official[722:723] -> embedded[760:766]: 'args_name,' => 'args_name in tool_call.arguments %} {%- set'",
+      "replace official[724:726] -> embedded[767:769]: 'in tool_call.arguments|items' => '= tool_call.arguments[args_name]'",
+      "replace official[740:741] -> embedded[783:786]: 'string' => 'tojson | safe'",
+      "replace official[744:745] -> embedded[789:799]: 'string' => 'mapping or (args_value is sequence and args_value is not string)'",
+      "replace official[748:751] -> embedded[802:803]: 'tojson | safe' => 'string'",
+      "replace official[828:829] -> embedded[880:881]: 'else' => 'endif'",
+      "delete official[830:835] -> embedded[882:882]: '{{- raise_exception('Unexpected message role.') }}' => ''",
+      "insert official[873:873] -> embedded[920:929]: '' => '{#- Unsloth fixes - developer role, tool calling #}'"
+    ],
+    "diff_truncated": false
+  },
+  "head_block": 40,
+  "reference_block": 39,
+  "layout": {
+    "tensors": [
+      {
+        "name": "blk.40.attn_k.weight",
+        "shape": [
+          2048,
+          512
+        ],
+        "type": "Q4_K",
+        "n_values": 1048576
+      },
+      {
+        "name": "blk.40.attn_k_norm.weight",
+        "shape": [
+          256
+        ],
+        "type": "F32",
+        "n_values": 256
+      },
+      {
+        "name": "blk.40.attn_norm.weight",
+        "shape": [
+          2048
+        ],
+        "type": "F32",
+        "n_values": 2048
+      },
+      {
+        "name": "blk.40.attn_output.weight",
+        "shape": [
+          4096,
+          2048
+        ],
+        "type": "Q4_K",
+        "n_values": 8388608
+      },
+      {
+        "name": "blk.40.attn_q.weight",
+        "shape": [
+          2048,
+          8192
+        ],
+        "type": "Q4_K",
+        "n_values": 16777216
+      },
+      {
+        "name": "blk.40.attn_q_norm.weight",
+        "shape": [
+          256
+        ],
+        "type": "F32",
+        "n_values": 256
+      },
+      {
+        "name": "blk.40.attn_v.weight",
+        "shape": [
+          2048,
+          512
+        ],
+        "type": "Q6_K",
+        "n_values": 1048576
+      },
+      {
+        "name": "blk.40.ffn_down_exps.weight",
+        "shape": [
+          512,
+          2048,
+          256
+        ],
+        "type": "Q6_K",
+        "n_values": 268435456
+      },
+      {
+        "name": "blk.40.ffn_down_shexp.weight",
+        "shape": [
+          512,
+          2048
+        ],
+        "type": "Q6_K",
+        "n_values": 1048576
+      },
+      {
+        "name": "blk.40.ffn_gate_exps.weight",
+        "shape": [
+          2048,
+          512,
+          256
+        ],
+        "type": "Q4_K",
+        "n_values": 268435456
+      },
+      {
+        "name": "blk.40.ffn_gate_inp.weight",
+        "shape": [
+          2048,
+          256
+        ],
+        "type": "F32",
+        "n_values": 524288
+      },
+      {
+        "name": "blk.40.ffn_gate_inp_shexp.weight",
+        "shape": [
+          2048
+        ],
+        "type": "F32",
+        "n_values": 2048
+      },
+      {
+        "name": "blk.40.ffn_gate_shexp.weight",
+        "shape": [
+          2048,
+          512
+        ],
+        "type": "Q4_K",
+        "n_values": 1048576
+      },
+      {
+        "name": "blk.40.ffn_up_exps.weight",
+        "shape": [
+          2048,
+          512,
+          256
+        ],
+        "type": "Q4_K",
+        "n_values": 268435456
+      },
+      {
+        "name": "blk.40.ffn_up_shexp.weight",
+        "shape": [
+          2048,
+          512
+        ],
+        "type": "Q4_K",
+        "n_values": 1048576
+      },
+      {
+        "name": "blk.40.nextn.eh_proj.weight",
+        "shape": [
+          4096,
+          2048
+        ],
+        "type": "Q4_K",
+        "n_values": 8388608
+      },
+      {
+        "name": "blk.40.nextn.enorm.weight",
+        "shape": [
+          2048
+        ],
+        "type": "F32",
+        "n_values": 2048
+      },
+      {
+        "name": "blk.40.nextn.hnorm.weight",
+        "shape": [
+          2048
+        ],
+        "type": "F32",
+        "n_values": 2048
+      },
+      {
+        "name": "blk.40.nextn.shared_head_norm.weight",
+        "shape": [
+          2048
+        ],
+        "type": "F32",
+        "n_values": 2048
+      },
+      {
+        "name": "blk.40.post_attention_norm.weight",
+        "shape": [
+          2048
+        ],
+        "type": "F32",
+        "n_values": 2048
+      }
+    ],
+    "count": 20,
+    "reference_count": 16,
+    "missing_vs_reference": [],
+    "extra_vs_reference": [
+      "nextn.eh_proj.weight",
+      "nextn.enorm.weight",
+      "nextn.hnorm.weight",
+      "nextn.shared_head_norm.weight"
+    ],
+    "missing_nextn": [],
+    "present_and_complete": true
+  },
+  "screen": {
+    "verdict": "PASS",
+    "reasons": [],
+    "n_matrices": 12,
+    "n_fresh_like": 0,
+    "fresh_fraction": 0.0
+  },
+  "reference_screen": {
+    "verdict": "PASS",
+    "reasons": [],
+    "n_matrices": 11,
+    "n_fresh_like": 0,
+    "fresh_fraction": 0.0
+  },
+  "head_stats": [
+    {
+      "name": "blk.40.attn_k.weight",
+      "kind": "matrix",
+      "shape": [
+        2048,
+        512
+      ],
+      "qtype": "Q4_K",
+      "n_values": 1048576,
+      "n_sampled": 1048576,
+      "n_nonfinite": 0,
+      "mean": -4.61476614646017e-05,
+      "std": 0.018410297943576032,
+      "kurtosis": 5.560609748547457,
+      "max_over_sigma": 12.574912389801195,
+      "abs_max": 0.2315540313720703,
+      "median": null
+    },
+    {
+      "name": "blk.40.attn_k_norm.weight",
+      "kind": "norm",
+      "shape": [
+        256
+      ],
+      "qtype": "F32",
+      "n_values": 256,
+      "n_sampled": 256,
+      "n_nonfinite": 0,
+      "mean": 1.7417898178100586,
+      "std": 0.31151150204703876,
+      "kurtosis": 7.342021962790028,
+      "max_over_sigma": 5.553795145415899,
+      "abs_max": 2.8203125,
+      "median": 1.703125
+    },
+    {
+      "name": "blk.40.attn_norm.weight",
+      "kind": "norm",
+      "shape": [
+        2048
+      ],
+      "qtype": "F32",
+      "n_values": 2048,
+      "n_sampled": 2048,
+      "n_nonfinite": 0,
+      "mean": 0.9049753237050027,
+      "std": 0.1561869938642344,
+      "kurtosis": 6.787274306878648,
+      "max_over_sigma": 6.185652226169332,
+      "abs_max": 1.87109375,
+      "median": 0.85205078125
+    },
+    {
+      "name": "blk.40.attn_output.weight",
+      "kind": "matrix",
+      "shape": [
+        4096,
+        2048
+      ],
+      "qtype": "Q4_K",
+      "n_values": 8388608,
+      "n_sampled": 8388608,
+      "n_nonfinite": 0,
+      "mean": -1.309424474271695e-05,
+      "std": 0.018755042193478098,
+      "kurtosis": 24.83551370959453,
+      "max_over_sigma": 98.0207053008316,
+      "abs_max": 1.838369369506836,
+      "median": null
+    },
+    {
+      "name": "blk.40.attn_q.weight",
+      "kind": "matrix",
+      "shape": [
+        2048,
+        8192
+      ],
+      "qtype": "Q4_K",
+      "n_values": 16777216,
+      "n_sampled": 16777216,
+      "n_nonfinite": 0,
+      "mean": 7.755603327551885e-06,
+      "std": 0.020454180084992387,
+      "kurtosis": 10.121256622864466,
+      "max_over_sigma": 18.79954309488376,
+      "abs_max": 0.384521484375,
+      "median": null
+    },
+    {
+      "name": "blk.40.attn_q_norm.weight",
+      "kind": "norm",
+      "shape": [
+        256
+      ],
+      "qtype": "F32",
+      "n_values": 256,
+      "n_sampled": 256,
+      "n_nonfinite": 0,
+      "mean": 1.7672481536865234,
+      "std": 0.33897899642354057,
+      "kurtosis": 8.857984432567076,
+      "max_over_sigma": 5.236491559697276,
+      "abs_max": 3.21875,
+      "median": 1.716796875
+    },
+    {
+      "name": "blk.40.attn_v.weight",
+      "kind": "matrix",
+      "shape": [
+        2048,
+        512
+      ],
+      "qtype": "Q6_K",
+      "n_values": 1048576,
+      "n_sampled": 1048576,
+      "n_nonfinite": 0,
+      "mean": -1.721349343597467e-05,
+      "std": 0.02120046981363155,
+      "kurtosis": 4.321636052113504,
+      "max_over_sigma": 11.792643573311414,
+      "abs_max": 0.24999237060546875,
+      "median": null
+    },
+    {
+      "name": "blk.40.ffn_down_exps.weight",
+      "kind": "matrix",
+      "shape": [
+        512,
+        2048,
+        256
+      ],
+      "qtype": "Q6_K",
+      "n_values": 268435456,
+      "n_sampled": 44739584,
+      "n_nonfinite": 0,
+      "mean": -1.594676015089046e-07,
+      "std": 0.013571172386571087,
+      "kurtosis": 4.136556510560627,
+      "max_over_sigma": 25.041602876099564,
+      "abs_max": 0.33984375,
+      "median": null
+    },
+    {
+      "name": "blk.40.ffn_down_shexp.weight",
+      "kind": "matrix",
+      "shape": [
+        512,
+        2048
+      ],
+      "qtype": "Q6_K",
+      "n_values": 1048576,
+      "n_sampled": 1048576,
+      "n_nonfinite": 0,
+      "mean": -1.1427098854710493e-05,
+      "std": 0.008306433829107613,
+      "kurtosis": 16.88393155997639,
+      "max_over_sigma": 40.67680605811131,
+      "abs_max": 0.337890625,
+      "median": null
+    },
+    {
+      "name": "blk.40.ffn_gate_exps.weight",
+      "kind": "matrix",
+      "shape": [
+        2048,
+        512,
+        256
+      ],
+      "qtype": "Q4_K",
+      "n_values": 268435456,
+      "n_sampled": 44740608,
+      "n_nonfinite": 0,
+      "mean": -2.133037716440446e-05,
+      "std": 0.014130164417329127,
+      "kurtosis": 3.617707280643863,
+      "max_over_sigma": 14.932413237047204,
+      "abs_max": 0.21097612380981445,
+      "median": null
+    },
+    {
+      "name": "blk.40.ffn_gate_inp.weight",
+      "kind": "matrix",
+      "shape": [
+        2048,
+        256
+      ],
+      "qtype": "F32",
+      "n_values": 524288,
+      "n_sampled": 524288,
+      "n_nonfinite": 0,
+      "mean": 6.813218190271364e-05,
+      "std": 0.009615140980491644,
+      "kurtosis": 7.221710767338462,
+      "max_over_sigma": 14.734021577981983,
+      "abs_max": 0.1416015625,
+      "median": null
+    },
+    {
+      "name": "blk.40.ffn_gate_inp_shexp.weight",
+      "kind": "other",
+      "shape": [
+        2048
+      ],
+      "qtype": "F32",
+      "n_values": 2048,
+      "n_sampled": 2048,
+      "n_nonfinite": 0,
+      "mean": -2.6697071007220075e-05,
+      "std": 0.0019839717747789382,
+      "kurtosis": 3.394557372991593,
+      "max_over_sigma": 4.355049414680063,
+      "abs_max": 0.0086669921875,
+      "median": null
+    },
+    {
+      "name": "blk.40.ffn_gate_shexp.weight",
+      "kind": "matrix",
+      "shape": [
+        2048,
+        512
+      ],
+      "qtype": "Q4_K",
+      "n_values": 1048576,
+      "n_sampled": 1048576,
+      "n_nonfinite": 0,
+      "mean": 2.7118924663227517e-05,
+      "std": 0.00888475286337861,
+      "kurtosis": 5.5316444087502745,
+      "max_over_sigma": 16.05353721793045,
+      "abs_max": 0.14265882968902588,
+      "median": null
+    },
+    {
+      "name": "blk.40.ffn_up_exps.weight",
+      "kind": "matrix",
+      "shape": [
+        2048,
+        512,
+        256
+      ],
+      "qtype": "Q4_K",
+      "n_values": 268435456,
+      "n_sampled": 44740608,
+      "n_nonfinite": 0,
+      "mean": -7.845813528107266e-06,
+      "std": 0.014709581435763813,
+      "kurtosis": 3.70202278475701,
+      "max_over_sigma": 35.49275016217279,
+      "abs_max": 0.5220756530761719,
+      "median": null
+    },
+    {
+      "name": "blk.40.ffn_up_shexp.weight",
+      "kind": "matrix",
+      "shape": [
+        2048,
+        512
+      ],
+      "qtype": "Q4_K",
+      "n_values": 1048576,
+      "n_sampled": 1048576,
+      "n_nonfinite": 0,
+      "mean": -4.576840694880957e-06,
+      "std": 0.013504319336701502,
+      "kurtosis": 5.951159533671904,
+      "max_over_sigma": 14.370114106929341,
+      "abs_max": 0.1940631866455078,
+      "median": null
+    },
+    {
+      "name": "blk.40.nextn.eh_proj.weight",
+      "kind": "matrix",
+      "shape": [
+        4096,
+        2048
+      ],
+      "qtype": "Q4_K",
+      "n_values": 8388608,
+      "n_sampled": 8388608,
+      "n_nonfinite": 0,
+      "mean": 7.367472446162514e-05,
+      "std": 0.0086532624936481,
+      "kurtosis": 502.44968140878444,
+      "max_over_sigma": 47.405504604036295,
+      "abs_max": 0.41028594970703125,
+      "median": null
+    },
+    {
+      "name": "blk.40.nextn.enorm.weight",
+      "kind": "norm",
+      "shape": [
+        2048
+      ],
+      "qtype": "F32",
+      "n_values": 2048,
+      "n_sampled": 2048,
+      "n_nonfinite": 0,
+      "mean": 0.27335357666015625,
+      "std": 0.058480888688762944,
+      "kurtosis": 3.5175943508312684,
+      "max_over_sigma": 5.411856427562413,
+      "abs_max": 0.58984375,
+      "median": 0.2734375
+    },
+    {
+      "name": "blk.40.nextn.hnorm.weight",
+      "kind": "norm",
+      "shape": [
+        2048
+      ],
+      "qtype": "F32",
+      "n_values": 2048,
+      "n_sampled": 2048,
+      "n_nonfinite": 0,
+      "mean": 0.4937027841806412,
+      "std": 0.09479006355565299,
+      "kurtosis": 11.223604767624208,
+      "max_over_sigma": 5.938785350521974,
+      "abs_max": 1.056640625,
+      "median": 0.46875
+    },
+    {
+      "name": "blk.40.nextn.shared_head_norm.weight",
+      "kind": "norm",
+      "shape": [
+        2048
+      ],
+      "qtype": "F32",
+      "n_values": 2048,
+      "n_sampled": 2048,
+      "n_nonfinite": 0,
+      "mean": 2.9251255989074707,
+      "std": 0.2965774785139704,
+      "kurtosis": 6.725286915142417,
+      "max_over_sigma": 7.06737425548898,
+      "abs_max": 3.953125,
+      "median": 3.015625
+    },
+    {
+      "name": "blk.40.post_attention_norm.weight",
+      "kind": "norm",
+      "shape": [
+        2048
+      ],
+      "qtype": "F32",
+      "n_values": 2048,
+      "n_sampled": 2048,
+      "n_nonfinite": 0,
+      "mean": 1.86859130859375,
+      "std": 0.21442359241525283,
+      "kurtosis": 8.394147095387357,
+      "max_over_sigma": 5.495121493554614,
+      "abs_max": 3.046875,
+      "median": 1.83203125
+    }
+  ],
+  "reference_stats": [
+    {
+      "name": "blk.39.attn_k.weight",
+      "kind": "matrix",
+      "shape": [
+        2048,
+        512
+      ],
+      "qtype": "Q4_K",
+      "n_values": 1048576,
+      "n_sampled": 1048576,
+      "n_nonfinite": 0,
+      "mean": -1.168045224630987e-05,
+      "std": 0.015129869084670547,
+      "kurtosis": 9.36708027598682,
+      "max_over_sigma": 15.136432943373721,
+      "abs_max": 0.22900056838989258,
+      "median": null
+    },
+    {
+      "name": "blk.39.attn_k_norm.weight",
+      "kind": "norm",
+      "shape": [
+        256
+      ],
+      "qtype": "F32",
+      "n_values": 256,
+      "n_sampled": 256,
+      "n_nonfinite": 0,
+      "mean": 1.371610164642334,
+      "std": 0.2816102502448295,
+      "kurtosis": 14.83905377155992,
+      "max_over_sigma": 4.926081928609785,
+      "abs_max": 2.34375,
+      "median": 1.3701171875
+    },
+    {
+      "name": "blk.39.attn_norm.weight",
+      "kind": "norm",
+      "shape": [
+        2048
+      ],
+      "qtype": "F32",
+      "n_values": 2048,
+      "n_sampled": 2048,
+      "n_nonfinite": 0,
+      "mean": 0.9296860136091709,
+      "std": 0.12463913588470123,
+      "kurtosis": 6.304948963054709,
+      "max_over_sigma": 4.920466850461422,
+      "abs_max": 1.54296875,
+      "median": 0.890625
+    },
+    {
+      "name": "blk.39.attn_output.weight",
+      "kind": "matrix",
+      "shape": [
+        4096,
+        2048
+      ],
+      "qtype": "Q4_K",
+      "n_values": 8388608,
+      "n_sampled": 8388608,
+      "n_nonfinite": 0,
+      "mean": -9.316744851173342e-07,
+      "std": 0.016718490533832012,
+      "kurtosis": 5.169423513377974,
+      "max_over_sigma": 32.29836519031625,
+      "abs_max": 0.5399789810180664,
+      "median": null
+    },
+    {
+      "name": "blk.39.attn_q.weight",
+      "kind": "matrix",
+      "shape": [
+        2048,
+        8192
+      ],
+      "qtype": "Q4_K",
+      "n_values": 16777216,
+      "n_sampled": 16777216,
+      "n_nonfinite": 0,
+      "mean": -1.6634606357257096e-05,
+      "std": 0.01701737427257231,
+      "kurtosis": 5.646431383801405,
+      "max_over_sigma": 24.904634734203345,
+      "abs_max": 0.423828125,
+      "median": null
+    },
+    {
+      "name": "blk.39.attn_q_norm.weight",
+      "kind": "norm",
+      "shape": [
+        256
+      ],
+      "qtype": "F32",
+      "n_values": 256,
+      "n_sampled": 256,
+      "n_nonfinite": 0,
+      "mean": 1.3831615447998047,
+      "std": 0.2811476968160515,
+      "kurtosis": 12.476318407577246,
+      "max_over_sigma": 4.697394144629551,
+      "abs_max": 2.3671875,
+      "median": 1.3798828125
+    },
+    {
+      "name": "blk.39.attn_v.weight",
+      "kind": "matrix",
+      "shape": [
+        2048,
+        512
+      ],
+      "qtype": "Q6_K",
+      "n_values": 1048576,
+      "n_sampled": 1048576,
+      "n_nonfinite": 0,
+      "mean": 1.1930600521736778e-05,
+      "std": 0.01357574924209416,
+      "kurtosis": 25.57297952962545,
+      "max_over_sigma": 28.341249351194346,
+      "abs_max": 0.384765625,
+      "median": null
+    },
+    {
+      "name": "blk.39.ffn_down_exps.weight",
+      "kind": "matrix",
+      "shape": [
+        512,
+        2048,
+        256
+      ],
+      "qtype": "Q6_K",
+      "n_values": 268435456,
+      "n_sampled": 44739584,
+      "n_nonfinite": 0,
+      "mean": 9.130784050768336e-07,
+      "std": 0.011574641973736638,
+      "kurtosis": 3.625268387772481,
+      "max_over_sigma": 20.24958671274225,
+      "abs_max": 0.23438262939453125,
+      "median": null
+    },
+    {
+      "name": "blk.39.ffn_down_shexp.weight",
+      "kind": "matrix",
+      "shape": [
+        512,
+        2048
+      ],
+      "qtype": "Q6_K",
+      "n_values": 1048576,
+      "n_sampled": 1048576,
+      "n_nonfinite": 0,
+      "mean": 6.942403615539661e-06,
+      "std": 0.0072527870356306826,
+      "kurtosis": 36.08461158524057,
+      "max_over_sigma": 38.139582641772904,
+      "abs_max": 0.276611328125,
+      "median": null
+    },
+    {
+      "name": "blk.39.ffn_gate_exps.weight",
+      "kind": "matrix",
+      "shape": [
+        2048,
+        512,
+        256
+      ],
+      "qtype": "Q4_K",
+      "n_values": 268435456,
+      "n_sampled": 44740608,
+      "n_nonfinite": 0,
+      "mean": -4.041499350284321e-05,
+      "std": 0.013051107198591731,
+      "kurtosis": 4.106083544066214,
+      "max_over_sigma": 23.011752423136667,
+      "abs_max": 0.3003692626953125,
+      "median": null
+    },
+    {
+      "name": "blk.39.ffn_gate_inp.weight",
+      "kind": "matrix",
+      "shape": [
+        2048,
+        256
+      ],
+      "qtype": "F32",
+      "n_values": 524288,
+      "n_sampled": 524288,
+      "n_nonfinite": 0,
+      "mean": -0.00022711938307090618,
+      "std": 0.011831405648378476,
+      "kurtosis": 6.889719912491206,
+      "max_over_sigma": 15.250676756371584,
+      "abs_max": 0.1806640625,
+      "median": null
+    },
+    {
+      "name": "blk.39.ffn_gate_inp_shexp.weight",
+      "kind": "other",
+      "shape": [
+        2048
+      ],
+      "qtype": "F32",
+      "n_values": 2048,
+      "n_sampled": 2048,
+      "n_nonfinite": 0,
+      "mean": 3.362420102348551e-05,
+      "std": 0.0033844534243407855,
+      "kurtosis": 9.955231167703852,
+      "max_over_sigma": 10.377636030201126,
+      "abs_max": 0.03515625,
+      "median": null
+    },
+    {
+      "name": "blk.39.ffn_gate_shexp.weight",
+      "kind": "matrix",
+      "shape": [
+        2048,
+        512
+      ],
+      "qtype": "Q4_K",
+      "n_values": 1048576,
+      "n_sampled": 1048576,
+      "n_nonfinite": 0,
+      "mean": 2.5552001716278028e-05,
+      "std": 0.011910431998339131,
+      "kurtosis": 4.616131501138446,
+      "max_over_sigma": 16.01840152301855,
+      "abs_max": 0.1908116340637207,
+      "median": null
+    },
+    {
+      "name": "blk.39.ffn_up_exps.weight",
+      "kind": "matrix",
+      "shape": [
+        2048,
+        512,
+        256
+      ],
+      "qtype": "Q4_K",
+      "n_values": 268435456,
+      "n_sampled": 44740608,
+      "n_nonfinite": 0,
+      "mean": -6.198013659972793e-06,
+      "std": 0.012105139087357686,
+      "kurtosis": 3.4491400396186735,
+      "max_over_sigma": 20.96448292270178,
+      "abs_max": 0.2537841796875,
+      "median": null
+    },
+    {
+      "name": "blk.39.ffn_up_shexp.weight",
+      "kind": "matrix",
+      "shape": [
+        2048,
+        512
+      ],
+      "qtype": "Q4_K",
+      "n_values": 1048576,
+      "n_sampled": 1048576,
+      "n_nonfinite": 0,
+      "mean": -1.0782944002585282e-05,
+      "std": 0.01001817053326438,
+      "kurtosis": 12.2716010599608,
+      "max_over_sigma": 29.049606869438723,
+      "abs_max": 0.2910346984863281,
+      "median": null
+    },
+    {
+      "name": "blk.39.post_attention_norm.weight",
+      "kind": "norm",
+      "shape": [
+        2048
+      ],
+      "qtype": "F32",
+      "n_values": 2048,
+      "n_sampled": 2048,
+      "n_nonfinite": 0,
+      "mean": 1.3780250698328018,
+      "std": 0.11032463176628465,
+      "kurtosis": 8.20466110120588,
+      "max_over_sigma": 6.416630799791503,
+      "abs_max": 2.0859375,
+      "median": 1.380859375
+    }
+  ],
+  "table": [
+    {
+      "tensor": "attn_k.weight",
+      "kind": "matrix",
+      "shape": [
+        2048,
+        512
+      ],
+      "type": "Q4_K",
+      "head": {
+        "mean": -4.61476614646017e-05,
+        "std": 0.018410297943576032,
+        "kurtosis": 5.560609748547457,
+        "max_over_sigma": 12.574912389801195,
+        "median": null,
+        "abs_max": 0.2315540313720703,
+        "n_nonfinite": 0
+      },
+      "ref": {
+        "mean": -1.168045224630987e-05,
+        "std": 0.015129869084670547,
+        "kurtosis": 9.36708027598682,
+        "max_over_sigma": 15.136432943373721,
+        "median": null,
+        "abs_max": 0.22900056838989258,
+        "n_nonfinite": 0
+      }
+    },
+    {
+      "tensor": "attn_k_norm.weight",
+      "kind": "norm",
+      "shape": [
+        256
+      ],
+      "type": "F32",
+      "head": {
+        "mean": 1.7417898178100586,
+        "std": 0.31151150204703876,
+        "kurtosis": 7.342021962790028,
+        "max_over_sigma": 5.553795145415899,
+        "median": 1.703125,
+        "abs_max": 2.8203125,
+        "n_nonfinite": 0
+      },
+      "ref": {
+        "mean": 1.371610164642334,
+        "std": 0.2816102502448295,
+        "kurtosis": 14.83905377155992,
+        "max_over_sigma": 4.926081928609785,
+        "median": 1.3701171875,
+        "abs_max": 2.34375,
+        "n_nonfinite": 0
+      }
+    },
+    {
+      "tensor": "attn_norm.weight",
+      "kind": "norm",
+      "shape": [
+        2048
+      ],
+      "type": "F32",
+      "head": {
+        "mean": 0.9049753237050027,
+        "std": 0.1561869938642344,
+        "kurtosis": 6.787274306878648,
+        "max_over_sigma": 6.185652226169332,
+        "median": 0.85205078125,
+        "abs_max": 1.87109375,
+        "n_nonfinite": 0
+      },
+      "ref": {
+        "mean": 0.9296860136091709,
+        "std": 0.12463913588470123,
+        "kurtosis": 6.304948963054709,
+        "max_over_sigma": 4.920466850461422,
+        "median": 0.890625,
+        "abs_max": 1.54296875,
+        "n_nonfinite": 0
+      }
+    },
+    {
+      "tensor": "attn_output.weight",
+      "kind": "matrix",
+      "shape": [
+        4096,
+        2048
+      ],
+      "type": "Q4_K",
+      "head": {
+        "mean": -1.309424474271695e-05,
+        "std": 0.018755042193478098,
+        "kurtosis": 24.83551370959453,
+        "max_over_sigma": 98.0207053008316,
+        "median": null,
+        "abs_max": 1.838369369506836,
+        "n_nonfinite": 0
+      },
+      "ref": {
+        "mean": -9.316744851173342e-07,
+        "std": 0.016718490533832012,
+        "kurtosis": 5.169423513377974,
+        "max_over_sigma": 32.29836519031625,
+        "median": null,
+        "abs_max": 0.5399789810180664,
+        "n_nonfinite": 0
+      }
+    },
+    {
+      "tensor": "attn_q.weight",
+      "kind": "matrix",
+      "shape": [
+        2048,
+        8192
+      ],
+      "type": "Q4_K",
+      "head": {
+        "mean": 7.755603327551885e-06,
+        "std": 0.020454180084992387,
+        "kurtosis": 10.121256622864466,
+        "max_over_sigma": 18.79954309488376,
+        "median": null,
+        "abs_max": 0.384521484375,
+        "n_nonfinite": 0
+      },
+      "ref": {
+        "mean": -1.6634606357257096e-05,
+        "std": 0.01701737427257231,
+        "kurtosis": 5.646431383801405,
+        "max_over_sigma": 24.904634734203345,
+        "median": null,
+        "abs_max": 0.423828125,
+        "n_nonfinite": 0
+      }
+    },
+    {
+      "tensor": "attn_q_norm.weight",
+      "kind": "norm",
+      "shape": [
+        256
+      ],
+      "type": "F32",
+      "head": {
+        "mean": 1.7672481536865234,
+        "std": 0.33897899642354057,
+        "kurtosis": 8.857984432567076,
+        "max_over_sigma": 5.236491559697276,
+        "median": 1.716796875,
+        "abs_max": 3.21875,
+        "n_nonfinite": 0
+      },
+      "ref": {
+        "mean": 1.3831615447998047,
+        "std": 0.2811476968160515,
+        "kurtosis": 12.476318407577246,
+        "max_over_sigma": 4.697394144629551,
+        "median": 1.3798828125,
+        "abs_max": 2.3671875,
+        "n_nonfinite": 0
+      }
+    },
+    {
+      "tensor": "attn_v.weight",
+      "kind": "matrix",
+      "shape": [
+        2048,
+        512
+      ],
+      "type": "Q6_K",
+      "head": {
+        "mean": -1.721349343597467e-05,
+        "std": 0.02120046981363155,
+        "kurtosis": 4.321636052113504,
+        "max_over_sigma": 11.792643573311414,
+        "median": null,
+        "abs_max": 0.24999237060546875,
+        "n_nonfinite": 0
+      },
+      "ref": {
+        "mean": 1.1930600521736778e-05,
+        "std": 0.01357574924209416,
+        "kurtosis": 25.57297952962545,
+        "max_over_sigma": 28.341249351194346,
+        "median": null,
+        "abs_max": 0.384765625,
+        "n_nonfinite": 0
+      }
+    },
+    {
+      "tensor": "ffn_down_exps.weight",
+      "kind": "matrix",
+      "shape": [
+        512,
+        2048,
+        256
+      ],
+      "type": "Q6_K",
+      "head": {
+        "mean": -1.594676015089046e-07,
+        "std": 0.013571172386571087,
+        "kurtosis": 4.136556510560627,
+        "max_over_sigma": 25.041602876099564,
+        "median": null,
+        "abs_max": 0.33984375,
+        "n_nonfinite": 0
+      },
+      "ref": {
+        "mean": 9.130784050768336e-07,
+        "std": 0.011574641973736638,
+        "kurtosis": 3.625268387772481,
+        "max_over_sigma": 20.24958671274225,
+        "median": null,
+        "abs_max": 0.23438262939453125,
+        "n_nonfinite": 0
+      }
+    },
+    {
+      "tensor": "ffn_down_shexp.weight",
+      "kind": "matrix",
+      "shape": [
+        512,
+        2048
+      ],
+      "type": "Q6_K",
+      "head": {
+        "mean": -1.1427098854710493e-05,
+        "std": 0.008306433829107613,
+        "kurtosis": 16.88393155997639,
+        "max_over_sigma": 40.67680605811131,
+        "median": null,
+        "abs_max": 0.337890625,
+        "n_nonfinite": 0
+      },
+      "ref": {
+        "mean": 6.942403615539661e-06,
+        "std": 0.0072527870356306826,
+        "kurtosis": 36.08461158524057,
+        "max_over_sigma": 38.139582641772904,
+        "median": null,
+        "abs_max": 0.276611328125,
+        "n_nonfinite": 0
+      }
+    },
+    {
+      "tensor": "ffn_gate_exps.weight",
+      "kind": "matrix",
+      "shape": [
+        2048,
+        512,
+        256
+      ],
+      "type": "Q4_K",
+      "head": {
+        "mean": -2.133037716440446e-05,
+        "std": 0.014130164417329127,
+        "kurtosis": 3.617707280643863,
+        "max_over_sigma": 14.932413237047204,
+        "median": null,
+        "abs_max": 0.21097612380981445,
+        "n_nonfinite": 0
+      },
+      "ref": {
+        "mean": -4.041499350284321e-05,
+        "std": 0.013051107198591731,
+        "kurtosis": 4.106083544066214,
+        "max_over_sigma": 23.011752423136667,
+        "median": null,
+        "abs_max": 0.3003692626953125,
+        "n_nonfinite": 0
+      }
+    },
+    {
+      "tensor": "ffn_gate_inp.weight",
+      "kind": "matrix",
+      "shape": [
+        2048,
+        256
+      ],
+      "type": "F32",
+      "head": {
+        "mean": 6.813218190271364e-05,
+        "std": 0.009615140980491644,
+        "kurtosis": 7.221710767338462,
+        "max_over_sigma": 14.734021577981983,
+        "median": null,
+        "abs_max": 0.1416015625,
+        "n_nonfinite": 0
+      },
+      "ref": {
+        "mean": -0.00022711938307090618,
+        "std": 0.011831405648378476,
+        "kurtosis": 6.889719912491206,
+        "max_over_sigma": 15.250676756371584,
+        "median": null,
+        "abs_max": 0.1806640625,
+        "n_nonfinite": 0
+      }
+    },
+    {
+      "tensor": "ffn_gate_inp_shexp.weight",
+      "kind": "other",
+      "shape": [
+        2048
+      ],
+      "type": "F32",
+      "head": {
+        "mean": -2.6697071007220075e-05,
+        "std": 0.0019839717747789382,
+        "kurtosis": 3.394557372991593,
+        "max_over_sigma": 4.355049414680063,
+        "median": null,
+        "abs_max": 0.0086669921875,
+        "n_nonfinite": 0
+      },
+      "ref": {
+        "mean": 3.362420102348551e-05,
+        "std": 0.0033844534243407855,
+        "kurtosis": 9.955231167703852,
+        "max_over_sigma": 10.377636030201126,
+        "median": null,
+        "abs_max": 0.03515625,
+        "n_nonfinite": 0
+      }
+    },
+    {
+      "tensor": "ffn_gate_shexp.weight",
+      "kind": "matrix",
+      "shape": [
+        2048,
+        512
+      ],
+      "type": "Q4_K",
+      "head": {
+        "mean": 2.7118924663227517e-05,
+        "std": 0.00888475286337861,
+        "kurtosis": 5.5316444087502745,
+        "max_over_sigma": 16.05353721793045,
+        "median": null,
+        "abs_max": 0.14265882968902588,
+        "n_nonfinite": 0
+      },
+      "ref": {
+        "mean": 2.5552001716278028e-05,
+        "std": 0.011910431998339131,
+        "kurtosis": 4.616131501138446,
+        "max_over_sigma": 16.01840152301855,
+        "median": null,
+        "abs_max": 0.1908116340637207,
+        "n_nonfinite": 0
+      }
+    },
+    {
+      "tensor": "ffn_up_exps.weight",
+      "kind": "matrix",
+      "shape": [
+        2048,
+        512,
+        256
+      ],
+      "type": "Q4_K",
+      "head": {
+        "mean": -7.845813528107266e-06,
+        "std": 0.014709581435763813,
+        "kurtosis": 3.70202278475701,
+        "max_over_sigma": 35.49275016217279,
+        "median": null,
+        "abs_max": 0.5220756530761719,
+        "n_nonfinite": 0
+      },
+      "ref": {
+        "mean": -6.198013659972793e-06,
+        "std": 0.012105139087357686,
+        "kurtosis": 3.4491400396186735,
+        "max_over_sigma": 20.96448292270178,
+        "median": null,
+        "abs_max": 0.2537841796875,
+        "n_nonfinite": 0
+      }
+    },
+    {
+      "tensor": "ffn_up_shexp.weight",
+      "kind": "matrix",
+      "shape": [
+        2048,
+        512
+      ],
+      "type": "Q4_K",
+      "head": {
+        "mean": -4.576840694880957e-06,
+        "std": 0.013504319336701502,
+        "kurtosis": 5.951159533671904,
+        "max_over_sigma": 14.370114106929341,
+        "median": null,
+        "abs_max": 0.1940631866455078,
+        "n_nonfinite": 0
+      },
+      "ref": {
+        "mean": -1.0782944002585282e-05,
+        "std": 0.01001817053326438,
+        "kurtosis": 12.2716010599608,
+        "max_over_sigma": 29.049606869438723,
+        "median": null,
+        "abs_max": 0.2910346984863281,
+        "n_nonfinite": 0
+      }
+    },
+    {
+      "tensor": "nextn.eh_proj.weight",
+      "kind": "matrix",
+      "shape": [
+        4096,
+        2048
+      ],
+      "type": "Q4_K",
+      "head": {
+        "mean": 7.367472446162514e-05,
+        "std": 0.0086532624936481,
+        "kurtosis": 502.44968140878444,
+        "max_over_sigma": 47.405504604036295,
+        "median": null,
+        "abs_max": 0.41028594970703125,
+        "n_nonfinite": 0
+      },
+      "ref": null
+    },
+    {
+      "tensor": "nextn.enorm.weight",
+      "kind": "norm",
+      "shape": [
+        2048
+      ],
+      "type": "F32",
+      "head": {
+        "mean": 0.27335357666015625,
+        "std": 0.058480888688762944,
+        "kurtosis": 3.5175943508312684,
+        "max_over_sigma": 5.411856427562413,
+        "median": 0.2734375,
+        "abs_max": 0.58984375,
+        "n_nonfinite": 0
+      },
+      "ref": null
+    },
+    {
+      "tensor": "nextn.hnorm.weight",
+      "kind": "norm",
+      "shape": [
+        2048
+      ],
+      "type": "F32",
+      "head": {
+        "mean": 0.4937027841806412,
+        "std": 0.09479006355565299,
+        "kurtosis": 11.223604767624208,
+        "max_over_sigma": 5.938785350521974,
+        "median": 0.46875,
+        "abs_max": 1.056640625,
+        "n_nonfinite": 0
+      },
+      "ref": null
+    },
+    {
+      "tensor": "nextn.shared_head_norm.weight",
+      "kind": "norm",
+      "shape": [
+        2048
+      ],
+      "type": "F32",
+      "head": {
+        "mean": 2.9251255989074707,
+        "std": 0.2965774785139704,
+        "kurtosis": 6.725286915142417,
+        "max_over_sigma": 7.06737425548898,
+        "median": 3.015625,
+        "abs_max": 3.953125,
+        "n_nonfinite": 0
+      },
+      "ref": null
+    },
+    {
+      "tensor": "post_attention_norm.weight",
+      "kind": "norm",
+      "shape": [
+        2048
+      ],
+      "type": "F32",
+      "head": {
+        "mean": 1.86859130859375,
+        "std": 0.21442359241525283,
+        "kurtosis": 8.394147095387357,
+        "max_over_sigma": 5.495121493554614,
+        "median": 1.83203125,
+        "abs_max": 3.046875,
+        "n_nonfinite": 0
+      },
+      "ref": {
+        "mean": 1.3780250698328018,
+        "std": 0.11032463176628465,
+        "kurtosis": 8.20466110120588,
+        "max_over_sigma": 6.416630799791503,
+        "median": 1.380859375,
+        "abs_max": 2.0859375,
+        "n_nonfinite": 0
+      }
+    }
+  ],
+  "table_text": "tensor                           kind   type  | blk.40 (head) | blk.39 (trunk reference)\n----------------------------------------------------------------------------------------------------------------------------------\nattn_k.weight                    matrix Q4_K  | std  0.01841 kurt    5.56 max/sigma   12.6 | std  0.01513 kurt    9.37 max/sigma   15.1\nattn_k_norm.weight               norm   F32   | median    1.703 absmax     2.82 | median     1.37 absmax    2.344\nattn_norm.weight                 norm   F32   | median   0.8521 absmax    1.871 | median   0.8906 absmax    1.543\nattn_output.weight               matrix Q4_K  | std  0.01876 kurt   24.84 max/sigma   98.0 | std  0.01672 kurt    5.17 max/sigma   32.3\nattn_q.weight                    matrix Q4_K  | std  0.02045 kurt   10.12 max/sigma   18.8 | std  0.01702 kurt    5.65 max/sigma   24.9\nattn_q_norm.weight               norm   F32   | median    1.717 absmax    3.219 | median     1.38 absmax    2.367\nattn_v.weight                    matrix Q6_K  | std  0.02120 kurt    4.32 max/sigma   11.8 | std  0.01358 kurt   25.57 max/sigma   28.3\nffn_down_exps.weight             matrix Q6_K  | std  0.01357 kurt    4.14 max/sigma   25.0 | std  0.01157 kurt    3.63 max/sigma   20.2\nffn_down_shexp.weight            matrix Q6_K  | std  0.00831 kurt   16.88 max/sigma   40.7 | std  0.00725 kurt   36.08 max/sigma   38.1\nffn_gate_exps.weight             matrix Q4_K  | std  0.01413 kurt    3.62 max/sigma   14.9 | std  0.01305 kurt    4.11 max/sigma   23.0\nffn_gate_inp.weight              matrix F32   | std  0.00962 kurt    7.22 max/sigma   14.7 | std  0.01183 kurt    6.89 max/sigma   15.3\nffn_gate_inp_shexp.weight        other  F32   | std  0.00198 kurt    3.39 max/sigma    4.4 | std  0.00338 kurt    9.96 max/sigma   10.4\nffn_gate_shexp.weight            matrix Q4_K  | std  0.00888 kurt    5.53 max/sigma   16.1 | std  0.01191 kurt    4.62 max/sigma   16.0\nffn_up_exps.weight               matrix Q4_K  | std  0.01471 kurt    3.70 max/sigma   35.5 | std  0.01211 kurt    3.45 max/sigma   21.0\nffn_up_shexp.weight              matrix Q4_K  | std  0.01350 kurt    5.95 max/sigma   14.4 | std  0.01002 kurt   12.27 max/sigma   29.0\nnextn.eh_proj.weight             matrix Q4_K  | std  0.00865 kurt  502.45 max/sigma   47.4 | (not in the reference layer)\nnextn.enorm.weight               norm   F32   | median   0.2734 absmax   0.5898 | (not in the reference layer)\nnextn.hnorm.weight               norm   F32   | median   0.4688 absmax    1.057 | (not in the reference layer)\nnextn.shared_head_norm.weight    norm   F32   | median    3.016 absmax    3.953 | (not in the reference layer)\npost_attention_norm.weight       norm   F32   | median    1.832 absmax    3.047 | median    1.381 absmax    2.086",
+  "thresholds": {
+    "norm_median_range": [
+      0.2,
+      5.0
+    ],
+    "norm_max_abs": 10000.0,
+    "fresh_kurtosis": [
+      3.0,
+      0.3
+    ],
+    "fresh_std": [
+      0.015,
+      0.025
+    ],
+    "fresh_fraction": 0.9,
+    "max_sample_values": 50000000
+  },
+  "verdict": "PASS",
+  "reasons": []
+}

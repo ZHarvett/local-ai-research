@@ -1,12 +1,54 @@
-# Model config. PLACEHOLDERS until WP4 fills in the verified values; every field is optional.
-# `file` is used for `-m` when a server config does not set `model`.
+# Model identity, verified in WP4. `file` is used for `-m` when a server config does not set
+# `model`. The file itself (models/, gitignored) is checked against `sha256` below.
 
-# repo     = "ornith-ai/Ornith-1.5-35B-A3B-GGUF"
-# revision = ""        # WP4
-file       = "Ornith-1.5-35B-A3B-Q4_K_M.gguf"   # PLACEHOLDER name, verified in WP4
-# size_bytes = 0       # WP4
-# sha256     = ""      # WP4
-# license    = ""      # WP4
+repo          = "ornith-ai/Ornith-1.5-35B-A3B-GGUF"
+revision      = "f60452672689e0040be350560267a614cc172a18"  # "Upload Ornith-1.5-35B-Q4_K_M.gguf"
+revision_date = "2026-08-24T03:38:27Z"  # newest commit that changed this file's content
+file          = "Ornith-1.5-35B-Q4_K_M.gguf"
+size_bytes    = 21713463040
+# LFS sha256 as published by Hugging Face at `revision`; WP4 recomputed it on the local file.
+sha256        = "42739874cc2ccfdb8523b23fbe52e29b2a7555c8176737ca9ca0b5d59859d41f"
+license       = "mit"  # `license: mit` in the repository's model card front matter
+license_source = "https://huggingface.co/ornith-ai/Ornith-1.5-35B-A3B-GGUF/blob/f60452672689e0040be350560267a614cc172a18/README.md (license_link points to a LICENSE file in the base repo that is not in its file list)"
 
-# Recommended sampling from the model card (WP4).
-[sampling]
+# The GGUF card has no `base_model` field. The base repo is taken from its `license_link` and its
+# chat-template link, both of which name ornith-ai/Ornith-1.5-35B-A3B.
+[base]
+repo          = "ornith-ai/Ornith-1.5-35B-A3B"
+revision      = "10fbf86fed7ecee4a061f8b499a618f46001cac1"  # newest commit on main
+revision_date = "2026-08-23T03:17:39Z"
+how_identified = "license_link and chat_template link in the GGUF model card; no base_model field"
+
+[chat_template]
+file   = "configs/model/chat_template.jinja"  # byte-for-byte copy of the official file
+source = "https://huggingface.co/ornith-ai/Ornith-1.5-35B-A3B/blob/10fbf86fed7ecee4a061f8b499a618f46001cac1/chat_template.jinja"
+normalization = "all runs of whitespace collapsed to one space, then stripped (UTF-8, SHA-256)"
+normalized_sha256 = "1575085b3cc2373cf3c2e0ec5cd075aa30581e9c3b9c36d33c17859fd2039b0c"
+# WP4 gguf_check: the template embedded in the GGUF is NOT identical to the official one after
+# whitespace normalisation (details: data/health/model-check.json, chat_template.diff).
+embedded_note = "embedded template is a modified variant (comment: 'Unsloth fixes - developer role, tool calling'): accepts the developer role, merges the first two system messages, renders tool-call arguments differently, no error on unexpected roles; 7828 vs 7536 bytes. llama-server uses the embedded one unless --chat-template-file is given. Decision open, see docs/decisions.md."
+
+# Recommended sampling, recorded exactly as the model card states it (base repo README.md at the
+# pinned revision; the GGUF card is the same text). The card does NOT give separate settings for
+# thinking vs non-thinking mode or for coding. Its benchmark footnotes quote per-benchmark values
+# (temperature 1.0 with top_p 1.0 or 0.95, ClawEval temperature 0.6); those describe evaluation
+# harnesses, not recommendations, and are not recorded here.
+[sampling.general]
+temperature = 0.6
+top_p       = 0.95
+top_k       = 20
+wording     = "For general tasks: temperature=0.6, top_p=0.95, top_k=20"
+source      = "https://huggingface.co/ornith-ai/Ornith-1.5-35B-A3B/blob/10fbf86fed7ecee4a061f8b499a618f46001cac1/README.md (Quickstart, \"Recommended sampling parameters\")"
+
+[sampling.benchmark]
+temperature = 1.0
+wording     = "To reproduce the reported benchmarks: temperature=1.0"
+source      = "https://huggingface.co/ornith-ai/Ornith-1.5-35B-A3B/blob/10fbf86fed7ecee4a061f8b499a618f46001cac1/README.md (Quickstart, \"Recommended sampling parameters\")"
+
+# Not from the card: the base repo's generation_config.json (defaults for transformers).
+[sampling.generation_config]
+temperature = 1.0
+top_p       = 0.95
+top_k       = 20
+wording     = "\"do_sample\": true, \"temperature\": 1.0, \"top_k\": 20, \"top_p\": 0.95"
+source      = "https://huggingface.co/ornith-ai/Ornith-1.5-35B-A3B/blob/10fbf86fed7ecee4a061f8b499a618f46001cac1/generation_config.json"
