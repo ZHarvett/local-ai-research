@@ -26,7 +26,7 @@ normalization = "all runs of whitespace collapsed to one space, then stripped (U
 normalized_sha256 = "1575085b3cc2373cf3c2e0ec5cd075aa30581e9c3b9c36d33c17859fd2039b0c"
 # WP4 gguf_check: the template embedded in the GGUF is NOT identical to the official one after
 # whitespace normalisation (details: data/health/model-check.json, chat_template.diff).
-embedded_note = "embedded template is a modified variant (comment: 'Unsloth fixes - developer role, tool calling'): accepts the developer role, merges the first two system messages, renders tool-call arguments differently, no error on unexpected roles; 7828 vs 7536 bytes. llama-server uses the embedded one unless --chat-template-file is given. Decision open, see docs/decisions.md."
+embedded_note = "embedded template is a modified variant (comment: 'Unsloth fixes - developer role, tool calling'): accepts the developer role, merges the first two system messages, renders tool-call arguments differently, no error on unexpected roles; 7828 vs 7536 bytes. llama-server uses the embedded one unless --chat-template-file is given. Decided in WP5: the embedded template is used in every stage (docs/decisions.md)."
 
 # Recommended sampling, recorded exactly as the model card states it (base repo README.md at the
 # pinned revision; the GGUF card is the same text). The card does NOT give separate settings for

@@ -267,8 +267,8 @@ hwmon0=acpitz, hwmon1=nvme, hwmon2=nvme, hwmon3=k10temp, hwmon4=gigabyte_wmi, hw
 
 | Field | Value |
 |---|---|
-| EXPO | enabled; configured speed confirmed at 6000 MT/s by `dmidecode -t memory` (run by Zack, 2026-11-07) |
-| iGPU | BIOS (Gigabyte board): Settings > IO Ports > Integrated Graphics = Forced, Initial Display Output = IGD Video, UMA Mode = Auto (set by Zack, his own statement); both monitors are plugged into the motherboard outputs |
+| EXPO | enabled; re-checked by Zack after the BIOS change (around 2026-11-08): `dmidecode -t memory` shows 6000 MT/s configured speed |
+| iGPU | BIOS (Gigabyte board): Settings > IO Ports > Integrated Graphics = Forced, Initial Display Output = IGD Video, UMA Mode = Auto; set by Zack in the BIOS around 2026-11-08 (exact date unknown, previous values unknown); both monitors are plugged into the motherboard outputs |
 | PBO/Eco mode | BIOS default, never changed by Zack; exact mode not recorded |
 
 ## Desktop GPU steering

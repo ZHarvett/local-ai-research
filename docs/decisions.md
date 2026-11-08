@@ -127,7 +127,7 @@ Decisions are recorded with date and source. Source section numbers refer to
   benchmark reproduction: temperature 1.0) and nothing for thinking vs non-thinking or coding. Both
   are recorded verbatim; the base `generation_config.json` (1.0 / 0.95 / 20) is recorded separately.
 
-### Embedded chat template differs from the official one (decision for Zack)
+### Embedded chat template differs from the official one (decided in WP5, see below)
 - `gguf_check` compared the GGUF's `tokenizer.chat_template` with the official base-repo template
   after whitespace normalisation: **not identical** (7828 vs 7536 bytes, 18 changes). The embedded
   one is a modified variant marked `Unsloth fixes - developer role, tool calling`: it accepts the
@@ -165,3 +165,38 @@ Decisions are recorded with date and source. Source section numbers refer to
 - **WP12:** the plan assumed `--load-mode auto (mmap)` vs `none`. The built llama-server accepts
   auto, none, mmap, mlock, mmap+mlock and dio. Before Stage 2c, read the exact meaning of each from
   `llama-server --help` and the source, and choose the comparison accordingly.
+
+## WP5 decisions (2026-11-08)
+
+### Chat template: the embedded template, everywhere
+- **Decision:** all Step 0 work uses the chat template embedded in the GGUF, with no
+  `--chat-template-file`, in every stage and every config (stock, candidate, tuned, health).
+- **Reasons:** stock means what a typical user runs, and the official GGUF ships this template.
+  It must be identical across all configs, so no config may point at `configs/model/chat_template.jinja`.
+- **Exact differences from the official template** (whitespace-normalized comparison, 18 changes,
+  7828 vs 7536 bytes; the full diff is `chat_template.diff` in `data/health/model-check.json`). The
+  embedded one is the "Unsloth fixes - developer role, tool calling" variant:
+  - it accepts the `developer` role;
+  - it merges the first two system/developer messages into one;
+  - it renders tool-call arguments differently (`tojson | safe` for mappings and sequences);
+  - it does not raise on an unknown role or on a system message that is not first.
+- **Check "template hash matches WP4":** the template that `/props` reports, whitespace-normalized
+  (all whitespace runs collapsed to one space, stripped, UTF-8) and SHA-256 hashed, must equal the
+  hash of the embedded template. `model-check.json` stores only `identical = false` and the diff, not
+  the embedded hash, so `smallpc.health` computes it from the GGUF with the same normalization
+  (`smallpc.gguf_check.normalize_template`) and reports it next to the official hash from
+  `configs/model.toml` (`1575085b3cc2373cf3c2e0ec5cd075aa30581e9c3b9c36d33c17859fd2039b0c`).
+- **Note for the executive chat:** Step 1 and Step 2 must decide which template to use for task
+  success and for the prefix-cache doctor, because the template may affect tool-call behaviour
+  (argument rendering, role handling). Step 0 numbers are for the embedded template only.
+
+### Base repository
+- `ornith-ai/Ornith-1.5-35B-A3B` is confirmed as the base repository. The GGUF card has no
+  `base_model` field, and that is accepted.
+
+### Manual BIOS fields updated
+- The previous values in `docs/environment.md`, `configs/machine.toml` and `scripts/inventory.sh` were
+  stale. Now: iGPU = Integrated Graphics "Forced", Initial Display Output "IGD Video", UMA Mode "Auto",
+  set by Zack in the BIOS around 2026-11-08 (exact date unknown, previous values unknown). EXPO =
+  enabled, and Zack re-checked it after the BIOS change: `dmidecode` shows 6000 MT/s configured speed.
+  PBO/Eco mode is still "BIOS default, not recorded". `inventory.sh` was edited but not re-run.
