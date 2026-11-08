@@ -227,3 +227,48 @@ Decisions are recorded with date and source. Source section numbers refer to
   `--checkpoint-min-step`; the WP5 plan's premise was wrong. The turn-3 restore still used no checkpoint.
 - **MTP acceptance source:** it was measured on llama.cpp's own source code, which the model may have
   seen in training, so rates on unseen code may be lower. Stage 2a re-measures on the WP8 workloads.
+
+## WP7 decisions (2026-11-08)
+
+### Smoke tests run against the stock server
+- **Decision:** both smoke tests start `configs/server/examples/stock-64k.toml` through
+  `scripts/launch-server.sh`. OpenCode with its defaults is the stock harness, and later steps compare
+  against stock.
+- **Recorded at run time from `/props`:** `total_slots`, the top-level `n_ctx`, the per-slot
+  `default_generation_settings.n_ctx` and the kv-unified setting. The stock default is `-np` auto,
+  so the slot count and the per-slot context are whatever the server reports, not assumed.
+- **Harness context:** `limit.context` (OpenCode) and `contextWindow` (dsh) use the **per-slot**
+  value, not the total `n_ctx`, wherever the two differ. `limit.output = min(16384, per_slot_ctx // 4)`.
+  Reasons: `max_tokens` is only a ceiling, a small value could cut off a long thinking pass, and
+  OpenCode subtracts it from the context when it decides to compact.
+
+### The smoke request pattern is smoke-task data
+- It shows how each harness behaves on a tiny task (for example extra title requests). It is not
+  representative of real agent turns and does not revise the 3,000 + 400 turn (step plan 3.4).
+  `data/harness/request-pattern.json` carries that label.
+
+### Harness version pinning rule
+- **Rule:** use the version the `latest` dist-tag points to at install time, unless it was published
+  less than 7 days before. Then use the newest version that is at least 7 days old and say so
+  (a newly published release can carry malicious code before anyone catches it).
+  "Newest" is read as newest by publish time. dsh's plugins get exactly the dsh CLI version (plugin
+  dist-tags are unreliable). A plugin without a release at that exact version stops the work.
+- **Whole dependency tree:** the install runs with `npm install --ignore-scripts --before=<UTC
+  timestamp exactly 7 days before the install>`. Every package in the lockfile is then checked against
+  registry publish times, and any published less than 7 days before the install gets an `overrides`
+  entry pinning an older version, repeated until none are left. The result is recorded in
+  `configs/harness.toml` and appended below once the install is done. A package with no version at
+  least 7 days old stops the work.
+- **Package choice (Zack, 2026-11-08):** OpenCode is `opencode-ai` (legacy 1.x line), as the step plan
+  says, not `@opencode/cli`, which the current README names. `npm view opencode-ai deprecated` was
+  empty and `latest` points to `opencode-ai` itself.
+
+### Isolation additions
+- Every execution of a harness binary, `--help` and `--version` included, goes through
+  `scripts/_sandbox.sh`: bubblewrap (`/home` and `/tmp` as tmpfs, only the scratch copy and
+  `third_party/harness-state` writable) plus an isolation environment (`HOME`, `XDG_*`, `TMPDIR`,
+  npm user and global config all repo-local). Informational commands also get `--unshare-net`. If
+  bubblewrap fails, work stops; there is no environment-only fallback.
+- Network behaviour is observed with a local logging proxy. A proxy cannot see traffic that ignores
+  the proxy settings; if the control run shows no attempt, network behaviour is reported as
+  "not verified".
