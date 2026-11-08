@@ -67,3 +67,24 @@ Newest entry last. Each entry: date, WP, status, commit, key results, open issue
   - `configs/model.toml` `file` is a placeholder name (`Ornith-1.5-35B-A3B-Q4_K_M.gguf`), to be replaced by WP4.
   - `SMALLPC_GPU_LOCK_HELD` is trusted when it names a live pid and the lock is held; the holder cannot be identified beyond that.
   - GitHub Actions pins (`actions/checkout@v7.0.1`, `astral-sh/setup-uv@v10.3.3`, uv 0.13.7) were looked up with `git ls-remote`; the workflow has never run.
+
+---
+
+## 2026-11-08 — WP3: Build llama.cpp
+
+- **Status:** done. All acceptance checks pass; CI commands pass locally (121 tests, ruff, shellcheck).
+- **Commits:** `48c823a` (`WP3: build llama.cpp`), `dfcd7d9` (`WP3: record desktop GPU steering`), then `WP3: progress log` (this entry).
+- **Key results:**
+  - llama.cpp **b12208**, commit `57d04820dfef7a3519aac276d018a6fd71251895` (newest b-tag; required >= b12017). Upstream's newest semver tag, `v0.9.0`, is recorded in `data/env/build-info.json` only. `llama-server --version`: `version: 0.9.0-dev (build 12208, commit 57d04820d)`, built with GNU 16.2.1.
+  - Build: Ninja, CUDA 13.4.92 (`/opt/cuda`), host compiler `/usr/bin/g++` 16.2.1, `CMAKE_CUDA_ARCHITECTURES=120` (CMake rewrote it to `120a`), 6 jobs, no OOM retry. **Build duration 262 s** (configure + compile, excluding the clone); the detached job ran about 6 min wall-clock including the clone.
+  - `scripts/run-detached.sh` / `job-status.sh` written and tested (`sleep 1; exit 3` records exit code 3). The build ran through them.
+  - `--help` lists `--moe-cache-mib`, `--fit`, `--slot-save-path`, `--reasoning-budget`; `--spec-type` accepts `draft-mtp` (and 10 other values). `--list-devices`: `CUDA0: NVIDIA GeForce RTX 5060 Ti (15941 MiB, 15803 MiB free)`. `ldd`: libcudart/libcublas/libcublasLt resolve to `/opt/cuda/lib64`.
+  - Flag table: all 22 flags exist, none renamed (golden files unchanged). Enums widened: `spec_type` (11 values), `load_mode` (`auto, none, mmap, mlock, mmap+mlock, dio`), `log_verbosity` 0-5. New tests check the table, the enums and `server-defaults.json` against `data/env/llama-server-help.txt`.
+  - Server defaults (`data/env/server-defaults.json`): port 9931, fit on, fit-target 1024 MiB, ctx-size 0 (from model), batch 2048, ubatch 512, parallel -1 (auto), flash-attn auto, K/V f16, ctx-checkpoints 32, checkpoint-min-step 8192, cache-ram 8192 MiB, spec-type none, spec-draft-n-max 3, load-mode auto, reasoning-budget -1.
+  - Desktop GPU steering (read-only): RTX 5060 Ti at 2 MiB of 16311 MiB, no process holds a context (G1 had 514 MiB and 8 processes). **Mechanism not identified**: no GPU-selection variable or setting in any searched location. Recorded in `docs/environment.md` and `docs/decisions.md`.
+- **Open issues:**
+  - Zack to name the mechanism (file and setting) behind the iGPU-first desktop so it can be recorded; the undo description depends on it.
+  - The steering state is part of the frozen machine tuning; the VRAM figure drifts with desktop activity, so each run's snapshot must record it.
+  - The actual slot count under `-np -1` and the fitted context are runtime values; read them in WP5.
+  - A WP0 entry in `docs/decisions.md` contained the account name; scrubbed in the working tree, but it remains in git history (commit `b2debca` or earlier). Rewrite history before any public push.
+  - The semver tags upstream (`v0.x.0`) are not obviously a "stable" channel; recorded only, as instructed.
