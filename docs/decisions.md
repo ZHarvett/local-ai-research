@@ -604,3 +604,60 @@ What this shows, plainly:
   "N other cells"; text stays text in the SVG (`svg.fonttype none`) so the figures are diffable.
 - `telemetry` gained `RssAnon`, `RssFile`, `RssShmem` and `pswpout` (not asked for; added because the paging
   analysis can use it). Older CSVs load unchanged.
+
+## WP11 decisions (2026-11-09)
+
+Declared before the WP11 code is written. Plan v1.4 is adopted (commit `8847d8e`, line 3 reads
+`*Version 1.4 · 9 November 2026*`).
+
+### 1. Paging flag and swap activity (§5.6)
+- `flags.paging` triggers only on more than 1,000 major page faults of llama-server in the measured window.
+  The `VmSwap` trigger is removed; the rest of the function and its detail output (`server_vmswap_max_kib`,
+  `server_vmswap_samples`, `system_swap_in_pages`, sample counts) is unchanged.
+- **Swap activity** is a note, never a flag. For every measured window, `windows[]` of the cell summary and
+  each request's `flag_detail` get `vmswap_start_mib`, `vmswap_end_mib`, `vmswap_max_mib` and
+  `swap_activity_mib` (= end minus start, signed), taken from the first and last `server_vmswap_kib` sample of
+  the window; and the RssAnon, RssFile and RssShmem figures at the window's start and end
+  (`rss_anon_start_mib`, `rss_anon_end_mib`, and likewise `rss_file_*`, `rss_shmem_*`). A value is `null` when
+  the column or the process was not sampled. The sweep runner's sampler is the same `telemetry.Sampler` that
+  WP10 extended, so it already writes the three RSS columns; a test now proves it.
+- The window's flags are unchanged otherwise: `thermal` and `paging` (faults).
+- A recorded `paging` flag from an earlier session is never edited. The mini-sweep's only measured paging flag
+  (stock-32K repetition 1, 1,692 faults) is also a flag under v1.4, which is what the re-run test relies on.
+
+### 2. Swap sensitivity (§5.5)
+- Threshold: a unit is "swap-heavy" if its window's `swap_activity_mib` is above 64. The report recomputes every
+  results table (per context) and every paired comparison with the swap-heavy *clean* units removed, and prints
+  both versions side by side with the removed units.
+- Swap activity of a unit comes from the cell summary's window (same repetition and attempt). Sessions recorded
+  before this change have no `swap_activity_mib`; for them it is derived from the telemetry CSV
+  (`server_vmswap_kib` between the window's `t0_epoch` and `t1_epoch`), and if that is not possible the
+  report prints "not available" for the unit. Units with "not available" are kept in both versions.
+- Verdict: the section states plainly whether a headline comparison changed sign (the geometric-mean ratio
+  or the paired difference moves across 1 or 0, or the shortlist order changes) and whether any interval changed
+  materially (an interval endpoint moved by more than the original interval's half-width).
+
+### 3. Paired-ratio intervals (§5.5)
+- `stats.paired_ratio` returns the wider of the percentile-bootstrap CI of the geometric mean (10,000
+  resamples, fixed seed) and a t-interval on the log ratios, back-transformed with exp; it reports both and
+  which one was used (`ci_method`). Coverage on simulated data (n = 5, log-normal noise, sigma 0.05 and 0.2,
+  known true geometric-mean ratio) is asserted at 93% or more in the tests and the measured numbers are recorded
+  below, with the code commit.
+
+### 4. Eligibility and selection against §3.3
+`smallpc.select` was compared with the v1.4 text again (eligibility conditions, the ordering by mean
+T_turn_400, the tie-break steps, "statistically tied with the winner", the screening shortlist without a
+tie-break, stock as a reference row only, peak VRAM = total minus minimum free). Differences found are
+recorded in the code commit; none is expected, because WP10 implemented that reading.
+
+### 5. Stage 1 and pre-flight specs
+- `configs/sweeps/stage1.toml` is the Stage 1 sketch fixture with `expect_cells = 57`; axes, defaults and
+  canary are copied unchanged.
+- `configs/sweeps/preflight.toml` copies the same axes and defaults, runs one repetition and has no canary
+  (the schema allows it; drift is "not assessed"). **10 cells, all batch b2048 except one:** 32K: P1, P3, P6,
+  P7, P8, P9; 128K: P1, P6, P8; plus **P1-32K-b4096**, added at Zack's request because half of Stage 1's cells run
+  `-b 4096 -ub 4096` and that setting would otherwise meet the GPU for the first time in the real sweep. Its checks
+  are: the server starts, `-b 4096 -ub 4096` in the effective settings, a compute buffer larger than in
+  P1-32K-b2048 (both numbers reported), no accounting, warm_prefill or cache_miss flag, and its minimum free VRAM.
+  A failure there stops the pre-flight for a decision; the plan is not changed in this session.
+- Pre-flight data is functional-test data, never results.
