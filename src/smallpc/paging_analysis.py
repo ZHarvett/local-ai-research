@@ -7,7 +7,8 @@ instance, this reports llama-server's ``VmSwap`` (start, end, maximum, change), 
 major faults, the system-wide ``pswpin`` (and ``pswpout`` when the CSV has it), the minimum
 ``MemAvailable``, whether swap was already there at the start of the window (a *state*) or grew
 (*activity*), and the window's speed figures. Three candidate paging rules are then evaluated on
-every window; none of them is the rule in ``flags.paging``, which is left alone:
+every window. They are historical: WP10 ran this before the plan changed. Plan v1.4 adopted a
+fourth rule (faults only, swap growth recorded as ``swap_activity``) in ``flags.paging``:
 
 * R0: the v1.3 rule as it is: more than 1,000 major faults, or ``VmSwap`` above zero at any sample.
 * R1: more than 1,000 major faults, or ``VmSwap`` *growth* of more than 64 MiB during the window.

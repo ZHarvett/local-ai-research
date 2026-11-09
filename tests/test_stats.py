@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import math
+import statistics
 
 import pytest
 
@@ -127,9 +128,15 @@ def test_paired_ratio_is_the_geometric_mean_of_ratios():
     r = stats.paired_ratio([2.0, 8.0, 4.0], [1.0, 2.0, 2.0])  # ratios 2, 4, 2
     assert r["n"] == 3 and r["ratios"] == pytest.approx([2.0, 4.0, 2.0])
     assert r["geomean"] == pytest.approx((2 * 4 * 2) ** (1 / 3))
-    lo, hi = r["ci"]
-    assert 2.0 <= lo <= r["geomean"] <= hi <= 4.0
-    assert r["ci_method"] == "bootstrap"
+    blo, bhi = r["bootstrap_ci"]
+    assert 2.0 <= blo <= r["geomean"] <= bhi <= 4.0  # the bootstrap CI stays inside the data range
+    # v1.4: the reported interval is the wider of that and the t-interval on the log ratios
+    logs = [math.log(v) for v in (2.0, 4.0, 2.0)]
+    m, sd = sum(logs) / 3, statistics.stdev(logs)
+    half = stats.t_critical(2) * sd / math.sqrt(3)
+    assert r["t_ci"] == pytest.approx([math.exp(m - half), math.exp(m + half)])
+    assert r["ci"] == r["t_ci"] and r["ci_method"] == "t"
+    assert r["ci"][0] < blo and r["ci"][1] > bhi
     again = stats.paired_ratio([2.0, 8.0, 4.0], [1.0, 2.0, 2.0])
     assert again["ci"] == r["ci"]  # fixed seed: reproducible
 

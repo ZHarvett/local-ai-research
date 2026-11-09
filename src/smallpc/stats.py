@@ -5,7 +5,8 @@ fixed seed) and a 95% t-interval. With n = 5 bootstrap intervals come out too na
 of the two is reported as the CI to use ("ci"); both are kept.
 
 WP10 adds the paired comparisons: ``paired_difference`` (per-repetition differences, same two
-intervals) and ``paired_ratio`` (geometric mean of per-repetition ratios, bootstrap CI), and
+intervals) and ``paired_ratio`` (geometric mean of per-repetition ratios; since plan v1.4 the wider
+of the bootstrap CI and a t-interval on the log ratios, back-transformed), and
 ``simulate_coverage``, which measures how often each interval covers the true mean on simulated
 data (see ``tests/test_stats_coverage.py`` and ``docs/decisions.md``).
 """
@@ -153,9 +154,14 @@ def paired_difference(a: Any, b: Any) -> dict:
 
 
 def paired_ratio(a: Any, b: Any) -> dict:
-    """Geometric mean of the per-repetition ratios ``a / b`` with a 95% percentile-bootstrap CI
-    (10,000 resamples, fixed seed) of that geometric mean. The ratios must be positive: zero or
-    negative input raises ``ValueError`` naming the offending side. The CI is None for n < 2."""
+    """Geometric mean of the per-repetition ratios ``a / b`` with a 95% interval (plan v1.4, 5.5).
+
+    The interval is the wider of two: the percentile-bootstrap CI of the geometric mean (10,000
+    resamples, fixed seed) and a t-interval on the log ratios, back-transformed with exp. Both
+    are returned (``bootstrap_ci``, ``t_ci``) and ``ci_method`` says which one is ``ci``. The ratios
+    must be positive: zero or negative input raises ``ValueError`` naming the offending side. The
+    intervals are None for n < 2.
+    """
     keys, xa, xb = _paired_values(a, b)
     for name, vals in (("a", xa), ("b", xb)):
         bad = [v for v in vals if not v > 0]  # also catches NaN
@@ -164,16 +170,31 @@ def paired_ratio(a: Any, b: Any) -> dict:
     logs = [math.log(p / q) for p, q in zip(xa, xb, strict=True)]
     if not logs:
         return {"n": 0, "geomean": None, "keys": [], "ratios": [], "ci": None,
+                "bootstrap_ci": None, "t_ci": None,
                 "ci_method": "unavailable (no matching repetitions)"}  # fmt: skip
-    boot = bootstrap_ci(logs)
-    return {
+    out: dict = {
         "n": len(logs),
         "geomean": math.exp(sum(logs) / len(logs)),
         "keys": keys,
         "ratios": [math.exp(v) for v in logs],
-        "ci": None if boot is None else [math.exp(boot[0]), math.exp(boot[1])],
-        "ci_method": "bootstrap" if boot is not None else "unavailable (n < 2)",
+        "bootstrap_ci": None,
+        "t_ci": None,
+        "ci": None,
+        "ci_method": "unavailable (n < 2)",
     }
+    boot, tci = bootstrap_ci(logs), t_interval(logs)
+    if boot is None or tci is None:
+        return out
+    out["bootstrap_ci"] = [math.exp(boot[0]), math.exp(boot[1])]
+    out["t_ci"] = [math.exp(tci[0]), math.exp(tci[1])]
+    # the wider one as reported, i.e. on the ratio scale
+    t_w = out["t_ci"][1] - out["t_ci"][0]
+    b_w = out["bootstrap_ci"][1] - out["bootstrap_ci"][0]
+    if t_w >= b_w:
+        out["ci"], out["ci_method"] = out["t_ci"], "t"
+    else:
+        out["ci"], out["ci_method"] = out["bootstrap_ci"], "bootstrap"
+    return out
 
 
 # ------------------------------------------------------------------------- coverage simulation
@@ -243,6 +264,44 @@ def simulate_coverage(
     }
 
 
+def simulate_ratio_coverage(
+    n: int, sigma: float, experiments: int, resamples: int = 1000, seed: int = 1,
+    true_ratio: float = 0.8, chunk: int = 250,
+) -> dict:  # fmt: skip
+    """How often the reported paired-ratio interval covers the true geometric-mean ratio.
+
+    Each experiment draws ``n`` log ratios ~ Normal(log(true_ratio), sigma) (log-normal noise on the
+    ratios), forms the percentile-bootstrap interval of their mean (``resamples`` resamples) and the
+    t interval, and takes the wider, exactly as ``paired_ratio`` does on the log scale. Coverage is
+    whether ``log(true_ratio)`` lies inside. Vectorised like ``simulate_coverage``.
+    """
+    rng = np.random.default_rng(seed)
+    mu = math.log(true_ratio)
+    hit = {"bootstrap": 0, "t": 0, "wider": 0}
+    boot_wider = done = 0
+    while done < experiments:
+        e = min(chunk, experiments - done)
+        x = rng.normal(mu, sigma, size=(e, n))
+        idx = rng.integers(0, n, size=(e, resamples, n))
+        means = np.take_along_axis(x[:, None, :], idx, axis=2).mean(axis=2)
+        lo_b, hi_b = np.percentile(means, [2.5, 97.5], axis=1)
+        m_ = x.mean(axis=1)
+        half = t_critical(n - 1) * x.std(axis=1, ddof=1) / math.sqrt(n)
+        lo_t, hi_t = m_ - half, m_ + half
+        use_t = (hi_t - lo_t) >= (hi_b - lo_b)
+        boot_wider += int((~use_t).sum())
+        lo_w, hi_w = np.where(use_t, lo_t, lo_b), np.where(use_t, hi_t, hi_b)
+        for name, lo, hi in (("bootstrap", lo_b, hi_b), ("t", lo_t, hi_t), ("wider", lo_w, hi_w)):
+            hit[name] += int(((lo <= mu) & (mu <= hi)).sum())
+        done += e
+    return {
+        "n": n, "sigma": sigma, "true_ratio": true_ratio, "experiments": experiments,
+        "resamples": resamples, "seed": seed,
+        "coverage": {k: v / experiments for k, v in hit.items()},
+        "bootstrap_was_wider_fraction": boot_wider / experiments,
+    }  # fmt: skip
+
+
 def main(argv: list[str] | None = None) -> int:
     """``python -m smallpc.stats coverage [--experiments N]``: the coverage table of section 5.5."""
     import argparse
@@ -255,7 +314,27 @@ def main(argv: list[str] | None = None) -> int:
     c.add_argument("--resamples", type=int, default=1000)
     c.add_argument("--seed", type=int, default=1)
     c.add_argument("--json", action="store_true")
+    c.add_argument("--ratio", action="store_true", help="paired-ratio coverage (plan v1.4, 5.5)")
     a = ap.parse_args(argv)
+    if a.ratio:
+        rows = [
+            simulate_ratio_coverage(n, sg, a.experiments, a.resamples, a.seed)
+            for n in (5, 10)
+            for sg in (0.05, 0.2)
+        ]
+        if a.json:
+            print(json.dumps(rows, indent=1))
+            return 0
+        print(f"paired ratios: {a.experiments} experiments per row, {a.resamples} resamples")
+        print("| n | sigma (log ratio) | bootstrap | t | reported (wider) | bootstrap was wider |")
+        print("|---|---|---|---|---|---|")
+        for r in rows:
+            cv = r["coverage"]
+            print(
+                f"| {r['n']} | {r['sigma']} | {cv['bootstrap']:.1%} | {cv['t']:.1%} "
+                f"| {cv['wider']:.1%} | {r['bootstrap_was_wider_fraction']:.1%} |"
+            )
+        return 0
     rows = [
         simulate_coverage(n, d, a.experiments, a.resamples, a.seed)
         for d in COVERAGE_DISTRIBUTIONS

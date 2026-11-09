@@ -17,7 +17,7 @@ from __future__ import annotations
 import hashlib
 import json
 import random
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from pathlib import Path
 
 from smallpc.sweep.records import Store, stamp_batch
@@ -37,6 +37,8 @@ class RepSpec:
     flags: tuple[str, ...] = ()  # put on every request of the unit (a window flag such as paging)
     short_gen: bool = False  # the first Request B generates 40 tokens and carries short_gen
     cache_miss: bool = False  # the first Request B reports a cache miss and carries cache_miss
+    swap_mib: float | None = None  # swap_activity_mib of the window (a note, never a flag)
+    slow: float = 1.0  # multiplies the cell's PP and TG for this repetition
 
 
 @dataclass
@@ -133,6 +135,8 @@ def _request(
 
 def unit_requests(session_id: str, c: CellSpec, r: RepSpec, seed: int) -> list[dict]:
     rng = random.Random(f"{seed}-{c.name}-{r.rep}-{r.attempt}")
+    if r.slow != 1.0:
+        c = replace(c, pp=c.pp * r.slow, tg=c.tg * r.slow)
     window = f"{c.name}-{chash(c.name)[:8]}-r{r.rep}-a{r.attempt}"
     flags = sorted(r.flags)
     mtp = c.spec_type == "draft-mtp"
@@ -194,7 +198,8 @@ def _summary(c: CellSpec, session_id: str) -> dict:
                          "min_free_mib": c.min_free},
                 "windows": [
                     {"window_id": f"{c.name}-{h[:8]}-r{r.rep}-a{a}", "repetition": r.rep,
-                     "attempt": a, "min_free_vram_mib": c.min_free, "flags": sorted(r.flags)}
+                     "attempt": a, "min_free_vram_mib": c.min_free, "flags": sorted(r.flags),
+                     **({} if r.swap_mib is None else {"swap_activity_mib": r.swap_mib})}
                     for r in reps
                 ],
                 "parsed": {
@@ -403,6 +408,11 @@ def standard_cells() -> list[CellSpec]:
                        RepSpec(2), RepSpec(3), RepSpec(4)]),
         CellSpec("shortgen-32K", pp=1000, tg=81, reps=[RepSpec(0), RepSpec(1, short_gen=True),
                                                         RepSpec(2), RepSpec(3), RepSpec(4)]),
+        # swap sensitivity: faster than stock overall, but its three swap-heavy repetitions (300 MiB
+        # of VmSwap growth, no faults, so no flag) are slow; without them the ratio is below 1
+        CellSpec("swap-32K-b2048", pp=1000, tg=84, placement="P3", batch="b2048",
+                 reps=[RepSpec(0), RepSpec(1, swap_mib=300.0, slow=0.7), RepSpec(2, swap_mib=250.0, slow=0.7),
+                       RepSpec(3, swap_mib=40.0), RepSpec(4, swap_mib=310.0, slow=0.7)]),
         CellSpec("NA-32K", status="not_applicable", reason="n_cpu_moe: n_fit resolves to -1; not applicable"),
         CellSpec("stock-64K", "stock", context=65536, pp=900, tg=70, kv_type="f16"),
         CellSpec("P1-64K-b2048", context=65536, pp=950, tg=76, placement="P1", batch="b2048"),

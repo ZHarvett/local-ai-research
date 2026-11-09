@@ -4,9 +4,9 @@
 
 ## Provenance
 
-- Plan version: v1.3
+- Plan version: v1.4
 - Regenerate with: `python -m smallpc.report render --sessions data/raw/mini-20261109 --out reports/functional-test --label functional-test`
-- Statistics: mean, n, min, max and a 95% CI (wider of the percentile-bootstrap interval, 10,000 resamples, fixed seed, and the t interval); CIs shown for n of at least 2.
+- Statistics: mean, n, min, max and a 95% CI (wider of the percentile-bootstrap interval, 10,000 resamples, fixed seed, and the t interval); CIs shown for n of at least 2. Paired ratios: geometric mean with the wider of the bootstrap CI and a t-interval on the log ratios, back-transformed.
 
 > FUNCTIONAL-TEST DATA. Produced to test the tooling. Not a result of this study; do not quote these numbers.
 
@@ -73,7 +73,34 @@ Mode **screening**: a cell needs at least 2 clean repetitions, a complete status
 |---|---|---|---|---|
 | fit-q8-32K | 1 | 0.970 | 1.083 | 1.001 |
 
-Geometric mean of per-repetition ratios (candidate / stock, repetitions that are clean in both cells) with a 95% bootstrap CI (10,000 resamples), shown for 2 or more pairs. A T_turn_400 ratio below 1 means the candidate is faster; PP_fresh and TG ratios above 1 mean it is faster. The bootstrap CI alone is narrow at small n.
+Geometric mean of per-repetition ratios (candidate / stock, repetitions that are clean in both cells) with a 95% interval, shown for 2 or more pairs: the wider of the percentile-bootstrap CI (10,000 resamples) and a t-interval on the log ratios, back-transformed. A T_turn_400 ratio below 1 means the candidate is faster; PP_fresh and TG ratios above 1 mean it is faster.
+
+## Swap sensitivity
+
+Every results table and paired comparison, recomputed without the clean units whose window shows more than 64 MiB of llama-server swap growth (`swap_activity_mib`, plan §5.5 and §5.6). Swap activity is a note, not a flag: the numbers in the other sections keep those units.
+
+No clean unit is above 64 MiB: both versions are identical.
+
+Units above the threshold that are already excluded by a flag (not affected here): stock-32K mini-20261109:1 (4143 MiB, paging).
+
+### 32K
+
+> FUNCTIONAL-TEST DATA. Produced to test the tooling. Not a result of this study; do not quote these numbers.
+
+| cell | n_clean (all) | T_turn_400 (s), all units | n_clean (no swap-heavy) | T_turn_400 (s), without swap-heavy units |
+|---|---|---|---|---|
+| stock-32K | 1 | 8.49 | 1 | 8.49 |
+| fit-q8-32K | 2 | 8.23 [8.12, 8.34] | 2 | 8.23 [8.12, 8.34] |
+
+> FUNCTIONAL-TEST DATA. Produced to test the tooling. Not a result of this study; do not quote these numbers.
+
+| candidate vs stock | pairs (all) | T_turn_400 ratio | PP_fresh ratio | TG ratio | pairs (without) | T_turn_400 ratio | PP_fresh ratio | TG ratio |
+|---|---|---|---|---|---|---|---|---|
+| fit-q8-32K | 1 | 0.970 | 1.083 | 1.001 | 1 | 0.970 | 1.083 | 1.001 |
+
+**Verdict.**
+
+No unit was removed, so no comparison changed.
 
 ## VRAM breakdown
 

@@ -103,12 +103,18 @@ def test_samples_without_a_value_are_skipped_and_empty_windows_are_safe():
     assert pa.evaluate_rules(empty) == {"R0": False, "R1": False, "R2": False}
 
 
-def test_r0_is_exactly_the_flag_in_flags_paging():
+def test_r0_is_the_v13_rule_and_flags_paging_is_now_its_fault_part():
+    """R0 is the historical v1.3 rule (faults above 1,000, or VmSwap above zero). Since plan v1.4
+    ``flags.paging`` keeps only the faults: it equals R0 on every case without VmSwap and is
+    stricter than R0 where VmSwap is above zero."""
     cases = [rows([0] * 5), rows([5] * 5), rows([0, 0, 1]), rows([0] * 3, maj=[0, 500, 1500])]
     for rs in cases:
-        assert pa.evaluate_rules(pa.segment_stats(rs))["R0"] == (
-            flags.paging(rs)["flag"] == "paging"
-        )
+        r0 = pa.evaluate_rules(pa.segment_stats(rs))["R0"]
+        v14 = flags.paging(rs)["flag"] == "paging"
+        faults = flags.paging(rs)["major_faults"] > flags.MAJFLT_LIMIT
+        max_vm = flags.paging(rs)["server_vmswap_max_kib"]
+        assert v14 == faults
+        assert r0 == (faults or max_vm > 0)
 
 
 def test_other_columns_pswpin_memavailable_rss_split():

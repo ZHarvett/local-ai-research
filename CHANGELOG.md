@@ -18,3 +18,6 @@ All notable changes to this project are documented here.
   append-only records, resume, probing of max-fit and N_fit, canaries and drift, re-run mode),
   `scripts/run-sweep.sh`, `scripts/sweep-status.sh`, a mock llama-server for CI, and the real mini-sweep
   (`configs/sweeps/mini.toml`, `data/raw/mini-20261109/`).
+- Plan v1.4 adopted. WP11 part 1: paging flag on llama-server major faults only, swap growth recorded as
+  `swap_activity_mib` (window summaries and request `flag_detail`, with the RssAnon/RssFile/RssShmem start and end),
+  a "Swap sensitivity" report section, paired-ratio intervals as the wider of bootstrap and t on the log ratios.

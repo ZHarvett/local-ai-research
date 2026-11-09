@@ -89,7 +89,9 @@ class FakeSampler:
                 used = float(self.vram_file.read_text()) if self.vram_file else None
             row = dict.fromkeys(telemetry.COLUMNS)
             row.update(t_epoch=time.time(), gpu_mem_used_mib=used, tctl_c=60.0, majflt=0.0,
-                       pswpin=5.0, server_vmswap_kib=0.0, gpu_temp_c=55.0)  # fmt: skip
+                       pswpin=5.0, server_vmswap_kib=0.0, gpu_temp_c=55.0,
+                       server_rss_anon_kib=2048.0, server_rss_file_kib=4096.0,
+                       server_rss_shmem_kib=0.0)  # fmt: skip
             for c in telemetry.COLUMNS:
                 if c.startswith("reason_"):
                     row[c] = False

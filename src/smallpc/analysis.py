@@ -28,7 +28,7 @@ from collections import defaultdict
 from dataclasses import dataclass, field
 from pathlib import Path
 
-from . import flags, stats
+from . import flags, stats, telemetry
 from .sweep.records import Store
 
 # Repetition indices of the canaries (step plan 5.1 / WP9: smallpc.sweep.session.CANARY_BASE).
@@ -38,6 +38,7 @@ DEPTH_METRICS = ("pp_fresh", "pp_inc", "tg", "t_turn_400", "t_b", "t_reread", "t
 REP_METRICS = ("t_turn_400_mean", "t_reread_mean", "acceptance", "acceptance_short")
 REQUEST_KINDS = ("short", "A", "B")
 SHORT_TOKENS = 2048
+SWAP_HEAVY_MIB = 64.0  # swap sensitivity (plan v1.4, 5.5): units with more swap growth than this
 
 
 @dataclass
@@ -188,6 +189,43 @@ def build_units(sessions: list[LoadedSession]) -> list[dict]:
     return units
 
 
+_CSV_CACHE: dict[str, list[dict]] = {}
+
+
+def _csv_rows(path: Path) -> list[dict] | None:
+    key = str(path)
+    if key not in _CSV_CACHE:
+        try:
+            _CSV_CACHE[key] = telemetry.read_csv(path)
+        except (OSError, ValueError, EOFError):
+            return None
+    return _CSV_CACHE[key]
+
+
+def unit_swap_activity(
+    sess: LoadedSession, cell: str, config_hash: str, rep: int, attempt: int
+) -> tuple[float | None, str]:
+    """``(swap_activity_mib, source)`` of one unit's window: from the cell summary (sessions since
+    plan v1.4), else derived from the instance's telemetry CSV between the window's start and end
+    (older sessions such as the mini-sweep), else ``(None, "not available")``."""
+    summ = sess.summaries.get((cell, config_hash)) or {}
+    for ins in summ.get("instances", []):
+        for w in ins.get("windows", []):
+            if w.get("repetition") != rep or w.get("attempt") != attempt:
+                continue
+            if w.get("swap_activity_mib") is not None:
+                return float(w["swap_activity_mib"]), "summary"
+            f = (ins.get("telemetry") or {}).get("file")
+            if f and w.get("t0_epoch") is not None and w.get("t1_epoch") is not None:
+                rows = _csv_rows(sess.dir / f)
+                if rows is not None:
+                    seg = telemetry.window(rows, w["t0_epoch"], w["t1_epoch"])
+                    v = flags.swap_activity(seg)["swap_activity_mib"]
+                    if v is not None:
+                        return float(v), "telemetry"
+    return None, "not available"
+
+
 def _unit(
     sess: LoadedSession, cell: str, rep: int, attempt: int, reqs: list[dict], depths: set[int]
 ) -> dict:
@@ -212,7 +250,10 @@ def _unit(
     complete = bool(metrics) and not problems
     b_recs = [v["B"] for v in by_depth.values() if "B" in v]
     acc_b, acc_s = _accept(b_recs), _accept([short] if short else [])
+    swap, swap_source = unit_swap_activity(sess, cell, reqs[0]["config_hash"], rep, attempt)
     return {
+        "swap_activity_mib": swap,
+        "swap_source": swap_source,
         "session": sess.id,
         "cell": cell,
         "repetition": rep,
@@ -604,6 +645,64 @@ def analyse(paths: list[str | Path]) -> dict:
         "cells": cells,
         "units": units,
         "diagnostics": diagnostics,
+        "swap_alt": swap_alternative(units, sessions, names, cells),
+    }
+
+
+def swap_alternative(
+    units: list[dict], sessions: list[LoadedSession], names: list[str], cells: dict
+) -> dict:
+    """The swap sensitivity (plan v1.4, 5.5): every cell recomputed without the clean final units
+    whose window shows more than 64 MiB of llama-server swap growth. ``removed`` lists them,
+    ``unavailable`` the final units whose swap activity could not be determined (they stay in both
+    versions). With nothing removed, ``cells`` is the main result itself."""
+    final = [u for u in units if not u["superseded"]]
+    removed = [
+        u
+        for u in final
+        if u["clean"]
+        and u["swap_activity_mib"] is not None
+        and u["swap_activity_mib"] > SWAP_HEAVY_MIB
+    ]
+    info = [
+        {
+            "cell": u["cell"],
+            "session": u["session"],
+            "repetition": u["repetition"],
+            "attempt": u["attempt"],
+            "swap_activity_mib": u["swap_activity_mib"],
+            "source": u["swap_source"],
+        }
+        for u in removed
+    ]
+    gone = {id(u) for u in removed}
+    alt_cells = (
+        {n: _cell_entry(n, [u for u in units if id(u) not in gone], sessions) for n in names}
+        if removed
+        else cells
+    )
+    return {
+        "threshold_mib": SWAP_HEAVY_MIB,
+        "removed": info,
+        "already_excluded": [
+            {
+                "cell": u["cell"],
+                "session": u["session"],
+                "repetition": u["repetition"],
+                "swap_activity_mib": u["swap_activity_mib"],
+                "flags": u["reasons"],
+            }
+            for u in final
+            if not u["clean"]
+            and u["swap_activity_mib"] is not None
+            and u["swap_activity_mib"] > SWAP_HEAVY_MIB
+        ],
+        "unavailable": [
+            {"cell": u["cell"], "session": u["session"], "repetition": u["repetition"]}
+            for u in final
+            if u["swap_activity_mib"] is None
+        ],
+        "cells": alt_cells,
     }
 
 

@@ -65,13 +65,13 @@ def thermal(samples: Sequence[dict]) -> dict:
 
 
 def paging(samples: Sequence[dict]) -> dict:
-    """Plan v1.3 (section 5.6): more than 1,000 major page faults of llama-server in the window, or
-    llama-server ``VmSwap`` above zero at any sample in the window.
+    """Plan v1.4 (section 5.6): more than 1,000 major page faults of llama-server in the window.
 
     ``majflt`` is llama-server's cumulative counter (``/proc/<pid>/stat``), so the window's value is
-    last minus first; ``server_vmswap_kib`` is ``VmSwap`` from ``/proc/<pid>/status``. The
-    system-wide ``pswpin`` is returned (last minus first) but never flags: zram swaps a few pages
-    per second even on an idle machine. Samples without the process (None) are skipped.
+    last minus first. ``VmSwap`` no longer flags: swap growth is a note (``swap_activity``), because
+    this machine's zram swap (swappiness 150) swaps cold pages of the server even with plenty of
+    free memory. The ``VmSwap`` figures and the system-wide ``pswpin`` (last minus first) are still
+    returned as detail. Samples without the process (None) are skipped.
     """
     maj = [s["majflt"] for s in samples if s.get("majflt") is not None]
     swp = [s["pswpin"] for s in samples if s.get("pswpin") is not None]
@@ -80,7 +80,7 @@ def paging(samples: Sequence[dict]) -> dict:
     d_swp = (swp[-1] - swp[0]) if len(swp) >= 2 else 0
     max_vmswap = max(vms, default=0)
     return {
-        "flag": "paging" if d_maj > MAJFLT_LIMIT or max_vmswap > 0 else None,
+        "flag": "paging" if d_maj > MAJFLT_LIMIT else None,
         "major_faults": d_maj,
         "server_vmswap_max_kib": max_vmswap,
         "server_vmswap_samples": sum(1 for v in vms if v > 0),
@@ -88,6 +88,39 @@ def paging(samples: Sequence[dict]) -> dict:
         "process_samples": len(maj),
         "vmswap_samples_read": len(vms),
     }
+
+
+_RSS_COLUMNS = (
+    ("server_rss_anon_kib", "rss_anon"),
+    ("server_rss_file_kib", "rss_file"),
+    ("server_rss_shmem_kib", "rss_shmem"),
+)
+
+
+def swap_activity(samples: Sequence[dict]) -> dict:
+    """Swap activity of llama-server in a window (plan v1.4 section 5.6). A note, never a flag.
+
+    ``vmswap_start_mib`` / ``vmswap_end_mib`` are the first and last ``VmSwap`` samples,
+    ``vmswap_max_mib`` the maximum, and ``swap_activity_mib`` is end minus start (signed). The
+    RssAnon, RssFile and RssShmem columns are summarised by their first and last sample. A figure is
+    None when the column was not sampled (older CSVs) or the process was not there.
+    """
+
+    def ends(col: str) -> tuple[float | None, float | None]:
+        v = [s[col] for s in samples if s.get(col) is not None]
+        return (v[0] / 1024, v[-1] / 1024) if v else (None, None)
+
+    vms = [s["server_vmswap_kib"] for s in samples if s.get("server_vmswap_kib") is not None]
+    start, end = ends("server_vmswap_kib")
+    out: dict = {
+        "vmswap_start_mib": start,
+        "vmswap_end_mib": end,
+        "vmswap_max_mib": max(vms) / 1024 if vms else None,
+        "swap_activity_mib": None if start is None or end is None else end - start,
+    }
+    for col, name in _RSS_COLUMNS:
+        out[f"{name}_start_mib"], out[f"{name}_end_mib"] = ends(col)
+    return out
 
 
 def drift(start: dict, end: dict) -> dict:

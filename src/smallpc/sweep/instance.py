@@ -443,9 +443,11 @@ class Instance:
         rows = rows_between(self._rows(), t0, t1)
         th, pg = flags.thermal(rows), flags.paging(rows)
         wf = [f for f, r in (("thermal", th), ("paging", pg)) if r["flag"]]
+        sw = flags.swap_activity(rows)  # a note, never a flag (plan v1.4)
         for r in recs:
             r["flags"] = sorted(set(r["flags"]) | set(wf))
             r["flag_detail"]["window_flags"] = wf
+            r["flag_detail"].update(sw)
         self._commit(recs)
         self.reps_done.append(rep)
         self.partial = []
@@ -459,6 +461,7 @@ class Instance:
                 "n_samples": len(rows),
                 "thermal": th,
                 "paging": pg,
+                **sw,
                 "min_free_vram_mib": min_free_mib(rows, self.total_mib),
                 "peak_used_mib": peak_used_mib(rows),
                 "request_flags": sorted(

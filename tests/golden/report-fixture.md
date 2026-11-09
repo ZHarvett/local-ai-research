@@ -6,7 +6,7 @@
 
 - Plan version: v1.3
 - Regenerate with: `python -m smallpc.report render --sessions SESSIONS --out OUT --label functional-test`
-- Statistics: mean, n, min, max and a 95% CI (wider of the percentile-bootstrap interval, 10,000 resamples, fixed seed, and the t interval); CIs shown for n of at least 2.
+- Statistics: mean, n, min, max and a 95% CI (wider of the percentile-bootstrap interval, 10,000 resamples, fixed seed, and the t interval); CIs shown for n of at least 2. Paired ratios: geometric mean with the wider of the bootstrap CI and a t-interval on the log ratios, back-transformed.
 
 > FUNCTIONAL-TEST DATA. Produced to test the tooling. Not a result of this study; do not quote these numbers.
 
@@ -23,7 +23,7 @@ Session `fx-1` was run with `--allow-dirty`: its recorded commit is not exact (u
 
 | session | systemd-inhibit | idle precondition | drift flag |
 |---|---|---|---|
-| fx-1 | checked True, active True | 10 checks, 0 failed, total wait 0 s, max busy 2.5 % | main: none |
+| fx-1 | checked True, active True | 11 checks, 0 failed, total wait 0 s, max busy 2.5 % | main: none |
 | fx-drift | checked True, active True | 1 checks, 0 failed, total wait 0 s, max busy 2.5 % | main: drift |
 
 Canaries (never part of cell statistics):
@@ -53,6 +53,7 @@ Canaries (never part of cell statistics):
 | rerun-bad-32K | 4/5 not reportable (n < 5) | 988.0 [986.4, 989.6] | 977.2 [975.4, 979.1] | 964.5 [963.9, 965.0] | 79.5 [79.0, 80.0] | 77.3 [77.0, 77.6] | 74.6 [74.4, 74.8] | 8.45 [8.42, 8.47] | 8.45 [8.42, 8.47] (predicted_n 400) | 16.85 [16.84, 16.85] | 3.31 [3.30, 3.31] | - | cache_miss, 1 unit(s) re-run (attempt 2 used) |
 | shortgen-32K | 4/5 not reportable (n < 5) | 986.7 [985.3, 988.2] | 976.7 [975.2, 978.3] | 964.0 [961.8, 966.1] | 78.4 [78.1, 78.6] | 76.2 [75.9, 76.4] | 73.9 [73.5, 74.4] | 8.52 [8.51, 8.53] | 8.52 [8.51, 8.53] (predicted_n 400) | 16.86 [16.84, 16.88] | 3.31 [3.31, 3.32] | - | short_gen |
 | P4-32K-b2048 | 5/5 | 998.2 [997.1, 999.2] | 985.3 [983.9, 986.7] | 975.0 [974.1, 976.0] | 77.6 [77.2, 77.9] | 75.4 [75.1, 75.7] | 72.9 [72.7, 73.0] | 8.54 [8.53, 8.56] | 8.54 [8.53, 8.56] (predicted_n 400) | 16.68 [16.67, 16.69] | 3.28 [3.27, 3.28] | - | - |
+| swap-32K-b2048 | 5/5 | 808.1 [605.3, 1011.0] | 796.5 [593.1, 999.9] | 783.3 [579.8, 986.7] | 66.3 [49.3, 83.3] | 64.0 [46.8, 81.3] | 61.9 [44.9, 78.9] | 10.57 [8.02, 13.12] | 10.57 [8.02, 13.12] (predicted_n 400) | 21.38 [16.27, 26.48] | 4.15 [3.20, 5.10] | - | - |
 | dnf-context-32K | did_not_fit (context) | - | - | - | - | - | - | - | - | - | - | - | - |
 | dnf-crash_mid_cell-32K | did_not_fit (crash_mid_cell) | - | - | - | - | - | - | - | - | - | - | - | - |
 | dnf-hung_server-32K | did_not_fit (hung_server) | - | - | - | - | - | - | - | - | - | - | - | - |
@@ -113,10 +114,11 @@ Mode **screening**: a cell needs at least 2 clean repetitions, a complete status
 | rerun-ok-32K | candidate | 5/5 | 8.42 [8.41, 8.44] | yes | - | not run |
 | shortgen-32K | candidate | 4/5 | 8.52 [8.51, 8.53] | no | flagged unit(s) fx-1:1 (short_gen) | not run |
 | stock-32K | reference (stock) | 5/5 | 8.90 [8.89, 8.91] | yes | - | not run |
+| swap-32K-b2048 | candidate | 5/5 | 10.57 [8.02, 13.12] | yes | - | not run |
 
 **Shortlist (32K):** `MTP-32K`, `P1-32K-b2048`. Reference: `stock-32K` (never shortlisted).
 
-Ranking by mean T_turn_400: `MTP-32K` < `P1-32K-b2048` < `P2-32K-b2048` < `rerun-ok-32K` < `P4-32K-b2048`
+Ranking by mean T_turn_400: `MTP-32K` < `P1-32K-b2048` < `P2-32K-b2048` < `rerun-ok-32K` < `P4-32K-b2048` < `swap-32K-b2048`
 
 - `P1-32K-b2048` and `P2-32K-b2048`: too close to call at n = 2 (means differ by 0.024 s, larger range 0.024 s).
 
@@ -144,13 +146,14 @@ Ranking by mean T_turn_400: `MTP-32K` < `P1-32K-b2048` < `P2-32K-b2048` < `rerun
 
 | candidate vs stock | pairs | T_turn_400 ratio | PP_fresh ratio | TG ratio |
 |---|---|---|---|---|
-| MTP-32K | 5 | 0.868 [0.867, 0.869] | 1.043 [1.042, 1.043] | 1.233 [1.230, 1.235] |
-| P1-32K-b2048 | 5 | 0.934 [0.933, 0.935] | 1.054 [1.054, 1.055] | 1.082 [1.080, 1.084] |
-| P2-32K-b2048 | 5 | 0.937 [0.936, 0.938] | 1.056 [1.055, 1.057] | 1.076 [1.074, 1.078] |
-| rerun-ok-32K | 5 | 0.946 [0.945, 0.948] | 1.059 [1.059, 1.060] | 1.056 [1.054, 1.058] |
-| rerun-bad-32K | 4 | 0.949 [0.947, 0.950] | 1.054 [1.053, 1.055] | 1.054 [1.052, 1.056] |
-| shortgen-32K | 4 | 0.957 [0.956, 0.958] | 1.054 [1.053, 1.054] | 1.040 [1.038, 1.042] |
-| P4-32K-b2048 | 5 | 0.960 [0.959, 0.961] | 1.065 [1.064, 1.065] | 1.029 [1.026, 1.031] |
+| MTP-32K | 5 | 0.868 [0.867, 0.870] | 1.043 [1.042, 1.044] | 1.233 [1.229, 1.236] |
+| P1-32K-b2048 | 5 | 0.934 [0.933, 0.936] | 1.054 [1.053, 1.055] | 1.082 [1.079, 1.086] |
+| P2-32K-b2048 | 5 | 0.937 [0.935, 0.938] | 1.056 [1.055, 1.057] | 1.076 [1.073, 1.079] |
+| rerun-ok-32K | 5 | 0.946 [0.945, 0.948] | 1.059 [1.058, 1.060] | 1.056 [1.052, 1.059] |
+| rerun-bad-32K | 4 | 0.949 [0.946, 0.952] | 1.054 [1.053, 1.056] | 1.054 [1.049, 1.058] |
+| shortgen-32K | 4 | 0.957 [0.954, 0.959] | 1.054 [1.053, 1.054] | 1.040 [1.037, 1.043] |
+| P4-32K-b2048 | 5 | 0.960 [0.958, 0.961] | 1.065 [1.064, 1.066] | 1.029 [1.025, 1.032] |
+| swap-32K-b2048 | 5 | 1.168 [0.908, 1.504] | 0.845 [0.659, 1.085] | 0.860 [0.664, 1.114] |
 
 ### 64K
 
@@ -158,9 +161,72 @@ Ranking by mean T_turn_400: `MTP-32K` < `P1-32K-b2048` < `P2-32K-b2048` < `rerun
 
 | candidate vs stock | pairs | T_turn_400 ratio | PP_fresh ratio | TG ratio |
 |---|---|---|---|---|
-| P1-64K-b2048 | 5 | 0.923 [0.921, 0.925] | 1.058 [1.057, 1.059] | 1.098 [1.095, 1.102] |
+| P1-64K-b2048 | 5 | 0.923 [0.920, 0.926] | 1.058 [1.056, 1.060] | 1.098 [1.093, 1.104] |
 
-Geometric mean of per-repetition ratios (candidate / stock, repetitions that are clean in both cells) with a 95% bootstrap CI (10,000 resamples), shown for 2 or more pairs. A T_turn_400 ratio below 1 means the candidate is faster; PP_fresh and TG ratios above 1 mean it is faster. The bootstrap CI alone is narrow at small n.
+Geometric mean of per-repetition ratios (candidate / stock, repetitions that are clean in both cells) with a 95% interval, shown for 2 or more pairs: the wider of the percentile-bootstrap CI (10,000 resamples) and a t-interval on the log ratios, back-transformed. A T_turn_400 ratio below 1 means the candidate is faster; PP_fresh and TG ratios above 1 mean it is faster.
+
+## Swap sensitivity
+
+Every results table and paired comparison, recomputed without the clean units whose window shows more than 64 MiB of llama-server swap growth (`swap_activity_mib`, plan §5.5 and §5.6). Swap activity is a note, not a flag: the numbers in the other sections keep those units.
+
+> FUNCTIONAL-TEST DATA. Produced to test the tooling. Not a result of this study; do not quote these numbers.
+
+| removed unit (cell, session, repetition) | swap growth (MiB) | source |
+|---|---|---|
+| swap-32K-b2048, fx-1, 1 | 300.0 | summary |
+| swap-32K-b2048, fx-1, 2 | 250.0 | summary |
+| swap-32K-b2048, fx-1, 4 | 310.0 | summary |
+
+Swap activity not available for 56 unit(s) (not in the summary and not derivable from the telemetry: not available); they are kept in both versions: MTP-32K fx-1 (5), P1-32K-b2048 fx-1 (5), P1-64K-b2048 fx-1 (5), P2-32K-b2048 fx-1 (5), P4-32K-b2048 fx-1 (5), drift-32K fx-drift (5), rerun-bad-32K fx-1 (5), rerun-ok-32K fx-1 (5), shortgen-32K fx-1 (5), stock-32K fx-1 (5), stock-64K fx-1 (5), swap-32K-b2048 fx-1 (1).
+
+### 32K
+
+> FUNCTIONAL-TEST DATA. Produced to test the tooling. Not a result of this study; do not quote these numbers.
+
+| cell | n_clean (all) | T_turn_400 (s), all units | n_clean (no swap-heavy) | T_turn_400 (s), without swap-heavy units |
+|---|---|---|---|---|
+| stock-32K | 5 | 8.90 [8.89, 8.91] | 5 | 8.90 [8.89, 8.91] |
+| MTP-32K | 5 | 7.73 [7.72, 7.74] | 5 | 7.73 [7.72, 7.74] |
+| P1-32K-b2048 | 5 | 8.32 [8.31, 8.32] | 5 | 8.32 [8.31, 8.32] |
+| P2-32K-b2048 | 5 | 8.34 [8.33, 8.35] | 5 | 8.34 [8.33, 8.35] |
+| rerun-ok-32K | 5 | 8.42 [8.41, 8.44] | 5 | 8.42 [8.41, 8.44] |
+| rerun-bad-32K | 4 | 8.45 [8.42, 8.47] | 4 | 8.45 [8.42, 8.47] |
+| shortgen-32K | 4 | 8.52 [8.51, 8.53] | 4 | 8.52 [8.51, 8.53] |
+| P4-32K-b2048 | 5 | 8.54 [8.53, 8.56] | 5 | 8.54 [8.53, 8.56] |
+| swap-32K-b2048 | 5 | 10.57 [8.02, 13.12] | 2 | 8.32 [8.25, 8.39] |
+
+> FUNCTIONAL-TEST DATA. Produced to test the tooling. Not a result of this study; do not quote these numbers.
+
+| candidate vs stock | pairs (all) | T_turn_400 ratio | PP_fresh ratio | TG ratio | pairs (without) | T_turn_400 ratio | PP_fresh ratio | TG ratio |
+|---|---|---|---|---|---|---|---|---|
+| MTP-32K | 5 | 0.868 [0.867, 0.870] | 1.043 [1.042, 1.044] | 1.233 [1.229, 1.236] | 5 | 0.868 [0.867, 0.870] | 1.043 [1.042, 1.044] | 1.233 [1.229, 1.236] |
+| P1-32K-b2048 | 5 | 0.934 [0.933, 0.936] | 1.054 [1.053, 1.055] | 1.082 [1.079, 1.086] | 5 | 0.934 [0.933, 0.936] | 1.054 [1.053, 1.055] | 1.082 [1.079, 1.086] |
+| P2-32K-b2048 | 5 | 0.937 [0.935, 0.938] | 1.056 [1.055, 1.057] | 1.076 [1.073, 1.079] | 5 | 0.937 [0.935, 0.938] | 1.056 [1.055, 1.057] | 1.076 [1.073, 1.079] |
+| rerun-ok-32K | 5 | 0.946 [0.945, 0.948] | 1.059 [1.058, 1.060] | 1.056 [1.052, 1.059] | 5 | 0.946 [0.945, 0.948] | 1.059 [1.058, 1.060] | 1.056 [1.052, 1.059] |
+| rerun-bad-32K | 4 | 0.949 [0.946, 0.952] | 1.054 [1.053, 1.056] | 1.054 [1.049, 1.058] | 4 | 0.949 [0.946, 0.952] | 1.054 [1.053, 1.056] | 1.054 [1.049, 1.058] |
+| shortgen-32K | 4 | 0.957 [0.954, 0.959] | 1.054 [1.053, 1.054] | 1.040 [1.037, 1.043] | 4 | 0.957 [0.954, 0.959] | 1.054 [1.053, 1.054] | 1.040 [1.037, 1.043] |
+| P4-32K-b2048 | 5 | 0.960 [0.958, 0.961] | 1.065 [1.064, 1.066] | 1.029 [1.025, 1.032] | 5 | 0.960 [0.958, 0.961] | 1.065 [1.064, 1.066] | 1.029 [1.025, 1.032] |
+| swap-32K-b2048 | 5 | 1.168 [0.908, 1.504] | 0.845 [0.659, 1.085] | 0.860 [0.664, 1.114] | 2 | 0.935 [0.922, 0.949] | 1.053 [1.050, 1.057] | 1.081 [1.056, 1.106] |
+
+### 64K
+
+> FUNCTIONAL-TEST DATA. Produced to test the tooling. Not a result of this study; do not quote these numbers.
+
+| cell | n_clean (all) | T_turn_400 (s), all units | n_clean (no swap-heavy) | T_turn_400 (s), without swap-heavy units |
+|---|---|---|---|---|
+| stock-64K | 5 | 10.27 [10.25, 10.29] | 5 | 10.27 [10.25, 10.29] |
+| P1-64K-b2048 | 5 | 9.48 [9.46, 9.50] | 5 | 9.48 [9.46, 9.50] |
+
+> FUNCTIONAL-TEST DATA. Produced to test the tooling. Not a result of this study; do not quote these numbers.
+
+| candidate vs stock | pairs (all) | T_turn_400 ratio | PP_fresh ratio | TG ratio | pairs (without) | T_turn_400 ratio | PP_fresh ratio | TG ratio |
+|---|---|---|---|---|---|---|---|---|
+| P1-64K-b2048 | 5 | 0.923 [0.920, 0.926] | 1.058 [1.056, 1.060] | 1.098 [1.093, 1.104] | 5 | 0.923 [0.920, 0.926] | 1.058 [1.056, 1.060] | 1.098 [1.093, 1.104] |
+
+**Verdict.**
+
+- A headline comparison changed sign: **YES**: swap-32K-b2048: T_turn_400 ratio 1.168 -> 0.935; swap-32K-b2048: PP_fresh ratio 0.845 -> 1.053; swap-32K-b2048: TG ratio 0.860 -> 1.081
+- An interval changed materially (an endpoint moved by more than the interval's half-width): **YES**: swap-32K-b2048: T_turn_400 interval; swap-32K-b2048: T_turn_400 ratio interval; swap-32K-b2048: PP_fresh ratio interval; swap-32K-b2048: TG ratio interval
 
 ## VRAM breakdown
 
@@ -178,6 +244,7 @@ Geometric mean of per-repetition ratios (candidate / stock, repetitions that are
 | rerun-bad-32K | 13,500 | 340 (q8_0) | 63 | 318 | 890 | 15,111 | 1,200 | 14 |
 | shortgen-32K | 13,500 | 340 (q8_0) | 63 | 318 | 890 | 15,111 | 1,200 | 14 |
 | P4-32K-b2048 | 13,000 | 340 (q8_0) | 63 | 318 | 1,390 | 15,111 | 1,200 | 14 |
+| swap-32K-b2048 | 13,500 | 340 (q8_0) | 63 | 318 | 890 | 15,111 | 1,200 | 14 |
 | drift-32K | 13,500 | 340 (q8_0) | 63 | 318 | 890 | 15,111 | 1,200 | 14 |
 
 ### 64K

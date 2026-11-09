@@ -436,6 +436,171 @@ def paired_rows(res: dict, cells: list[dict]) -> list[list[str]]:
     return rows
 
 
+# ----------------------------------------------------------------------- swap sensitivity
+
+SWAP_METRICS = (("t_turn_400", "T_turn_400"), ("pp_fresh", "PP_fresh"), ("tg", "TG"))
+
+
+def _ci_moved(a: list[float] | None, b: list[float] | None) -> bool:
+    """An interval endpoint moved by more than the original interval's half-width."""
+    if a is None:
+        return False
+    if b is None:
+        return True  # the interval is no longer available
+    half = (a[1] - a[0]) / 2
+    return abs(b[0] - a[0]) > half or abs(b[1] - a[1]) > half
+
+
+def _pair(c: dict, stock: dict, metric: str) -> dict | None:
+    a, b = rep_mean_over_depths(c, metric), rep_mean_over_depths(stock, metric)
+    return stats.paired_ratio(a, b) if set(a) & set(b) else None
+
+
+def swap_verdict(res: dict) -> dict:
+    """Did removing the swap-heavy units change a headline comparison (plan v1.4, 5.5)?
+
+    ``sign_changes``: a paired ratio (candidate / stock) whose geometric mean moves from one side
+    of 1 to the other, or a per-context order of the two fastest candidates (mean T_turn_400) that
+    changes. ``interval_changes``: a results or paired interval with an endpoint that moved by more
+    than the original half-width. Only cells that lost units can change.
+    """
+    alt = res["swap_alt"]
+    sign, interval = [], []
+    touched = {r["cell"] for r in alt["removed"]}
+    for ctx, cells in contexts(res).items():
+        alt_cells = [alt["cells"][c["name"]] for c in cells]
+        stock = next((c for c in cells if c["profile"] == "stock"), None)
+        stock_alt = next((c for c in alt_cells if c["profile"] == "stock"), None)
+        for c, ca in zip(cells, alt_cells, strict=True):
+            if c["name"] in touched or (stock and stock["name"] in touched):
+                s0, s1 = c["rep_metrics"]["t_turn_400_mean"]["stats"], ca["rep_metrics"][
+                    "t_turn_400_mean"]["stats"]  # fmt: skip
+                if s0 and _ci_moved(s0["ci"], s1["ci"] if s1 else None):
+                    interval.append(f"{c['name']}: T_turn_400 interval")
+            if c is stock or not (stock and stock_alt):
+                continue
+            for m, label in SWAP_METRICS:
+                r0, r1 = _pair(c, stock, m), _pair(ca, stock_alt, m)
+                if not r0 or r0["geomean"] is None:
+                    continue
+                if r1 is None or r1["geomean"] is None:
+                    interval.append(f"{c['name']}: {label} ratio (no pairs left)")
+                    continue
+                if (r0["geomean"] - 1) * (r1["geomean"] - 1) < 0:
+                    sign.append(
+                        f"{c['name']}: {label} ratio {r0['geomean']:.3f} -> {r1['geomean']:.3f}"
+                    )
+                if _ci_moved(r0["ci"], r1["ci"]):
+                    interval.append(f"{c['name']}: {label} ratio interval")
+
+        def top(cs: list[dict]) -> list[str]:
+            cand = [x for x in cs if x["profile"] != "stock" and select.mean_tt(x)]
+            return [c["name"] for c in ordered(cand)[:2]]
+
+        if top(cells) != top(alt_cells):
+            sign.append(
+                f"{ctx}: order of the two fastest candidates {top(cells)} -> {top(alt_cells)}"
+            )
+    return {"removed": len(alt["removed"]), "sign_changes": sign, "interval_changes": interval}
+
+
+def render_swap_sensitivity(res: dict, ban: str) -> list[str]:
+    alt = res["swap_alt"]
+    L: list[str] = ["## Swap sensitivity", ""]
+    thr = f"{alt['threshold_mib']:g}"
+    L.append(
+        f"Every results table and paired comparison, recomputed without the clean units whose "
+        f"window shows more than {thr} MiB of llama-server swap growth (`swap_activity_mib`, "
+        "plan §5.5 and §5.6). Swap activity is a note, not a flag: the numbers in the other "
+        "sections keep those units."
+    )
+    L.append("")
+    if alt["removed"]:
+        L += _table(
+            ban,
+            ["removed unit (cell, session, repetition)", "swap growth (MiB)", "source"],
+            [
+                [
+                    f"{r['cell']}, {r['session']}, {r['repetition']}",
+                    f"{r['swap_activity_mib']:.1f}",
+                    r["source"],
+                ]
+                for r in alt["removed"]
+            ],  # fmt: skip
+        )
+    else:
+        L += [f"No clean unit is above {thr} MiB: both versions are identical.", ""]
+    if alt.get("already_excluded"):
+        L.append(
+            "Units above the threshold that are already excluded by a flag (not affected here): "
+            + "; ".join(
+                f"{r['cell']} {r['session']}:{r['repetition']} ({r['swap_activity_mib']:.0f} MiB, "
+                f"{', '.join(r['flags'])})"
+                for r in alt["already_excluded"]
+            )
+            + "."
+        )
+        L.append("")
+    if alt["unavailable"]:
+        counts: dict[tuple[str, str], int] = {}
+        for u in alt["unavailable"]:
+            counts[(u["cell"], u["session"])] = counts.get((u["cell"], u["session"]), 0) + 1
+        L.append(
+            f"Swap activity not available for {len(alt['unavailable'])} unit(s) (not in the "
+            "summary and not derivable from the telemetry: not available); they are kept in both "
+            "versions: "
+            + ", ".join(f"{c} {s_} ({n})" for (c, s_), n in sorted(counts.items()))
+            + "."
+        )
+        L.append("")
+    for ctx, cells in contexts(res).items():
+        alt_cells = [alt["cells"][c["name"]] for c in cells]
+        L += [f"### {ctx}", ""]
+        rows = []
+        for c, ca in zip(
+            ordered(cells), [alt["cells"][x["name"]] for x in ordered(cells)], strict=True
+        ):
+            s0 = c["rep_metrics"]["t_turn_400_mean"]["stats"]
+            s1 = ca["rep_metrics"]["t_turn_400_mean"]["stats"]
+            if not c["n_clean"] and not ca["n_clean"]:
+                continue  # nothing measured cleanly in either version
+            rows.append(
+                [c["name"], f"{c['n_clean']}", f_stats(s0), f"{ca['n_clean']}", f_stats(s1)]
+            )
+        L += _table(
+            ban,
+            ["cell", "n_clean (all)", "T_turn_400 (s), all units", "n_clean (no swap-heavy)",
+             "T_turn_400 (s), without swap-heavy units"],
+            rows,
+        )  # fmt: skip
+        prow = paired_rows(res, cells)
+        prow_alt = paired_rows(res, alt_cells)
+        if prow:
+            alt_by = {r[0]: r for r in prow_alt}
+            L += _table(
+                ban,
+                ["candidate vs stock", "pairs (all)", "T_turn_400 ratio", "PP_fresh ratio",
+                 "TG ratio", "pairs (without)", "T_turn_400 ratio", "PP_fresh ratio", "TG ratio"],
+                [r + (alt_by.get(r[0], [r[0], "0", "-", "-", "-"])[1:]) for r in prow],
+            )  # fmt: skip
+    v = swap_verdict(res)
+    L += ["**Verdict.**", ""]
+    if not v["removed"]:
+        L.append("No unit was removed, so no comparison changed.")
+    else:
+        L.append(
+            "- A headline comparison changed sign: "
+            + ("**YES**: " + "; ".join(v["sign_changes"]) if v["sign_changes"] else "no.")
+        )
+        L.append(
+            "- An interval changed materially (an endpoint moved by more than the interval's "
+            "half-width): "
+            + ("**YES**: " + "; ".join(v["interval_changes"]) if v["interval_changes"] else "no.")
+        )
+    L.append("")
+    return L
+
+
 def plan_version(root: Path | None = None) -> str:
     p = (root or repo_root()) / PLAN_PATH
     if p.exists():
@@ -464,7 +629,9 @@ def render_report(
     A("- Regenerate with: `" + command + "`")
     A(
         "- Statistics: mean, n, min, max and a 95% CI (wider of the percentile-bootstrap interval, "
-        "10,000 resamples, fixed seed, and the t interval); CIs shown for n of at least 2."
+        "10,000 resamples, fixed seed, and the t interval); CIs shown for n of at least 2. Paired "
+        "ratios: geometric mean with the wider of the bootstrap CI and a t-interval on the log "
+        "ratios, back-transformed."
     )
     A("")
     rows = []
@@ -618,13 +785,15 @@ def render_report(
     if any_pair:
         A(
             "Geometric mean of per-repetition ratios (candidate / stock, repetitions that are "
-            "clean in both cells) with a 95% bootstrap CI (10,000 resamples), shown for 2 or more "
-            "pairs. A T_turn_400 ratio below 1 means the candidate is faster; PP_fresh and TG "
-            "ratios above 1 mean it is faster. The bootstrap CI alone is narrow at small n."
+            "clean in both cells) with a 95% interval, shown for 2 or more pairs: the wider of the "
+            "percentile-bootstrap CI (10,000 resamples) and a t-interval on the log ratios, "
+            "back-transformed. A T_turn_400 ratio below 1 means the candidate is faster; PP_fresh "
+            "and TG ratios above 1 mean it is faster."
         )
     else:
         A("No context has both a stock cell and a candidate with clean repetitions.")
     A("")
+    L += render_swap_sensitivity(res, ban)
     # ------------------------------------------------------------------ VRAM
     A("## VRAM breakdown")
     A("")

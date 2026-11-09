@@ -88,3 +88,34 @@ def test_cli_prints_the_table(capsys):
     assert stats.main(["coverage", "--experiments", "200", "--resamples", "50"]) == 0
     out = capsys.readouterr().out
     assert "| normal | 5 |" in out and "| exponential | 10 |" in out
+
+
+# ------------------------------------------------------------------ paired ratios (plan v1.4)
+
+RATIO_EXPERIMENTS = 3000
+
+
+@pytest.mark.parametrize("sigma", [0.05, 0.2])
+def test_paired_ratio_interval_covers_at_least_93_percent_at_n5(sigma):
+    """n = 5 paired ratios with log-normal noise and a known true geometric-mean ratio (0.8)."""
+    t0 = time.time()
+    r = stats.simulate_ratio_coverage(5, sigma, RATIO_EXPERIMENTS, RESAMPLES, seed=21)
+    cov = r["coverage"]
+    print(f"ratio coverage n=5 sigma={sigma}: " + ", ".join(f"{k} {v:.3f}" for k, v in cov.items()))
+    assert cov["wider"] >= FLOOR
+    assert cov["wider"] >= cov["bootstrap"] and cov["wider"] >= cov["t"]
+    assert cov["bootstrap"] < cov["t"]  # the bootstrap alone under-covers at n = 5
+    assert time.time() - t0 < 10  # the two cases together stay well under 20 s
+
+
+def test_paired_ratio_uses_the_wider_interval_and_reports_both():
+    rng = np.random.default_rng(3)
+    for _ in range(50):
+        a = list(rng.lognormal(0, 0.2, 5) * 2)
+        b = list(rng.lognormal(0, 0.2, 5))
+        r = stats.paired_ratio(a, b)
+        boot, tci = r["bootstrap_ci"], r["t_ci"]
+        assert boot and tci and r["ci_method"] in ("t", "bootstrap")
+        widest = max((boot, tci), key=lambda c: c[1] - c[0])
+        assert r["ci"] == widest
+        assert r["ci_method"] == ("t" if widest is tci else "bootstrap")

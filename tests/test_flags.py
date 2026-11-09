@@ -95,12 +95,47 @@ def test_paging_major_fault_threshold():
     assert flags.paging(pg([500, 1501], [10, 10]))["major_faults"] == 1001
 
 
-def test_paging_server_vmswap_above_zero_at_any_sample_flags():
+def test_server_vmswap_alone_does_not_flag_but_is_reported_as_detail():
+    # plan v1.4: swap growth is a note (swap_activity), only major faults flag
     assert flags.paging(pg([0, 0, 0], [5, 5, 5], [0, 0, 0]))["flag"] is None
     r = flags.paging(pg([0, 0, 0], [5, 5, 5], [0, 4, 0]))  # swapped for one sample only
-    assert r["flag"] == "paging"
+    assert r["flag"] is None
     assert r["server_vmswap_max_kib"] == 4 and r["server_vmswap_samples"] == 1
-    assert flags.paging(pg([0, 0], [5, 5], [128, 128]))["flag"] == "paging"
+    assert flags.paging(pg([0, 0], [5, 5], [128, 128]))["flag"] is None
+    assert flags.paging(pg([0, 0], [5, 5], [0, 4_000_000]))["flag"] is None  # 3.8 GiB, no faults
+
+
+def test_faults_flag_whatever_the_swap_does():
+    assert flags.paging(pg([0, 1001], [5, 5], [0, 0]))["flag"] == "paging"
+    assert flags.paging(pg([0, 1001], [5, 5], [900, 4_000_000]))["flag"] == "paging"
+
+
+def test_swap_activity_start_end_max_and_growth():
+    rows = [
+        {"server_vmswap_kib": 1024, "server_rss_anon_kib": 2048, "server_rss_file_kib": 4096},
+        {"server_vmswap_kib": 5120, "server_rss_anon_kib": 1024, "server_rss_file_kib": 4096},
+        {"server_vmswap_kib": 3072, "server_rss_anon_kib": 512, "server_rss_shmem_kib": 0},
+    ]
+    r = flags.swap_activity(rows)
+    assert (r["vmswap_start_mib"], r["vmswap_end_mib"], r["vmswap_max_mib"]) == (1.0, 3.0, 5.0)
+    assert r["swap_activity_mib"] == 2.0  # end minus start
+    assert (r["rss_anon_start_mib"], r["rss_anon_end_mib"]) == (2.0, 0.5)
+    assert (r["rss_file_start_mib"], r["rss_file_end_mib"]) == (4.0, 4.0)
+    assert (r["rss_shmem_start_mib"], r["rss_shmem_end_mib"]) == (0.0, 0.0)
+
+
+def test_swap_growth_with_few_faults_gives_activity_and_no_flag():
+    rows = pg([0, 40], [5, 5], [0, 300 * 1024])  # 300 MiB growth, 40 faults
+    rows[0]["server_rss_anon_kib"], rows[1]["server_rss_anon_kib"] = 8192, 4096
+    assert flags.paging(rows)["flag"] is None
+    assert flags.swap_activity(rows)["swap_activity_mib"] == 300.0
+
+
+def test_swap_activity_without_columns_is_none():
+    r = flags.swap_activity([{"majflt": 1}, {"majflt": 2}])
+    assert r["swap_activity_mib"] is None and r["vmswap_max_mib"] is None
+    assert r["rss_anon_start_mib"] is None
+    assert flags.swap_activity([])["swap_activity_mib"] is None
 
 
 def test_system_swap_in_alone_does_not_flag():

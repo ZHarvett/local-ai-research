@@ -661,3 +661,45 @@ recorded in the code commit; none is expected, because WP10 implemented that rea
   P1-32K-b2048 (both numbers reported), no accounting, warm_prefill or cache_miss flag, and its minimum free VRAM.
   A failure there stops the pre-flight for a decision; the plan is not changed in this session.
 - Pre-flight data is functional-test data, never results.
+
+### WP11 results recorded with the code (commit "WP11: apply plan v1.4 rules")
+
+**Paired-ratio interval coverage** (`python -m smallpc.stats coverage --ratio`; 20,000 simulated experiments per row,
+1,000 bootstrap resamples, seed 1; per-repetition log ratios ~ Normal(log 0.8, sigma), true geometric-mean ratio 0.8;
+reported interval = wider of the bootstrap and the t interval on the log ratios):
+
+| n | sigma (log ratio) | bootstrap | t | reported (wider) | bootstrap was wider |
+|---|---|---|---|---|---|
+| 5 | 0.05 | 83.3% | 94.9% | 94.9% | 0.0% |
+| 5 | 0.2 | 83.3% | 94.9% | 94.9% | 0.0% |
+| 10 | 0.05 | 89.9% | 94.9% | 94.9% | 0.0% |
+| 10 | 0.2 | 89.9% | 94.9% | 94.9% | 0.0% |
+
+- The reported interval covers 94.9% at n = 5 for both sigmas, above the 93% floor; the test
+  (`tests/test_stats_coverage.py`, 3,000 experiments, 500 resamples, about 0.3 s) asserts at least 93%.
+- sigma 0.05 and 0.2 give identical coverage because the noise is a scale family on the log scale and both runs use the
+  same seed (the same standard-normal draws); the coverage of a t-interval does not depend on sigma. It is not a
+  copy-paste error.
+- The bootstrap alone covers 83% at n = 5 (the WP10 finding); the t interval was the wider one in every sample, as for
+  plain means.
+- The simulation is for log-normal ratios, where the t-interval on logs is exact. Real ratios of timings that include a
+  slowed repetition are the heavy-tailed case; the flag rules and the swap sensitivity are the guard against that.
+
+**Eligibility and selection against §3.3 (v1.4):** compared line by line, no difference found; no code change.
+Eligibility (complete; minimum free VRAM of the final-attempt windows at least 512 MiB; no flagged final unit; n_clean 2 in
+screening and 5 in final; sanity pass/fail/not run), the ordering by mean T_turn_400 (units are whole repetitions, so a
+repetition counts only if all its depths are clean), the tie-break steps (CI excludes zero; T_reread; no MTP then no
+expert cache; then lower peak VRAM = total minus minimum free), the "statistically tied" list, the screening shortlist
+without a tie-break and the "too close to call at n = 2" marking, and stock as a reference row only.
+
+**Implementation notes (WP11):**
+- `analysis.unit_swap_activity` reads `swap_activity_mib` from the cell summary window, else derives it from the
+  instance's telemetry CSV between the window's `t0_epoch` and `t1_epoch`, else "not available". For the mini-sweep it
+  derives 4,143 MiB for stock-32K repetition 1 (the paging analysis of WP10 gave 4,146 MiB from the same data; the
+  difference is the sample boundary), and 0 for the other three units.
+- Only clean final units are removed in the sensitivity. A swap-heavy unit that is already excluded by a flag is
+  listed as "already excluded" and does not count as removed (it is not in the headline numbers anyway).
+- `windows[]` and each request's `flag_detail` carry `vmswap_start_mib`, `vmswap_end_mib`, `vmswap_max_mib`,
+  `swap_activity_mib`, and the `rss_anon/file/shmem_start_mib` and `_end_mib` figures.
+- `paging_analysis` keeps its three historical rules R0 to R2 (WP10); R0 is the v1.3 rule and is no longer equal to
+  `flags.paging` (v1.4: faults only).

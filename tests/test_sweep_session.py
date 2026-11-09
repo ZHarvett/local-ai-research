@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import json
 import time
+from pathlib import Path
 
 import pytest
 
@@ -157,22 +158,13 @@ def test_accounting_flag_on_a_wrong_total(tmp_path, free_port):
     assert len(hit) == 3 and {r["kind"] for r in hit} == {"A"}
 
 
-def test_thermal_and_paging_flags_attach_to_the_repetition_window(tmp_path, free_port):
-    state = {"on": False}
-
-    def hook(row):
-        if state["on"]:
-            row["reason_hw_thermal_slowdown"] = True
-            row["server_vmswap_kib"] = 512.0
-
+def _flag_session(tmp_path, free_port, hook):
     env = make_env(tmp_path, free_port, hook=hook)
     sp = mini_spec(tmp_path, reps=2)
     sess = Session(env, load_sweep(sp), sp, "s1")
-    # slow the mock slightly so the 20 Hz sampler gets rows inside every window
-    env.provider.get  # noqa: B018
     orig = env.server_factory
 
-    def factory():
+    def factory():  # slow the mock slightly so the sampler gets rows inside every window
         srv = orig()
         srv.env["MOCK_BEHAVIOR"] = json.dumps(
             {"vram_file": str(tmp_path / "vram.txt"), "slow_s": 0.06}
@@ -180,17 +172,63 @@ def test_thermal_and_paging_flags_attach_to_the_repetition_window(tmp_path, free
         return srv
 
     env.server_factory = factory
-    state["on"] = True
     assert sess.run() == 0
     reqs, _ = read_records(sess)
-    m = measured(reqs)
-    assert m and all({"thermal", "paging"} <= set(r["flags"]) for r in m)
-    assert all(r["flag_detail"]["window_flags"] == ["thermal", "paging"] for r in m)
     summ = json.loads(next((sess.dir / "cells").glob("Pa-32K-*.json")).read_text())
-    w = summ["instances"][0]["windows"][0]
-    assert w["thermal"]["flag"] == "thermal" and w["paging"]["server_vmswap_max_kib"] == 512.0
+    return sess, measured(reqs), summ["instances"][0]["windows"]
+
+
+def test_thermal_flag_and_swap_activity_note_attach_to_the_repetition_window(tmp_path, free_port):
+    """Plan v1.4: swap growth is recorded (windows and flag_detail) and never flags."""
+    state = {"vm": 0.0}
+
+    def hook(row):
+        row["reason_hw_thermal_slowdown"] = True
+        state["vm"] += 8.0  # VmSwap grows 8 kiB per sample
+        row["server_vmswap_kib"] = 512.0 + state["vm"]
+
+    sess, m, windows = _flag_session(tmp_path, free_port, hook)
+    assert m and all(r["flags"] == ["thermal"] for r in m)  # no paging flag from VmSwap
+    assert all(r["flag_detail"]["window_flags"] == ["thermal"] for r in m)
+    w = windows[0]
+    assert w["thermal"]["flag"] == "thermal" and w["paging"]["flag"] is None
+    assert w["paging"]["server_vmswap_max_kib"] > 512.0
+    assert w["swap_activity_mib"] > 0 and w["vmswap_max_mib"] >= w["vmswap_end_mib"]
+    assert w["vmswap_end_mib"] - w["vmswap_start_mib"] == pytest.approx(w["swap_activity_mib"])
+    assert (w["rss_anon_start_mib"], w["rss_anon_end_mib"]) == (2.0, 2.0)
+    assert (w["rss_file_start_mib"], w["rss_shmem_end_mib"]) == (4.0, 0.0)
+    for r in m:  # the same figures are in every request of the window
+        assert (
+            r["flag_detail"]["swap_activity_mib"] == w["swap_activity_mib"]
+            or r["repetition"] != w["repetition"]
+        )
+        assert "vmswap_start_mib" in r["flag_detail"] and "rss_anon_end_mib" in r["flag_detail"]
     # warm-ups carry no window flags
+    reqs, _ = read_records(sess)
     assert not any("thermal" in r["flags"] for r in reqs if r["role"] == "warmup")
+
+
+def test_major_faults_flag_the_window_with_or_without_swap(tmp_path, free_port):
+    state = {"n": 0.0}
+
+    def hook(row):
+        state["n"] += 400.0  # 400 faults per sample: well above 1,000 per window
+        row["majflt"] = state["n"]
+
+    _, m, windows = _flag_session(tmp_path, free_port, hook)
+    assert m and all("paging" in r["flags"] for r in m)
+    assert windows[0]["paging"]["flag"] == "paging" and windows[0]["swap_activity_mib"] == 0.0
+
+
+def test_sweep_runner_samples_the_rss_split():
+    """The real runner wiring uses telemetry.Sampler, which writes RssAnon, RssFile and RssShmem."""
+    from smallpc import telemetry
+    from smallpc.sweep.core import default_env
+
+    s = default_env().sampler_factory(Path("/nonexistent/x.csv"), None)
+    assert isinstance(s, telemetry.Sampler)
+    for col in ("server_rss_anon_kib", "server_rss_file_kib", "server_rss_shmem_kib"):
+        assert col in telemetry.COLUMNS
 
 
 # ------------------------------------------------------------------ failure paths
