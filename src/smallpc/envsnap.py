@@ -568,7 +568,13 @@ def preconditions(
     """
     root = root or repo_root()
     aborts: list[str] = []
+    hard: list[str] = []  # aborts a wait cannot fix; the rest ("transient") may pass on a retry
     warns: list[str] = []
+
+    def abort(msg: str, *, is_hard: bool) -> None:
+        aborts.append(msg)
+        if is_hard:
+            hard.append(msg)
 
     wrapper = os.environ.get("SMALLPC_GPU_LOCK_HELD")
     want_held = (
@@ -576,20 +582,24 @@ def preconditions(
     )
     lock = gpu_lock_state(root)
     if want_held and not lock["held"]:
-        aborts.append("SMALLPC_GPU_LOCK_HELD is set but the GPU lock is not held (stale variable)")
+        abort(
+            "SMALLPC_GPU_LOCK_HELD is set but the GPU lock is not held (stale variable)",
+            is_hard=True,
+        )
     elif not want_held and lock["held"]:
-        aborts.append("the GPU lock is held by another job")
+        abort("the GPU lock is held by another job", is_hard=True)
 
     procs = [p for p in gpu_processes() if p["pid"] not in ignore_pids]
     cls = classify_processes(procs)
     if cls["compute"]:
-        aborts.append(
+        abort(
             "other GPU compute processes: "
-            + ", ".join(f"{os.path.basename(p['name'])}({p['pid']})" for p in cls["compute"])
+            + ", ".join(f"{os.path.basename(p['name'])}({p['pid']})" for p in cls["compute"]),
+            is_hard=True,
         )
     servers = [p for p in llama_server_pids() if p not in ignore_pids]
     if servers:
-        aborts.append(f"llama-server already running: pids {servers}")
+        abort(f"llama-server already running: pids {servers}", is_hard=True)
     drm = parse_drm(read_drm())
     if cls["graphics"] or drm["connected_on_nvidia"]:
         warns.append(
@@ -601,24 +611,27 @@ def preconditions(
     mi = parse_meminfo(_read("/proc/meminfo"))
     avail_gib = mi.get("MemAvailable", 0) / GIB_KIB
     if avail_gib < MEM_ABORT_GIB:
-        aborts.append(f"MemAvailable {avail_gib:.1f} GiB < {MEM_ABORT_GIB} GiB")
+        abort(f"MemAvailable {avail_gib:.1f} GiB < {MEM_ABORT_GIB} GiB", is_hard=False)
     elif avail_gib < MEM_WARN_GIB:
         warns.append(f"MemAvailable {avail_gib:.1f} GiB < {MEM_WARN_GIB} GiB")
 
-    if aborts:
-        idle: dict = {"ok": None, "skipped": "another precondition already aborted"}
+    if hard:
+        idle: dict = {"ok": None, "skipped": "a hard precondition already aborted"}
     else:
         idle = (idle_check or wait_for_idle)()
         if not idle["ok"]:
-            aborts.append(
+            abort(
                 f"CPU not idle: busy {idle['busy_pct']}% (limit {idle['threshold_busy_pct']}%) "
                 f"after waiting {idle['waited_s']} s"
-                + (f" ({idle['error']})" if idle.get("error") else "")
+                + (f" ({idle['error']})" if idle.get("error") else ""),
+                is_hard=False,
             )
 
     return {
         "ok": not aborts,
         "aborts": aborts,
+        "hard_aborts": hard,
+        "transient_aborts": [a for a in aborts if a not in hard],
         "warnings": warns,
         "values": {
             "gpu_lock_held": lock["held"],

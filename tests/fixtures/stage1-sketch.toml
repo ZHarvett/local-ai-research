@@ -1,0 +1,50 @@
+# The Stage 1 design of step plan 5.4 as a compact sweep spec (57 cells). WP11 writes the real file
+# (configs/sweeps/stage1.toml); this copy is the test fixture that proves the sketch expands to 57.
+name = "stage1-sketch"
+repetitions = 2
+shuffle_seed = 20261109
+max_restarts = 2
+expect_cells = 57
+
+# Candidate and tuned cells get [defaults]; the section 5.4 sweep defaults (-ctk/-ctv q8_0, -fa on,
+# -np 1) are applied to them by ServerConfig.effective() when the argv is rendered, and --port comes
+# from machine.toml. Stock cells get only [stock_defaults].
+[defaults]
+metrics = true
+log_verbosity = 4
+[stock_defaults]
+metrics = true
+log_verbosity = 4
+
+[axes.context]
+"32K"  = { context = 32768 }
+"64K"  = { context = 65536 }
+"128K" = { context = 131072 }
+[axes.batch]
+b2048 = { batch = 2048, ubatch = 2048 }
+b4096 = { batch = 4096, ubatch = 4096 }
+[axes.placement]
+P1 = { fit = "on" }
+P2 = { fit = "on", fit_target = 256 }
+P3 = { fit = "on", moe_cache_mib = 1024 }
+P4 = { fit = "on", moe_cache_mib = 2048 }
+P5 = { fit = "on", moe_cache_mib = 4096 }
+P6 = { cpu_moe = true, moe_cache_mib = "@max_fit" }
+P7 = { cpu_moe = true, moe_cache_mib = "@max_fit-2048" }
+P8 = { fit = "off", n_cpu_moe = "@n_fit(P1)" }
+P9 = { fit = "off", n_cpu_moe = "@n_fit(P1)-2" }
+
+[[cells]]
+name = "{placement}-{context}-{batch}"
+profile = "candidate"
+product = { placement = ["P1", "P2", "P3", "P4", "P5", "P6", "P7", "P8", "P9"], context = ["32K", "64K", "128K"], batch = ["b2048", "b4096"] }
+
+[[cells]]
+name = "stock-{context}"
+profile = "stock"
+product = { context = ["32K", "64K", "128K"] }
+
+[canary]
+cell = { profile = "candidate", context = 65536, fit = "on", metrics = true, log_verbosity = 4 }
+repetitions = 3
+points = ["short", "16K"]

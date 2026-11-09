@@ -168,7 +168,7 @@ OOM_PATTERNS = tuple(
         r"cudaMalloc failed",
         r"failed to allocate .*buffer",
         r"unable to allocate",
-        r"CUDA error: .*(memory|alloc)",
+        r"CUDA error: .*(out of memory|alloc)",  # not "illegal memory access": a crash, not an OOM
         r"failed to load model",
         r"error loading model",
         r"llama_model_load: error",

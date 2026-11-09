@@ -242,6 +242,13 @@ def test_did_not_fit_exit_code_and_log():
     assert flags.did_not_fit(None, "cudaMalloc failed: out of memory")["flag"] == "did_not_fit"
 
 
+def test_an_illegal_memory_access_is_a_crash_not_an_out_of_memory():
+    log = "srv  CUDA error: an illegal memory access was encountered"
+    assert flags.did_not_fit(None, log)["flag"] is None
+    assert flags.did_not_fit(None, "CUDA error: out of memory")["flag"] == "did_not_fit"
+    assert flags.did_not_fit(None, "CUDA error: failed to allocate buffer")["flag"] == "did_not_fit"
+
+
 @pytest.mark.parametrize("name", sorted(p.name for p in (FIX / "logs").glob("startup-*.txt")))
 def test_real_startup_logs_are_not_flagged(name):
     assert flags.did_not_fit(None, (FIX / "logs" / name).read_text())["flag"] is None

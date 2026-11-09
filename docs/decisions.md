@@ -394,3 +394,75 @@ characters. Instruction wording is kept in `recipe.toml` and referenced from the
 
 **Rejected recipes.** None. All five variants reached 400 tokens with the first wording (W0) at every depth
 and as short points; W1 and W2 in `recipe.toml` were never needed.
+
+## WP9 decisions (2026-11-09)
+
+### Plan v1.3 adopted
+- `docs/plans/step-0-baseline.md` is v1.3 (commit `273e69f`). Its rules are in the code (commit `7385799`):
+  the idle precondition (busy time below 10% over 10 s from `/proc/stat`, re-checked every 10 s for up to
+  10 minutes, wait recorded, load average recorded not gated), the paging flag (llama-server major faults
+  above 1,000 or `VmSwap` above zero; system `pswpin` recorded only; telemetry gained `server_vmswap_kib`)
+  and the `accounting` flag.
+- `flags.OOM_PATTERNS` no longer treats `CUDA error: an illegal memory access` as an out-of-memory error
+  (the old pattern matched any "CUDA error ... memory"). A crash is `crash_mid_cell`; only "out of memory"
+  and allocation failures are `oom_at_load` / `oom_runtime`.
+
+### Sweep runner: how records are committed
+- **The unit of commit is a repetition** (the short point plus every pair), the warm-up (two requests) or a
+  cell record. A batch is appended with one `write`, and every line carries `batch_id`, `batch_index` and
+  `batch_size`; the reader accepts a batch only if it is complete and skips unparsable lines. Reason: the
+  thermal and paging flags belong to a repetition window and are only known when it ends, and a kill must
+  never leave half a repetition that a resume then duplicates. Cost: the requests of an interrupted
+  repetition are not in `records.jsonl`; they are kept in `events.jsonl` as `discarded_partial`.
+- Resume is keyed by (config hash, role, repetition, attempt). A partly finished cell restarts with a new
+  server, the warm-up again, and only the missing repetitions. It refuses if the spec, manifest or sampling
+  hash or the `--only` filter differ from `session.json`; a different code commit only warns and the new
+  records carry the new commit.
+- `session.json` records the SHA-256 of the spec, of `configs/workloads/manifest.json` and of the `[sampling]`
+  section of `configs/model.toml`, the git commit, whether `src/`, `configs/` or `scripts/` were dirty
+  (`run-sweep.sh` refuses that for a new session unless `--allow-dirty`, which is recorded), the filter, the
+  cell order and the `systemd-inhibit` status.
+
+### Failure handling
+- Every terminal failure of a cell is flagged `did_not_fit` with a `reason`: `oom_at_load`, `startup_failure`,
+  `startup_timeout`, `context` (a depth does not fit the per-slot context from `/props`), `crash_mid_cell`,
+  `oom_runtime`, `hung_server`, `request_timeout`. A server that dies mid-cell is restarted (new server,
+  warm-up, missing repetitions only) up to `max_restarts` (default 2) times.
+- Session-level problems are **not** `did_not_fit`: a held GPU lock, a foreign compute process, a running
+  llama-server, a busy port or a missing binary abort at once (exit 3, resumable). Idle CPU and MemAvailable
+  failures are retried 3 more times with a 10-minute pause, every attempt recorded in `events.jsonl` and the
+  cell summary, then the session aborts (exit 3, resumable).
+- Timeouts: 120 s + prompt tokens / 200 + `n_predict` / 10, using the whole prompt length, so a 96K Request A
+  gets about ten minutes and a Request B that misses its cache cannot time out falsely. There is no separate
+  gap timeout for streams (only the total limit). A hung server is stopped through `stop-server.sh`
+  (SIGINT, then SIGKILL after 20 s).
+
+### Session structure
+- Stage 1 runs as three sessions (`--only context=32K` and so on), each with its own start and end canaries,
+  so a drift flag covers 2 to 4 hours. Within a session the cell order is a seeded shuffle that respects
+  `@n_fit` dependencies (P1 before P8 and P9 of the same group), not spec order; the order is in
+  `session.json`. The depth order within a repetition is a shuffle seeded by (seed, cell name, repetition).
+- The drift flag is decided on PP_fresh at 16K and TG of the 16K Request B (prefill and decode); the short
+  point's TG is recorded but not decisive, to keep the false-flag rate down.
+- A re-run (`--rerun-flagged`) repeats whole repetitions: any attempt-1 request flagged `warm_prefill`,
+  `cache_miss`, `accounting`, `thermal` or `paging` makes its repetition a re-run. `short_gen`, `drift` and
+  `did_not_fit` are never re-run, and there is never an attempt 3. A re-run has its own canaries (repetition
+  indices 110 to 115).
+
+### N_fit, `--fit` and explicit placement (for WP11)
+- **How a partly offloaded layer counts.** N_fit is `expert_layers_on_cpu` from P1's log, which is `n_part` of
+  the final `--fit` state: the number of layers whose expert tensors are at least partly in host memory. The
+  one partly offloaded layer is counted as a whole layer. `--n-cpu-moe N` puts all the expert tensors of N
+  layers on the CPU, so P8 (`N_fit`) keeps at most as much on the GPU as P1 did, and P9 (`N_fit - 2`) two
+  layers more. This rests on how `common/fit.cpp` is documented in `smallpc.parsers`, not on a measurement:
+  each P8 and P9 cell summary stores the P1 count (`p1_expert_layers_on_cpu`, the overflow type) and P1's
+  realized peak VRAM and minimum free VRAM next to its own, so WP11 can check that P8 uses no more VRAM than P1.
+- **`--fit` and an explicit placement.** The WP5 `-cmoe --moe-cache-mib 4096` log
+  (`health-20261108T170427Z-E-cmoe-lv4`) shows fit leaving the placement alone when it fits:
+  `projected to use 6650 MiB ... will leave 9153 >= 1024 MiB ... no changes needed`. If it did not fit, fit
+  would ask to reduce device memory. Every cell summary has a `placement_check` (fit setting, attempted,
+  succeeded, "no changes needed", whether fit asked for a reduction, expert layers on the CPU), a fit
+  intervention on an explicit placement raises a `fit_changed_explicit_placement` warning event, and a
+  probing step counts it as a failure, so max-fit is never found with fit moving things. The Stage 1 sketch
+  leaves `--fit` at its default for P6 and P7 and sets `fit = "off"` for P8 and P9; **WP11 must read the first
+  logs of P6 to P9 and confirm** that fit does not change the explicit placement before trusting the rest.

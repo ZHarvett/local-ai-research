@@ -10,7 +10,7 @@ import os
 import re
 import tomllib
 from pathlib import Path
-from typing import Annotated, Literal, Self
+from typing import Annotated, Any, Literal, Self
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
@@ -269,24 +269,79 @@ def load_server(path: str | Path) -> ServerConfig:
 # --------------------------------------------------------------------------- sweep spec
 
 
+_NAME = r"^[A-Za-z0-9{][A-Za-z0-9._{}-]*$"  # braces: name templates of product blocks
+
+
 class SweepCell(_Strict):
-    name: str = Field(min_length=1, pattern=r"^[A-Za-z0-9][A-Za-z0-9._-]*$")
-    config: str = Field(min_length=1)  # path to a server TOML, relative to the repo root
+    """One ``[[cells]]`` block. Three forms:
+
+    * reference: ``config`` names a server TOML (the WP2 form);
+    * inline: ``profile`` plus ``set`` (field overrides);
+    * product: ``profile`` plus ``product`` (axis -> list of axis values), with a name template.
+    """
+
+    name: str = Field(min_length=1, pattern=_NAME)
+    config: str | None = None  # path to a server TOML, relative to the repo root
+    profile: Profile | None = None
+    set: dict[str, Any] = {}
+    product: dict[str, list[str]] = {}
+
+    @model_validator(mode="after")
+    def _form(self) -> Self:
+        if (self.config is None) == (self.profile is None):
+            raise ValueError("a cell needs exactly one of `config` (reference) or `profile`")
+        if self.config is not None and (self.set or self.product):
+            raise ValueError("a reference cell (`config`) takes no `set` or `product`")
+        if self.product and not all(self.product.values()):
+            raise ValueError("every product axis needs at least one value")
+        return self
+
+
+class SweepCanary(_Strict):
+    """The §5.1 canary: a fixed config measured at the start and end of every session."""
+
+    config: str | None = None
+    cell: dict[str, Any] = {}  # inline: profile and fields
+    repetitions: PosInt = 3
+    points: list[str] = ["short", "16K"]
+
+    @model_validator(mode="after")
+    def _one(self) -> Self:
+        if (self.config is None) == (not self.cell):
+            raise ValueError("canary needs exactly one of `config` or `cell`")
+        return self
 
 
 class SweepSpec(_Strict):
-    """Minimal sweep spec; WP9 extends it."""
+    """Sweep spec (WP9). The WP2 form (name, cells, repetitions) is a valid subset."""
 
     name: str = Field(min_length=1, pattern=r"^[A-Za-z0-9][A-Za-z0-9._-]*$")
     cells: Annotated[list[SweepCell], Field(min_length=1)]
     repetitions: PosInt
+    shuffle_seed: int = 20261109  # cell order and depth order derive from it
+    max_restarts: Annotated[int, Field(ge=0, le=10)] = 2  # server restarts per cell
+    expect_cells: PosInt | None = None  # `check` fails if the expansion differs
+    # Candidate/tuned cells get `defaults`; stock cells get only `stock_defaults` (section 5.4).
+    # The section 5.4 sweep defaults (8-bit KV, -fa on, -np 1) are applied to candidate cells by
+    # ServerConfig.effective() at render time, together with the explicit port from machine.toml.
+    defaults: dict[str, Any] = {}
+    stock_defaults: dict[str, Any] = {}
+    axes: dict[str, dict[str, dict[str, Any]]] = {}
+    canary: SweepCanary | None = None
 
     @model_validator(mode="after")
     def _unique_cells(self) -> Self:
-        names = [c.name for c in self.cells]
+        names = [c.name for c in self.cells if not c.product]
         dupes = sorted({n for n in names if names.count(n) > 1})
         if dupes:
             raise ValueError(f"duplicate cell name(s): {dupes}")
+        for c in self.cells:
+            for axis, values in c.product.items():
+                if axis not in self.axes:
+                    raise ValueError(f"cell {c.name!r}: unknown axis {axis!r}")
+                missing = [v for v in values if v not in self.axes[axis]]
+                if missing:
+                    raise ValueError(f"cell {c.name!r}: axis {axis!r} has no value(s) {missing}")
         return self
 
 

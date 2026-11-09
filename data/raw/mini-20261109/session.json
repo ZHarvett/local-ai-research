@@ -1,0 +1,142 @@
+{
+  "schema": 1,
+  "session_id": "mini-20261109",
+  "created_utc": "2026-11-09T08:30:25Z",
+  "spec": {
+    "name": "mini",
+    "path": "configs/sweeps/mini.toml"
+  },
+  "spec_sha256": "a6e436fe5640eb7265922788b6ca51661f18650888af7f1ebf4b74d8000eda10",
+  "manifest_sha256": "ed750c1c73355d08d3f76742eb164721ebdfe7206ce2a7fcad89fd3bd5e9f27e",
+  "sampling_sha256": "09b6a27e5b086b3891ff66e0dd64f25deb12530e505cc69e4153c95716ee6743",
+  "git": {
+    "commit": "73857996223fdec24b27a150cd325742fef6713f",
+    "short": "7385799622",
+    "dirty": true,
+    "dirty_paths": [
+      "src/smallpc/config.py",
+      "src/smallpc/envsnap.py",
+      "src/smallpc/flags.py",
+      "configs/sweeps/",
+      "scripts/run-sweep.sh",
+      "scripts/sweep-status.sh",
+      "src/smallpc/sweep/"
+    ]
+  },
+  "filters": {},
+  "model_sha256": "42739874cc2ccfdb8523b23fbe52e29b2a7555c8176737ca9ca0b5d59859d41f",
+  "llama_cpp_commit": "57d04820dfef7a3519aac276d018a6fd71251895",
+  "allow_dirty": true,
+  "model": {
+    "sha256": "42739874cc2ccfdb8523b23fbe52e29b2a7555c8176737ca9ca0b5d59859d41f",
+    "verified": true,
+    "declared": "42739874cc2ccfdb8523b23fbe52e29b2a7555c8176737ca9ca0b5d59859d41f",
+    "size_bytes": 21713463040
+  },
+  "shuffle_seed": 20261109,
+  "cell_order": [
+    "stock-32K",
+    "fit-q8-32K"
+  ],
+  "cell_order_rule": "seeded shuffle respecting @n_fit dependencies (smallpc.sweep.spec.order_cells), not spec order",
+  "repetitions": 2,
+  "state": "complete",
+  "runs": [
+    {
+      "start_utc": "2026-11-09T08:30:25Z",
+      "pid": 219843,
+      "mode": "run",
+      "code_commit": "7385799622",
+      "inhibit": {
+        "checked": true,
+        "active": true,
+        "tag": "smallpc-sweep-mini-20261109-1794213025",
+        "line": "local-ai-research sweep 1000 <user> 219830 systemd-inhibit sleep:idle smallpc-sweep-mini-20261109-1794213025 block"
+      }
+    },
+    {
+      "start_utc": "2026-11-09T08:39:15Z",
+      "pid": 223221,
+      "mode": "resume",
+      "code_commit": "7385799622",
+      "inhibit": {
+        "checked": true,
+        "active": true,
+        "tag": "smallpc-sweep-mini-20261109-1794213555",
+        "line": "local-ai-research sweep 1000 <user> 223208 systemd-inhibit sleep:idle smallpc-sweep-mini-20261109-1794213555 block"
+      },
+      "warnings": [],
+      "resumed": true
+    }
+  ],
+  "inhibit": {
+    "checked": true,
+    "active": true,
+    "tag": "smallpc-sweep-mini-20261109-1794213555",
+    "line": "local-ai-research sweep 1000 <user> 223208 systemd-inhibit sleep:idle smallpc-sweep-mini-20261109-1794213555 block"
+  },
+  "drift": {
+    "main": {
+      "metrics": {
+        "pp_fresh_16k": {
+          "flag": null,
+          "relative_difference": 0.001954244967665542,
+          "threshold": 0.05,
+          "start_mean": 1016.2778741287351,
+          "end_mean": 1014.2918182074692,
+          "start_values": [
+            1019.2786376455111,
+            1011.8086542864615,
+            1017.7463304542326
+          ],
+          "end_values": [
+            1020.8597715390102,
+            1014.1875453386835,
+            1007.8281377447139
+          ]
+        },
+        "tg_16k": {
+          "flag": null,
+          "relative_difference": 0.0054753845860856425,
+          "threshold": 0.05,
+          "start_mean": 80.01681003621796,
+          "end_mean": 79.57868722791791,
+          "start_values": [
+            80.21758063776797,
+            79.98933475536596,
+            79.84351471551997
+          ],
+          "end_values": [
+            78.76655133980127,
+            79.96213121725611,
+            80.00737912669639
+          ]
+        },
+        "tg_short": {
+          "flag": null,
+          "relative_difference": 0.006102681479917453,
+          "threshold": 0.05,
+          "start_mean": 90.21930778529413,
+          "end_mean": 90.76988748404642,
+          "start_values": [
+            89.8987793818614,
+            90.65188245790651,
+            90.10726151611452
+          ],
+          "end_values": [
+            91.89891487880283,
+            89.73809969340608,
+            90.67264787993034
+          ]
+        }
+      },
+      "flag": null,
+      "decided_on": [
+        "pp_fresh_16k",
+        "tg_16k"
+      ],
+      "complete": true
+    }
+  },
+  "finished_utc": "2026-11-09T08:44:11Z"
+}

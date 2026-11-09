@@ -1,0 +1,803 @@
+{
+  "cell": "canary-start",
+  "role": "canary_start",
+  "profile": "candidate",
+  "config_hash": "57efb62a7fc756ce",
+  "argv": [
+    "/mnt/data/local-ai-research/third_party/llama.cpp/build/bin/llama-server",
+    "-m",
+    "/mnt/data/local-ai-research/models/Ornith-1.5-35B-Q4_K_M.gguf",
+    "--host",
+    "127.0.0.1",
+    "--port",
+    "8080",
+    "-c",
+    "32768",
+    "--fit",
+    "on",
+    "-ctk",
+    "q8_0",
+    "-ctv",
+    "q8_0",
+    "-fa",
+    "on",
+    "-np",
+    "1",
+    "--metrics",
+    "-lv",
+    "4"
+  ],
+  "resolved_config": "resolved/canary-start.toml",
+  "coords": {},
+  "resolution": {},
+  "model_sha256": "42739874cc2ccfdb8523b23fbe52e29b2a7555c8176737ca9ca0b5d59859d41f",
+  "llama_cpp_commit": "57d04820dfef7a3519aac276d018a6fd71251895",
+  "instances": [
+    {
+      "instance": 0,
+      "run_id": "mini-20261109-canary-start-57efb62a-i0",
+      "attempt": 1,
+      "started_utc": "2026-11-09T08:30:25Z",
+      "repetitions_planned": [
+        100,
+        101,
+        102
+      ],
+      "phases_s": {
+        "preconditions": 10.11,
+        "launch": 11.33,
+        "props": 0.0,
+        "snapshot": 0.18,
+        "prefetch": 26.58,
+        "warmup": 19.36,
+        "measure": 118.97,
+        "shutdown": 0.61,
+        "parse": 0.01
+      },
+      "preconditions": {
+        "final": {
+          "gpu_lock_held": true,
+          "lock_expected_held_by_wrapper": true,
+          "gpu_compute_processes": 0,
+          "gpu_graphics_processes": 0,
+          "connected_on_nvidia": [],
+          "mem_available_gib": 23.84,
+          "idle": {
+            "ok": true,
+            "threshold_busy_pct": 10.0,
+            "window_s": 10.0,
+            "max_wait_s": 600.0,
+            "busy_pct": 1.54,
+            "busy_pct_history": [
+              1.54
+            ],
+            "attempts": 1,
+            "elapsed_s": 10.0,
+            "waited_s": 0.0,
+            "loadavg_1m": 0.94,
+            "error": null
+          },
+          "loadavg_1m": 0.94
+        },
+        "attempts": [
+          {
+            "attempt": 1,
+            "utc": "2026-11-09T08:30:35Z",
+            "ok": true,
+            "aborts": [],
+            "hard": [],
+            "warnings": [
+              "MemAvailable 23.8 GiB < 24 GiB"
+            ],
+            "idle": {
+              "ok": true,
+              "threshold_busy_pct": 10.0,
+              "window_s": 10.0,
+              "max_wait_s": 600.0,
+              "busy_pct": 1.54,
+              "busy_pct_history": [
+                1.54
+              ],
+              "attempts": 1,
+              "elapsed_s": 10.0,
+              "waited_s": 0.0,
+              "loadavg_1m": 0.94,
+              "error": null
+            },
+            "mem_available_gib": 23.84
+          }
+        ],
+        "warnings": [
+          "MemAvailable 23.8 GiB < 24 GiB"
+        ]
+      },
+      "launch": {
+        "rc": 0,
+        "load_time_s": 11.33,
+        "started": true,
+        "healthy": true,
+        "reason": null,
+        "exit_code": null,
+        "output": "server healthy: pid=219948 http://127.0.0.1:8080\nrun-dir: /mnt/data/local-ai-research/data/logs/mini-20261109-canary-start-57efb62a-i0"
+      },
+      "props": {
+        "n_ctx": null,
+        "total_slots": 1,
+        "n_ctx_per_slot": 32768,
+        "kv_unified": false,
+        "build_info": "b12208-57d04820d",
+        "log_n_ctx": 32768,
+        "log_n_slots": 1,
+        "log_n_ctx_slot": 32768
+      },
+      "context_check": {
+        "per_slot_n_ctx": 32768,
+        "depths_fit": {
+          "16384": true
+        }
+      },
+      "snapshot_id": "66c04f6c276af71a",
+      "snapshot_state": {
+        "timestamp_utc": "2026-11-09T08:30:47Z",
+        "gpu": {
+          "pcie_gen_current": "4",
+          "pcie_width_current": "8",
+          "clock_graphics_mhz": "2842",
+          "clock_memory_mhz": "13801",
+          "temperature_c": "30",
+          "pstate": "P1",
+          "memory_used_mib": "14934"
+        },
+        "gpu_processes": [
+          {
+            "pid": 219948,
+            "type": "C",
+            "name": "/mnt/data/local-ai-research/third_party/llama.cpp/build/bin/llama-server",
+            "vram_mib": 14924.0
+          }
+        ],
+        "gpu_processes_compute": [
+          {
+            "pid": 219948,
+            "type": "C",
+            "name": "/mnt/data/local-ai-research/third_party/llama.cpp/build/bin/llama-server",
+            "vram_mib": 14924.0
+          }
+        ],
+        "gpu_processes_graphics": [],
+        "llama_server_pids": [
+          219948
+        ],
+        "desktop_gpu_steering": {
+          "memory_used_mib_before_any_server": null,
+          "note": "a llama-server was running: memory.used includes it",
+          "processes_on_card": [
+            {
+              "pid": 219948,
+              "type": "C",
+              "name": "/mnt/data/local-ai-research/third_party/llama.cpp/build/bin/llama-server",
+              "vram_mib": 14924.0
+            }
+          ]
+        },
+        "memory": {
+          "mem_total_kib": 31937292,
+          "mem_available_kib": 24682312,
+          "mem_available_gib": 23.54,
+          "cached_kib": 23686856,
+          "swap_total_kib": 31936508,
+          "swap_used_kib": 2735684,
+          "zram_bytes_name_disksize_data_compr_total": "/dev/zram0 32702988288 2633256960 715791917 732454912",
+          "vmstat": {
+            "pswpin": 745298,
+            "pswpout": 2234584,
+            "pgmajfault": 811246
+          },
+          "swappiness": "150",
+          "thp_enabled": "always",
+          "thp_defrag": "defer+madvise"
+        },
+        "loadavg": "1.11 1.14 1.05 1/2142 220132",
+        "gpu_lock": {
+          "held": true,
+          "file": "/mnt/data/local-ai-research/.locks/gpu.lock"
+        }
+      },
+      "telemetry": {
+        "file": "telemetry/canary-start-57efb62a-i0.csv.gz",
+        "rows": 277,
+        "overhead": {
+          "wall_s": 138.37506523400225,
+          "python_cpu_s": 23.918630966,
+          "nvidia_smi_cpu_s": 0.08,
+          "python_core_fraction": 0.1728536201630826,
+          "nvidia_smi_core_fraction": 0.0005781388421730043,
+          "total_core_fraction": 0.17343175900525556,
+          "n_rows": 277
+        },
+        "error": null
+      },
+      "stop": {
+        "stopped_utc": "2026-11-09T08:33:33Z",
+        "pid": 219948,
+        "method": "sigint",
+        "exit_code": 0,
+        "waited_s": 1,
+        "sigint_timeout_s": 60,
+        "stop_rc": 0
+      },
+      "parsed": {
+        "placement": {
+          "fit_attempted": true,
+          "fit_succeeded": true,
+          "initial_projection_mib": 20456,
+          "free_device_mib_at_fit": 15803,
+          "required_reduction_mib": 5676,
+          "fit_target_mib": 1024,
+          "fit_context_note": "set by user to 32768 -> no change",
+          "fit_layers": 41,
+          "fit_overflowing_layers": 14,
+          "fit_device_used_mib": 14769,
+          "fit_device_free_mib": 1034,
+          "n_layer": 41,
+          "expert_layers_on_cpu": 14,
+          "first_partial_layer_overflow": "GATE",
+          "offloaded_layers": [
+            42,
+            42
+          ],
+          "load_mode": "mmap",
+          "tensor_overrides_to_cpu": true,
+          "model_buffers": {
+            "CPU_Mapped": {
+              "count": 38,
+              "mib": 6129.37
+            },
+            "CUDA0": {
+              "count": 1,
+              "mib": 14046.34
+            }
+          },
+          "kv_buffers": [
+            {
+              "device": "CUDA0",
+              "mib": 340.0
+            }
+          ],
+          "kv": {
+            "mib": 340.0,
+            "cells": 32768,
+            "layers": 10,
+            "k_type": "q8_0",
+            "k_mib": 170.0,
+            "v_type": "q8_0",
+            "v_mib": 170.0
+          },
+          "recurrent_state_buffers": [
+            {
+              "device": "CUDA0",
+              "mib": 62.81
+            }
+          ],
+          "compute_buffers": [
+            {
+              "device": "CUDA0",
+              "mib": 318.02
+            },
+            {
+              "device": "CUDA_Host",
+              "mib": 48.02
+            }
+          ],
+          "contexts": [
+            {
+              "n_seq_max": 1,
+              "n_ctx": 32768,
+              "n_ctx_seq": 32768,
+              "n_batch": 2048,
+              "n_ubatch": 512,
+              "flash_attn": "enabled",
+              "kv_unified": "false"
+            }
+          ],
+          "n_ctx": 32768,
+          "n_slots": 1,
+          "n_ctx_slot": 32768,
+          "server_kv_unified": "false",
+          "prompt_cache": "8192 MiB",
+          "checkpoints": {
+            "max": 32,
+            "min_spacing": 8192
+          },
+          "warnings": [
+            "srv  server_setup: security: no API key is set and CORS allows all origins (see https://github.com/ggml-org/llama.cpp/pull/25655)",
+            "llama_model_loader: tensor overrides to CPU are used with mmap enabled - consider using --load-mode none for better performance",
+            "srv          init: chat template supports preserving reasoning, it is enabled by default (may use more tokens, disable via --no-reasoning-preserve)"
+          ]
+        },
+        "moe_cache": {
+          "present": false,
+          "classes": [],
+          "overall_hit_rate_pct": null
+        },
+        "checkpoints": {
+          "created": 22,
+          "created_detail": [
+            {
+              "index": 1,
+              "max": 32,
+              "pos_min": 7675,
+              "pos_max": 7675,
+              "n_tokens": 7676
+            },
+            {
+              "index": 2,
+              "max": 32,
+              "pos_min": 8187,
+              "pos_max": 8187,
+              "n_tokens": 8188
+            },
+            {
+              "index": 1,
+              "max": 32,
+              "pos_min": 7675,
+              "pos_max": 7675,
+              "n_tokens": 7676
+            },
+            {
+              "index": 2,
+              "max": 32,
+              "pos_min": 8187,
+              "pos_max": 8187,
+              "n_tokens": 8188
+            },
+            {
+              "index": 1,
+              "max": 32,
+              "pos_min": 1531,
+              "pos_max": 1531,
+              "n_tokens": 1532
+            },
+            {
+              "index": 2,
+              "max": 32,
+              "pos_min": 2043,
+              "pos_max": 2043,
+              "n_tokens": 2044
+            },
+            {
+              "index": 1,
+              "max": 32,
+              "pos_min": 15867,
+              "pos_max": 15867,
+              "n_tokens": 15868
+            },
+            {
+              "index": 2,
+              "max": 32,
+              "pos_min": 16379,
+              "pos_max": 16379,
+              "n_tokens": 16380
+            },
+            {
+              "index": 3,
+              "max": 32,
+              "pos_min": 18867,
+              "pos_max": 18867,
+              "n_tokens": 18868
+            },
+            {
+              "index": 4,
+              "max": 32,
+              "pos_min": 19379,
+              "pos_max": 19379,
+              "n_tokens": 19380
+            },
+            {
+              "index": 1,
+              "max": 32,
+              "pos_min": 1531,
+              "pos_max": 1531,
+              "n_tokens": 1532
+            },
+            {
+              "index": 2,
+              "max": 32,
+              "pos_min": 2043,
+              "pos_max": 2043,
+              "n_tokens": 2044
+            },
+            {
+              "index": 1,
+              "max": 32,
+              "pos_min": 15867,
+              "pos_max": 15867,
+              "n_tokens": 15868
+            },
+            {
+              "index": 2,
+              "max": 32,
+              "pos_min": 16379,
+              "pos_max": 16379,
+              "n_tokens": 16380
+            },
+            {
+              "index": 3,
+              "max": 32,
+              "pos_min": 18867,
+              "pos_max": 18867,
+              "n_tokens": 18868
+            },
+            {
+              "index": 4,
+              "max": 32,
+              "pos_min": 19379,
+              "pos_max": 19379,
+              "n_tokens": 19380
+            },
+            {
+              "index": 1,
+              "max": 32,
+              "pos_min": 1531,
+              "pos_max": 1531,
+              "n_tokens": 1532
+            },
+            {
+              "index": 2,
+              "max": 32,
+              "pos_min": 2043,
+              "pos_max": 2043,
+              "n_tokens": 2044
+            },
+            {
+              "index": 1,
+              "max": 32,
+              "pos_min": 15867,
+              "pos_max": 15867,
+              "n_tokens": 15868
+            },
+            {
+              "index": 2,
+              "max": 32,
+              "pos_min": 16379,
+              "pos_max": 16379,
+              "n_tokens": 16380
+            },
+            {
+              "index": 3,
+              "max": 32,
+              "pos_min": 18867,
+              "pos_max": 18867,
+              "n_tokens": 18868
+            },
+            {
+              "index": 4,
+              "max": 32,
+              "pos_min": 19379,
+              "pos_max": 19379,
+              "n_tokens": 19380
+            }
+          ],
+          "erased": 0,
+          "restored_from_checkpoint": 0,
+          "speculative_checkpoints_created": 0
+        },
+        "spec_stats": []
+      },
+      "startup_excerpt": [
+        "0.00.162.118 I cmn  common_param: common_params_print_info: build 12208 (57d04820d) with GNU 16.2.1 for Linux x86_64",
+        "0.00.162.119 I cmn  common_param: common_params_print_info: verbosity = 4 (adjust with the `-lv N` CLI arg)",
+        "0.00.235.262 I cmn  common_fit_a: fitting params to device memory ...",
+        "0.00.235.263 I cmn  common_fit_a: (for bugs during this step try to reproduce them with -fit off, or provide --verbose logs if the bug only occurs with -fit on)",
+        "0.00.235.288 I common_params_fit_impl: getting device memory data for initial parameters:",
+        "0.00.360.124 I common_memory_breakdown_print: | memory breakdown [MiB]  | total    free     self   model   context   compute    unaccounted |",
+        "0.00.373.476 I common_params_fit_impl: projected to use 20456 MiB of device memory vs. 15803 MiB of free device memory",
+        "0.00.373.479 I common_params_fit_impl: cannot meet free memory target of 1024 MiB, need to reduce device memory by 5676 MiB",
+        "0.00.373.479 I common_params_fit_impl: context size set by user to 32768 -> no change",
+        "0.00.373.484 I common_params_fit_impl: getting device memory data with all MoE tensors moved to system memory:",
+        "0.00.489.092 I common_memory_breakdown_print: | memory breakdown [MiB]  | total    free     self   model   context   compute    unaccounted |",
+        "0.00.501.746 I common_params_fit_impl: with only dense weights in device memory there is a total surplus of 12595 MiB",
+        "0.00.501.749 I common_params_fit_impl: id=0, target=14779 MiB",
+        "0.00.616.691 I common_memory_breakdown_print: | memory breakdown [MiB]  | total    free     self   model   context   compute    unaccounted |",
+        "0.00.629.319 I common_params_fit_impl: memory for test allocation by device:",
+        "0.00.629.322 I common_params_fit_impl: id=0, n_layer= 0, n_part= 0, overflow_type=4, mem=   325 MiB",
+        "0.00.629.323 I common_params_fit_impl: filling dense-only layers back-to-front:",
+        "0.00.788.861 I common_memory_breakdown_print: | memory breakdown [MiB]  | total    free     self   model   context   compute    unaccounted |",
+        "0.00.802.500 I common_params_fit_impl: memory for test allocation by device:",
+        "0.00.802.505 I common_params_fit_impl: id=0, n_layer=41, n_part=40, overflow_type=4, mem=  2682 MiB",
+        "0.00.802.507 I common_params_fit_impl: set ngl_per_device[0].n_layer=41",
+        "0.00.802.508 I common_params_fit_impl:   - CUDA0 (NVIDIA GeForce RTX 5060 Ti): 41 layers,   2682 MiB used,  13121 MiB free",
+        "0.00.802.509 I common_params_fit_impl: converting dense-only layers to full layers and filling them front-to-back with overflow to next device/system memory:",
+        "0.00.919.101 I common_memory_breakdown_print: | memory breakdown [MiB]  | total    free     self   model   context   compute    unaccounted |",
+        "0.00.931.639 I common_params_fit_impl: memory for test allocation by device:",
+        "0.00.931.643 I common_params_fit_impl: id=0, n_layer=41, n_part= 0, overflow_type=4, mem= 20456 MiB",
+        "0.01.061.136 I common_memory_breakdown_print: | memory breakdown [MiB]  | total    free     self   model   context   compute    unaccounted |",
+        "0.01.073.018 I common_params_fit_impl: memory for test allocation by device:",
+        "0.01.073.021 I common_params_fit_impl: id=0, n_layer=41, n_part=13, overflow_type=4, mem= 14914 MiB",
+        "0.01.073.023 I common_params_fit_impl: set ngl_per_device_high[0].(n_layer, n_part)=(41, 13), id_dense_start_high=0",
+        "0.01.198.994 I common_memory_breakdown_print: | memory breakdown [MiB]  | total    free     self   model   context   compute    unaccounted |",
+        "0.01.211.400 I common_params_fit_impl: memory for test allocation by device:",
+        "0.01.211.404 I common_params_fit_impl: id=0, n_layer=41, n_part=14, overflow_type=4, mem= 14482 MiB",
+        "0.01.211.406 I common_params_fit_impl: set ngl_per_device[0].(n_layer, n_part)=(41, 14), id_dense_start=0",
+        "0.01.211.407 I common_params_fit_impl: trying to fit one extra layer with overflow_type=LAYER_FRACTION_UP",
+        "0.01.339.339 I common_memory_breakdown_print: | memory breakdown [MiB]  | total    free     self   model   context   compute    unaccounted |",
+        "0.01.351.823 I common_params_fit_impl: memory for test allocation by device:",
+        "0.01.351.826 I common_params_fit_impl: id=0, n_layer=41, n_part=14, overflow_type=2, mem= 14623 MiB",
+        "0.01.351.828 I common_params_fit_impl: set ngl_per_device[0].(n_layer, n_part, overflow_type)=(41, 14, UP), id_dense_start=0",
+        "0.01.351.828 I common_params_fit_impl: trying to fit one extra layer with overflow_type=LAYER_FRACTION_GATE",
+        "0.01.478.539 I common_memory_breakdown_print: | memory breakdown [MiB]  | total    free     self   model   context   compute    unaccounted |",
+        "0.01.490.829 I common_params_fit_impl: memory for test allocation by device:",
+        "0.01.490.833 I common_params_fit_impl: id=0, n_layer=41, n_part=14, overflow_type=3, mem= 14769 MiB",
+        "0.01.490.835 I common_params_fit_impl: set ngl_per_device[0].(n_layer, n_part, overflow_type)=(41, 14, GATE), id_dense_start=0",
+        "0.01.490.836 I common_params_fit_impl:   - CUDA0 (NVIDIA GeForce RTX 5060 Ti): 41 layers (14 overflowing),  14769 MiB used,   1034 MiB free",
+        "0.01.490.840 I common_fit_params: successfully fit params to free device memory",
+        "0.01.490.843 I common_fit_params: fitting params to free memory took 1.26 seconds",
+        "0.01.516.245 I llama_model_loader: Dumping metadata keys/values. Note: KV overrides do not apply in this output.",
+        "0.01.595.357 I print_info: n_ctx_train           = 262144",
+        "0.01.595.378 I print_info: n_ctx_orig_yarn       = 262144",
+        "0.01.595.499 I load_tensors: loading model tensors, this can take a while... (load_mode = mmap)",
+        "0.01.608.027 W llama_model_loader: tensor overrides to CPU are used with mmap enabled - consider using --load-mode none for better performance",
+        "0.09.285.471 I load_tensors: offloading output layer to GPU",
+        "0.09.285.475 I load_tensors: offloading 40 repeating layers to GPU",
+        "0.09.285.475 I load_tensors: offloaded 42/42 layers to GPU",
+        "0.09.285.480 I load_tensors:   CPU_Mapped model buffer size =   272.81 MiB",
+        "0.09.285.480 I load_tensors:   CPU_Mapped model buffer size =   144.56 MiB",
+        "0.09.285.481 I load_tensors:   CPU_Mapped model buffer size =   210.00 MiB",
+        "0.09.285.481 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.09.285.481 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.09.285.481 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.09.285.482 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.09.285.482 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.09.285.482 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.09.285.482 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.09.285.482 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.09.285.483 I load_tensors:   CPU_Mapped model buffer size =   210.00 MiB",
+        "0.09.285.483 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.09.285.483 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.09.285.483 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.09.285.483 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.09.285.483 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.09.285.483 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.09.285.484 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.09.285.484 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.09.285.484 I load_tensors:   CPU_Mapped model buffer size =   210.00 MiB",
+        "0.09.285.484 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.09.285.484 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.09.285.484 I load_tensors:   CPU_Mapped model buffer size =   210.00 MiB",
+        "0.09.285.485 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.09.285.485 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.09.285.485 I load_tensors:   CPU_Mapped model buffer size =   210.00 MiB",
+        "0.09.285.485 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.09.285.485 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.09.285.485 I load_tensors:   CPU_Mapped model buffer size =   210.00 MiB",
+        "0.09.285.486 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.09.285.486 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.09.285.486 I load_tensors:   CPU_Mapped model buffer size =   210.00 MiB",
+        "0.09.285.486 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.09.285.486 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.09.285.486 I load_tensors:   CPU_Mapped model buffer size =   210.00 MiB",
+        "0.09.285.487 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.09.285.487 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.09.285.488 I load_tensors:        CUDA0 model buffer size = 14046.34 MiB",
+        "0.10.648.334 I llama_context: constructing llama_context",
+        "0.10.648.336 I llama_context: n_seq_max             = 1",
+        "0.10.648.337 I llama_context: n_ctx                 = 32768",
+        "0.10.648.337 I llama_context: n_ctx_seq             = 32768",
+        "0.10.648.337 I llama_context: n_batch               = 2048",
+        "0.10.648.337 I llama_context: n_ubatch              = 512",
+        "0.10.648.337 I llama_context: causal_attn           = 1",
+        "0.10.648.338 I llama_context: flash_attn            = enabled",
+        "0.10.648.338 I llama_context: kv_unified            = false",
+        "0.10.648.341 I llama_context: freq_base             = 10000000.0",
+        "0.10.648.341 I llama_context: freq_scale            = 1",
+        "0.10.648.342 I llama_context: n_rs_seq              = 0",
+        "0.10.648.342 I llama_context: n_outputs_max         = 1",
+        "0.10.648.342 I llama_context: n_outputs_max_per_seq = 1",
+        "0.10.648.342 I llama_context: n_ctx_seq (32768) < n_ctx_train (262144) -- the full capacity of the model will not be utilized",
+        "0.10.648.841 I llama_context:  CUDA_Host  output buffer size =     0.95 MiB",
+        "0.10.649.852 I llama_kv_cache:      CUDA0 KV buffer size =   340.00 MiB",
+        "0.10.649.912 I init_rotation:      CUDA0 rotation buffer size =     2.66 MiB",
+        "0.10.650.527 I llama_memory_recurrent:      CUDA0 RS buffer size =    62.81 MiB",
+        "0.10.665.459 I sched_reserve:      CUDA0 compute buffer size =   318.02 MiB",
+        "0.10.665.461 I sched_reserve:  CUDA_Host compute buffer size =    48.02 MiB",
+        "0.10.745.893 I srv    load_model: speculative decoding will use checkpoints",
+        "0.10.745.896 I srv    load_model: initializing, n_slots = 1, n_ctx_slot = 32768, kv_unified = 'false'",
+        "0.10.745.908 I slot   load_model: id  0 | task -1 | new slot, n_ctx = 32768",
+        "0.10.746.405 I srv    load_model: prompt cache is enabled, size limit: 8192 MiB",
+        "0.10.746.406 I srv    load_model: use `--cache-ram 0` to disable the prompt cache",
+        "0.10.746.407 I srv    load_model: context checkpoints enabled, max = 32, min spacing = 8192",
+        "0.10.746.426 I srv          init: idle slots will be saved to prompt cache upon starting a new task",
+        "0.10.753.931 I srv  server_on_li: listening on http://127.0.0.1:8080",
+        "0.10.753.995 I srv  update_slots: all slots are idle",
+        "0.37.789.820 I slot get_availabl: id  0 | task -1 |  - skipping, slot is empty",
+        "0.37.789.825 I slot get_availabl: id  0 | task -1 | selected slot by LRU, n_tokens = 0, t_last = -1",
+        "0.37.789.826 I srv  get_availabl: updating prompt cache",
+        "0.37.789.838 I srv  get_availabl: prompt cache update took 0.01 ms",
+        "0.37.789.871 I slot launch_slot_: id  0 | task -1 | sampler chain: logits -> ?penalties -> ?dry -> ?top-n-sigma -> top-k -> ?typical -> top-p -> min-p -> ?xtc -> temp-ext -> dist ",
+        "0.37.789.878 I slot launch_slot_: id  0 | task -1 | sampler params: ",
+        "0.37.789.880 I slot launch_slot_: id  0 | task 0 | processing task, is_child = 0",
+        "0.37.789.892 I slot   operator(): id  0 | task 0 | new prompt, n_ctx_slot = 32768, n_keep = 0, task.n_tokens = 8192",
+        "0.37.789.897 I slot   operator(): id  0 | task 0 | cached n_tokens = 0, memory_seq_rm [0, end)",
+        "0.39.746.329 I slot   operator(): id  0 | task 0 | cached n_tokens = 2048, memory_seq_rm [2048, end)",
+        "0.41.654.617 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =   4096, progress = 0.50, t =   3.86 s / 1059.85 tokens per second",
+        "0.41.654.619 I slot   operator(): id  0 | task 0 | cached n_tokens = 4096, memory_seq_rm [4096, end)",
+        "0.43.650.712 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =   6144, progress = 0.75, t =   5.86 s / 1048.32 tokens per second",
+        "0.43.650.715 I slot   operator(): id  0 | task 0 | cached n_tokens = 6144, memory_seq_rm [6144, end)",
+        "0.45.160.733 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =   7676, progress = 0.94, t =   7.37 s / 1041.40 tokens per second",
+        "0.45.160.735 I slot   operator(): id  0 | task 0 | cached n_tokens = 7676, memory_seq_rm [7676, end)",
+        "0.45.171.357 I slot create_check: id  0 | task 0 | created context checkpoint 1 of 32 (pos_min = 7675, pos_max = 7675, n_tokens = 7676, size = 62.813 MiB)",
+        "0.45.681.611 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =   8188, progress = 1.00, t =   7.89 s / 1037.55 tokens per second",
+        "0.45.681.614 I slot   operator(): id  0 | task 0 | cached n_tokens = 8188, memory_seq_rm [8188, end)",
+        "0.45.682.251 I slot init_sampler: id  0 | task 0 | init sampler, took 0.62 ms, tokens: text = 8192, total = 8192",
+        "0.45.691.994 I slot create_check: id  0 | task 0 | created context checkpoint 2 of 32 (pos_min = 8187, pos_max = 8187, n_tokens = 8188, size = 62.813 MiB)",
+        "0.47.205.085 I slot print_timing: id  0 | task 0 | prompt eval time =    7934.21 ms /  8192 tokens (    0.97 ms per token,  1032.49 tokens per second)",
+        "0.47.205.088 I slot print_timing: id  0 | task 0 |        eval time =    1480.97 ms /   128 tokens (   11.66 ms per token,    85.75 tokens per second)",
+        "0.47.205.088 I slot print_timing: id  0 | task 0 |       total time =    9415.18 ms /  8320 tokens",
+        "0.47.205.092 I slot print_timing: id  0 | task 0 |    graphs reused =        127",
+        "0.47.205.092 I slot print_timing: id  0 | task 0 |   graph reallocs =         15    /     0        (same size) / (changed size)",
+        "0.47.205.374 I slot      release: id  0 | task 0 | stop processing: n_tokens = 8319, truncated = 0",
+        "0.47.205.383 I srv  update_slots: all slots are idle",
+        "0.47.208.420 I slot get_availabl: id  0 | task -1 |  - checking sim = 0.001 (6/8192) > 0.100",
+        "0.47.208.422 I slot get_availabl: id  0 | task -1 | selected slot by LRU, n_tokens = 8319, t_last = 28002346824",
+        "0.47.208.422 I srv  get_availabl: updating prompt cache",
+        "0.47.239.477 I srv        update:    - prompt 0x56217b812b40:    8319 tokens, checkpoints:  2,   274.948 MiB",
+        "0.47.239.482 I srv  get_availabl: prompt cache update took 31.05 ms",
+        "0.47.239.516 I slot launch_slot_: id  0 | task -1 | sampler chain: logits -> ?penalties -> ?dry -> ?top-n-sigma -> top-k -> ?typical -> top-p -> min-p -> ?xtc -> temp-ext -> dist ",
+        "0.47.239.521 I slot launch_slot_: id  0 | task -1 | sampler params: ",
+        "0.47.239.523 I slot launch_slot_: id  0 | task 134 | processing task, is_child = 0"
+      ],
+      "placement_check": {
+        "explicit_placement": false,
+        "fit_setting": "on",
+        "fit_attempted": true,
+        "fit_succeeded": true,
+        "fit_no_changes_needed": false,
+        "fit_intervened": true,
+        "required_reduction_mib": 5676,
+        "expert_layers_on_cpu": 14,
+        "offloaded_layers": [
+          42,
+          42
+        ],
+        "tensor_overrides_to_cpu": true
+      },
+      "status": "complete",
+      "reason": null,
+      "vram": {
+        "before_launch_mib": 2.0,
+        "total_mib": 16311.0,
+        "loaded_mib": 14934.0,
+        "after_warmup_min_free_mib": 1269.0,
+        "after_warmup_used_mib": 15042.0,
+        "peak_used_mib": 15042.0,
+        "min_free_mib": 1269.0
+      },
+      "windows": [
+        {
+          "window_id": "canary-start-57efb62a-r100-a1",
+          "repetition": 100,
+          "attempt": 1,
+          "t0_epoch": 1794213093.3436704,
+          "t1_epoch": 1794213132.4366717,
+          "n_samples": 78,
+          "thermal": {
+            "flag": null,
+            "n_samples": 78,
+            "gpu_slowdown_samples": 0,
+            "gpu_slowdown_by_reason": {
+              "reason_hw_slowdown": 0,
+              "reason_hw_thermal_slowdown": 0,
+              "reason_sw_thermal_slowdown": 0,
+              "reason_hw_power_brake_slowdown": 0
+            },
+            "tctl_ge_95_samples": 0,
+            "sw_power_cap_samples": 0,
+            "max_tctl_c": 72.875,
+            "max_gpu_temp_c": 52.0
+          },
+          "paging": {
+            "flag": "paging",
+            "major_faults": 0,
+            "server_vmswap_max_kib": 72396,
+            "server_vmswap_samples": 26,
+            "system_swap_in_pages": 42419,
+            "process_samples": 78,
+            "vmswap_samples_read": 78
+          },
+          "min_free_vram_mib": 1269.0,
+          "peak_used_mib": 15042.0,
+          "request_flags": [],
+          "flags": [
+            "paging"
+          ]
+        },
+        {
+          "window_id": "canary-start-57efb62a-r101-a1",
+          "repetition": 101,
+          "attempt": 1,
+          "t0_epoch": 1794213132.4382906,
+          "t1_epoch": 1794213173.1787944,
+          "n_samples": 82,
+          "thermal": {
+            "flag": null,
+            "n_samples": 82,
+            "gpu_slowdown_samples": 0,
+            "gpu_slowdown_by_reason": {
+              "reason_hw_slowdown": 0,
+              "reason_hw_thermal_slowdown": 0,
+              "reason_sw_thermal_slowdown": 0,
+              "reason_hw_power_brake_slowdown": 0
+            },
+            "tctl_ge_95_samples": 0,
+            "sw_power_cap_samples": 0,
+            "max_tctl_c": 71.375,
+            "max_gpu_temp_c": 54.0
+          },
+          "paging": {
+            "flag": "paging",
+            "major_faults": 158,
+            "server_vmswap_max_kib": 145436,
+            "server_vmswap_samples": 82,
+            "system_swap_in_pages": 4939,
+            "process_samples": 82,
+            "vmswap_samples_read": 82
+          },
+          "min_free_vram_mib": 1269.0,
+          "peak_used_mib": 15042.0,
+          "request_flags": [],
+          "flags": [
+            "paging"
+          ]
+        },
+        {
+          "window_id": "canary-start-57efb62a-r102-a1",
+          "repetition": 102,
+          "attempt": 1,
+          "t0_epoch": 1794213173.1806107,
+          "t1_epoch": 1794213212.3216004,
+          "n_samples": 78,
+          "thermal": {
+            "flag": null,
+            "n_samples": 78,
+            "gpu_slowdown_samples": 0,
+            "gpu_slowdown_by_reason": {
+              "reason_hw_slowdown": 0,
+              "reason_hw_thermal_slowdown": 0,
+              "reason_sw_thermal_slowdown": 0,
+              "reason_hw_power_brake_slowdown": 0
+            },
+            "tctl_ge_95_samples": 0,
+            "sw_power_cap_samples": 0,
+            "max_tctl_c": 73.5,
+            "max_gpu_temp_c": 56.0
+          },
+          "paging": {
+            "flag": "paging",
+            "major_faults": 357,
+            "server_vmswap_max_kib": 768944,
+            "server_vmswap_samples": 78,
+            "system_swap_in_pages": 1567,
+            "process_samples": 78,
+            "vmswap_samples_read": 78
+          },
+          "min_free_vram_mib": 1269.0,
+          "peak_used_mib": 15042.0,
+          "request_flags": [],
+          "flags": [
+            "paging"
+          ]
+        }
+      ],
+      "finished_utc": "2026-11-09T08:33:33Z",
+      "repetitions_done": [
+        100,
+        101,
+        102
+      ],
+      "n_requests": 11
+    }
+  ],
+  "flags": [
+    "paging"
+  ]
+}

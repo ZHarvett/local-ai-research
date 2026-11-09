@@ -1,0 +1,41 @@
+# WP9 mini-sweep: the end-to-end proof of the sweep runner. Two cells at 32K (stock, and a candidate
+# --fit with 8-bit KV), two repetitions, a canary at the start and the end (a 32K config here, to
+# keep it short; Stage 1 uses the 64K default of step plan 5.1). About 15 minutes.
+#
+#   scripts/run-sweep.sh configs/sweeps/mini.toml --allow-dirty
+#
+# Stock gets only the section 3.1 settings (context, --metrics, -lv 4). The candidate gets
+# [defaults] here, and the section 5.4 sweep defaults (-ctk/-ctv q8_0, -fa on, -np 1) from
+# ServerConfig.effective() when the argv is rendered; --port comes from configs/machine.toml.
+name = "mini"
+repetitions = 2
+shuffle_seed = 20261109
+max_restarts = 2
+expect_cells = 2
+
+[defaults]
+metrics = true
+log_verbosity = 4
+[stock_defaults]
+metrics = true
+log_verbosity = 4
+
+[axes.context]
+"32K" = { context = 32768 }
+[axes.placement]
+fit = { fit = "on" }
+
+[[cells]]
+name = "stock-{context}"
+profile = "stock"
+product = { context = ["32K"] }
+
+[[cells]]
+name = "fit-q8-{context}"
+profile = "candidate"
+product = { placement = ["fit"], context = ["32K"] }
+
+[canary]
+cell = { profile = "candidate", context = 32768, fit = "on", metrics = true, log_verbosity = 4 }
+repetitions = 3
+points = ["short", "16K"]
