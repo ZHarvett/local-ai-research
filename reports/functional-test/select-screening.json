@@ -1,0 +1,137 @@
+{
+ "mode": "screening",
+ "min_clean": 2,
+ "contexts": {
+  "32K": {
+   "rows": [
+    {
+     "cell": "fit-q8-32K",
+     "profile": "candidate",
+     "reference": false,
+     "status": "complete",
+     "n_clean": 2,
+     "n_total": 2,
+     "t_turn_400": {
+      "n": 2,
+      "mean": 8.22583134962406,
+      "min": 8.21715690309106,
+      "max": 8.23450579615706,
+      "bootstrap_ci": [
+       8.21715690309106,
+       8.23450579615706
+      ],
+      "t_ci": [
+       8.115613831975763,
+       8.336048867272359
+      ],
+      "ci": [
+       8.115613831975763,
+       8.336048867272359
+      ],
+      "ci_method": "t"
+     },
+     "t_reread": {
+      "n": 2,
+      "mean": 16.341574166666668,
+      "min": 16.214411666666667,
+      "max": 16.46873666666667,
+      "bootstrap_ci": [
+       16.214411666666667,
+       16.46873666666667
+      ],
+      "t_ci": [
+       14.725847441666659,
+       17.957300891666677
+      ],
+      "ci": [
+       14.725847441666659,
+       17.957300891666677
+      ],
+      "ci_method": "t"
+     },
+     "range": 0.01734889306599996,
+     "eligible": true,
+     "reasons": [],
+     "sanity": "not run",
+     "mtp": false,
+     "cache_mib": 0,
+     "peak_vram_mib": 15042.0,
+     "flags": []
+    },
+    {
+     "cell": "stock-32K",
+     "profile": "stock",
+     "reference": true,
+     "status": "complete",
+     "n_clean": 1,
+     "n_total": 2,
+     "t_turn_400": {
+      "n": 1,
+      "mean": 8.489369062656642,
+      "min": 8.489369062656642,
+      "max": 8.489369062656642,
+      "bootstrap_ci": null,
+      "t_ci": null,
+      "ci": null,
+      "ci_method": "unavailable (n < 2)"
+     },
+     "t_reread": {
+      "n": 1,
+      "mean": 17.551469333333333,
+      "min": 17.551469333333333,
+      "max": 17.551469333333333,
+      "bootstrap_ci": null,
+      "t_ci": null,
+      "ci": null,
+      "ci_method": "unavailable (n < 2)"
+     },
+     "range": 0.0,
+     "eligible": false,
+     "reasons": [
+      "flagged unit(s) mini-20261109:1 (paging)",
+      "n_clean 1 is below 2 (screening mode)"
+     ],
+     "sanity": "not run",
+     "mtp": false,
+     "cache_mib": 0,
+     "peak_vram_mib": 14926.0,
+     "flags": [
+      "paging"
+     ]
+    }
+   ],
+   "ranking": [
+    "fit-q8-32K"
+   ],
+   "shortlist": [
+    "fit-q8-32K"
+   ],
+   "too_close": [],
+   "stock": "stock-32K",
+   "details": {
+    "fit-q8-32K": {
+     "vram": {
+      "model_mib": 14046.34,
+      "kv_mib": 340.0,
+      "recurrent_mib": 62.81,
+      "compute_mib": 318.02,
+      "total_mib": 16311.0,
+      "loaded_mib": 14934.0,
+      "peak_used_mib": 15042.0,
+      "min_free_mib": 1269.0,
+      "other_mib": 274.8,
+      "kv_type": "q8_0",
+      "expert_layers_on_cpu": 14
+     },
+     "min_free_vram_mib": 1269.0,
+     "cache": {
+      "present": false,
+      "decode_hit_rate_pct": null,
+      "classes": [],
+      "large_batch_copies": null
+     }
+    }
+   }
+  }
+ }
+}

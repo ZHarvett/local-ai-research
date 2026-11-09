@@ -74,3 +74,81 @@ def test_t_table_edges():
 def test_empty_raises():
     with pytest.raises(ValueError):
         stats.summarize([])
+
+
+# ------------------------------------------------------------------------------ paired (WP10)
+
+
+def test_paired_difference_known_values():
+    b = {0: 9.0, 1: 11.0, 2: 11.5, 3: 12.0, 4: 12.5}
+    a = {k: v + dv for (k, v), dv in zip(b.items(), [1.0, 1.2, 0.9, 1.1, 0.8], strict=True)}
+    d = stats.paired_difference(a, b)
+    assert d["n"] == 5 and d["keys"] == [0, 1, 2, 3, 4]
+    assert d["differences"] == pytest.approx([1.0, 1.2, 0.9, 1.1, 0.8])
+    assert d["mean"] == pytest.approx(1.0)
+    # by hand: deviations 0, .2, -.1, .1, -.2 -> variance .025 -> half = 2.776 * sqrt(.025 / 5)
+    half = 2.776 * math.sqrt(0.025 / 5)
+    assert d["t_ci"] == pytest.approx([1.0 - half, 1.0 + half])
+    s = stats.summarize(d["differences"])
+    assert d["bootstrap_ci"] == s["bootstrap_ci"] and d["ci"] == s["ci"]
+    assert d["ci"] == d["t_ci"] and d["ci_method"] == "t"  # the wider of the two at n = 5
+    assert d["excludes_zero"] is True
+
+
+def test_paired_difference_matches_on_keys_not_position():
+    a = {("s", 0): 5.0, ("s", 1): 6.0, ("s", 2): 7.0}
+    b = {("s", 2): 5.0, ("s", 0): 4.0, ("s", 9): 100.0}  # only 0 and 2 are in both
+    d = stats.paired_difference(a, b)
+    assert d["n"] == 2 and d["keys"] == [("s", 0), ("s", 2)]
+    assert d["differences"] == [1.0, 2.0]
+
+
+def test_paired_difference_that_includes_zero():
+    d = stats.paired_difference([5.0, 6.0, 7.0, 8.0, 9.0], [5.5, 5.5, 7.5, 7.5, 9.5])
+    assert d["excludes_zero"] is False and d["ci"][0] < 0 < d["ci"][1]
+
+
+def test_paired_difference_small_and_empty_inputs():
+    one = stats.paired_difference({0: 2.0}, {0: 1.0})
+    assert one["n"] == 1 and one["mean"] == 1.0 and one["ci"] is None
+    assert one["excludes_zero"] is None  # no CI for n = 1: no claim either way
+    none = stats.paired_difference({0: 1.0}, {1: 1.0})
+    assert none["n"] == 0 and none["mean"] is None and none["excludes_zero"] is None
+
+
+def test_paired_difference_rejects_mismatched_inputs():
+    with pytest.raises(ValueError, match="different length"):
+        stats.paired_difference([1.0, 2.0], [1.0])
+    with pytest.raises(TypeError, match="mappings"):
+        stats.paired_difference({0: 1.0}, [1.0])
+
+
+def test_paired_ratio_is_the_geometric_mean_of_ratios():
+    r = stats.paired_ratio([2.0, 8.0, 4.0], [1.0, 2.0, 2.0])  # ratios 2, 4, 2
+    assert r["n"] == 3 and r["ratios"] == pytest.approx([2.0, 4.0, 2.0])
+    assert r["geomean"] == pytest.approx((2 * 4 * 2) ** (1 / 3))
+    lo, hi = r["ci"]
+    assert 2.0 <= lo <= r["geomean"] <= hi <= 4.0
+    assert r["ci_method"] == "bootstrap"
+    again = stats.paired_ratio([2.0, 8.0, 4.0], [1.0, 2.0, 2.0])
+    assert again["ci"] == r["ci"]  # fixed seed: reproducible
+
+
+def test_paired_ratio_of_equal_series_is_one():
+    r = stats.paired_ratio({0: 3.0, 1: 5.0}, {0: 3.0, 1: 5.0})
+    assert r["geomean"] == pytest.approx(1.0) and r["ci"] == pytest.approx([1.0, 1.0])
+
+
+def test_paired_ratio_rejects_non_positive_values_with_a_clear_error():
+    for bad in (0.0, -1.0, float("nan")):
+        with pytest.raises(ValueError, match="positive values; a has"):
+            stats.paired_ratio([1.0, bad], [1.0, 1.0])
+        with pytest.raises(ValueError, match="positive values; b has"):
+            stats.paired_ratio([1.0, 1.0], [1.0, bad])
+
+
+def test_paired_ratio_small_inputs():
+    one = stats.paired_ratio([4.0], [2.0])
+    assert one["geomean"] == pytest.approx(2.0) and one["ci"] is None
+    assert "unavailable" in one["ci_method"]
+    assert stats.paired_ratio({0: 1.0}, {1: 1.0})["n"] == 0

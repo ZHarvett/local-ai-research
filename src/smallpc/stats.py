@@ -1,14 +1,20 @@
-"""Statistics of step plan section 5.5 (WP6 subset; WP10 extends it).
+"""Statistics of step plan section 5.5.
 
 ``summarize(values)`` gives mean, n, min, max, a 95% percentile-bootstrap CI (10,000 resamples,
 fixed seed) and a 95% t-interval. With n = 5 bootstrap intervals come out too narrow, so the wider
 of the two is reported as the CI to use ("ci"); both are kept.
+
+WP10 adds the paired comparisons: ``paired_difference`` (per-repetition differences, same two
+intervals) and ``paired_ratio`` (geometric mean of per-repetition ratios, bootstrap CI), and
+``simulate_coverage``, which measures how often each interval covers the true mean on simulated
+data (see ``tests/test_stats_coverage.py`` and ``docs/decisions.md``).
 """
 
 from __future__ import annotations
 
 import math
-from collections.abc import Sequence
+from collections.abc import Mapping, Sequence
+from typing import Any
 
 import numpy as np
 
@@ -93,3 +99,182 @@ def summarize(values: Sequence[float]) -> dict:
 def ci_halfwidth(s: dict) -> float | None:
     """Half the width of the CI in a summarize() result; None if unavailable."""
     return None if s["ci"] is None else (s["ci"][1] - s["ci"][0]) / 2
+
+
+# ------------------------------------------------------------------------------ paired data
+
+
+def _paired_values(a: Any, b: Any) -> tuple[list[Any], list[float], list[float]]:
+    """Match two series on their repetition keys.
+
+    ``a`` and ``b`` are either mappings (key -> value; the keys present in both are used, in sorted
+    order) or equally long sequences (matched by position). Returns (keys, a-values, b-values).
+    """
+    if isinstance(a, Mapping) and isinstance(b, Mapping):
+        keys = sorted(set(a) & set(b), key=repr)
+        return keys, [float(a[k]) for k in keys], [float(b[k]) for k in keys]
+    if isinstance(a, Mapping) or isinstance(b, Mapping):
+        raise TypeError("pass two mappings (matched on keys) or two sequences, not one of each")
+    xa, xb = [float(v) for v in a], [float(v) for v in b]
+    if len(xa) != len(xb):
+        raise ValueError(f"unpaired sequences of different length ({len(xa)} and {len(xb)})")
+    return list(range(len(xa))), xa, xb
+
+
+def paired_difference(a: Any, b: Any) -> dict:
+    """Per-repetition differences ``a - b`` on matching repetition keys.
+
+    Returns ``n``, ``mean``, the ``keys`` and ``differences`` used, both intervals and ``ci`` (the
+    wider of the bootstrap and the t interval, as ``summarize``), and ``excludes_zero``: True or
+    False when a CI exists (n >= 2), None otherwise. With no matching key ``n`` is 0 and
+    everything else is None.
+    """
+    keys, xa, xb = _paired_values(a, b)
+    diffs = [p - q for p, q in zip(xa, xb, strict=True)]
+    if not diffs:
+        return {
+            "n": 0, "mean": None, "keys": [], "differences": [], "bootstrap_ci": None,
+            "t_ci": None, "ci": None, "ci_method": "unavailable (no matching repetitions)",
+            "excludes_zero": None,
+        }  # fmt: skip
+    s = summarize(diffs)
+    ci = s["ci"]
+    return {
+        "n": s["n"],
+        "mean": s["mean"],
+        "keys": keys,
+        "differences": diffs,
+        "bootstrap_ci": s["bootstrap_ci"],
+        "t_ci": s["t_ci"],
+        "ci": ci,
+        "ci_method": s["ci_method"],
+        "excludes_zero": None if ci is None else (ci[0] > 0 or ci[1] < 0),
+    }
+
+
+def paired_ratio(a: Any, b: Any) -> dict:
+    """Geometric mean of the per-repetition ratios ``a / b`` with a 95% percentile-bootstrap CI
+    (10,000 resamples, fixed seed) of that geometric mean. The ratios must be positive: zero or
+    negative input raises ``ValueError`` naming the offending side. The CI is None for n < 2."""
+    keys, xa, xb = _paired_values(a, b)
+    for name, vals in (("a", xa), ("b", xb)):
+        bad = [v for v in vals if not v > 0]  # also catches NaN
+        if bad:
+            raise ValueError(f"paired_ratio needs positive values; {name} has {bad[0]!r}")
+    logs = [math.log(p / q) for p, q in zip(xa, xb, strict=True)]
+    if not logs:
+        return {"n": 0, "geomean": None, "keys": [], "ratios": [], "ci": None,
+                "ci_method": "unavailable (no matching repetitions)"}  # fmt: skip
+    boot = bootstrap_ci(logs)
+    return {
+        "n": len(logs),
+        "geomean": math.exp(sum(logs) / len(logs)),
+        "keys": keys,
+        "ratios": [math.exp(v) for v in logs],
+        "ci": None if boot is None else [math.exp(boot[0]), math.exp(boot[1])],
+        "ci_method": "bootstrap" if boot is not None else "unavailable (n < 2)",
+    }
+
+
+# ------------------------------------------------------------------------- coverage simulation
+
+# name -> what it models. The skewed ones are stress cases: step-0 timing data has a spread of about
+# 1 to 2% between repetitions, where lognormal(sigma 0.02) is indistinguishable from normal.
+COVERAGE_DISTRIBUTIONS = {
+    "normal": "symmetric",
+    "lognormal-0.1": "mild right skew (skewness 0.30, CV 10%)",
+    "lognormal-0.5": "strong right skew (skewness 1.75, CV 53%)",
+    "exponential": "very strong right skew (skewness 2)",
+}
+
+
+def _draw(dist: str, rng: np.random.Generator, shape: tuple[int, int]) -> tuple[np.ndarray, float]:
+    """Samples and the true mean of the distribution."""
+    if dist == "normal":
+        return rng.normal(10.0, 1.0, size=shape), 10.0
+    if dist.startswith("lognormal-"):
+        sigma = float(dist.split("-", 1)[1])
+        return rng.lognormal(0.0, sigma, size=shape), math.exp(sigma**2 / 2)
+    if dist == "exponential":
+        return rng.exponential(1.0, size=shape), 1.0
+    raise ValueError(f"unknown distribution {dist!r}")
+
+
+def simulate_coverage(
+    n: int, dist: str, experiments: int, resamples: int = 1000, seed: int = 1, chunk: int = 250
+) -> dict:
+    """How often each 95% interval of the mean covers the true mean.
+
+    ``experiments`` independent samples of size ``n`` are drawn from ``dist``; for each, the
+    percentile-bootstrap interval (``resamples`` resamples), the t interval and the wider of the two
+    (what ``summarize`` reports) are computed with the same formulas as ``summarize``, vectorised
+    over experiments. Returns the coverage fractions and the mean widths.
+    """
+    rng = np.random.default_rng(seed)
+    hit = {"bootstrap": 0, "t": 0, "wider": 0}
+    boot_wider = 0
+    width = {"bootstrap": 0.0, "t": 0.0, "wider": 0.0}
+    done = 0
+    while done < experiments:
+        e = min(chunk, experiments - done)
+        x, truth = _draw(dist, rng, (e, n))
+        idx = rng.integers(0, n, size=(e, resamples, n))
+        means = np.take_along_axis(x[:, None, :], idx, axis=2).mean(axis=2)
+        lo_b, hi_b = np.percentile(means, [2.5, 97.5], axis=1)
+        m = x.mean(axis=1)
+        half = t_critical(n - 1) * x.std(axis=1, ddof=1) / math.sqrt(n)
+        lo_t, hi_t = m - half, m + half
+        use_t = (hi_t - lo_t) >= (hi_b - lo_b)
+        boot_wider += int((~use_t).sum())
+        lo_w, hi_w = np.where(use_t, lo_t, lo_b), np.where(use_t, hi_t, hi_b)
+        for name, lo, hi in (("bootstrap", lo_b, hi_b), ("t", lo_t, hi_t), ("wider", lo_w, hi_w)):
+            hit[name] += int(((lo <= truth) & (truth <= hi)).sum())
+            width[name] += float((hi - lo).sum())
+        done += e
+    return {
+        "n": n,
+        "distribution": dist,
+        "experiments": experiments,
+        "resamples": resamples,
+        "seed": seed,
+        "coverage": {k: v / experiments for k, v in hit.items()},
+        "mean_width": {k: v / experiments for k, v in width.items()},
+        "bootstrap_was_wider_fraction": boot_wider / experiments,
+    }
+
+
+def main(argv: list[str] | None = None) -> int:
+    """``python -m smallpc.stats coverage [--experiments N]``: the coverage table of section 5.5."""
+    import argparse
+    import json
+
+    ap = argparse.ArgumentParser(prog="python -m smallpc.stats")
+    sub = ap.add_subparsers(dest="cmd", required=True)
+    c = sub.add_parser("coverage", help="coverage of the bootstrap, t and wider intervals")
+    c.add_argument("--experiments", type=int, default=20000)
+    c.add_argument("--resamples", type=int, default=1000)
+    c.add_argument("--seed", type=int, default=1)
+    c.add_argument("--json", action="store_true")
+    a = ap.parse_args(argv)
+    rows = [
+        simulate_coverage(n, d, a.experiments, a.resamples, a.seed)
+        for d in COVERAGE_DISTRIBUTIONS
+        for n in (5, 10)
+    ]
+    if a.json:
+        print(json.dumps(rows, indent=1))
+        return 0
+    print(f"{a.experiments} experiments per row, {a.resamples} bootstrap resamples, seed {a.seed}")
+    print("| distribution | n | bootstrap | t | reported (wider) | bootstrap was wider |")
+    print("|---|---|---|---|---|---|")
+    for r in rows:
+        cv = r["coverage"]
+        print(
+            f"| {r['distribution']} | {r['n']} | {cv['bootstrap']:.1%} | {cv['t']:.1%} "
+            f"| {cv['wider']:.1%} | {r['bootstrap_was_wider_fraction']:.1%} |"
+        )
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

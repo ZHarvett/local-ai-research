@@ -540,6 +540,10 @@ index of the first divergence from the reference. A prompt **fails** if any of t
 - some 8-gram repeats 8 or more times while the reference's maximum is below 8.
 A candidate passes if none of its 3 prompts fails. The first divergence index is information only:
 different placements and KV types can legitimately diverge.
+- **Counting rule for the 8-gram repeat (made while implementing, before any real data):** occurrences
+  are counted **non-overlapping**, greedy from the left. With overlapping counts a run of 15 identical
+  tokens already contains one 8-gram 8 times and would fail the 8-gram rule, which contradicts the
+  separate "run of 16" rule. A loop of an 8-token phrase repeated 8 times still counts 8.
 
 ### 6. Mini-sweep data caveats
 `data/raw/mini-20261109` is functional-test data, never results. It was produced with `--allow-dirty`, so
@@ -551,3 +555,52 @@ relies on a cell record's `server_instance`: it uses only request records, cell 
 - Cell identity across sessions is the cell name; units are keyed by (session, cell, repetition), so
   pooling several sessions never merges two repetitions that happen to share an index.
 - Paired comparisons match on (session, repetition) keys.
+
+### Interval coverage on simulated data (WP10, `python -m smallpc.stats coverage`)
+How often each 95% interval of the mean covers the true mean. 20,000 simulated experiments per row, 1,000
+bootstrap resamples per experiment (the production interval uses 10,000; the endpoint noise from 1,000 is
+far below the coverage differences shown), seed 1. The reported interval is the wider of the bootstrap and
+the t interval, as in §5.5.
+
+| distribution | n | bootstrap | t | reported (wider) | bootstrap was wider |
+|---|---|---|---|---|---|
+| normal | 5 | 83.3% | 94.9% | 94.9% | 0.0% |
+| normal | 10 | 89.9% | 94.9% | 94.9% | 0.0% |
+| lognormal sigma 0.1 (mild right skew, skewness 0.30) | 5 | 83.2% | 94.8% | 94.8% | 0.0% |
+| lognormal sigma 0.1 | 10 | 89.9% | 94.7% | 94.7% | 0.0% |
+| lognormal sigma 0.5 (strong right skew, skewness 1.75) | 5 | 80.2% | 91.2% | 91.2% | 0.0% |
+| lognormal sigma 0.5 | 10 | 87.2% | 91.9% | 91.9% | 0.0% |
+| exponential (very strong right skew, skewness 2) | 5 | 78.5% | 88.5% | 88.5% | 0.0% |
+| exponential | 10 | 86.4% | 90.1% | 90.1% | 0.0% |
+
+What this shows, plainly:
+- **The bootstrap interval alone under-covers badly** (80 to 90%), which is why §5.5 asks for the wider one.
+- **The wider interval is always the t interval** (the bootstrap interval was wider in 0.0% of simulated
+  samples), so the reported interval covers exactly as often as the t interval. It does **not** over-cover:
+  the highest coverage is 94.9%, nowhere near 98%, so it is not conservative.
+- **The asked-for floor of 93% holds for symmetric and mildly skewed data (94.7 to 94.9%) but not for strongly
+  skewed data** (91.2% and 91.9% for lognormal sigma 0.5, 88.5% and 90.1% for exponential). The tests
+  (`tests/test_stats_coverage.py`) assert at least 93% for normal and mild skew at n = 5 and n = 10, and only a
+  regression floor of 85% for the two strong-skew stress cases, whose numbers are reported here rather than
+  hidden. The step-0 timings vary by about 1 to 2% between repetitions (the mini-sweep's canaries: coefficient
+  of variation about 0.4% for PP_fresh at 16K), where the data are indistinguishable from the symmetric case,
+  so the floor should hold for the data this project will produce (a hope, not something these 10 windows
+  prove). A heavy-tailed outcome (for example a few repetitions slowed by paging) is exactly the
+  case where the interval under-covers, which is one more reason for the flag rules to keep such repetitions
+  out of the headline numbers.
+- Paired ratios use a bootstrap CI only (plan §5.5 / the WP10 spec): at n = 5 that interval is narrow
+  (the 83% row above is the same effect), so a ratio CI at small n should be read as optimistic.
+
+### Implementation notes (WP10)
+- `analysis`: units are keyed `"<session>:<repetition>"`; a unit's drift status is looked up per attempt
+  (`drift.main` for attempt 1, `drift.rerun` for attempt 2, "not assessed" when absent). The cell's final
+  status is the worst over the sessions that have the cell; `partial` means requests without a final record.
+- `select`: stock cells are reference rows in both modes. Cells with no resolved configuration
+  (`not_applicable`) have no context and are listed in their own table in the report.
+- `report`: the results tables of a `results` report show only cells with at least 5 clean repetitions; the rest
+  go to the screening appendix. Every table carries the label banner; every cell with `n_clean` below 5 is
+  marked "not reportable (n < 5)" under every label. Figures: stock is neutral ink, at most 8 candidates take
+  the reference palette's categorical slots in order of mean T_turn_400, further cells are drawn gray as
+  "N other cells"; text stays text in the SVG (`svg.fonttype none`) so the figures are diffable.
+- `telemetry` gained `RssAnon`, `RssFile`, `RssShmem` and `pswpout` (not asked for; added because the paging
+  analysis can use it). Older CSVs load unchanged.
