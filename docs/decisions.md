@@ -703,3 +703,44 @@ without a tie-break and the "too close to call at n = 2" marking, and stock as a
   `swap_activity_mib`, and the `rss_anon/file/shmem_start_mib` and `_end_mib` figures.
 - `paging_analysis` keeps its three historical rules R0 to R2 (WP10); R0 is the v1.3 rule and is no longer equal to
   `flags.paging` (v1.4: faults only).
+
+### WP11 pre-flight findings (session `preflight-20261109`, 9 Nov 2026, functional-test data)
+Run with Zack's G3 with one Chrome tab, Mission Center and the IDE left open (the runner's idle-CPU gate passed at its first
+check for every cell: 10 s waits, busy 1 to 3 %). 10 cells, 1 repetition, 29 minutes, 90 requests, all cells `complete`, no
+flag of any kind in any window, no warning event, no `fit_changed_explicit_placement`.
+- **Placement confirmations from the logs.** P6, P7: `-cmoe --moe-cache-mib N` with `--fit` at its default: "projected to use 14638
+  MiB ... will leave 1165 >= 1024 MiB ... no changes needed" (P6 at 32K), "will leave 3214 ... no changes needed" (P7); fit left the
+  explicit placement alone. P8, P9: `--fit off --n-cpu-moe N`, fit not attempted. P3 (`--fit --moe-cache-mib 1024`): fit sizes
+  the placement around the cache, 17 expert layers on the CPU against P1's 15, 1,251 MiB free (the cache coexists with fit). P1
+  (`--fit`): 15 layers on the CPU at 32K, 16 at 32K with `-b 4096`, 18 at 128K.
+- **Max-fit is bound by fit's 1,024 MiB margin, not by the 512 MiB floor of §5.4.** Probe steps at 13,056, 12,800 and 12,544 MiB
+  (32K) and 11,520, 11,264 and 11,008 MiB (128K) were rejected as `fit_intervened` although the free VRAM after the longest
+  request would have been 589 to 1,101 MiB (at least 512): with `--fit` at its default fit shrinks the placement whenever its
+  projection leaves less than 1,024 MiB. The WP9 rule (a fit intervention fails a probing step, so max-fit is never found with fit
+  moving things) is working as decided; the consequence is that P6/P7 cache sizes are about 512 to 768 MiB smaller than a pure
+  512 MiB rule would give (found 12,288 MiB at 32K, 10,752 MiB at 128K, leaving 1,355 and 1,361 MiB free). The plan is not changed;
+  whether P6/P7 should instead set `--fit off` or a lower `--fit-target` is Zack's decision.
+- **P7 = max_fit - 2048:** 12,288 - 2,048 = 10,240 MiB at 32K (reported 10,237 by the server). P6 at 32K reused the probe
+  (cache hit, 0 steps).
+- **N_fit from P1's log** (`expert_layers_on_cpu`, partial layer counted whole; overflow type GATE): 15 at 32K and 18 at 128K; P8
+  `--n-cpu-moe` 15 and 18, P9 13. P8 uses less VRAM than P1, as §N_fit says it should: peak 14,246 against 14,962 MiB (32K) and
+  14,420 against 15,006 MiB (128K); P9 uses more: 15,176 MiB peak, 1,135 MiB free.
+- **`-b 4096 -ub 4096` (P1-32K-b4096):** the server starts and the log reads `n_batch = 4096, n_ubatch = 4096` (the runner's saved
+  /props has only context and slot fields; the log and argv are the evidence). CUDA0 compute buffer 1,104.2 MiB against 642.1 MiB at
+  b2048 (host 384.2 against 192.1), minimum free VRAM 1,349 MiB, one more expert layer on the CPU (16 against 15). No flags.
+- **Prefill depends strongly on `-ub`:** PP_fresh at 16K 1,015 tok/s (mini-sweep, `-ub 512`), 2,316 (`-ub 2048`), 2,862 (`-ub 4096`);
+  decode unchanged. The plan's Stage 1 time estimate (from the live check at `-ub 512`) is about twice too high; see the runbook.
+- **Swap and RSS:** `swap_activity_mib` 0.0 and VmSwap 0 in all 10 windows; 0 major faults. RssAnon grows by 1.2 to 2.8 GiB during a
+  window (1.2 to 4.0 GiB at 128K), RssFile 19,986 MiB for `-cmoe` and `--fit` cells and 7,829 (P8) / 6,851 (P9) / 9,258 (128K P8)
+  MiB for explicit `--n-cpu-moe`, RssShmem 277 MiB (469 at b4096, 661 at 128K).
+- **Report fix:** the VRAM breakdown showed the expert cache (10 to 12 GiB for P6/P7) as "other"; it is now its own part
+  (`expert_cache_mib`, from the server's reported cache size) and "other" is about 300 MiB (CUDA context).
+- **Re-run mode on real hardware** (copy `data/raw/rerun-test-20261109` of the mini-sweep): `--rerun-flagged` re-ran exactly
+  stock-32K repetition 1 as attempt 2 (7 requests, warm-up, no flags) plus its own start and end canaries (indices 110 to 115,
+  drift: no flag); the first 61 lines of `records.jsonl` are byte-identical before and after, and a second identical command
+  planned nothing and left `records.jsonl` unchanged. On a copy the new records carry the copy's session id
+  (`rerun-test-20261109`) while `session.json` and the old records still say `mini-20261109`; the runner and the analysis cope with that
+  (the analysis uses the session id of `session.json`), so no change was needed.
+- **Probe cache:** `data/probes/cache.jsonl` now holds the pre-flight's two max-fit probes (32K and 128K, b2048). A real session
+  with the same configuration, llama.cpp commit, model and GPU reuses them (recorded as `probe_cache`, `cached_from`). Committed
+  with the pre-flight data so that the tree is clean.

@@ -1,0 +1,14 @@
+{
+  "session_id": "preflight-20261109",
+  "state": "complete",
+  "phase": "done",
+  "cells_total": 10,
+  "cells_done": 9,
+  "started_utc": "2026-11-09T12:55:24Z",
+  "updated_utc": "2026-11-09T13:24:21Z",
+  "cell": "P8-128K-b2048",
+  "repetition": 0,
+  "depth": 98304,
+  "kind": "B",
+  "probe": "max_fit=10752"
+}

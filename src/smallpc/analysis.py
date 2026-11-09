@@ -331,7 +331,17 @@ def _vram_parts(instance: dict) -> dict:
         "peak_used_mib": vram.get("peak_used_mib"),
         "min_free_mib": vram.get("min_free_mib"),
     }
-    known = parts["model_mib"] + parts["kv_mib"] + parts["recurrent_mib"] + parts["compute_mib"]
+    # the expert cache (--moe-cache-mib) lives in VRAM but is not a llama.cpp buffer in the load log
+    mc = (instance.get("parsed") or {}).get("moe_cache") or {}
+    cache = ((mc.get("config") or {}).get("cache_mib")) if mc.get("present") else None
+    parts["expert_cache_mib"] = float(cache) if cache else 0.0
+    known = (
+        parts["model_mib"]
+        + parts["kv_mib"]
+        + parts["recurrent_mib"]
+        + parts["compute_mib"]
+        + parts["expert_cache_mib"]
+    )
     parts["other_mib"] = (
         None if parts["peak_used_mib"] is None else round(parts["peak_used_mib"] - known, 1)
     )

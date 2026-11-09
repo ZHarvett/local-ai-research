@@ -72,8 +72,9 @@ def check_spec(path: Path, root: Path | None = None, only: dict[str, str] | None
         "first_in_order": [c.name for c in order[:5]],
         "estimate": {
             "basis": "WP8 live-check request times, planning overhead 60 s per cell, 3 probe "
-            "steps per (context, batch) group with a @max_fit cell; updated by measured "
-            "pre-flight figures in docs/runbook-stage1.md",
+            "steps per (context, batch) group with a @max_fit cell; the WP11 pre-flight "
+            "measured about half of this for candidate cells (they run -ub 2048 or 4096, not "
+            "the live check's 512): see docs/runbook-stage1.md section 6",
             "cells_h": round(est["cells_s"] / 3600, 2),
             "probing_h": round(est["probing_s"] / 3600, 2),
             "canaries_h": round(est["canaries_s"] / 3600, 2),

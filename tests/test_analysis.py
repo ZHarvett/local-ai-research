@@ -253,3 +253,24 @@ def test_incomplete_batches_are_ignored_via_store(tmp_path):
     res = analysis.analyse([d])
     assert res["cells"]["c-32K"]["n_total"] == 5
     assert analysis.load_session(d).incomplete_batches == 1
+
+
+def test_expert_cache_is_its_own_vram_part_and_not_in_other(tmp_path):
+    d = build_session(
+        tmp_path,
+        "c",
+        [
+            CellSpec("P4-32K-b2048", cache_mib=2048, cache_hit_rate=0.6, placement="P4"),
+            CellSpec("P1-32K-b2048", placement="P1"),
+        ],
+        canary=False,
+    )
+    res = analysis.analyse([d])
+    with_cache, without = res["cells"]["P4-32K-b2048"]["vram"], res["cells"]["P1-32K-b2048"]["vram"]
+    assert with_cache["expert_cache_mib"] == 2048.0 and without["expert_cache_mib"] == 0.0
+    # peak used = the listed parts + other, with the cache no longer hidden in "other"
+    for v in (with_cache, without):
+        listed = sum(v[k] for k in ("model_mib", "kv_mib", "recurrent_mib", "compute_mib",
+                                    "expert_cache_mib"))  # fmt: skip
+        assert v["peak_used_mib"] == pytest.approx(listed + v["other_mib"], abs=0.1)
+    assert with_cache["other_mib"] == pytest.approx(without["other_mib"] - 2048.0, abs=0.1)

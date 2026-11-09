@@ -122,8 +122,8 @@ Ranking by mean T_turn_400: `MTP-32K` < `P1-32K-b2048` < `P2-32K-b2048` < `rerun
 
 - `P1-32K-b2048` and `P2-32K-b2048`: too close to call at n = 2 (means differ by 0.024 s, larger range 0.024 s).
 
-- `MTP-32K`: VRAM model 13500, KV 340, recurrent 63, compute 318, other 890.2 MiB; minimum free 1200.0 MiB; expert-cache decode-batch hit rate -.
-- `P1-32K-b2048`: VRAM model 13500, KV 340, recurrent 63, compute 318, other 890.2 MiB; minimum free 1200.0 MiB; expert-cache decode-batch hit rate -.
+- `MTP-32K`: VRAM model 13500, KV 340, recurrent 63, compute 318, expert cache 0, other 890.2 MiB; minimum free 1200.0 MiB; expert-cache decode-batch hit rate -.
+- `P1-32K-b2048`: VRAM model 13500, KV 340, recurrent 63, compute 318, expert cache 0, other 890.2 MiB; minimum free 1200.0 MiB; expert-cache decode-batch hit rate -.
 
 ### 64K
 
@@ -136,7 +136,7 @@ Ranking by mean T_turn_400: `MTP-32K` < `P1-32K-b2048` < `P2-32K-b2048` < `rerun
 
 **Shortlist (64K):** `P1-64K-b2048` (only 1 eligible cell). Reference: `stock-64K` (never shortlisted).
 
-- `P1-64K-b2048`: VRAM model 13500, KV 340, recurrent 63, compute 318, other 890.2 MiB; minimum free 1200.0 MiB; expert-cache decode-batch hit rate -.
+- `P1-64K-b2048`: VRAM model 13500, KV 340, recurrent 63, compute 318, expert cache 0, other 890.2 MiB; minimum free 1200.0 MiB; expert-cache decode-batch hit rate -.
 
 ## Paired comparisons with stock
 
@@ -234,29 +234,29 @@ Swap activity not available for 56 unit(s) (not in the summary and not derivable
 
 > FUNCTIONAL-TEST DATA. Produced to test the tooling. Not a result of this study; do not quote these numbers.
 
-| cell | model | KV | recurrent state | compute buffers | other | peak used | min free (final windows) | expert layers on CPU |
-|---|---|---|---|---|---|---|---|---|
-| stock-32K | 13,400 | 340 (f16) | 63 | 318 | 990 | 15,111 | 1,200 | 14 |
-| MTP-32K | 13,500 | 340 (q8_0) | 63 | 318 | 890 | 15,111 | 1,200 | 14 |
-| P1-32K-b2048 | 13,500 | 340 (q8_0) | 63 | 318 | 890 | 15,111 | 1,200 | 14 |
-| P2-32K-b2048 | 13,500 | 340 (q8_0) | 63 | 318 | 1,390 | 15,611 | 700 | 14 |
-| rerun-ok-32K | 13,500 | 340 (q8_0) | 63 | 318 | 890 | 15,111 | 1,200 | 14 |
-| rerun-bad-32K | 13,500 | 340 (q8_0) | 63 | 318 | 890 | 15,111 | 1,200 | 14 |
-| shortgen-32K | 13,500 | 340 (q8_0) | 63 | 318 | 890 | 15,111 | 1,200 | 14 |
-| P4-32K-b2048 | 13,000 | 340 (q8_0) | 63 | 318 | 1,390 | 15,111 | 1,200 | 14 |
-| swap-32K-b2048 | 13,500 | 340 (q8_0) | 63 | 318 | 890 | 15,111 | 1,200 | 14 |
-| drift-32K | 13,500 | 340 (q8_0) | 63 | 318 | 890 | 15,111 | 1,200 | 14 |
+| cell | model | KV | recurrent state | compute buffers | expert cache | other | peak used | min free (final windows) | expert layers on CPU |
+|---|---|---|---|---|---|---|---|---|---|
+| stock-32K | 13,400 | 340 (f16) | 63 | 318 | 0 | 990 | 15,111 | 1,200 | 14 |
+| MTP-32K | 13,500 | 340 (q8_0) | 63 | 318 | 0 | 890 | 15,111 | 1,200 | 14 |
+| P1-32K-b2048 | 13,500 | 340 (q8_0) | 63 | 318 | 0 | 890 | 15,111 | 1,200 | 14 |
+| P2-32K-b2048 | 13,500 | 340 (q8_0) | 63 | 318 | 0 | 1,390 | 15,611 | 700 | 14 |
+| rerun-ok-32K | 13,500 | 340 (q8_0) | 63 | 318 | 0 | 890 | 15,111 | 1,200 | 14 |
+| rerun-bad-32K | 13,500 | 340 (q8_0) | 63 | 318 | 0 | 890 | 15,111 | 1,200 | 14 |
+| shortgen-32K | 13,500 | 340 (q8_0) | 63 | 318 | 0 | 890 | 15,111 | 1,200 | 14 |
+| P4-32K-b2048 | 13,000 | 340 (q8_0) | 63 | 318 | 2,048 | -658 | 15,111 | 1,200 | 14 |
+| swap-32K-b2048 | 13,500 | 340 (q8_0) | 63 | 318 | 0 | 890 | 15,111 | 1,200 | 14 |
+| drift-32K | 13,500 | 340 (q8_0) | 63 | 318 | 0 | 890 | 15,111 | 1,200 | 14 |
 
 ### 64K
 
 > FUNCTIONAL-TEST DATA. Produced to test the tooling. Not a result of this study; do not quote these numbers.
 
-| cell | model | KV | recurrent state | compute buffers | other | peak used | min free (final windows) | expert layers on CPU |
-|---|---|---|---|---|---|---|---|---|
-| stock-64K | 13,500 | 340 (f16) | 63 | 318 | 890 | 15,111 | 1,200 | 14 |
-| P1-64K-b2048 | 13,500 | 340 (q8_0) | 63 | 318 | 890 | 15,111 | 1,200 | 14 |
+| cell | model | KV | recurrent state | compute buffers | expert cache | other | peak used | min free (final windows) | expert layers on CPU |
+|---|---|---|---|---|---|---|---|---|---|
+| stock-64K | 13,500 | 340 (f16) | 63 | 318 | 0 | 890 | 15,111 | 1,200 | 14 |
+| P1-64K-b2048 | 13,500 | 340 (q8_0) | 63 | 318 | 0 | 890 | 15,111 | 1,200 | 14 |
 
-MiB, from each cell summary's parsed placement (buffers on the GPU) and its windows. 'other' is peak used minus the listed buffers (CUDA context, graphs, allocator slack).
+MiB, from each cell summary's parsed placement (buffers on the GPU) and its windows. 'expert cache' is the `--moe-cache-mib` size the server reports; 'other' is peak used minus the listed parts (CUDA context, graphs, allocator slack).
 
 ## Expert cache
 

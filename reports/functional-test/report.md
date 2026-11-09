@@ -61,7 +61,7 @@ Mode **screening**: a cell needs at least 2 clean repetitions, a complete status
 
 **Shortlist (32K):** `fit-q8-32K` (only 1 eligible cell). Reference: `stock-32K` (never shortlisted).
 
-- `fit-q8-32K`: VRAM model 14046, KV 340, recurrent 63, compute 318, other 274.8 MiB; minimum free 1269.0 MiB; expert-cache decode-batch hit rate -.
+- `fit-q8-32K`: VRAM model 14046, KV 340, recurrent 63, compute 318, expert cache 0, other 274.8 MiB; minimum free 1269.0 MiB; expert-cache decode-batch hit rate -.
 
 ## Paired comparisons with stock
 
@@ -108,12 +108,12 @@ No unit was removed, so no comparison changed.
 
 > FUNCTIONAL-TEST DATA. Produced to test the tooling. Not a result of this study; do not quote these numbers.
 
-| cell | model | KV | recurrent state | compute buffers | other | peak used | min free (final windows) | expert layers on CPU |
-|---|---|---|---|---|---|---|---|---|
-| stock-32K | 13,468 | 640 (f16) | 251 | 299 | 268 | 14,926 | 1,385 | 15 |
-| fit-q8-32K | 14,046 | 340 (q8_0) | 63 | 318 | 275 | 15,042 | 1,269 | 14 |
+| cell | model | KV | recurrent state | compute buffers | expert cache | other | peak used | min free (final windows) | expert layers on CPU |
+|---|---|---|---|---|---|---|---|---|---|
+| stock-32K | 13,468 | 640 (f16) | 251 | 299 | 0 | 268 | 14,926 | 1,385 | 15 |
+| fit-q8-32K | 14,046 | 340 (q8_0) | 63 | 318 | 0 | 275 | 15,042 | 1,269 | 14 |
 
-MiB, from each cell summary's parsed placement (buffers on the GPU) and its windows. 'other' is peak used minus the listed buffers (CUDA context, graphs, allocator slack).
+MiB, from each cell summary's parsed placement (buffers on the GPU) and its windows. 'expert cache' is the `--moe-cache-mib` size the server reports; 'other' is peak used minus the listed parts (CUDA context, graphs, allocator slack).
 
 ## Expert cache
 

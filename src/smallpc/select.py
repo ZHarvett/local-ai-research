@@ -394,6 +394,7 @@ def render_markdown(result: dict, label: str | None = None) -> str:
                 f"- `{name}`: VRAM model {v.get('model_mib', 0):.0f}, KV {v.get('kv_mib', 0):.0f}, "
                 f"recurrent {v.get('recurrent_mib', 0):.0f}, "
                 f"compute {v.get('compute_mib', 0):.0f}, "
+                f"expert cache {v.get('expert_cache_mib', 0):.0f}, "
                 f"other {'-' if other is None else other} MiB; "
                 f"minimum free {d['min_free_vram_mib']} MiB; expert-cache decode-batch hit rate "
                 f"{'-' if hit is None else f'{hit:.1f}%'}."

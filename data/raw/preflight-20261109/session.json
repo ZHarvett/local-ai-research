@@ -1,0 +1,65 @@
+{
+  "schema": 1,
+  "session_id": "preflight-20261109",
+  "created_utc": "2026-11-09T12:55:24Z",
+  "spec": {
+    "name": "preflight",
+    "path": "configs/sweeps/preflight.toml"
+  },
+  "spec_sha256": "65093de82110822f7d35ea336a6fb5bfc00d7fa18647e96c528b231f41fe8ff2",
+  "manifest_sha256": "ed750c1c73355d08d3f76742eb164721ebdfe7206ce2a7fcad89fd3bd5e9f27e",
+  "sampling_sha256": "09b6a27e5b086b3891ff66e0dd64f25deb12530e505cc69e4153c95716ee6743",
+  "git": {
+    "commit": "c1d080a482bb90cd1093002c820dd30277f3d6a0",
+    "short": "c1d080a482",
+    "dirty": false,
+    "dirty_paths": []
+  },
+  "filters": {},
+  "model_sha256": "42739874cc2ccfdb8523b23fbe52e29b2a7555c8176737ca9ca0b5d59859d41f",
+  "llama_cpp_commit": "57d04820dfef7a3519aac276d018a6fd71251895",
+  "allow_dirty": false,
+  "model": {
+    "sha256": "42739874cc2ccfdb8523b23fbe52e29b2a7555c8176737ca9ca0b5d59859d41f",
+    "verified": true,
+    "declared": "42739874cc2ccfdb8523b23fbe52e29b2a7555c8176737ca9ca0b5d59859d41f",
+    "size_bytes": 21713463040
+  },
+  "shuffle_seed": 20261109,
+  "cell_order": [
+    "P1-32K-b4096",
+    "P7-32K-b2048",
+    "P6-32K-b2048",
+    "P1-32K-b2048",
+    "P8-32K-b2048",
+    "P9-32K-b2048",
+    "P3-32K-b2048",
+    "P6-128K-b2048",
+    "P1-128K-b2048",
+    "P8-128K-b2048"
+  ],
+  "cell_order_rule": "seeded shuffle respecting @n_fit dependencies (smallpc.sweep.spec.order_cells), not spec order",
+  "repetitions": 1,
+  "state": "complete",
+  "runs": [
+    {
+      "start_utc": "2026-11-09T12:55:24Z",
+      "pid": 323747,
+      "mode": "run",
+      "code_commit": "c1d080a482",
+      "inhibit": {
+        "checked": true,
+        "active": true,
+        "tag": "smallpc-sweep-preflight-20261109-1794228924",
+        "line": "local-ai-research sweep 1000 <user> 323734 systemd-inhibit sleep:idle smallpc-sweep-preflight-20261109-1794228924 block"
+      }
+    }
+  ],
+  "inhibit": {
+    "checked": true,
+    "active": true,
+    "tag": "smallpc-sweep-preflight-20261109-1794228924",
+    "line": "local-ai-research sweep 1000 <user> 323734 systemd-inhibit sleep:idle smallpc-sweep-preflight-20261109-1794228924 block"
+  },
+  "finished_utc": "2026-11-09T13:24:21Z"
+}

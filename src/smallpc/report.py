@@ -44,6 +44,7 @@ VRAM_PARTS = [
     ("kv_mib", "KV cache", SERIES[1]),
     ("recurrent_mib", "recurrent state", SERIES[2]),
     ("compute_mib", "compute buffers", SERIES[3]),
+    ("expert_cache_mib", "expert cache", SERIES[4]),
     ("other_mib", "other (CUDA context, ...)", SERIES[6]),
 ]
 
@@ -810,6 +811,7 @@ def render_report(
                     f"{v['kv_mib']:,.0f} ({v['kv_type'] or '-'})",
                     f"{v['recurrent_mib']:,.0f}",
                     f"{v['compute_mib']:,.0f}",
+                    f"{v['expert_cache_mib']:,.0f}",
                     "-" if v["other_mib"] is None else f"{v['other_mib']:,.0f}",
                     "-" if v["peak_used_mib"] is None else f"{v['peak_used_mib']:,.0f}",
                     "-" if c["min_free_vram_mib"] is None else f"{c['min_free_vram_mib']:,.0f}",
@@ -822,13 +824,15 @@ def render_report(
         A("")
         L += _table(
             ban,
-            ["cell", "model", "KV", "recurrent state", "compute buffers", "other", "peak used",
+            ["cell", "model", "KV", "recurrent state", "compute buffers", "expert cache", "other",
+             "peak used",
              "min free (final windows)", "expert layers on CPU"],
             vrows,
         )  # fmt: skip
     A(
         "MiB, from each cell summary's parsed placement (buffers on the GPU) and its windows. "
-        "'other' is peak used minus the listed buffers (CUDA context, graphs, allocator slack)."
+        "'expert cache' is the `--moe-cache-mib` size the server reports; 'other' is peak used "
+        "minus the listed parts (CUDA context, graphs, allocator slack)."
     )
     A("")
     # ------------------------------------------------------------------ expert cache

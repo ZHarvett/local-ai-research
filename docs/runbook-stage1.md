@@ -27,9 +27,9 @@ Run them in this order, one at a time. Each session starts, prints a session id 
 
 | session | command | session id | expected duration |
 |---|---|---|---|
-| 32K  | `scripts/run-sweep.sh configs/sweeps/stage1.toml --only context=32K  --session-id stage1-32K`  | `stage1-32K`  | about 1.5 h (plan estimate) |
-| 64K  | `scripts/run-sweep.sh configs/sweeps/stage1.toml --only context=64K  --session-id stage1-64K`  | `stage1-64K`  | about 2.3 h (plan estimate) |
-| 128K | `scripts/run-sweep.sh configs/sweeps/stage1.toml --only context=128K --session-id stage1-128K` | `stage1-128K` | about 4 h (plan estimate) |
+| 32K  | `scripts/run-sweep.sh configs/sweeps/stage1.toml --only context=32K  --session-id stage1-32K`  | `stage1-32K`  | about 0.9 h (0.85 to 1.0) |
+| 64K  | `scripts/run-sweep.sh configs/sweeps/stage1.toml --only context=64K  --session-id stage1-64K`  | `stage1-64K`  | about 1.3 h (1.3 to 1.5) |
+| 128K | `scripts/run-sweep.sh configs/sweeps/stage1.toml --only context=128K --session-id stage1-128K` | `stage1-128K` | about 2.2 h (2.2 to 2.6) |
 
 Do not start the next session until the previous one says `state=complete` (the GPU lock allows only one anyway).
 
@@ -69,8 +69,36 @@ Do **not** delete or edit anything, and do not start a different session.
 7. If it refuses with a provenance error (spec, workload manifest or sampling settings changed since the session started): do not work around it; stop and ask Claude.
 8. When it is `state=complete`, tell Claude. Resumes are normal and are recorded in `session.json`.
 
-## 6. Expected duration
-Plan v1.4 §5.4 estimate: 32K about 1.5 h, 64K about 2.3 h, 128K about 4.2 h (6.7 h for all 57 cells, 7.8 h if the CPU-expert
-placements P6 to P9 run 1.5 times slower, 8.3 h with cold loads; probing adds about 24 minutes, 49 at worst; two canaries
-of about 5 minutes each per session). `python -m smallpc.sweep check configs/sweeps/stage1.toml --only context=32K`
-prints the same arithmetic. The pre-flight measurements will replace these figures.
+## 6. Expected duration (measured by the pre-flight of 9 Nov 2026)
+The plan (§5.4) estimated 32K 1.5 h, 64K 2.3 h, 128K 4.2 h. The pre-flight (10 cells, 1 repetition, 29 minutes, no flags) ran at
+**40 to 53 % of the plan's per-cell estimate**, because the estimate used the WP8 live check with the default `-ub 512`, while
+every Stage 1 candidate runs `-b/-ub` 2048 or 4096: PP_fresh at 16K was 1,015 tok/s (mini-sweep, `-ub 512`), **2,316 tok/s at 2048
+and 2,862 tok/s at 4096**; decode speed was unchanged (about 78 to 80 tok/s). Stock cells and the canary keep `-ub 512` and run at the old speed.
+
+Measured per cell (seconds, one repetition = the "measure" phase; the rest of a cell is about 14 s fixed (10 s idle check, launch, stop)
+plus 9 to 15 s warm-up):
+
+| context | P1 | P3 | P6 | P7 | P8 | P9 | P1 at b4096 |
+|---|---|---|---|---|---|---|---|
+| 32K  | 47.4 | 52.3 | 50.9 | 56.0 | 51.0 | 46.6 | 41.9 |
+| 128K | 148.7 | - | 165.8 | - | 159.3 | - | - |
+
+Relative to P1: caches P3 to P5 +10 %, P6 +9 %, P7 +18 %, P8 +7 %, P9 -2 %, b4096 -12 % (one measurement). 64K was not run; it is scaled with
+the same ratio to the live-check figures (52 %). Max-fit probing for P6 and P7 took 5 steps each: 27 s per step at 32K and 103 s per step
+at 128K (about 52 s at 64K, interpolated), so one probe sequence costs 2.3 min at 32K and 8.6 min at 128K; Stage 1 needs one per
+(context, batch) group, two per session. P8 and P9 need no probing (N_fit is read from P1's log). Canary: 3 min per end (mini-sweep, 181 to 188 s), two per session.
+
+| session | cells (2 repetitions) | probing | canaries | **expected total** | upper bound |
+|---|---|---|---|---|---|
+| 32K  | 0.67 h | 4.5 min | 6.5 min | **0.85 h** | 0.97 h |
+| 64K  | 1.02 h | 8.7 min | 6.5 min | **1.28 h** | 1.48 h |
+| 128K | 1.79 h | 17.1 min | 6.5 min | **2.18 h** | 2.57 h |
+| all three | | | | **4.3 h** | 5.0 h |
+
+Per cell: 14 s + warm-up 12.5 s + 2 x repetition (P1 at b2048 as in the table, other placements by the ratios above, b4096 cells at 0.88,
+stock at 0.96 x the live-check repetition, about 87 s at 32K). Upper bound: b4096 no faster, CPU-expert cells (P6 to P9) 25 % slower, 7 probe steps.
+Allow extra time for a cold model load (12 s for the first cell of the pre-flight instead of 1 to 3 s) and for idle-CPU waits; a re-run of flagged
+repetitions is extra. These are measured from one repetition per cell, so they are good to perhaps 15 %.
+
+Note on probing: the pre-flight left two max-fit probes in `data/probes/cache.jsonl` (32K and 128K, batch b2048). The real sessions reuse them
+(the session records `probe_cache` and `cached_from: preflight-20261109`), which saves about 11 minutes. The 64K contexts and all `b4096` cells are probed fresh.

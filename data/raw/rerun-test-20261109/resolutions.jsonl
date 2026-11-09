@@ -1,0 +1,2 @@
+{"cell": "stock-32K", "fields": {"metrics": true, "log_verbosity": 4, "context": 32768}, "resolution": {}, "not_applicable": null, "utc": "2026-11-09T08:33:33Z"}
+{"cell": "fit-q8-32K", "fields": {"metrics": true, "log_verbosity": 4, "fit": "on", "context": 32768}, "resolution": {}, "not_applicable": null, "utc": "2026-11-09T08:37:01Z"}
