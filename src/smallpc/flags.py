@@ -64,24 +64,29 @@ def thermal(samples: Sequence[dict]) -> dict:
     }
 
 
-def paging(samples: Sequence[dict], swap_in_tolerance_pages: int = 0) -> dict:
-    """More than 1,000 major faults of llama-server, or any swap-in (``pswpin``), in the window.
+def paging(samples: Sequence[dict]) -> dict:
+    """Plan v1.3 (section 5.6): more than 1,000 major page faults of llama-server in the window, or
+    llama-server ``VmSwap`` above zero at any sample in the window.
 
-    ``majflt`` is the cumulative per-process counter and ``pswpin`` the cumulative system counter,
-    so the window's value is last minus first. Samples without the process (None) are skipped.
-    The plan says "any swap-in", so the tolerance defaults to 0. ``pswpin`` is system-wide, so
-    background swap-in (WP6 saw ~20 pages in 5 s on an idle machine) counts too; WP9 can pass a
-    tolerance if that proves noisy, and the raw counts are always returned.
+    ``majflt`` is llama-server's cumulative counter (``/proc/<pid>/stat``), so the window's value is
+    last minus first; ``server_vmswap_kib`` is ``VmSwap`` from ``/proc/<pid>/status``. The
+    system-wide ``pswpin`` is returned (last minus first) but never flags: zram swaps a few pages
+    per second even on an idle machine. Samples without the process (None) are skipped.
     """
     maj = [s["majflt"] for s in samples if s.get("majflt") is not None]
     swp = [s["pswpin"] for s in samples if s.get("pswpin") is not None]
+    vms = [s["server_vmswap_kib"] for s in samples if s.get("server_vmswap_kib") is not None]
     d_maj = (maj[-1] - maj[0]) if len(maj) >= 2 else 0
     d_swp = (swp[-1] - swp[0]) if len(swp) >= 2 else 0
+    max_vmswap = max(vms, default=0)
     return {
-        "flag": "paging" if d_maj > MAJFLT_LIMIT or d_swp > swap_in_tolerance_pages else None,
+        "flag": "paging" if d_maj > MAJFLT_LIMIT or max_vmswap > 0 else None,
         "major_faults": d_maj,
-        "swap_in_pages": d_swp,
+        "server_vmswap_max_kib": max_vmswap,
+        "server_vmswap_samples": sum(1 for v in vms if v > 0),
+        "system_swap_in_pages": d_swp,  # recorded, not flagged
         "process_samples": len(maj),
+        "vmswap_samples_read": len(vms),
     }
 
 
@@ -120,16 +125,39 @@ def short_gen(rec: dict) -> bool:
     return (rec.get("predicted_n") or 0) < SHORT_GEN_TOKENS
 
 
-def request_flags(kind: str, rec: dict, depth: int | None = None) -> list[str]:
-    """Flags of one request record. ``kind`` is "A" (fresh, n_predict 0) or "B" (append)."""
+def accounting(rec: dict, expected_total: int) -> bool:
+    """``prompt_n + cache_n`` differs from the expected total: d for Request A, d + 3,000 for
+    Request B, the prompt length for any other fresh request. A record without the counts (None)
+    cannot be verified and is flagged too."""
+    p, c = rec.get("prompt_n"), rec.get("cache_n")
+    return p is None or c is None or p + c != expected_total
+
+
+_EXPECTED_KEY = {"A": "A", "B": "B", "fresh": "request"}
+
+
+def request_flags(
+    kind: str, rec: dict, depth: int | None = None, expected: dict | None = None
+) -> list[str]:
+    """Flags of one request record.
+
+    ``kind``: "A" (Request A), "B" (Request B) or "fresh" (the short point, a warm-up or a canary
+    request: a fresh prompt with no pair). ``expected`` is ``Workload.expected`` from
+    ``smallpc.workloads``; with it the ``accounting`` flag is checked against
+    ``expected["processed_plus_cached"]``.
+    """
     out = []
-    if kind == "A" and warm_prefill(rec):
+    if kind in ("A", "fresh") and warm_prefill(rec):
         out.append("warm_prefill")
     if kind == "B":
         if depth is not None and cache_miss(rec, depth):
             out.append("cache_miss")
         if short_gen(rec):
             out.append("short_gen")
+    if expected is not None:
+        total = expected["processed_plus_cached"][_EXPECTED_KEY[kind]]
+        if accounting(rec, total):
+            out.append("accounting")
     return out
 
 

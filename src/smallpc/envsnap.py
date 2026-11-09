@@ -26,8 +26,10 @@ import platform
 import re
 import subprocess
 import sys
+import time
 import tomllib
 import xml.etree.ElementTree as ET
+from collections.abc import Callable
 from pathlib import Path
 
 from .config import repo_root
@@ -35,7 +37,13 @@ from .scrub import Identity, scrub_json
 
 U = "unavailable"
 GIB_KIB = 1024 * 1024
-MEM_WARN_GIB, MEM_ABORT_GIB, LOAD_MAX = 24, 20, 1.5
+MEM_WARN_GIB, MEM_ABORT_GIB = 24, 20
+# Idle check (plan v1.3, section 5.3 step 1): CPU busy time below 10% averaged over 10 s, read
+# from /proc/stat. Re-checked every 10 s for up to 10 minutes; the 1-minute load average is
+# recorded only.
+IDLE_BUSY_MAX_PCT = 10.0
+IDLE_WINDOW_S = 10.0
+IDLE_MAX_WAIT_S = 600.0
 VENDORS = {"0x1002": "AMD (amdgpu)", "0x10de": "NVIDIA", "0x8086": "Intel"}
 
 
@@ -440,6 +448,100 @@ def snapshot(root: Path | None = None, gpu_index: int = 0, scrub: bool = True) -
     return scrub_json(snap, Identity.current()) if scrub else snap
 
 
+# ------------------------------------------------------------------------------ idle check
+
+
+def parse_cpu_times(text: str) -> tuple[int, int] | None:
+    """(busy, total) jiffies from the aggregate ``cpu`` line of /proc/stat, or None.
+
+    Fields: user nice system idle iowait irq softirq steal [guest guest_nice]. ``guest`` and
+    ``guest_nice`` are already inside user and nice, so only the first eight count. Idle time is
+    ``idle + iowait``; everything else is busy.
+    """
+    for line in text.splitlines():
+        parts = line.split()
+        if parts and parts[0] == "cpu":
+            try:
+                f = [int(x) for x in parts[1:9]]
+            except ValueError:
+                return None
+            if len(f) < 4:
+                return None
+            f += [0] * (8 - len(f))  # old kernels print fewer columns
+            total = sum(f)
+            return total - (f[3] + f[4]), total
+    return None
+
+
+def loadavg_1m() -> float | None:
+    try:
+        return float(_read("/proc/loadavg").split()[0])
+    except (ValueError, IndexError):
+        return None
+
+
+def measure_cpu_busy_pct(
+    read_stat: Callable[[], str], sleep: Callable[[float], None], window_s: float
+) -> float | None:
+    """CPU busy percentage over one ``window_s`` window (two /proc/stat reads), or None."""
+    a = parse_cpu_times(read_stat())
+    sleep(window_s)
+    b = parse_cpu_times(read_stat())
+    if a is None or b is None or b[1] <= a[1]:
+        return None
+    return 100.0 * (b[0] - a[0]) / (b[1] - a[1])
+
+
+def wait_for_idle(
+    read_stat: Callable[[], str] | None = None,
+    sleep: Callable[[float], None] = time.sleep,
+    clock: Callable[[], float] = time.monotonic,
+    *,
+    threshold_pct: float = IDLE_BUSY_MAX_PCT,
+    window_s: float = IDLE_WINDOW_S,
+    max_wait_s: float = IDLE_MAX_WAIT_S,
+) -> dict:
+    """The idle precondition. Passes when the CPU busy time over a ``window_s`` window is below
+    ``threshold_pct``. If it is not, the next window is measured straight away (so the check is
+    repeated every ``window_s`` seconds) until ``max_wait_s`` seconds have passed since the start,
+    then ``ok`` is False. If /proc/stat cannot be read the check fails at once: no wait would help.
+
+    ``read_stat``, ``sleep`` and ``clock`` are injectable so tests need no real time. The result
+    records every window's busy percentage, the wait, and the 1-minute load average (recorded,
+    not a gate: it lags for minutes after a heavy run).
+    """
+    read_stat = read_stat or (lambda: _read("/proc/stat"))
+    t0 = clock()
+    history: list[float | None] = []
+    error = None
+    ok = False
+    while True:
+        pct = measure_cpu_busy_pct(read_stat, sleep, window_s)
+        history.append(None if pct is None else round(pct, 2))
+        if pct is None:
+            error = "/proc/stat could not be read or did not advance"
+            break
+        if pct < threshold_pct:
+            ok = True
+            break
+        if clock() - t0 >= max_wait_s:
+            break
+    elapsed = clock() - t0
+    return {
+        "ok": ok,
+        "threshold_busy_pct": threshold_pct,
+        "window_s": window_s,
+        "max_wait_s": max_wait_s,
+        "busy_pct": history[-1],
+        "busy_pct_history": history,
+        "attempts": len(history),
+        "elapsed_s": round(elapsed, 1),
+        "waited_s": round(max(0.0, elapsed - window_s), 1),  # time beyond the first window
+        "loadavg_1m": loadavg_1m(),  # recorded, not gated
+        "error": error,
+    }
+
+
 # ------------------------------------------------------------------------------ preconditions
 
 
@@ -448,8 +550,9 @@ def preconditions(
     *,
     expect_lock_held_by_wrapper: bool | None = None,
     ignore_pids: tuple[int, ...] = (),
+    idle_check: Callable[[], dict] | None = None,
 ) -> dict:
-    """The checks of section 5.3 step 1. ``ok`` is False if anything aborts.
+    """The checks of section 5.3 step 1 (plan v1.3). ``ok`` is False if anything aborts.
 
     * GPU lock free. When the caller runs under ``scripts/with-gpu-lock.sh``
       (``SMALLPC_GPU_LOCK_HELD`` set), the lock must be held, by that wrapper; otherwise it must
@@ -458,7 +561,10 @@ def preconditions(
     * Display clients on the dGPU (graphics-type processes, or a connected display on the NVIDIA
       card): warning only. "C+G" desktop clients count as graphics clients (warning).
     * MemAvailable >= 24 GiB (warn below) and >= 20 GiB (abort below).
-    * 1-minute load average below 1.5.
+    * The CPU is idle: busy time below 10% averaged over 10 s (``wait_for_idle``), re-checked
+      every 10 s for up to 10 minutes. The wait is recorded under ``values["idle"]``; the 1-minute
+      load average is recorded as ``loadavg_1m`` but is not a gate. The idle check is skipped (and
+      recorded as skipped) when another check has already aborted: waiting would be pointless.
     """
     root = root or repo_root()
     aborts: list[str] = []
@@ -499,12 +605,16 @@ def preconditions(
     elif avail_gib < MEM_WARN_GIB:
         warns.append(f"MemAvailable {avail_gib:.1f} GiB < {MEM_WARN_GIB} GiB")
 
-    try:
-        load1 = float(_read("/proc/loadavg").split()[0])
-    except (ValueError, IndexError):
-        load1 = float("nan")
-    if not load1 < LOAD_MAX:
-        aborts.append(f"1-minute load average {load1} is not below {LOAD_MAX}")
+    if aborts:
+        idle: dict = {"ok": None, "skipped": "another precondition already aborted"}
+    else:
+        idle = (idle_check or wait_for_idle)()
+        if not idle["ok"]:
+            aborts.append(
+                f"CPU not idle: busy {idle['busy_pct']}% (limit {idle['threshold_busy_pct']}%) "
+                f"after waiting {idle['waited_s']} s"
+                + (f" ({idle['error']})" if idle.get("error") else "")
+            )
 
     return {
         "ok": not aborts,
@@ -517,7 +627,8 @@ def preconditions(
             "gpu_graphics_processes": len(cls["graphics"]),
             "connected_on_nvidia": drm["connected_on_nvidia"],
             "mem_available_gib": round(avail_gib, 2),
-            "loadavg_1m": load1,
+            "idle": idle,
+            "loadavg_1m": idle.get("loadavg_1m", loadavg_1m()),
         },
     }
 

@@ -178,12 +178,19 @@ def test_snapshot_is_scrubbed(monkeypatch, quiet):
 
 # ---------------------------------------------------------------- preconditions
 
+REAL_WAIT_FOR_IDLE = envsnap.wait_for_idle  # the fixture below stubs the module attribute
+
 
 @pytest.fixture
 def pre(monkeypatch):
     """A healthy machine; individual tests change one thing."""
     state = {"avail_gib": 26.0, "load": "0.20", "lock_held": False, "procs": [], "servers": [],
-             "drm": []}  # fmt: skip
+             "drm": [], "idle_calls": 0, "idle": {"ok": True, "busy_pct": 2.0, "waited_s": 0.0,
+             "threshold_busy_pct": 10.0, "loadavg_1m": 0.2}}  # fmt: skip
+
+    def fake_idle():
+        state["idle_calls"] += 1
+        return dict(state["idle"])
 
     def fake_read(path):
         if str(path) == "/proc/meminfo":
@@ -194,6 +201,7 @@ def pre(monkeypatch):
 
     monkeypatch.delenv("SMALLPC_GPU_LOCK_HELD", raising=False)
     monkeypatch.setattr(envsnap, "_read", fake_read)
+    monkeypatch.setattr(envsnap, "wait_for_idle", fake_idle)
     monkeypatch.setattr(envsnap, "gpu_processes", lambda: state["procs"])
     monkeypatch.setattr(envsnap, "llama_server_pids", lambda: state["servers"])
     monkeypatch.setattr(envsnap, "read_drm", lambda root="/sys/class/drm": state["drm"])
@@ -222,12 +230,135 @@ def test_memory_thresholds(pre, gib, ok, warn):
         assert "MemAvailable" in r["aborts"][0]
 
 
-@pytest.mark.parametrize(
-    "load,ok", [("1.49", True), ("1.50", False), ("3.2", False), ("0.0", True)]
-)
-def test_load_threshold(pre, load, ok):
-    pre["load"] = load
-    assert envsnap.preconditions()["ok"] is ok
+def test_load_average_is_recorded_but_is_not_a_gate(pre):
+    pre["load"] = "7.5"  # a heavy run just ended: the 1-minute average lags
+    r = envsnap.preconditions()
+    assert r["ok"] and r["values"]["loadavg_1m"] == 0.2  # the value the idle check recorded
+
+
+def test_idle_failure_aborts_and_is_recorded(pre):
+    pre["idle"] = {"ok": False, "busy_pct": 41.5, "waited_s": 600.0, "threshold_busy_pct": 10.0,
+                   "loadavg_1m": 3.0, "error": None}  # fmt: skip
+    r = envsnap.preconditions()
+    assert not r["ok"]
+    assert r["aborts"] == ["CPU not idle: busy 41.5% (limit 10.0%) after waiting 600.0 s"]
+    assert r["values"]["idle"]["waited_s"] == 600.0
+
+
+def test_idle_wait_is_skipped_when_another_check_already_aborted(pre):
+    pre["servers"] = [555]
+    r = envsnap.preconditions()
+    assert not r["ok"] and pre["idle_calls"] == 0
+    assert r["values"]["idle"]["skipped"]
+
+
+# ---------------------------------------------------------------- idle check (plan v1.3)
+
+# /proc/stat "cpu" line: user nice system idle iowait irq softirq steal guest guest_nice
+STAT = "cpu  {user} 0 {system} {idle} {iowait} 0 0 {steal} 0 0\ncpu0 1 2 3 4 5 6 7 8 9 10\n"
+
+
+class FakeMachine:
+    """A fake clock plus a fake /proc/stat whose counters advance with the fake time.
+
+    ``busy_by_time`` maps a time range to the busy fraction of that period (100 ticks/s x 8 CPUs
+    = 800 jiffies per second in total).
+    """
+
+    def __init__(self, schedule):
+        self.t = 0.0
+        self.schedule = schedule  # list of (until_t, busy_fraction)
+        self.reads = 0
+
+    def clock(self):
+        return self.t
+
+    def sleep(self, s):
+        self.t += s
+
+    def busy_fraction(self, t):
+        for until, frac in self.schedule:
+            if t < until:
+                return frac
+        return self.schedule[-1][1]
+
+    def read_stat(self):
+        self.reads += 1
+        # counters are integrals of the schedule up to now (coarse: 1 s steps are exact enough)
+        busy = total = 0.0
+        t = 0.0
+        while t < self.t:
+            dt_ = min(1.0, self.t - t)
+            total += 800 * dt_
+            busy += 800 * dt_ * self.busy_fraction(t)
+            t += dt_
+        return STAT.format(
+            user=int(busy * 0.8), system=int(busy * 0.2), idle=int((total - busy) * 0.7),
+            iowait=int((total - busy) * 0.3), steal=0,
+        )  # fmt: skip
+
+
+def test_parse_cpu_times_counts_idle_and_iowait_as_idle():
+    assert envsnap.parse_cpu_times("cpu  100 10 20 700 50 5 6 9 99 99\ncpu0 1 2 3 4\n") == (
+        150,
+        900,
+    )
+    assert envsnap.parse_cpu_times("cpu0 1 2 3 4 5 6 7 8\n") is None  # per-CPU lines are not it
+    assert envsnap.parse_cpu_times("cpu  1 2 x 4\n") is None
+    assert envsnap.parse_cpu_times("") is None
+    # old kernels print only four columns
+    assert envsnap.parse_cpu_times("cpu 10 0 10 80\n") == (20, 100)
+
+
+def test_idle_passes_at_once_on_an_idle_machine(monkeypatch):
+    m = FakeMachine([(1e9, 0.03)])
+    r = envsnap.wait_for_idle(m.read_stat, m.sleep, m.clock)
+    assert r["ok"] and r["attempts"] == 1 and r["waited_s"] == 0.0 and r["elapsed_s"] == 10.0
+    assert r["busy_pct"] == pytest.approx(3.0, abs=0.1) and r["error"] is None
+
+
+@pytest.mark.parametrize("frac,ok", [(0.099, True), (0.10, False), (0.15, False)])
+def test_idle_threshold_is_below_ten_percent(frac, ok):
+    m = FakeMachine([(1e9, frac)])
+    r = envsnap.wait_for_idle(m.read_stat, m.sleep, m.clock, max_wait_s=10.0)
+    assert r["ok"] is ok
+
+
+def test_idle_waits_in_ten_second_windows_until_the_cpu_settles():
+    m = FakeMachine([(45.0, 0.60), (1e9, 0.02)])  # busy for the first 45 s, then idle
+    r = envsnap.wait_for_idle(m.read_stat, m.sleep, m.clock)
+    assert r["ok"] and r["attempts"] == 6  # windows 0-10 ... 40-50 (the last one is mostly idle)
+    assert r["busy_pct_history"][:4] == [60.0, 60.0, 60.0, 60.0]
+    assert r["busy_pct_history"][-1] < 10.0
+    assert r["elapsed_s"] == 60.0 and r["waited_s"] == 50.0
+    assert m.t == 60.0
+
+
+def test_idle_gives_up_after_ten_minutes_and_records_the_wait():
+    m = FakeMachine([(1e9, 0.50)])
+    r = envsnap.wait_for_idle(m.read_stat, m.sleep, m.clock)
+    assert not r["ok"] and r["busy_pct"] == pytest.approx(50.0, abs=0.1)
+    assert r["elapsed_s"] == 600.0 and r["waited_s"] == 590.0 and r["attempts"] == 60
+    assert r["max_wait_s"] == 600.0
+
+
+def test_idle_aborts_at_once_if_proc_stat_is_unreadable():
+    slept = []
+    r = envsnap.wait_for_idle(lambda: "unavailable", slept.append, lambda: 0.0)
+    assert not r["ok"] and r["attempts"] == 1 and r["error"] and slept == [10.0]
+
+
+def test_preconditions_runs_the_real_idle_wait_with_fake_time(pre):
+    m = FakeMachine([(25.0, 0.80), (1e9, 0.01)])
+    r = envsnap.preconditions(idle_check=lambda: REAL_WAIT_FOR_IDLE(m.read_stat, m.sleep, m.clock))
+    assert r["ok"] and r["values"]["idle"]["attempts"] == 4
+    assert r["values"]["idle"]["waited_s"] == 30.0 and r["values"]["loadavg_1m"] == 0.2
+    never = FakeMachine([(1e9, 0.90)])
+    r = envsnap.preconditions(
+        idle_check=lambda: REAL_WAIT_FOR_IDLE(never.read_stat, never.sleep, never.clock)
+    )
+    assert not r["ok"] and r["aborts"][0].startswith("CPU not idle: busy 90.0%")
+    assert r["values"]["idle"]["waited_s"] == 590.0
 
 
 def test_lock_must_be_free_without_the_wrapper(pre):

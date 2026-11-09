@@ -81,8 +81,12 @@ def test_thermal_empty_and_missing_values():
 # ---------------------------------------------------------------- paging
 
 
-def pg(maj, swp):
-    return [{"majflt": a, "pswpin": b} for a, b in zip(maj, swp, strict=True)]
+def pg(maj, swp, vmswap=None):
+    vmswap = vmswap if vmswap is not None else [0] * len(maj)
+    return [
+        {"majflt": a, "pswpin": b, "server_vmswap_kib": c}
+        for a, b, c in zip(maj, swp, vmswap, strict=True)
+    ]
 
 
 def test_paging_major_fault_threshold():
@@ -91,18 +95,31 @@ def test_paging_major_fault_threshold():
     assert flags.paging(pg([500, 1501], [10, 10]))["major_faults"] == 1001
 
 
-def test_paging_any_swap_in():
-    assert flags.paging(pg([0, 0], [100, 100]))["flag"] is None
-    r = flags.paging(pg([0, 0], [100, 101]))
-    assert r["flag"] == "paging" and r["swap_in_pages"] == 1
-    assert flags.paging(pg([0, 0], [100, 105]), swap_in_tolerance_pages=5)["flag"] is None
-    assert flags.paging(pg([0, 0], [100, 106]), swap_in_tolerance_pages=5)["flag"] == "paging"
+def test_paging_server_vmswap_above_zero_at_any_sample_flags():
+    assert flags.paging(pg([0, 0, 0], [5, 5, 5], [0, 0, 0]))["flag"] is None
+    r = flags.paging(pg([0, 0, 0], [5, 5, 5], [0, 4, 0]))  # swapped for one sample only
+    assert r["flag"] == "paging"
+    assert r["server_vmswap_max_kib"] == 4 and r["server_vmswap_samples"] == 1
+    assert flags.paging(pg([0, 0], [5, 5], [128, 128]))["flag"] == "paging"
+
+
+def test_system_swap_in_alone_does_not_flag():
+    # zram swaps pages even on an idle machine: recorded, never a flag
+    r = flags.paging(pg([0, 0], [100, 100_000], [0, 0]))
+    assert r["flag"] is None and r["system_swap_in_pages"] == 99_900
+    # ... and rows from before VmSwap was sampled (no column) behave the same
+    rows = [{"majflt": 0, "pswpin": 1}, {"majflt": 0, "pswpin": 9999}]
+    assert flags.paging(rows)["flag"] is None
 
 
 def test_paging_skips_samples_without_process():
-    rows = [{"majflt": None, "pswpin": 1}, {"majflt": 10, "pswpin": 1}, {"majflt": 20, "pswpin": 1}]
+    rows = [
+        {"majflt": None, "pswpin": 1, "server_vmswap_kib": None},
+        {"majflt": 10, "pswpin": 1, "server_vmswap_kib": 0},
+        {"majflt": 20, "pswpin": 1, "server_vmswap_kib": 0},
+    ]
     r = flags.paging(rows)
-    assert r["major_faults"] == 10 and r["flag"] is None
+    assert r["major_faults"] == 10 and r["flag"] is None and r["vmswap_samples_read"] == 2
     assert flags.paging([{"majflt": None, "pswpin": None}])["flag"] is None
 
 
@@ -159,6 +176,47 @@ def test_short_gen_threshold():
     assert not flags.short_gen({"predicted_n": 100})
     assert flags.short_gen({"predicted_n": 99})
     assert flags.short_gen({})
+
+
+@pytest.mark.parametrize(
+    "prompt_n,cache_n,flagged",
+    [(8192, 0, False), (8160, 32, False), (8191, 0, True), (8192, 1, True), (0, 8192, False)],
+)
+def test_accounting_request_a(prompt_n, cache_n, flagged):
+    exp = {"processed_plus_cached": {"A": 8192, "B": 11192}}
+    rec = {"prompt_n": prompt_n, "cache_n": cache_n}
+    assert flags.accounting(rec, 8192) is flagged
+    assert ("accounting" in flags.request_flags("A", rec, expected=exp)) is flagged
+
+
+def test_accounting_request_b_uses_d_plus_3000():
+    exp = {"processed_plus_cached": {"A": 8192, "B": 11192}}
+    ok = {"prompt_n": 3000, "cache_n": 8192, "predicted_n": 400}
+    assert "accounting" not in flags.request_flags("B", ok, depth=8192, expected=exp)
+    # the cache hit is fine but the server processed a different number of tokens
+    bad = {"prompt_n": 3000, "cache_n": 8191, "predicted_n": 400}
+    assert flags.request_flags("B", bad, depth=8192, expected=exp) == ["accounting"]
+    # a miss that re-processes everything keeps the total: cache_miss, not accounting
+    miss = {"prompt_n": 11192, "cache_n": 0, "predicted_n": 400}
+    assert flags.request_flags("B", miss, depth=8192, expected=exp) == ["cache_miss"]
+
+
+def test_accounting_other_fresh_requests_use_their_own_length():
+    exp = {"processed_plus_cached": {"request": 2048}}
+    assert flags.request_flags("fresh", {"prompt_n": 2048, "cache_n": 0}, expected=exp) == []
+    assert flags.request_flags("fresh", {"prompt_n": 2047, "cache_n": 0}, expected=exp) == [
+        "accounting"
+    ]
+    # warm_prefill and accounting are independent
+    both = {"prompt_n": 1900, "cache_n": 100}
+    assert flags.request_flags("fresh", both, expected=exp) == ["warm_prefill", "accounting"]
+
+
+def test_accounting_missing_counts_are_flagged_and_expected_is_optional():
+    exp = {"processed_plus_cached": {"A": 100, "B": 3100}}
+    assert flags.request_flags("A", {}, expected=exp) == ["accounting"]
+    assert flags.accounting({"prompt_n": 100}, 100)
+    assert flags.request_flags("A", {"prompt_n": 5, "cache_n": 0}) == []  # no expected: unchecked
 
 
 def test_request_flags_by_kind():

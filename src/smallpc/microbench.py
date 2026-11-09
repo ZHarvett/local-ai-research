@@ -58,23 +58,15 @@ def env_ref(out: Path, snap: dict | None = None) -> dict:
     return {"snapshot_id": sid, "file": str((out / "env-snapshot.json").relative_to(ROOT))}
 
 
-def require_preconditions(name: str, settle_s: float = 300.0) -> dict:
-    """Run the section 5.3 preconditions. If only the load average fails (the previous
-    microbenchmark's own CPU use keeps the 1-minute average up), wait for it to settle, up to
-    ``settle_s`` seconds, and record the wait."""
-    t0 = time.time()
-    while True:
-        pre = envsnap.preconditions()
-        only_load = bool(pre["aborts"]) and all(
-            a.startswith("1-minute load average") for a in pre["aborts"]
-        )
-        if pre["ok"] or not only_load or time.time() - t0 > settle_s:
-            break
-        time.sleep(10)
-    pre["waited_for_load_s"] = round(time.time() - t0, 1)
+def require_preconditions(name: str) -> dict:
+    """Run the section 5.3 preconditions (plan v1.3). The idle check waits for the CPU by itself
+    (every 10 s, up to 10 minutes) and records the wait under ``values["idle"]``."""
+    pre = envsnap.preconditions()
+    idle = pre["values"].get("idle", {})
+    pre["waited_for_idle_s"] = idle.get("waited_s")
     print(
         f"[{name}] preconditions: ok={pre['ok']} warnings={pre['warnings']} "
-        f"waited_for_load_s={pre['waited_for_load_s']}",
+        f"idle_busy_pct={idle.get('busy_pct')} waited_for_idle_s={pre['waited_for_idle_s']}",
         flush=True,
     )
     if not pre["ok"]:

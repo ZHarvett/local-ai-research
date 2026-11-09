@@ -25,6 +25,15 @@ def test_header_matches_the_requested_fields():
     assert tm.parse_nvsmi_row("") is None and tm.parse_nvsmi_row("1, 2, 3") is None
 
 
+def test_vmswap_is_parsed_from_proc_status():
+    base = (FIX / "proc_status.txt").read_text()
+    assert tm.parse_status_vmswap_kib(base) is None  # the older excerpt has no VmSwap line
+    assert tm.parse_status_vmswap_kib(base + "VmSwap:\t       0 kB\n") == 0
+    assert tm.parse_status_vmswap_kib(base + "VmSwap:\t  204800 kB\n") == 204800
+    assert tm.parse_status_vmswap_kib("VmSwap:\tgarbage\n") is None
+    assert "server_vmswap_kib" in tm.COLUMNS and "server_vmswap_kib" in tm._FLOAT_COLS
+
+
 def test_every_clock_event_reason_is_collected():
     cols = {c for _, c, _ in tm.GPU_FIELDS}
     for need in (
@@ -146,6 +155,7 @@ def test_sampler_with_fake_nvidia_smi(tmp_path, monkeypatch):
     assert rows[0]["gpu_util_pct"] == 93.0 and rows[0]["reason_sw_power_cap"] is True
     assert rows[0]["server_rss_kib"] > 0 and rows[0]["majflt"] is not None
     assert rows[0]["memavailable_kib"] > 0
+    assert rows[0]["server_vmswap_kib"] is not None  # VmSwap is sampled from /proc/<pid>/status
     assert rows[-1]["t_epoch"] > rows[0]["t_epoch"]
     oh = s.overhead()
     assert oh["n_rows"] == 6 and oh["python_core_fraction"] < 0.5
@@ -192,7 +202,8 @@ def test_detectors_on_a_real_sampler_excerpt():
     from smallpc import flags
 
     rows = tm.read_csv(FIX / "sampler-sample.csv")
-    assert len(rows) == 20 and list(rows[0]) == tm.COLUMNS
+    # the excerpt was recorded in WP6, before VmSwap was added to the sampler (plan v1.3)
+    assert len(rows) == 20 and list(rows[0]) == [c for c in tm.COLUMNS if c != "server_vmswap_kib"]
     assert all(r["pcie_gen"] == 4 and r["pcie_width"] == 8 for r in rows)
     assert all(r["server_rss_kib"] > 1e6 for r in rows)  # the server pid was found via the pidfile
     ev = tm.evaluate(rows)

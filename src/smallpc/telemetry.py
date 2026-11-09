@@ -55,7 +55,14 @@ GPU_FIELDS: list[tuple[str, str, str]] = [
     ("clocks_event_reasons.board_limit", "reason_board_limit", "reason"),
     ("clocks_event_reasons.reliability", "reason_reliability", "reason"),
 ]
-OTHER_COLUMNS = ["tctl_c", "server_rss_kib", "majflt", "pswpin", "memavailable_kib"]
+OTHER_COLUMNS = [
+    "tctl_c",
+    "server_rss_kib",
+    "majflt",
+    "pswpin",
+    "memavailable_kib",
+    "server_vmswap_kib",  # VmSwap of llama-server (plan v1.3 paging flag)
+]
 COLUMNS = ["t_epoch", "t_utc", "t_rel_s", *[c for _, c, _ in GPU_FIELDS], *OTHER_COLUMNS]
 INTERVAL_MS = 500
 
@@ -136,6 +143,17 @@ def parse_status_rss_kib(text: str) -> int | None:
     for line in text.splitlines():
         if line.startswith("VmRSS:"):
             return int(line.split()[1])
+    return None
+
+
+def parse_status_vmswap_kib(text: str) -> int | None:
+    """``VmSwap`` of /proc/<pid>/status in kiB (0 means none of its memory is swapped out)."""
+    for line in text.splitlines():
+        if line.startswith("VmSwap:"):
+            try:
+                return int(line.split()[1])
+            except (IndexError, ValueError):
+                return None
     return None
 
 
@@ -270,6 +288,7 @@ class Sampler:
             "majflt": parse_proc_stat_majflt(stat) if stat else None,
             "pswpin": parse_vmstat(_read("/proc/vmstat") or ""),
             "memavailable_kib": parse_meminfo_kib(_read("/proc/meminfo") or ""),
+            "server_vmswap_kib": parse_status_vmswap_kib(status) if status else None,
         }
 
     def _loop(self) -> None:
@@ -320,6 +339,7 @@ _FLOAT_COLS = {c for _, c, k in GPU_FIELDS if k == "float"} | {
     "majflt",
     "pswpin",
     "memavailable_kib",
+    "server_vmswap_kib",
 }
 _BOOL_COLS = {c for _, c, k in GPU_FIELDS if k == "reason"}
 

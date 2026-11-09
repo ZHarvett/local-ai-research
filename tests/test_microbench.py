@@ -69,22 +69,22 @@ def test_link_hist():
     assert mb.link_hist([{"pcie_gen": None, "pcie_width": None}]) == {}
 
 
-def test_precondition_wait_only_for_load(monkeypatch):
-    seq = [
-        {"ok": False, "aborts": ["1-minute load average 1.8 is not below 1.5"], "warnings": []},
-        {"ok": True, "aborts": [], "warnings": []},
-    ]
-    monkeypatch.setattr(mb.envsnap, "preconditions", lambda: dict(seq.pop(0)))
-    slept = []
-    monkeypatch.setattr(mb.time, "sleep", slept.append)
+def test_require_preconditions_records_the_idle_wait_and_aborts(monkeypatch):
+    ok = {
+        "ok": True,
+        "aborts": [],
+        "warnings": [],
+        "values": {"idle": {"busy_pct": 3.0, "waited_s": 20.0}},
+    }
+    monkeypatch.setattr(mb.envsnap, "preconditions", lambda: dict(ok))
     r = mb.require_preconditions("t")
-    assert r["ok"] and slept == [10]
-    # any other abort reason is not waited for
-    monkeypatch.setattr(
-        mb.envsnap,
-        "preconditions",
-        lambda: {"ok": False, "aborts": ["other GPU compute processes: x"], "warnings": []},
-    )
-    with pytest.raises(mb.Aborted):
+    assert r["ok"] and r["waited_for_idle_s"] == 20.0
+    bad = {
+        "ok": False,
+        "aborts": ["CPU not idle: busy 50% (limit 10.0%) after waiting 600 s"],
+        "warnings": [],
+        "values": {"idle": {"busy_pct": 50.0, "waited_s": 600.0}},
+    }
+    monkeypatch.setattr(mb.envsnap, "preconditions", lambda: dict(bad))
+    with pytest.raises(mb.Aborted, match="CPU not idle"):
         mb.require_preconditions("t")
-    assert slept == [10]
