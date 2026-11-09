@@ -19,6 +19,7 @@ from __future__ import annotations
 import argparse
 import csv
 import datetime as dt
+import gzip
 import json
 import os
 import signal
@@ -62,6 +63,11 @@ OTHER_COLUMNS = [
     "pswpin",
     "memavailable_kib",
     "server_vmswap_kib",  # VmSwap of llama-server (plan v1.3 paging flag)
+    # WP10: what the server's resident memory is made of (/proc/<pid>/status), and swap-out
+    "server_rss_anon_kib",
+    "server_rss_file_kib",
+    "server_rss_shmem_kib",
+    "pswpout",  # system-wide pages swapped out (recorded, like pswpin; not flagged)
 ]
 COLUMNS = ["t_epoch", "t_utc", "t_rel_s", *[c for _, c, _ in GPU_FIELDS], *OTHER_COLUMNS]
 INTERVAL_MS = 500
@@ -150,6 +156,17 @@ def parse_status_vmswap_kib(text: str) -> int | None:
     """``VmSwap`` of /proc/<pid>/status in kiB (0 means none of its memory is swapped out)."""
     for line in text.splitlines():
         if line.startswith("VmSwap:"):
+            try:
+                return int(line.split()[1])
+            except (IndexError, ValueError):
+                return None
+    return None
+
+
+def parse_status_field_kib(text: str, key: str) -> int | None:
+    """One ``<key>:  N kB`` line of /proc/<pid>/status in kiB (e.g. ``RssAnon``); None if absent."""
+    for line in text.splitlines():
+        if line.startswith(key + ":"):
             try:
                 return int(line.split()[1])
             except (IndexError, ValueError):
@@ -289,6 +306,10 @@ class Sampler:
             "pswpin": parse_vmstat(_read("/proc/vmstat") or ""),
             "memavailable_kib": parse_meminfo_kib(_read("/proc/meminfo") or ""),
             "server_vmswap_kib": parse_status_vmswap_kib(status) if status else None,
+            "server_rss_anon_kib": parse_status_field_kib(status, "RssAnon") if status else None,
+            "server_rss_file_kib": parse_status_field_kib(status, "RssFile") if status else None,
+            "server_rss_shmem_kib": parse_status_field_kib(status, "RssShmem") if status else None,
+            "pswpout": parse_vmstat(_read("/proc/vmstat") or "", "pswpout"),
         }
 
     def _loop(self) -> None:
@@ -340,13 +361,20 @@ _FLOAT_COLS = {c for _, c, k in GPU_FIELDS if k == "float"} | {
     "pswpin",
     "memavailable_kib",
     "server_vmswap_kib",
+    "server_rss_anon_kib",
+    "server_rss_file_kib",
+    "server_rss_shmem_kib",
+    "pswpout",
 }
 _BOOL_COLS = {c for _, c, k in GPU_FIELDS if k == "reason"}
 
 
 def read_csv(path: str | Path) -> list[dict]:
+    """Rows as dicts. CSVs written before a column existed (VmSwap, the Rss split, pswpout) simply
+    lack that key; ``.gz`` files are read transparently."""
     out = []
-    with open(path, newline="") as fh:
+    opener = gzip.open if str(path).endswith(".gz") else open
+    with opener(path, "rt", newline="") as fh:
         for r in csv.DictReader(fh):
             row: dict = {}
             for k, v in r.items():

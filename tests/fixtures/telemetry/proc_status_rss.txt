@@ -1,0 +1,9 @@
+Name:	llama-server
+State:	S (sleeping)
+VmPeak:	30000000 kB
+VmRSS:	 6710886 kB
+RssAnon:	  4194304 kB
+RssFile:	  2490368 kB
+RssShmem:	    26214 kB
+VmSwap:	   786432 kB
+Threads:	8

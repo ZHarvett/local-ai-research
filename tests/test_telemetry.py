@@ -34,6 +34,43 @@ def test_vmswap_is_parsed_from_proc_status():
     assert "server_vmswap_kib" in tm.COLUMNS and "server_vmswap_kib" in tm._FLOAT_COLS
 
 
+def test_rss_split_and_pswpout_are_parsed():
+    """WP10: RssAnon, RssFile and RssShmem (what the resident memory is made of) and pswpout."""
+    txt = (FIX / "proc_status_rss.txt").read_text()
+    assert tm.parse_status_field_kib(txt, "RssAnon") == 4194304
+    assert tm.parse_status_field_kib(txt, "RssFile") == 2490368
+    assert tm.parse_status_field_kib(txt, "RssShmem") == 26214
+    assert tm.parse_status_vmswap_kib(txt) == 786432
+    assert tm.parse_status_field_kib(txt, "Nope") is None
+    assert tm.parse_status_field_kib("RssAnon:\tgarbage\n", "RssAnon") is None
+    # the older fixture has RssAnon only
+    old = (FIX / "proc_status.txt").read_text()
+    assert tm.parse_status_field_kib(old, "RssAnon") == 500000
+    assert tm.parse_status_field_kib(old, "RssFile") is None
+    assert tm.parse_vmstat((FIX / "vmstat.txt").read_text(), "pswpout") == 462512
+    for c in ("server_rss_anon_kib", "server_rss_file_kib", "server_rss_shmem_kib", "pswpout"):
+        assert c in tm.COLUMNS and c in tm._FLOAT_COLS
+    # the new columns come after the older ones: existing consumers keep their positions
+    assert tm.COLUMNS.index("server_vmswap_kib") < tm.COLUMNS.index("server_rss_anon_kib")
+
+
+def test_older_csvs_without_the_new_columns_still_load(tmp_path):
+    """A CSV from before VmSwap, and one from before the Rss split, load; keys are just absent."""
+    old = tmp_path / "old.csv"
+    old.write_text("t_epoch,gpu_util_pct,majflt,pswpin\n100.5,90,7,5\n101.0,91,9,6\n")
+    rows = tm.read_csv(old)
+    assert rows[0] == {"t_epoch": 100.5, "gpu_util_pct": 90.0, "majflt": 7.0, "pswpin": 5.0}
+    assert "server_rss_anon_kib" not in rows[0]
+    mid = tmp_path / "mid.csv.gz"  # written by WP9 code: VmSwap, no Rss split; gzip is transparent
+    import gzip
+
+    with gzip.open(mid, "wt") as fh:
+        fh.write("t_epoch,majflt,pswpin,server_vmswap_kib\n100.5,7,5,1024\n")
+    rows = tm.read_csv(mid)
+    assert rows[0]["server_vmswap_kib"] == 1024.0 and "server_rss_file_kib" not in rows[0]
+    assert tm.evaluate(rows)["paging"]["server_vmswap_max_kib"] == 1024.0
+
+
 def test_every_clock_event_reason_is_collected():
     cols = {c for _, c, _ in tm.GPU_FIELDS}
     for need in (
@@ -156,6 +193,9 @@ def test_sampler_with_fake_nvidia_smi(tmp_path, monkeypatch):
     assert rows[0]["server_rss_kib"] > 0 and rows[0]["majflt"] is not None
     assert rows[0]["memavailable_kib"] > 0
     assert rows[0]["server_vmswap_kib"] is not None  # VmSwap is sampled from /proc/<pid>/status
+    # the split of the resident memory comes from the same file (this test process has all three)
+    assert rows[0]["server_rss_anon_kib"] > 0 and rows[0]["server_rss_file_kib"] is not None
+    assert rows[0]["server_rss_shmem_kib"] is not None and rows[0]["pswpout"] is not None
     assert rows[-1]["t_epoch"] > rows[0]["t_epoch"]
     oh = s.overhead()
     assert oh["n_rows"] == 6 and oh["python_core_fraction"] < 0.5
@@ -202,8 +242,9 @@ def test_detectors_on_a_real_sampler_excerpt():
     from smallpc import flags
 
     rows = tm.read_csv(FIX / "sampler-sample.csv")
-    # the excerpt was recorded in WP6, before VmSwap was added to the sampler (plan v1.3)
-    assert len(rows) == 20 and list(rows[0]) == [c for c in tm.COLUMNS if c != "server_vmswap_kib"]
+    # the excerpt was recorded in WP6, before VmSwap (plan v1.3) and the Rss split (WP10) existed
+    newer = {"server_vmswap_kib", *tm.OTHER_COLUMNS[tm.OTHER_COLUMNS.index("server_vmswap_kib") :]}
+    assert len(rows) == 20 and list(rows[0]) == [c for c in tm.COLUMNS if c not in newer]
     assert all(r["pcie_gen"] == 4 and r["pcie_width"] == 8 for r in rows)
     assert all(r["server_rss_kib"] > 1e6 for r in rows)  # the server pid was found via the pidfile
     ev = tm.evaluate(rows)

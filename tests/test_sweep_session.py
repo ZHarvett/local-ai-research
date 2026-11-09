@@ -522,10 +522,10 @@ def test_transient_precondition_failures_are_retried_with_pauses(tmp_path, free_
     assert [e["event"] for e in ev[:5]] == ["precondition", "precondition_wait", "precondition",
                                             "precondition_wait", "precondition"]  # fmt: skip
     assert [e.get("ok") for e in ev if e["event"] == "precondition"][:3] == [False, False, True]
-    summ = json.loads(next((sess.dir / "cells").glob("*.json")).read_text())
-    first = min((json.loads(p.read_text()) for p in (sess.dir / "cells").glob("*.json")),
-                key=lambda s: s["instances"][0]["started_utc"])  # fmt: skip
-    assert summ and len(first["instances"][0]["preconditions"]["attempts"]) == 3
+    # the first cell of the run took the three attempts; started_utc has 1 s resolution, so do not
+    # pick it by time (a tie with the next cell made this test flaky)
+    summs = [json.loads(p.read_text()) for p in (sess.dir / "cells").glob("*.json")]
+    assert summs and max(len(x["instances"][0]["preconditions"]["attempts"]) for x in summs) == 3
 
 
 def test_transient_failures_that_persist_abort_the_session_resumably(tmp_path, free_port):
