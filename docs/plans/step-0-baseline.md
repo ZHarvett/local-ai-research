@@ -1,6 +1,6 @@
 # Step 0 Plan: Baseline Setup
 
-*Version 1.3 · 9 November 2026*
+*Version 1.4 · 9 November 2026*
 *Part of "Local AI on a Small PC" (project plan dated 5 November 2026). This file is the reference for Step 0. Any change produces a new version, recorded in §14.*
 
 ---
@@ -62,16 +62,20 @@ The tuned configuration is Step 0's best configuration for that context, chosen 
 
 ### 3.3 Selection rule (declared before any speed measurement)
 
-A candidate is eligible for a context if it:
-- started without errors;
-- leaves at least 512 MiB of VRAM free after the longest request;
-- has no unresolved flags;
-- passes the output sanity check (§5.6).
+A candidate is eligible for a context if:
+- its final cell status is complete (it started without errors and finished);
+- the minimum free VRAM across its measured windows, in the final attempt, is at least 512 MiB;
+- it has no unresolved flagged unit, where a unit is one repetition and an attempt-2 unit replaces the attempt-1 unit it re-ran;
+- it has enough clean units: 2 in screening, 5 in final selection;
+- it has not failed the output sanity check (§5.6). In screening the check may be "not run". In final selection it must have passed.
 
-Among eligible candidates, pick the one with the lowest **mean T_turn_400** (the estimated standardised turn, §5.3) across the three depths of §5.3. Ties are broken in this order:
-1. If the 95% CI of the paired difference with the runner-up includes zero, prefer the lower **mean T_reread**.
-2. If still tied, prefer fewer moving parts: no MTP over MTP, and no expert cache over a cache.
-3. Then prefer lower VRAM use.
+Among eligible candidates, order them by the **mean T_turn_400** (the estimated standardised turn, §5.3): the mean over repetitions of each repetition's mean over the three depths of §5.3. A repetition counts only if all three depths are clean. Final selection then compares the best-mean candidate with the runner-up, using the paired per-repetition difference of T_turn_400 and its 95% CI (§5.5):
+1. If the CI excludes zero, the best-mean candidate wins.
+2. If the CI includes zero, compare the paired difference of **T_reread** in the same way. If that CI excludes zero, the candidate with the lower mean T_reread wins.
+3. If both CIs include zero, the candidates are tied on speed: prefer fewer moving parts, which means no MTP over MTP, then no expert cache over a cache.
+4. If still tied, prefer the lower peak VRAM use (total minus the minimum free VRAM over its windows).
+
+Any other eligible candidate whose paired T_turn_400 difference from the winner has a CI that includes zero is reported as "statistically tied with the winner", for information only. Screening (2 repetitions) applies no tie-break: its shortlist is simply the two eligible candidates with the lowest mean T_turn_400 per context, and pairs whose means differ by less than the larger of their two ranges are marked "too close to call at n = 2". The stock cell is a reference row and is never shortlisted.
 
 ### 3.4 Standardised turn workload
 
@@ -131,7 +135,8 @@ One server configuration is one **cell**. For each cell:
    - no other GPU compute processes are running;
    - no display clients are on the dGPU (warning only);
    - `MemAvailable` is at least 24 GiB (warn below this) and at least 20 GiB (abort below this);
-   - the CPU is idle: busy time below 10% averaged over 10 seconds (from `/proc/stat`). The 1-minute load average is recorded but is not the gate, because it lags for minutes after a heavy run. If the idle check fails, the runner re-checks every 10 seconds for up to 10 minutes, records the wait, and aborts if it still fails.
+   - the CPU is idle: busy time below 10% averaged over 10 seconds (from `/proc/stat`). The 1-minute load average is recorded but is not the gate, because it lags for minutes after a heavy run. If the idle check fails, the runner re-checks every 10 seconds for up to 10 minutes, records the wait, and treats it as a transient failure if it still fails.
+   - **Retries:** a transient failure (the idle check times out, or `MemAvailable` is below the abort line) is retried up to 3 more times with a 10-minute pause, and every attempt and wait is recorded. Hard conditions abort the session at once, and it stays resumable: the GPU lock held by another job, a foreign GPU compute process, a busy port, or a missing binary.
 2. **Start the server.** Record load time, the startup log and the effective settings from `/props`.
 3. **Snapshot and telemetry.** Take an environment snapshot and start 2 Hz telemetry.
 4. **Warm-up.** Send 2 requests (8K-token prompt, 128 generated tokens) and discard them.
@@ -169,7 +174,7 @@ One server configuration is one **cell**. For each cell:
 
 **Logging and hit rates:** every cell, stock included, runs with `-lv 4`. This is logging only, which §3.1 allows, and WP5 measured no speed cost. It provides the placement trace, the buffer sizes and the expert-cache statistics. The statistics give hit rates for decode-sized batches only; prefill-sized batches report only how many experts were copied from the cache.
 
-**Stage 1: Screening** (2 repetitions; WP11; about 6–8 hours)
+**Stage 1: Screening** (2 repetitions; WP11; about 8 hours of GPU time, run as three sessions)
 
 Run every placement below for each context C ∈ {32K, 64K, 128K} and each batch setting (b, ub) ∈ {(2048, 2048), (4096, 4096)}:
 
@@ -183,7 +188,13 @@ Run every placement below for each context C ∈ {32K, 64K, 128K} and each batch
 
 Add the stock configuration for each C, for 57 cells in total.
 
-Output: for each context, the top 2 placements by T_turn_400, plus VRAM breakdowns and expert-cache hit rates.
+**Sessions.** Stage 1 runs as three sessions, one per context (`--only context=32K`, then 64K, then 128K), each with its own start and end canaries, so a drift flag covers 2 to 4 hours instead of one 9-hour block. Inside a session, the cell order is a seeded shuffle that respects the one dependency (P1 before P8 and P9 of the same group), so slow thermal or background drift cannot line up with a placement. Real sessions start only from a clean committed tree (no `--allow-dirty`), and a resumed session must match its spec, workload manifest and sampling hashes.
+
+**Time.** Measured per-cell overhead is about 15 s plus the 20 s warm-up (WP9). With the live-check request times, the 57 cells take about 6.7 h (7.8 h if the CPU-expert placements P6–P9 run 1.5 times slower, 8.3 h with cold loads). Max-fit and N_fit probing adds about 24 minutes (49 at worst), and canaries about 5 minutes. Per session: 32K about 1.5 h, 64K about 2.3 h, 128K about 4.2 h.
+
+**Pre-flight.** Before the first real session, a short real run (WP11) covers what the WP9 mini-sweep could not: one cell of each placement family on the GPU, the max-fit probe, N_fit from P1's log and the re-run mode.
+
+Output: for each context, the shortlist of §3.3 (the top 2 eligible placements by T_turn_400, with the stock reference row), plus VRAM breakdowns and expert-cache hit rates.
 
 **Stage 2: Features** (5 repetitions; WP12; about 4–5 hours)
 
@@ -205,7 +216,9 @@ Stock-64K and tuned-64K, 5 repetitions each.
 
 - **Unit:** one repetition, which is one prompt variant.
 - **Per cell and metric:** report the mean, n, min and max, and a 95% percentile-bootstrap CI over repetitions (10,000 resamples, fixed seed). With n = 5, bootstrap intervals come out too narrow, so a t-interval is also computed and the wider of the two is reported.
-- **Paired comparisons** (tuned vs stock, MTP vs no MTP): compute per-repetition ratios on the same variants, then report the geometric mean with a bootstrap CI.
+- **Paired comparisons** (tuned vs stock, MTP vs no MTP): compute per-repetition ratios on the same variants, take the geometric mean, and report the wider of two 95% intervals: a percentile-bootstrap CI and a t-interval on the log ratios (back-transformed). The bootstrap alone covered only about 83% at n = 5 in the WP10 simulation.
+- **Known limit of the intervals.** In the WP10 simulation (20,000 experiments per case), the reported interval, which is always the t-interval, covered about 95% for symmetric data at n = 5 and n = 10, 91–92% for strongly skewed data (lognormal σ 0.5) and 88–90% for exponential data. Step-0 timings are close to symmetric in the canaries, but a repetition slowed by background activity is exactly the heavy-tailed case, so the flag rules matter.
+- **Swap sensitivity.** Every results table and paired comparison is also computed with the units excluded whose window shows llama-server swap growth of more than 64 MiB (`swap_activity`, §5.6). If a headline comparison changes sign or an interval changes materially, the report says so.
 - **Screening results** (2 repetitions) are used only for shortlisting. They appear in a clearly labelled appendix and are never reported as results.
 
 ### 5.6 Flags and sanity checks
@@ -213,7 +226,7 @@ Stock-64K and tuned-64K, 5 repetitions each.
 | Flag | Trigger |
 |---|---|
 | thermal | A GPU thermal or hardware slowdown reason is active in more than 1% of samples in the measured window, or CPU Tctl reaches 95 °C in more than 1% of samples. The GPU power cap is recorded, not flagged. |
-| paging | llama-server has more than 1,000 major page faults during a measured window, or any of its memory is in swap (`VmSwap` above zero) during the window. System-wide swap-in is recorded but not flagged, because zram swaps a few pages per second even on an idle machine. |
+| paging | llama-server has more than 1,000 major page faults during a measured window. Swap growth is recorded as `swap_activity` (MiB of `VmSwap` growth in the window, with start, end and maximum), not flagged. System-wide swap-in is recorded but not flagged. Reason (chosen after the WP9 mini-sweep, which showed it): this machine uses zram swap with `vm.swappiness` 150, and the kernel swaps cold pages of the server's own memory with about 20 GiB available. Three canary windows with 71–610 MiB of growth and 0–357 faults were not slower than unflagged windows. Pages that are swapped out and later read back show up as major faults in the later window. The one window with 4.1 GiB of growth also had 1,692 faults, so it is flagged. The swap sensitivity of §5.5 checks this choice in every report. |
 | drift | A session's start and end canaries differ by more than max(their 95% CI, 5%). |
 | short_gen | Request B generates fewer than 100 tokens. Its generation speed and T_turn_400 are excluded, because too few tokens give an unstable per-token time; its prefill numbers are kept. |
 | warm_prefill | Request A (or another fresh request) reports `cache_n` > 32. |
@@ -223,7 +236,7 @@ Stock-64K and tuned-64K, 5 repetitions each.
 
 Flagged measurements are re-run once, except `short_gen`, which a seeded re-run would only repeat. If still flagged, they are excluded from selection and from headline numbers. They stay in the report as excluded diagnostic results, with the flag shown.
 
-**Output sanity check for final candidates:** greedy 512-token outputs on 3 fixed prompts, compared with the plain `--fit` reference for coherence and repetition (distinct 4-gram ratio). This matters because there is one unconfirmed report of the expert cache producing degenerate output.
+**Output sanity check:** greedy 512-token outputs on the 3 fixed sanity prompts of WP8, compared with a reference (the plain `--fit` cell at the same context). It runs in Stage 2 on each shortlisted candidate, and in Stage 3 on the tuned configs. This matters because there is one unconfirmed report of the expert cache producing degenerate output. Thresholds (declared before any real measurement): a prompt fails if its length is below min(100, half the reference length); if its distinct 4-gram ratio is below half the reference's; if its longest run of one repeated token is 16 or more while the reference's is below 16; or if some 8-gram repeats 8 or more times (non-overlapping) while the reference's maximum is below 8. A candidate passes if none of its 3 prompts fails. The index of the first divergence from the reference is reported for information only, because different placements and KV types can legitimately diverge.
 
 ### 5.7 Machine state during sweeps
 
@@ -549,24 +562,24 @@ Each work package (WP) is sized for one Claude Code prompt in a fresh session. B
 - The tests pass.
 - The report renders from the mini-sweep data.
 
-### WP11: Stage 1 screening (overnight)
+### WP11: Stage 1 screening
+
+WP11 runs in several sessions: preparation and pre-flight, three sweep sessions (one per context, each started by Zack after G3), and an analysis session.
 
 **Tasks:**
-- Generate `configs/sweeps/stage1.toml` according to §5.4.
-- Zack readies the machine (G3), and the sweep runs detached.
-- In the next session:
-  - analyse the results and re-run any flagged cells;
-  - produce the shortlist, the VRAM breakdowns and the hit rates;
-  - update the progress log.
+- Preparation: adopt the current plan version; write `configs/sweeps/stage1.toml` according to §5.4 (it must expand to exactly 57 cells); write a short pre-flight spec; write `docs/runbook-stage1.md` with the exact commands for the three sessions, the G3 checklist, how to monitor, and how to resume.
+- Pre-flight on the GPU (short, not reported as results): one cell of each placement family, the max-fit probe at 32K and 128K, N_fit from P1's log, and the re-run mode on a copy of the mini-sweep data. Check in the first logs that `--fit` leaves explicit placements alone (P6–P9) and that P8 and P9 start at the intended placement.
+- Sessions: for each context, Zack readies the machine (G3), and the session runs detached from a clean committed tree.
+- Analysis, after each session or after all three: `report coverage` to confirm every cell is measured or recorded as did not fit; re-run flagged repetitions once with `--rerun-flagged`; produce the shortlist, the VRAM breakdowns, the hit rates and the swap sensitivity; update the progress log.
 
 **Acceptance:**
-- Coverage is complete and all flags are resolved.
+- Coverage is complete (exit code 0) and all flags are resolved or listed as excluded diagnostics.
 - The shortlist follows §3.3.
 - Everything is committed.
 
 ### WP12: Stage 2 feature experiments
 
-**Tasks:** run Stages 2a–2e as described in §5.4, then recommend whether MTP belongs in the tuned configs.
+**Tasks:** run Stages 2a–2e as described in §5.4. Write the runner for the output sanity check (§5.6, using `smallpc.sanity`) and run it on each shortlisted candidate. Then recommend whether MTP belongs in the tuned configs.
 
 **Acceptance:**
 - All results have CIs.
@@ -766,6 +779,7 @@ Each entry records the date, WP, status, commit, key results (with numbers) and 
 - **Estimates to be replaced.** The plan's per-token KV size and per-expert size estimates will be replaced with measured values in WP6 and WP11. Any material difference will be reported.
 - **Release.** Step 0's release follows the lighter standard agreed earlier: a tagged baseline release in the umbrella repo.
 - **MTP state across save and restore.** On the pinned build, neither `/slots` save/restore nor the host-RAM prompt cache lost the MTP draft state (identical draft counts at 181 and 3,191 tokens of history, and the log shows the draft state saved and restored). There was no negative control and no history above 8,192 tokens. llama.cpp #28619 (a Step 3b starter PR that Step 5 depends on) may already be fixed, and Step 3b and Step 5 should confirm it.
+- **Memory behaviour on this machine.** The system uses zram swap with `vm.swappiness` 150, and the kernel swaps cold pages of llama-server's memory even with about 20 GiB available. Step 1 benchmark runs on this PC will see the same behaviour. Step 0 flags only major page faults, and reports swap activity separately.
 - **Real agent turns.** Step 0's 3,000 + 400 turn is a standardised workload. Step 1 should report per-turn new tokens and generated tokens from real tasks, to show how far real use is from it.
 
 ---
@@ -775,6 +789,7 @@ Each entry records the date, WP, status, commit, key results (with numbers) and 
 | Version | Date | Change |
 |---|---|---|
 | 1.0 | 6 Nov 2026 | Initial plan |
+| 1.4 | 9 Nov 2026 | Lessons from WP9–WP10: the paging flag counts only llama-server major faults, with swap growth recorded as `swap_activity` and a swap sensitivity added to every report (§5.5, §5.6); paired-ratio intervals become the wider of bootstrap and t on log ratios, and the measured coverage of the intervals is stated (§5.5); eligibility and the tie-break are written as WP10 implemented them, with the literal step 2 that could never apply removed, and screening applies no tie-break (§3.3); the output sanity check gets declared thresholds and a stage (§5.6, WP12); transient precondition failures are retried (§5.3); Stage 1 runs as three sessions with shuffled cell order, a recomputed time estimate of about 8 h, a clean-tree rule and a pre-flight (§5.4, WP11); a note on memory behaviour for the executive chat (§13) |
 | 1.3 | 9 Nov 2026 | Lessons from WP5–WP8: the idle precondition uses CPU busy time instead of the lagging load average, with a recorded wait (§5.3); the paging flag counts only llama-server's own faults and swap, since system-wide zram swap-in never reaches zero (§5.6); a new `accounting` flag and `prompt_n + cache_n` assertions for Requests A and B, and Request A's one generated token documented (§5.3, §5.6, WP9); every cell runs with `-lv 4`, and hit rates are decode-batch only (§5.4); the canary is defined, with fresh nonces (§5.1, §5.2); K = 1,024, the variant policy r mod 5 and the special-token exclusion recorded (§5.2); the MTP notes updated with WP5's findings (§13) |
 | 1.2 | 6 Nov 2026 | Zack's review: MTP draft state tested across slot save/restore and the host-RAM prompt cache (WP5, §13); the 3,000 + 400 turn is a standardised workload, and the smoke task's request pattern is no longer used to revise it (§3.4, WP7); T_turn renamed T_turn_400 and labelled an estimate, with measured T_B and `predicted_n` recorded, a `short_gen` flag, and a WP8 check that outputs reach 400 tokens (§5.3, §5.6, WP8, WP10); confirmed repo name, licence holder and WP0 setup (§4, §7, §11, WP0) |
 | 1.1 | 6 Nov 2026 | After external review: stock cells keep their §3.1 settings in every stage (§5.4, WP2); every fresh request gets its own nonce, plus `cache_n` assertions and a new `warm_prefill` flag (§5.2, §5.3, §5.6, WP8, WP9); explicit BOS/special-token handling for token arrays (§5.2, WP8); the MTP tensor check now screens for known broken-head signatures, with proof left to WP5's functional tests (S4, WP4); S4 and §5.6 agree on how flagged results are reported |
