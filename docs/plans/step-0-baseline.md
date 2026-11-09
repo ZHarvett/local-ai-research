@@ -1,6 +1,6 @@
 # Step 0 Plan: Baseline Setup
 
-*Version 1.4 · 9 November 2026*
+*Version 1.5 · 9 November 2026*
 *Part of "Local AI on a Small PC" (project plan dated 5 November 2026). This file is the reference for Step 0. Any change produces a new version, recorded in §14.*
 
 ---
@@ -174,7 +174,7 @@ One server configuration is one **cell**. For each cell:
 
 **Logging and hit rates:** every cell, stock included, runs with `-lv 4`. This is logging only, which §3.1 allows, and WP5 measured no speed cost. It provides the placement trace, the buffer sizes and the expert-cache statistics. The statistics give hit rates for decode-sized batches only; prefill-sized batches report only how many experts were copied from the cache.
 
-**Stage 1: Screening** (2 repetitions; WP11; about 8 hours of GPU time, run as three sessions)
+**Stage 1: Screening** (2 repetitions; WP11; about 4 to 5 hours of GPU time, run as three sessions)
 
 Run every placement below for each context C ∈ {32K, 64K, 128K} and each batch setting (b, ub) ∈ {(2048, 2048), (4096, 4096)}:
 
@@ -183,16 +183,16 @@ Run every placement below for each context C ∈ {32K, 64K, 128K} and each batch
 | P1 | `--fit` with its default 1024 MiB margin |
 | P2 | `--fit --fit-target 256` |
 | P3–P5 | `--fit` plus `--moe-cache-mib` of 1024, 2048 and 4096 |
-| P6–P7 | `-cmoe` plus `--moe-cache-mib` at max-fit and at max-fit − 2048. Max-fit is found by binary search in 256 MiB steps, requiring at least 512 MiB free after the longest request. |
+| P6–P7 | `-cmoe` plus `--moe-cache-mib` at max-fit and at max-fit − 2048. Max-fit is found by binary search in 256 MiB steps: the largest cache for which the server starts with the explicit placement unchanged and at least 512 MiB stays free after the longest request. `--fit` stays at its default for these cells, so its 1,024 MiB margin applies and a probe step where `--fit` intervenes is rejected. On this card the fit margin is the binding limit (about 1.35 GiB free), which makes the cache 512 to 768 MiB smaller than a 512 MiB rule alone would allow, and keeps the setting safe on other cards. |
 | P8–P9 | `--n-cpu-moe` at N_fit and at N_fit − 2. N_fit is the number of expert layers that P1's fit placed on the CPU, read from its log; if it can't be derived, it is the smallest N that fits, found by binary search. |
 
 Add the stock configuration for each C, for 57 cells in total.
 
 **Sessions.** Stage 1 runs as three sessions, one per context (`--only context=32K`, then 64K, then 128K), each with its own start and end canaries, so a drift flag covers 2 to 4 hours instead of one 9-hour block. Inside a session, the cell order is a seeded shuffle that respects the one dependency (P1 before P8 and P9 of the same group), so slow thermal or background drift cannot line up with a placement. Real sessions start only from a clean committed tree (no `--allow-dirty`), and a resumed session must match its spec, workload manifest and sampling hashes.
 
-**Time.** Measured per-cell overhead is about 15 s plus the 20 s warm-up (WP9). With the live-check request times, the 57 cells take about 6.7 h (7.8 h if the CPU-expert placements P6–P9 run 1.5 times slower, 8.3 h with cold loads). Max-fit and N_fit probing adds about 24 minutes (49 at worst), and canaries about 5 minutes. Per session: 32K about 1.5 h, 64K about 2.3 h, 128K about 4.2 h.
+**Time.** The WP11 pre-flight measured one repetition of ten cells. Candidate cells run at 40 to 53% of the earlier estimate, because the larger batch settings (`-ub 2048` or `4096`) prefill 2.3 to 2.9 times faster than the default `-ub 512` (PP_fresh at 16K: about 2,300 and 2,900 tokens/s against about 1,000), while decode speed is unchanged. Expected per session: 32K about 0.85 h, 64K about 1.3 h, 128K about 2.2 h, 4.3 h in all (5.0 h upper bound), including probing and canaries. These come from one repetition per cell and are good to about 15%.
 
-**Pre-flight.** Before the first real session, a short real run (WP11) covers what the WP9 mini-sweep could not: one cell of each placement family on the GPU, the max-fit probe, N_fit from P1's log and the re-run mode.
+**Pre-flight (done in WP11 part 1).** A short real run covered what the WP9 mini-sweep could not: one cell of each placement family on the GPU (including `-b 4096`), the max-fit probe at 32K and 128K, N_fit from P1's log, and the re-run mode on real hardware. All ten cells completed with no flags and no swap activity, `--fit` left the explicit placements of P6 to P9 unchanged, and the re-run left the old record lines byte-identical. Pre-flight data is functional-test data and is not reported as results. The probe cache from the pre-flight is retired before the real sessions, so every probe is measured under the same conditions as the session that uses it.
 
 Output: for each context, the shortlist of §3.3 (the top 2 eligible placements by T_turn_400, with the stock reference row), plus VRAM breakdowns and expert-cache hit rates.
 
@@ -789,6 +789,7 @@ Each entry records the date, WP, status, commit, key results (with numbers) and 
 | Version | Date | Change |
 |---|---|---|
 | 1.0 | 6 Nov 2026 | Initial plan |
+| 1.5 | 9 Nov 2026 | After the WP11 pre-flight: the max-fit definition for P6 and P7 states that `--fit` keeps its default margin, which is the binding limit on this card (§5.4); the Stage 1 time estimate drops to about 4 to 5 hours, because the larger batch settings prefill 2.3 to 2.9 times faster than the default (§5.4); the pre-flight is recorded as done, and its probe cache retired (§5.4) |
 | 1.4 | 9 Nov 2026 | Lessons from WP9–WP10: the paging flag counts only llama-server major faults, with swap growth recorded as `swap_activity` and a swap sensitivity added to every report (§5.5, §5.6); paired-ratio intervals become the wider of bootstrap and t on log ratios, and the measured coverage of the intervals is stated (§5.5); eligibility and the tie-break are written as WP10 implemented them, with the literal step 2 that could never apply removed, and screening applies no tie-break (§3.3); the output sanity check gets declared thresholds and a stage (§5.6, WP12); transient precondition failures are retried (§5.3); Stage 1 runs as three sessions with shuffled cell order, a recomputed time estimate of about 8 h, a clean-tree rule and a pre-flight (§5.4, WP11); a note on memory behaviour for the executive chat (§13) |
 | 1.3 | 9 Nov 2026 | Lessons from WP5–WP8: the idle precondition uses CPU busy time instead of the lagging load average, with a recorded wait (§5.3); the paging flag counts only llama-server's own faults and swap, since system-wide zram swap-in never reaches zero (§5.6); a new `accounting` flag and `prompt_n + cache_n` assertions for Requests A and B, and Request A's one generated token documented (§5.3, §5.6, WP9); every cell runs with `-lv 4`, and hit rates are decode-batch only (§5.4); the canary is defined, with fresh nonces (§5.1, §5.2); K = 1,024, the variant policy r mod 5 and the special-token exclusion recorded (§5.2); the MTP notes updated with WP5's findings (§13) |
 | 1.2 | 6 Nov 2026 | Zack's review: MTP draft state tested across slot save/restore and the host-RAM prompt cache (WP5, §13); the 3,000 + 400 turn is a standardised workload, and the smoke task's request pattern is no longer used to revise it (§3.4, WP7); T_turn renamed T_turn_400 and labelled an estimate, with measured T_B and `predicted_n` recorded, a `short_gen` flag, and a WP8 check that outputs reach 400 tokens (§5.3, §5.6, WP8, WP10); confirmed repo name, licence holder and WP0 setup (§4, §7, §11, WP0) |
