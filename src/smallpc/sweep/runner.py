@@ -1,6 +1,6 @@
 """Command line of the sweep runner.
 
-    python -m smallpc.sweep check SPEC
+    python -m smallpc.sweep check SPEC [--only context=32K] [--only batch=b2048]
     python -m smallpc.sweep run SPEC --session-id ID [--resume] [--rerun-flagged]
         [--only context=32K] [--only batch=b2048] [--allow-dirty] [--inhibit-tag TAG]
         [--machine M.toml] [--model-config MODEL.toml] [--no-inhibit-check]
@@ -26,9 +26,11 @@ from .core import EXIT_ERROR, EXIT_OK, SessionAbort, default_env
 from .session import Session
 
 
-def check_spec(path: Path, root: Path | None = None) -> dict:
+def check_spec(path: Path, root: Path | None = None, only: dict[str, str] | None = None) -> dict:
     """Expand and validate a spec. Raises ``SpecError`` if it is inconsistent or does not expand
-    to the number of cells it declares (``expect_cells``)."""
+    to the number of cells it declares (``expect_cells``; always checked on the whole spec, before
+    ``only`` filters it). Reports the cell counts, the expansion per axis value and the time
+    estimate of the (filtered) cells."""
     root = root or repo_root()
     spec = load_sweep(path)
     cells = sp.expand(spec, root)
@@ -37,22 +39,46 @@ def check_spec(path: Path, root: Path | None = None) -> dict:
         raise sp.SpecError(
             f"the spec expects {spec.expect_cells} cells but expands to {len(cells)}"
         )
+    total = len(cells)
+    cells = sp.apply_filter(cells, only or {})
+
+    def ctx_of(c: sp.CellDef) -> str:
+        return c.coords.get("context", str(c.overrides.get("context")))
+
     by_ctx: dict[str, int] = {}
+    by_axis: dict[str, dict[str, int]] = {}
     for c in cells:
-        by_ctx[c.coords.get("context", str(c.overrides.get("context")))] = (
-            by_ctx.get(c.coords.get("context", str(c.overrides.get("context"))), 0) + 1
-        )
+        by_ctx[ctx_of(c)] = by_ctx.get(ctx_of(c), 0) + 1
+        for axis, value in c.coords.items():
+            by_axis.setdefault(axis, {})
+            by_axis[axis][value] = by_axis[axis].get(value, 0) + 1
+    by_axis["profile"] = {}
+    for c in cells:
+        by_axis["profile"][c.profile] = by_axis["profile"].get(c.profile, 0) + 1
     order = sp.order_cells(cells, spec.shuffle_seed)
+    canary_reps = spec.canary.repetitions if spec.canary else 0
+    est = estimate.spec_s(cells, spec.repetitions, canary_repetitions=canary_reps)
     return {
         "name": spec.name,
         "cells": len(cells),
+        "cells_in_spec": total,
+        "filter": only or {},
         "stock_cells": sum(c.profile == "stock" for c in cells),
         "by_context": by_ctx,
+        "by_axis": by_axis,
         "cells_with_tokens": [c.name for c in cells if c.tokens],
         "repetitions": spec.repetitions,
         "canary": spec.canary is not None,
         "first_in_order": [c.name for c in order[:5]],
-        "stage1_estimate_h": round(estimate.stage1_s()["total_s"] / 3600, 2),
+        "estimate": {
+            "basis": "WP8 live-check request times, planning overhead 60 s per cell, 3 probe "
+            "steps per (context, batch) group with a @max_fit cell; updated by measured "
+            "pre-flight figures in docs/runbook-stage1.md",
+            "cells_h": round(est["cells_s"] / 3600, 2),
+            "probing_h": round(est["probing_s"] / 3600, 2),
+            "canaries_h": round(est["canaries_s"] / 3600, 2),
+            "total_h": round(est["total_s"] / 3600, 2),
+        },
     }
 
 
@@ -61,6 +87,7 @@ def main(argv: list[str] | None = None) -> int:
     sub = ap.add_subparsers(dest="cmd", required=True)
     c = sub.add_parser("check")
     c.add_argument("spec", type=Path)
+    c.add_argument("--only", action="append", default=[], help="axis=value (context, batch)")
     r = sub.add_parser("run")
     r.add_argument("spec", type=Path)
     r.add_argument("--session-id", required=True)
@@ -86,7 +113,7 @@ def main(argv: list[str] | None = None) -> int:
 
     try:
         if a.cmd == "check":
-            print(json.dumps(check_spec(a.spec, root), indent=2))
+            print(json.dumps(check_spec(a.spec, root, sp.parse_only(a.only)), indent=2))
             return EXIT_OK
         if a.cmd == "latest":
             sid = status.latest_session(out_root, load_sweep(a.spec).name, sp.parse_only(a.only))

@@ -84,3 +84,42 @@ def stage1_s(
         "total_s": cells + probing + canaries,
         "total_without_probing_s": cells + canaries,
     }
+
+
+def spec_s(
+    cells,
+    repetitions: int,
+    *,
+    canary_repetitions: int = 0,
+    probe_steps: int = 3,
+    overhead: float = OVERHEAD_S,
+    warmup: float = WARMUP_S,
+    probe_load: float = LOAD_S,
+    probe_stop: float = STOP_S,
+) -> dict:
+    """Seconds for the cells of a (possibly filtered) sweep spec: every cell at its context, the
+    probing of each (context, batch) group that has a ``@max_fit`` token (``probe_steps`` steps
+    of ``probe_step_s``), and a start and end canary when ``canary_repetitions`` is above zero.
+    Cells are ``smallpc.sweep.spec.CellDef``s; the context comes from the cell's overrides."""
+    cell_t = 0.0
+    groups: set[tuple[int, str]] = set()
+    for c in cells:
+        ctx = int(c.overrides["context"])
+        cell_t += cell_s(ctx, repetitions, overhead=overhead, warmup=warmup)
+        if any(t.kind == "max_fit" for t in c.tokens.values()):
+            groups.add((ctx, c.coords.get("batch", "")))
+    probing = sum(
+        probe_steps * probe_step_s(ctx, load=probe_load, stop=probe_stop) for ctx, _ in groups
+    )
+    canaries = (
+        2 * canary_s(canary_repetitions, overhead=overhead, warmup=warmup)
+        if canary_repetitions
+        else 0.0
+    )
+    return {
+        "cells_s": cell_t,
+        "probing_s": probing,
+        "canaries_s": canaries,
+        "total_s": cell_t + probing + canaries,
+        "probe_groups": len(groups),
+    }

@@ -1,0 +1,57 @@
+# WP11 pre-flight (plan v1.4, 5.4): a short real run on the GPU that exercises exactly the Stage 1 code paths,
+# one repetition, no canary (drift is "not assessed"). Functional-test data, never results.
+#
+#   scripts/run-sweep.sh configs/sweeps/preflight.toml --session-id preflight-20261109
+#
+# Defaults, axes and cell names are copied from configs/sweeps/stage1.toml (tests/test_stage1_spec.py checks
+# that every pre-flight cell has the same name and settings as the Stage 1 cell). All cells use batch b2048
+# except P1-32K-b4096, which is there because half of Stage 1 runs -b 4096 -ub 4096 and that setting must not
+# meet the GPU for the first time in the real sweep.
+name = "preflight"
+repetitions = 1
+shuffle_seed = 20261109
+max_restarts = 2
+expect_cells = 10
+
+# Candidate and tuned cells get [defaults]; the section 5.4 sweep defaults (-ctk/-ctv q8_0, -fa on,
+# -np 1) are applied to them by ServerConfig.effective() when the argv is rendered, and --port comes
+# from machine.toml. Stock cells get only [stock_defaults].
+[defaults]
+metrics = true
+log_verbosity = 4
+[stock_defaults]
+metrics = true
+log_verbosity = 4
+
+[axes.context]
+"32K"  = { context = 32768 }
+"64K"  = { context = 65536 }
+"128K" = { context = 131072 }
+[axes.batch]
+b2048 = { batch = 2048, ubatch = 2048 }
+b4096 = { batch = 4096, ubatch = 4096 }
+[axes.placement]
+P1 = { fit = "on" }
+P2 = { fit = "on", fit_target = 256 }
+P3 = { fit = "on", moe_cache_mib = 1024 }
+P4 = { fit = "on", moe_cache_mib = 2048 }
+P5 = { fit = "on", moe_cache_mib = 4096 }
+P6 = { cpu_moe = true, moe_cache_mib = "@max_fit" }
+P7 = { cpu_moe = true, moe_cache_mib = "@max_fit-2048" }
+P8 = { fit = "off", n_cpu_moe = "@n_fit(P1)" }
+P9 = { fit = "off", n_cpu_moe = "@n_fit(P1)-2" }
+
+[[cells]]
+name = "{placement}-{context}-{batch}"
+profile = "candidate"
+product = { placement = ["P1", "P3", "P6", "P7", "P8", "P9"], context = ["32K"], batch = ["b2048"] }
+
+[[cells]]
+name = "{placement}-{context}-{batch}"
+profile = "candidate"
+product = { placement = ["P1", "P6", "P8"], context = ["128K"], batch = ["b2048"] }
+
+[[cells]]
+name = "{placement}-{context}-{batch}"
+profile = "candidate"
+product = { placement = ["P1"], context = ["32K"], batch = ["b4096"] }
