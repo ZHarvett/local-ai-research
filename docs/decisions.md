@@ -466,3 +466,88 @@ and as short points; W1 and W2 in `recipe.toml` were never needed.
   probing step counts it as a failure, so max-fit is never found with fit moving things. The Stage 1 sketch
   leaves `--fit` at its default for P6 and P7 and sets `fit = "off"` for P8 and P9; **WP11 must read the first
   logs of P6 to P9 and confirm** that fit does not change the explicit placement before trusting the rest.
+
+## WP10 decisions (2026-11-09)
+
+Declared before any WP10 code is written, and before any real (non-functional-test) measurement exists.
+
+### 1. Units and attempts
+- The unit of measurement is **one repetition of one cell**: (session, cell, repetition).
+- When attempt-2 records exist for a unit, they **replace** the attempt-1 records for that unit in every
+  headline number. Attempt 1 stays in the diagnostics table ("excluded diagnostic result").
+- Warm-up records (role `warmup`) and canary records (roles `canary_start`, `canary_end`) are never part
+  of cell statistics. Canaries are summarised separately (session health).
+
+### 2. Exclusion and eligibility
+- After attempts are resolved, a unit is **clean** if no request in it carries any flag (any of
+  `thermal`, `paging`, `warm_prefill`, `cache_miss`, `short_gen`, `accounting`) and its session is not
+  flagged for drift. Drift is judged per attempt: attempt-1 units against the session's `drift.main`,
+  attempt-2 units against `drift.rerun` (the re-run's own canaries); an attempt-2 unit is therefore not
+  excluded by the drift of the main run it replaces. If a session has no drift record for an attempt
+  (no canary was run), drift is "not assessed" and does not exclude, and the report says so.
+- Headline statistics use clean units only and show `n_clean` and `n_total`. Flagged units are listed in a
+  diagnostics table with their flags, labelled "excluded diagnostic result".
+- A cell is **eligible** for selection (§3.3) if all of these hold:
+  - its final cell status is `complete`;
+  - the minimum over its final-attempt windows of `windows[*].min_free_vram_mib` is at least 512;
+  - it has no flagged unit (after attempts are resolved);
+  - `n_clean` meets the minimum for the mode: 2 in screening, 5 in final;
+  - it has not failed the output sanity check (§5.6): sanity is `pass`, `fail` or `not run`; `not run`
+    is allowed in screening, in final mode it must be `pass`.
+- Every cell gets an eligibility line with the reasons it failed, so the table explains itself.
+- One refinement that follows from the §5.6 text: a `short_gen` flag is not re-run, so a unit with it stays
+  flagged. It excludes the unit from the headline numbers and from eligibility, as the rules say ("no
+  unresolved flags"). Its prefill numbers are still shown in the diagnostics table.
+
+### 3. Reading of the tie-break (§3.3)
+Among eligible cells of one context, order by **mean T_turn_400** (the mean over repetitions of the
+per-repetition mean over the three depths of §5.3). Compare the best-mean cell with the runner-up by the
+paired per-repetition difference of T_turn_400 and its 95% CI (the wider of the bootstrap and t
+intervals, §5.5).
+- If the CI excludes zero, the best-mean cell wins.
+- If it includes zero, **step 1** applies: the paired difference of T_reread (also the per-repetition
+  mean over the three depths). If that CI excludes zero, the cell with the lower mean T_reread wins. If it
+  also includes zero the cells are "still tied" and **step 2** applies: prefer the one without MTP, then
+  the one without an expert cache (`moe_cache_mib` unset or 0).
+- If still tied, **step 3**: prefer the lower peak VRAM use (total minus the minimum free VRAM over its
+  windows).
+- The winner and the loser of this comparison are the shortlist's top two. As information only, every
+  further eligible cell whose paired T_turn_400 difference from the winner has a CI that includes zero is
+  reported as "statistically tied with the winner".
+- **Why a reading is needed:** the literal text of step 2 would never apply. Step 1 always yields an
+  answer ("prefer the lower mean T_reread" exists for any two cells), so "if still tied" is unreachable.
+  Here step 1 only counts when the T_reread difference is itself distinguishable from zero, which is the
+  same standard step 0 uses for T_turn_400. Cells are paired on (session, repetition); cells that share no
+  repetition cannot be compared and the comparison reports "not comparable" (the better mean stays ahead
+  but the result is marked unpaired).
+
+### 4. Screening shortlist (§5.4 Stage 1)
+- Screening has 2 repetitions, so **no tie-break is applied**: the shortlist is the 2 eligible cells with
+  the lowest mean T_turn_400 per context, where a cell is a placement plus batch setting. The stock cell
+  is shown as a reference row and is never shortlisted.
+- The output lists the shortlist's VRAM breakdowns and expert-cache hit rates, and flags any pair of cells
+  in the top 4 whose means differ by less than the larger of the two ranges (max minus min over the two
+  repetitions) as "too close to call at n = 2".
+
+### 5. Output sanity check (§5.6), thresholds declared before any measurement
+Inputs are the generated token ids of a candidate and of the reference (the plain `--fit` cell at the same
+context) for the same prompt. Computed: the length; the distinct 4-gram ratio (distinct 4-grams divided by
+all 4-grams); the longest run of one repeated token; the highest repeat count of any 8-gram; and the
+index of the first divergence from the reference. A prompt **fails** if any of these holds:
+- length is below `min(100, half the reference length)`;
+- the distinct 4-gram ratio is below half the reference's;
+- the longest repeated-token run is 16 or more while the reference's is below 16;
+- some 8-gram repeats 8 or more times while the reference's maximum is below 8.
+A candidate passes if none of its 3 prompts fails. The first divergence index is information only:
+different placements and KV types can legitimately diverge.
+
+### 6. Mini-sweep data caveats
+`data/raw/mini-20261109` is functional-test data, never results. It was produced with `--allow-dirty`, so
+its recorded commit is not exact. Its final `complete` cell records have a `server_instance` that is one
+too high (fixed in the code afterwards, deliberately not patched in the data), so the analysis never
+relies on a cell record's `server_instance`: it uses only request records, cell summaries and telemetry.
+
+### Further choices made while implementing (recorded with the code that needs them)
+- Cell identity across sessions is the cell name; units are keyed by (session, cell, repetition), so
+  pooling several sessions never merges two repetitions that happen to share an index.
+- Paired comparisons match on (session, repetition) keys.
