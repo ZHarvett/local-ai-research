@@ -1,6 +1,6 @@
 # Step 0 Plan: Baseline Setup
 
-*Version 1.2 · 6 November 2026*
+*Version 1.3 · 9 November 2026*
 *Part of "Local AI on a Small PC" (project plan dated 5 November 2026). This file is the reference for Step 0. Any change produces a new version, recorded in §14.*
 
 ---
@@ -107,7 +107,7 @@ It is a standardised workload, not a model of real agent use. Real turns vary wi
 1. **llama-server's response `timings` are the authoritative speed source.** Client wall-clock times are recorded alongside them.
 2. **No random-token numbers for expert-cache or MTP results.** llama-bench builds its prompts from random token IDs, which distorts MoE routing (whole groups of experts go unused) and therefore cache hit rates and draft acceptance. All reported numbers come from llama-server with real, public coding prompts. llama-bench is used once, as a clearly labelled cross-check (Stage 2e).
 3. **Every server start gets a warm-up**, and every run records an environment snapshot and continuous telemetry.
-4. **Every long session is bracketed by a canary measurement**, run at the start and the end, to detect drift and heat soak.
+4. **Every long session is bracketed by a canary measurement**, run at the start and the end, to detect drift and heat soak. The canary is a fixed candidate configuration named in the sweep spec (by default `--fit` at 64K with 8-bit KV), measured with 3 repetitions of the short point and the 16K pair. Canary requests use repetition indices from 100 upward, so each one gets a fresh nonce and the end canary can't be served from the cache.
 5. **Nothing is left implicit.** Every llama-server argument that matters is either set or deliberately left at its default, and the effective values are captured from `/props` and the startup log. The default port is 9931, so an explicit port is always set.
 
 ### 5.2 Workloads (built in WP8)
@@ -115,10 +115,11 @@ It is a standardised workload, not a model of real agent use. Real turns vary wi
 - **Sources:** two permissively licensed public repositories at pinned commits, one in Python and one in Rust or TypeScript.
 - **Prompt variant:** a system prompt, then real source files packed to an exact token length (counted with `/tokenize`), then an instruction that asks for code. Prompts follow the model's chat template.
 - **Append chunk:** about 3,000 tokens of tool-output-like text (for example a test log or file listing from the same repos), plus an instruction.
-- **Variants:** 5 per length; each repetition uses the next variant.
-- **Per-request nonces:** every fresh request (each Request A, the short point and the warm-up) starts with its own unique nonce at the very beginning of the system message. A per-repetition nonce would not be enough: the prompts for different depths of the same variant share their opening files, so a longer prompt could reuse a shorter one's cached prefix. The nonce also prevents matches against anything kept in the host-RAM prompt cache.
+- **Variants:** 5 per length; repetition r uses variant r mod 5. K = 1,024 tokens throughout, so 96K is 98,304 tokens.
+- **Per-request nonces:** every fresh request (each Request A, the short point, the warm-up and every canary request) starts with its own unique nonce at the very beginning of the system message. A per-repetition nonce would not be enough: the prompts for different depths of the same variant share their opening files, so a longer prompt could reuse a shorter one's cached prefix. The nonce also prevents matches against anything kept in the host-RAM prompt cache.
 - **Exact prefixes:** Request B (§5.3) must begin with Request A's exact token sequence, so token arrays are sent to `/completion`.
 - **BOS and special tokens:** llama-server adds BOS automatically only to string prompts, never to pure token-ID arrays. WP8 therefore reads the model's `add_bos_token` metadata, tokenizes with matching `/tokenize` settings (special tokens parsed), and checks that a token-array request matches the equivalent string request.
+- **Special-token strings:** repository files and command outputs that contain any of the model's special-token strings are excluded, because prompts are tokenized with special tokens parsed and such text would silently become control tokens.
 - **What is committed:** only the recipes (repo, commit, file list, instruction, token count, and SHA-256 of the rendered text). The prompts themselves are regenerated deterministically.
 
 ### 5.3 Per-cell protocol
@@ -130,15 +131,15 @@ One server configuration is one **cell**. For each cell:
    - no other GPU compute processes are running;
    - no display clients are on the dGPU (warning only);
    - `MemAvailable` is at least 24 GiB (warn below this) and at least 20 GiB (abort below this);
-   - the 1-minute load average is below 1.5.
+   - the CPU is idle: busy time below 10% averaged over 10 seconds (from `/proc/stat`). The 1-minute load average is recorded but is not the gate, because it lags for minutes after a heavy run. If the idle check fails, the runner re-checks every 10 seconds for up to 10 minutes, records the wait, and aborts if it still fails.
 2. **Start the server.** Record load time, the startup log and the effective settings from `/props`.
 3. **Snapshot and telemetry.** Take an environment snapshot and start 2 Hz telemetry.
 4. **Warm-up.** Send 2 requests (8K-token prompt, 128 generated tokens) and discard them.
 5. **Repetitions.** For each repetition, with the depth order shuffled using a fixed seed:
    - **Short point:** a fresh 2K-token prompt with up to 400 generated tokens.
    - For each depth d in D(C):
-     - **Request A:** a fresh prompt of length d with `n_predict: 0`. The prompt is evaluated into the cache with no generated token, so the hybrid model's state ends exactly at A. The runner asserts `cache_n` ≤ 32, since only the template's fixed opening tokens may match. A larger value raises the `warm_prefill` flag, and that request is not used for PP_fresh or T_reread.
-     - **Request B:** the same tokens plus the 3,000-token append, with up to 400 generated tokens. The runner checks that `cache_n` ≈ d, raising the `cache_miss` flag otherwise.
+     - **Request A:** a fresh prompt of length d with `n_predict: 0`. The prompt is evaluated into the cache. On the pinned build the server still reports one generated token (`predicted_n` = 1), but Request B reuses exactly d tokens, so the cached state ends at A. The runner asserts `prompt_n + cache_n` = d and `cache_n` ≤ 32, since only the template's fixed opening tokens may match. A larger `cache_n` raises the `warm_prefill` flag, and that request is not used for PP_fresh or T_reread.
+     - **Request B:** the same tokens plus the 3,000-token append, with up to 400 generated tokens. The runner asserts `prompt_n + cache_n` = d + 3,000 and checks that `cache_n` ≥ 0.95·d, raising the `cache_miss` flag otherwise.
    - D(32K) = {8K, 16K, 24K}; D(64K) = {16K, 32K, 48K}; D(128K) = {32K, 64K, 96K}.
 6. **Clean shutdown** (SIGINT). Parse buffer sizes, placement decisions and expert-cache statistics from the log.
 
@@ -165,6 +166,8 @@ One server configuration is one **cell**. For each cell:
 **Sweep defaults apply to candidate cells only:** 8-bit KV (`-ctk q8_0 -ctv q8_0`), `-fa on`, `-np 1` and an explicit port, unless a stage says otherwise.
 
 **Stock cells keep exactly the §3.1 settings in every stage:** FP16 KV, flash attention `auto`, the default slot count, `-b 2048 -ub 512` and no speculative decoding. Tuned configurations are therefore always compared against genuine stock.
+
+**Logging and hit rates:** every cell, stock included, runs with `-lv 4`. This is logging only, which §3.1 allows, and WP5 measured no speed cost. It provides the placement trace, the buffer sizes and the expert-cache statistics. The statistics give hit rates for decode-sized batches only; prefill-sized batches report only how many experts were copied from the cache.
 
 **Stage 1: Screening** (2 repetitions; WP11; about 6–8 hours)
 
@@ -210,11 +213,12 @@ Stock-64K and tuned-64K, 5 repetitions each.
 | Flag | Trigger |
 |---|---|
 | thermal | A GPU thermal or hardware slowdown reason is active in more than 1% of samples in the measured window, or CPU Tctl reaches 95 °C in more than 1% of samples. The GPU power cap is recorded, not flagged. |
-| paging | llama-server has more than 1,000 major page faults, or any swap-in occurs, during a measured window. |
+| paging | llama-server has more than 1,000 major page faults during a measured window, or any of its memory is in swap (`VmSwap` above zero) during the window. System-wide swap-in is recorded but not flagged, because zram swaps a few pages per second even on an idle machine. |
 | drift | A session's start and end canaries differ by more than max(their 95% CI, 5%). |
 | short_gen | Request B generates fewer than 100 tokens. Its generation speed and T_turn_400 are excluded, because too few tokens give an unstable per-token time; its prefill numbers are kept. |
 | warm_prefill | Request A (or another fresh request) reports `cache_n` > 32. |
 | cache_miss | Request B is served with `cache_n` < 0.95·d. |
+| accounting | `prompt_n + cache_n` differs from the expected total: d for Request A, d + 3,000 for Request B, and the prompt length for other fresh requests. |
 | did_not_fit | Startup failure or out-of-memory. |
 
 Flagged measurements are re-run once, except `short_gen`, which a seeded re-run would only repeat. If still flagged, they are excluded from selection and from headline numbers. They stay in the report as excluded diagnostic results, with the flag shown.
@@ -513,7 +517,7 @@ Each work package (WP) is sized for one Claude Code prompt in a fresh session. B
   - JSONL records, one per request, each carrying the config hash and an environment reference;
   - resuming by (config hash, workload, repetition);
   - recording "did not fit" cells;
-  - the `cache_n` assertions for Requests A and B (§5.3);
+  - the accounting and `cache_n` assertions for Requests A and B (§5.3);
   - max-fit probing and canary bracketing;
   - `systemd-inhibit` wrapping.
 - **Scripts:** `scripts/run-sweep.sh` (which goes through `run-detached.sh`) and `scripts/sweep-status.sh`.
@@ -756,12 +760,12 @@ Each entry records the date, WP, status, commit, key results (with numbers) and 
 
 ## 13. Notes for the executive chat
 
-- **MTP and parallel slots.** MTP may require a single server slot; WP5 confirms this on the pinned build. If it does, the "second server slot" designs in Steps 4 and 5 can't run alongside MTP.
+- **MTP and parallel slots.** WP5 found that MTP works with `-np 2` on the pinned build: both slots draft, and the context is split between them. The "second server slot" designs in Steps 4 and 5 are therefore not blocked by MTP.
 - **Control harness.** OpenCode was chosen; the project plan text still says "OpenCode or Claude Code".
 - **Sweep tooling.** Expert-cache and MTP results come from llama-server with real prompts, not llama-bench, because random-token benchmarks distort MoE routing. llama-bench is kept as a cross-check.
 - **Estimates to be replaced.** The plan's per-token KV size and per-expert size estimates will be replaced with measured values in WP6 and WP11. Any material difference will be reported.
 - **Release.** Step 0's release follows the lighter standard agreed earlier: a tagged baseline release in the umbrella repo.
-- **MTP state across save and restore.** WP5 tests whether the pinned build keeps the MTP draft state through `/slots` save/restore and through the host-RAM prompt cache. The result shows whether llama.cpp #28619 (a Step 3b starter PR that Step 5 depends on) is still open work.
+- **MTP state across save and restore.** On the pinned build, neither `/slots` save/restore nor the host-RAM prompt cache lost the MTP draft state (identical draft counts at 181 and 3,191 tokens of history, and the log shows the draft state saved and restored). There was no negative control and no history above 8,192 tokens. llama.cpp #28619 (a Step 3b starter PR that Step 5 depends on) may already be fixed, and Step 3b and Step 5 should confirm it.
 - **Real agent turns.** Step 0's 3,000 + 400 turn is a standardised workload. Step 1 should report per-turn new tokens and generated tokens from real tasks, to show how far real use is from it.
 
 ---
@@ -771,5 +775,6 @@ Each entry records the date, WP, status, commit, key results (with numbers) and 
 | Version | Date | Change |
 |---|---|---|
 | 1.0 | 6 Nov 2026 | Initial plan |
+| 1.3 | 9 Nov 2026 | Lessons from WP5–WP8: the idle precondition uses CPU busy time instead of the lagging load average, with a recorded wait (§5.3); the paging flag counts only llama-server's own faults and swap, since system-wide zram swap-in never reaches zero (§5.6); a new `accounting` flag and `prompt_n + cache_n` assertions for Requests A and B, and Request A's one generated token documented (§5.3, §5.6, WP9); every cell runs with `-lv 4`, and hit rates are decode-batch only (§5.4); the canary is defined, with fresh nonces (§5.1, §5.2); K = 1,024, the variant policy r mod 5 and the special-token exclusion recorded (§5.2); the MTP notes updated with WP5's findings (§13) |
 | 1.2 | 6 Nov 2026 | Zack's review: MTP draft state tested across slot save/restore and the host-RAM prompt cache (WP5, §13); the 3,000 + 400 turn is a standardised workload, and the smoke task's request pattern is no longer used to revise it (§3.4, WP7); T_turn renamed T_turn_400 and labelled an estimate, with measured T_B and `predicted_n` recorded, a `short_gen` flag, and a WP8 check that outputs reach 400 tokens (§5.3, §5.6, WP8, WP10); confirmed repo name, licence holder and WP0 setup (§4, §7, §11, WP0) |
 | 1.1 | 6 Nov 2026 | After external review: stock cells keep their §3.1 settings in every stage (§5.4, WP2); every fresh request gets its own nonce, plus `cache_n` assertions and a new `warm_prefill` flag (§5.2, §5.3, §5.6, WP8, WP9); explicit BOS/special-token handling for token arrays (§5.2, WP8); the MTP tensor check now screens for known broken-head signatures, with proof left to WP5's functional tests (S4, WP4); S4 and §5.6 agree on how flagged results are reported |
