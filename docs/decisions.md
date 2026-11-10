@@ -922,3 +922,41 @@ The pinned server returns the ids in `tokens` with `"return_tokens": true` (READ
 `python -m smallpc.stage2 bench-crosscheck --list-expressibility` ranks the Stage 1 64K candidates by the number of inference fields llama-bench cannot express. P1 and P2 (fit placements) have none: `--fit-target` is `-fitt`, and only the context is approximated (`-fitc`, the minimum context of the fit).
 P3 to P5 lose the expert cache, P6 and P7 lose the cache and the context, P8 and P9 lose the context. The default is P2-64K-b4096: nothing inexpressible, one approximation, and it is on the 64K shortlist. (The brief expected a P8 or P9; those cannot carry the context at all.)
 Smoke (`data/microbench/ft-crosscheck-P2-64K-b4096.json`, 1 repetition, 175 s): parses, labelled "cross-check, random-token prompts, never used for a decision", nothing inexpressible; fresh prefill 2,682 / 2,493 / 2,324 tok/s at 16K / 32K / 48K, decode 70.5 / 64.5 / 59.4 tok/s at those depths.
+
+## Stage 2f decision (2026-11-10)
+
+**Chosen `--cache-ram`: 2048.** It comes from the plan v1.6 rule (section 5.4, quoted in "WP12 decisions") applied by `python -m smallpc.stage2 decide --stage 2f`
+to session `s2f` (`data/raw/s2f`, spec `configs/sweeps/stage2-2f.toml`, code commit `7b7daf1`). Tool output: `status: decided`, both contexts choose 2048, no human
+decision needed (`data/analysis/stage2/2f.md`, `.json`). The step lead reviewed the checkpoint report and accepted the session and the decision.
+The value is used in every later candidate cell and in the tuned configs; stock keeps the default (8192).
+
+Paging-flagged windows (attempt 1, more than 1,000 major faults), per cell of `s2f` (5 repetitions each):
+
+| context | `--cache-ram` | flagged windows | faults per window (min to max) | flagged repetitions |
+|---|---|---|---|---|
+| 128K (P2-128K-b4096) | 8192 | 2 of 5 | 239 to 15,130 | 1, 2 |
+| 128K | 4096 | 1 of 5 | 19 to 1,202 | 1 |
+| 128K | 2048 | 0 of 5 | 0 to 889 | none |
+| 128K | 0 | 0 of 5 | 0 to 0 | none |
+| 64K (P6-64K-b4096) | 8192 | 3 of 5 | 0 to 159,451 | 2, 3, 4 |
+| 64K | 2048 | 0 of 5 | 0 to 828 | none |
+
+Caveats recorded with the decision:
+- **"Clean" means no window above the 1,000-fault line, not "no paging".** The 2048 cells had repetition-1 windows of 889 faults (128K) and 828 faults (64K), with 450.6 and
+  547.6 MiB of `VmSwap` growth. Only `--cache-ram 0` was fault-free and swap-free in all five windows (0 faults, 0.0 MiB, 128K only; 64K was not run at 0).
+- **The tool's 3% test is unpaired.** It compares the mean over all 5 repetitions of the candidate with the mean over the 8192 cell's clean units (3 of 5 at 128K, 2 of 5 at 64K),
+  and T_turn_400 differs by repetition (prompt variant), so the repetition mix inflates the gap (-0.62 % at 128K and -4.18 % at 64K as printed). On the same repetitions the 2048 against
+  8192 differences are **-0.75 % (128K, n = 3) and -0.31 % (64K, n = 2)**. The decision is the same either way (the rule's limit is +3 %).
+- **At 64K with 8192 the paging was worse than in Stage 1:** three windows flagged (repetitions 2, 3, 4), up to 159,451 faults in one window (Stage 1: one flagged window of 38 at 64K).
+  Flagged windows were not slower: the 159,451-fault window had the lowest T_turn_400 of its cell (6.816 s against 7.054 s in repetition 0). Anecdotal (one cell per setting, one session).
+- **Stock keeps the default 8192 cache**, so Stage 3 (stock against tuned) will compare a tuned config at 2048 with a stock config that pages at 64K and 128K. The step lead designs how
+  Stage 3 deals with that after the 2a data.
+- **Fallback:** if gate criterion f (at most 20 % of the measured windows paging-flagged) fails in a later session, the step lead decides whether to use `--cache-ram 0`. It is not an
+  automatic step and the agent does not choose it.
+- The data cannot show causation (one cell per setting, one session, one machine state); the dose-response (flagged windows, RssAnon growth and host cache size all fall with the setting)
+  and the fault-free cram 0 cell are consistent with the host-prompt-cache hypothesis.
+
+### Sub-stages not run in this continuation
+- **2d (threads) is skipped:** the default thread count is 8 in all 82 Stage 1 server logs (`n_threads = 8 (n_threads_batch = 8) / 16`, WP12 part 1 finding), so `-t 8` is the default; recorded with
+  `python -m smallpc.stage2 decide --stage 2d --default-threads 8` when needed.
+- **2c (`--load-mode dio`) is not part of this continuation**; no 2c spec is generated here.
