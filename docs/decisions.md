@@ -960,3 +960,27 @@ Caveats recorded with the decision:
 - **2d (threads) is skipped:** the default thread count is 8 in all 82 Stage 1 server logs (`n_threads = 8 (n_threads_batch = 8) / 16`, WP12 part 1 finding), so `-t 8` is the default; recorded with
   `python -m smallpc.stage2 decide --stage 2d --default-threads 8` when needed.
 - **2c (`--load-mode dio`) is not part of this continuation**; no 2c spec is generated here.
+
+## Stage 2a 64K gate (2026-11-10)
+
+**What happened.** Session `s2a-64K` failed the step lead's operational gate criterion f: **6 of 25 measured attempt-1 windows paging-flagged (24.0 %)**, above the 20 % stop line
+(`s2a-32K`: 4 of 25, 16.0 %, passed). Criteria a to e passed in both sessions. The runner stopped the programme as instructed; the step lead reviewed the stop report
+(commits `455eb57`, `7c9d223`) and decided as below. The session is accepted as a **recorded deviation**.
+
+**Evidence (from the stop report).**
+- Flagged windows: 32K P6-mtp0 repetition 4 (1,697 faults) and P6-mtp1 repetitions 2, 3, 4 (8,296; 1,243; 1,683); 64K P6-mtp1 repetitions 2, 3, 4 (20,153; 16,162; 18,550) and P6-mtp2
+  repetitions 2, 3, 4 (51,759; 4,687; 13,247). None in P2 cells, in mtp3 cells or in repetitions 0 and 1; 64K mtp0 had none.
+- Swap activity of the flagged windows: -295 to +58 MiB (almost no swap growth); host prompt cache capped at 1.3 to 1.9 GiB (limit 2,048 MiB); MemAvailable at least 21.1 GiB;
+  several flagged windows lost 0.2 to 1.5 GiB of RssFile (file-backed pages of the memory-mapped model).
+
+**Step lead's reading.** The mechanism differs from 2f. In 2f the flagged windows came with swap growth and growth of the host cache and anonymous memory (`--cache-ram 8192`);
+here they are file-backed faults of the memory-mapped model, concentrated in P6 cells with MTP (mtp1, mtp2) in repetitions 2 to 4. Therefore **`--cache-ram 0` is not indicated by
+the evidence, and `--cache-ram` stays 2048** (the 2f decision stands). Working hypothesis, **not a finding**: first-touch faults on expert pages that were evicted after load, touched
+again when later prompt variants use those experts. Nothing in the 2a data tests it yet (the 2a paging diagnostic describes the windows; it does not isolate a cause).
+
+**Rules for the rest of Stage 2.**
+- The plan's paging-flag rule (section 5.6) is unchanged: flagged units are re-run once, and units still flagged are excluded from selection and headline numbers.
+- Criterion f was the step lead's operational stop rule, not a plan rule. It now reads: **stop if more than 40 % of a session's measured windows are paging-flagged, or if any
+  paging-flagged window shows `swap_activity_mib` above 1,024 (the 2f mechanism returning).** This applies to every later Stage 2 session. `docs/runbook-stage2.md` and the `stage2 gate`
+  tool still print the 20 % rule (the tool is not changed); the gate output is read with this rule and the figures are reported.
+- `--rerun-flagged` is now allowed (the 2f decision is made) and runs once per session with flagged units, never twice.
