@@ -101,3 +101,9 @@ from the measurement telemetry.
 - Top 5 by CPU, ps lifetime average (names): antigravity-ide 1.4 %, claude 1.3 %, cosmic-comp 1.0 %, antigravity-ide 0.5 %, kswapd0 0.2 %.
 - Desktop apps open (names): antigravity-ide claude cosmic-comp kilo 
 - `missioncenter` (system monitor app) is no longer open.
+
+### Session s2a2-32K result (2026-11-10 22:35:03Z to 22:53:33Z)
+- Duration 18.5 min (sweep-check estimate for the three sessions together: 3.22 h). Runner exit 0, state complete, `systemd-inhibit` active, one run. Gate criteria a to f PASS.
+- Cells: 3 of 3 complete (P2-32K mtp0, P2-32K mtp2, P6-32K mtp2), none `did_not_fit`. **No flags at all** (0 of 15 measured attempt-1 windows paging-flagged; no window with swap activity above 1,024 MiB); drift none.
+- P6-32K-mtp2 took its expert-cache size from the runner's probe cache (`probe_cache_hit`, key `69cf427da1b214de5028`, 10,752 MiB, the same key as the 2a probe: same config, llama.cpp commit, model and GPU), not from a new binary search; minimum free VRAM 1,131 MiB, the same as in 2a.
+- Lowest minimum free VRAM 567 MiB (P2-mtp0), P2-mtp2 615 MiB, P6-mtp2 1,131 MiB. Runner idle gate: first check passed every time (busy at most 0.51 %), no idle waits, no retries; lowest MemAvailable 22.3 GiB (telemetry). Polls: server's share 20.3 % at most, everything else at most 0.7 %. Highest CPU Tctl 75 °C, GPU 67 °C.
