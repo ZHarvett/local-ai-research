@@ -32,3 +32,12 @@ from the measurement telemetry.
 - Top 5 by memory (names): spotify 0.50 GiB, chrome 0.40 GiB, chrome 0.37 GiB, claude 0.34 GiB, chrome 0.30 GiB.
 - Top 5 by CPU, ps lifetime average (names): chrome 9.1 %, antigravity-ide 1.2 %, claude 1.1 %, cosmic-comp 1.0 %, spotify 0.9 %.
 - Desktop apps open (names): antigravity-ide chrome claude cosmic-comp kilo spotify 
+
+### Session s2a-32K result (2026-11-10 16:17:10Z to 16:48:20Z)
+- Duration 31.2 min (runbook estimate 32 min). Runner exit 0, state complete, `systemd-inhibit` active, one run. Code commit of the session: `60edde1`.
+- Cells: 5 of 5 complete (P6-32K-b4096 at mtp0, mtp1, mtp2, mtp3; P2-32K-b4096 mtp0), none `did_not_fit`. Max-fit probes: MTP cells probed fresh (4 steps each, 4096, 11264, 11008, 10752); mtp0 read the Stage 1 probe (`probe_cache_hit`).
+- Flags: `paging` only (28 request flags = 4 flagged windows of 25 measured attempt-1 windows, 16.0 %; gate criterion f PASS): P6-mtp1 repetitions 2, 3, 4 and P6-mtp0 repetition 4. No accounting, warm_prefill, cache_miss, thermal or short_gen flag; drift none.
+- Runner idle gate: first check passed every time (busy at most 1.52 %), no idle waits, no retries; MemAvailable at the checks 24.5 GiB or more.
+- Lowest minimum free VRAM: 567 MiB (P2-32K-b4096-mtp0); P6 cells 1,069 to 1,379 MiB.
+- Polls (7 min apart; the first poll predates the "server share" column): busy 7.1 to 17.1 %; P6 cells run their experts on the CPU, so most of that is the server's own threads (the later polls show the server at 6.3 % and everything else at 0.8 to 7.5 %). No interfering process identified.
+- Lowest MemAvailable: 21.5 GiB (telemetry, P6-mtp2), 22.0 GiB at a poll. Highest CPU Tctl 75 °C, GPU 68 °C.

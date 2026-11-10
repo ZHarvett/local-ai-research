@@ -1,0 +1,125 @@
+{
+  "schema": 1,
+  "session_id": "s2a-32K",
+  "created_utc": "2026-11-10T16:17:10Z",
+  "spec": {
+    "name": "stage2-2a",
+    "path": "configs/sweeps/stage2-2a.toml"
+  },
+  "spec_sha256": "a4e031802c25d4053295b5677e939af5481b4151371b0bf77f2a82ece885e880",
+  "manifest_sha256": "ed750c1c73355d08d3f76742eb164721ebdfe7206ce2a7fcad89fd3bd5e9f27e",
+  "sampling_sha256": "09b6a27e5b086b3891ff66e0dd64f25deb12530e505cc69e4153c95716ee6743",
+  "git": {
+    "commit": "60edde1c8f7845937abe79828c707ab28dc425ca",
+    "short": "60edde1c8f",
+    "dirty": false,
+    "dirty_paths": []
+  },
+  "filters": {
+    "context": "32K"
+  },
+  "model_sha256": "42739874cc2ccfdb8523b23fbe52e29b2a7555c8176737ca9ca0b5d59859d41f",
+  "llama_cpp_commit": "57d04820dfef7a3519aac276d018a6fd71251895",
+  "allow_dirty": false,
+  "model": {
+    "sha256": "42739874cc2ccfdb8523b23fbe52e29b2a7555c8176737ca9ca0b5d59859d41f",
+    "verified": true,
+    "declared": "42739874cc2ccfdb8523b23fbe52e29b2a7555c8176737ca9ca0b5d59859d41f",
+    "size_bytes": 21713463040
+  },
+  "shuffle_seed": 20261109,
+  "cell_order": [
+    "s2a-P6-32K-b4096-mtp1",
+    "s2a-P6-32K-b4096-mtp0",
+    "s2a-P6-32K-b4096-mtp2",
+    "s2a-P6-32K-b4096-mtp3",
+    "s2a-P2-32K-b4096-mtp0"
+  ],
+  "cell_order_rule": "seeded shuffle respecting @n_fit dependencies (smallpc.sweep.spec.order_cells), not spec order",
+  "repetitions": 5,
+  "state": "complete",
+  "runs": [
+    {
+      "start_utc": "2026-11-10T16:17:10Z",
+      "pid": 794994,
+      "mode": "run",
+      "code_commit": "60edde1c8f",
+      "inhibit": {
+        "checked": true,
+        "active": true,
+        "tag": "smallpc-sweep-s2a-32K-1794327430",
+        "line": "local-ai-research sweep 1000 <user> 794981 systemd-inhibit sleep:idle smallpc-sweep-s2a-32K-1794327430 block"
+      }
+    }
+  ],
+  "inhibit": {
+    "checked": true,
+    "active": true,
+    "tag": "smallpc-sweep-s2a-32K-1794327430",
+    "line": "local-ai-research sweep 1000 <user> 794981 systemd-inhibit sleep:idle smallpc-sweep-s2a-32K-1794327430 block"
+  },
+  "drift": {
+    "main": {
+      "metrics": {
+        "pp_fresh_16k": {
+          "flag": null,
+          "relative_difference": 0.009388366373696638,
+          "threshold": 0.05,
+          "start_mean": 950.4133769451082,
+          "end_mean": 959.3362059343311,
+          "start_values": [
+            949.1492589348001,
+            948.5967004420897,
+            953.4941714584345
+          ],
+          "end_values": [
+            956.8317283158535,
+            958.8925166000658,
+            962.284372887074
+          ]
+        },
+        "tg_16k": {
+          "flag": null,
+          "relative_difference": 0.0037096811234912236,
+          "threshold": 0.05,
+          "start_mean": 78.59010484683087,
+          "end_mean": 78.29856061838738,
+          "start_values": [
+            78.7918892932486,
+            78.2586029054536,
+            78.7198223417904
+          ],
+          "end_values": [
+            78.16843711319848,
+            78.31142510699617,
+            78.41581963496749
+          ]
+        },
+        "tg_short": {
+          "flag": null,
+          "relative_difference": 0.005082830468686561,
+          "threshold": 0.05,
+          "start_mean": 88.86554088907506,
+          "end_mean": 88.41385241022776,
+          "start_values": [
+            89.4590151033274,
+            88.48240696984125,
+            88.6552005940565
+          ],
+          "end_values": [
+            88.88906711258235,
+            88.80247525215228,
+            87.55001486594863
+          ]
+        }
+      },
+      "flag": null,
+      "decided_on": [
+        "pp_fresh_16k",
+        "tg_16k"
+      ],
+      "complete": true
+    }
+  },
+  "finished_utc": "2026-11-10T16:48:20Z"
+}

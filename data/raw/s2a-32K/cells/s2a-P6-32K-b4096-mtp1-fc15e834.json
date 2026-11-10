@@ -1,0 +1,1503 @@
+{
+  "cell": "s2a-P6-32K-b4096-mtp1",
+  "role": "measured",
+  "profile": "candidate",
+  "config_hash": "fc15e834ea83faf4",
+  "argv": [
+    "/mnt/data/local-ai-research/third_party/llama.cpp/build/bin/llama-server",
+    "-m",
+    "/mnt/data/local-ai-research/models/Ornith-1.5-35B-Q4_K_M.gguf",
+    "--host",
+    "127.0.0.1",
+    "--port",
+    "8080",
+    "-c",
+    "32768",
+    "-cmoe",
+    "--moe-cache-mib",
+    "10752",
+    "-b",
+    "4096",
+    "-ub",
+    "4096",
+    "-ctk",
+    "q8_0",
+    "-ctv",
+    "q8_0",
+    "-fa",
+    "on",
+    "-np",
+    "1",
+    "--spec-type",
+    "draft-mtp",
+    "--spec-draft-n-max",
+    "1",
+    "--cache-ram",
+    "2048",
+    "--metrics",
+    "-lv",
+    "4"
+  ],
+  "resolved_config": "resolved/s2a-P6-32K-b4096-mtp1.toml",
+  "coords": {
+    "placement": "P6",
+    "context": "32K",
+    "batch": "b4096",
+    "mtp": "mtp1"
+  },
+  "resolution": {
+    "moe_cache_mib": {
+      "source": "binary_search",
+      "probe_key": "e90b8c0e0bdd113a4d6d",
+      "n_steps": 4,
+      "steps": [
+        {
+          "value": 4096,
+          "ok": true,
+          "free_mib": 7841.0,
+          "reason": null
+        },
+        {
+          "value": 11264,
+          "ok": false,
+          "free_mib": 675.0,
+          "reason": "fit_intervened"
+        },
+        {
+          "value": 11008,
+          "ok": false,
+          "free_mib": 929.0,
+          "reason": "fit_intervened"
+        },
+        {
+          "value": 10752,
+          "ok": true,
+          "free_mib": 1187.0,
+          "reason": null
+        }
+      ],
+      "verified": true,
+      "token": "max_fit",
+      "base": 10752,
+      "value": 10752
+    }
+  },
+  "model_sha256": "42739874cc2ccfdb8523b23fbe52e29b2a7555c8176737ca9ca0b5d59859d41f",
+  "llama_cpp_commit": "57d04820dfef7a3519aac276d018a6fd71251895",
+  "instances": [
+    {
+      "instance": 0,
+      "run_id": "s2a-32K-s2a-P6-32K-b4096-mtp1-fc15e834-i0",
+      "attempt": 1,
+      "started_utc": "2026-11-10T16:21:54Z",
+      "repetitions_planned": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "phases_s": {
+        "preconditions": 10.08,
+        "launch": 2.3,
+        "props": 0.0,
+        "snapshot": 0.17,
+        "prefetch": 0.02,
+        "warmup": 12.07,
+        "measure": 222.75,
+        "shutdown": 0.61,
+        "parse": 0.1
+      },
+      "preconditions": {
+        "final": {
+          "gpu_lock_held": true,
+          "lock_expected_held_by_wrapper": true,
+          "gpu_compute_processes": 0,
+          "gpu_graphics_processes": 0,
+          "connected_on_nvidia": [],
+          "mem_available_gib": 25.82,
+          "idle": {
+            "ok": true,
+            "threshold_busy_pct": 10.0,
+            "window_s": 10.0,
+            "max_wait_s": 600.0,
+            "busy_pct": 1.26,
+            "busy_pct_history": [
+              1.26
+            ],
+            "attempts": 1,
+            "elapsed_s": 10.0,
+            "waited_s": 0.0,
+            "loadavg_1m": 2.6,
+            "error": null
+          },
+          "loadavg_1m": 2.6
+        },
+        "attempts": [
+          {
+            "attempt": 1,
+            "utc": "2026-11-10T16:22:05Z",
+            "ok": true,
+            "aborts": [],
+            "hard": [],
+            "warnings": [],
+            "idle": {
+              "ok": true,
+              "threshold_busy_pct": 10.0,
+              "window_s": 10.0,
+              "max_wait_s": 600.0,
+              "busy_pct": 1.26,
+              "busy_pct_history": [
+                1.26
+              ],
+              "attempts": 1,
+              "elapsed_s": 10.0,
+              "waited_s": 0.0,
+              "loadavg_1m": 2.6,
+              "error": null
+            },
+            "mem_available_gib": 25.82
+          }
+        ],
+        "warnings": []
+      },
+      "launch": {
+        "rc": 0,
+        "load_time_s": 2.3,
+        "started": true,
+        "healthy": true,
+        "reason": null,
+        "exit_code": null,
+        "output": "server healthy: pid=797368 http://127.0.0.1:8080\nrun-dir: /mnt/data/local-ai-research/data/logs/s2a-32K-s2a-P6-32K-b4096-mtp1-fc15e834-i0"
+      },
+      "props": {
+        "n_ctx": null,
+        "total_slots": 1,
+        "n_ctx_per_slot": 32768,
+        "kv_unified": false,
+        "build_info": "b12208-57d04820d",
+        "log_n_ctx": 32768,
+        "log_n_slots": 1,
+        "log_n_ctx_slot": 32768
+      },
+      "context_check": {
+        "per_slot_n_ctx": 32768,
+        "depths_fit": {
+          "8192": true,
+          "16384": true,
+          "24576": true
+        }
+      },
+      "snapshot_id": "66c04f6c276af71a",
+      "snapshot_state": {
+        "timestamp_utc": "2026-11-10T16:22:07Z",
+        "gpu": {
+          "pcie_gen_current": "4",
+          "pcie_width_current": "8",
+          "clock_graphics_mhz": "2835",
+          "clock_memory_mhz": "13801",
+          "temperature_c": "39",
+          "pstate": "P1",
+          "memory_used_mib": "14760"
+        },
+        "gpu_processes": [
+          {
+            "pid": 797368,
+            "type": "C",
+            "name": "/mnt/data/local-ai-research/third_party/llama.cpp/build/bin/llama-server",
+            "vram_mib": 14750.0
+          }
+        ],
+        "gpu_processes_compute": [
+          {
+            "pid": 797368,
+            "type": "C",
+            "name": "/mnt/data/local-ai-research/third_party/llama.cpp/build/bin/llama-server",
+            "vram_mib": 14750.0
+          }
+        ],
+        "gpu_processes_graphics": [],
+        "llama_server_pids": [
+          797368
+        ],
+        "desktop_gpu_steering": {
+          "memory_used_mib_before_any_server": null,
+          "note": "a llama-server was running: memory.used includes it",
+          "processes_on_card": [
+            {
+              "pid": 797368,
+              "type": "C",
+              "name": "/mnt/data/local-ai-research/third_party/llama.cpp/build/bin/llama-server",
+              "vram_mib": 14750.0
+            }
+          ]
+        },
+        "memory": {
+          "mem_total_kib": 31937292,
+          "mem_available_kib": 25376544,
+          "mem_available_gib": 24.2,
+          "cached_kib": 23403008,
+          "swap_total_kib": 31936508,
+          "swap_used_kib": 3529900,
+          "zram_bytes_name_disksize_data_compr_total": "/dev/zram0 32702988288 3429187584 895494782 968241152",
+          "vmstat": {
+            "pswpin": 9158099,
+            "pswpout": 37358377,
+            "pgmajfault": 15786859
+          },
+          "swappiness": "150",
+          "thp_enabled": "always",
+          "thp_defrag": "defer+madvise"
+        },
+        "loadavg": "2.60 2.55 2.42 1/1836 797444",
+        "gpu_lock": {
+          "held": true,
+          "file": "/mnt/data/local-ai-research/.locks/gpu.lock"
+        }
+      },
+      "telemetry": {
+        "file": "telemetry/s2a-P6-32K-b4096-mtp1-fc15e834-i0.csv.gz",
+        "rows": 470,
+        "overhead": {
+          "wall_s": 234.8366194209957,
+          "python_cpu_s": 0.8678298650000045,
+          "nvidia_smi_cpu_s": 0.1,
+          "python_core_fraction": 0.003695462262826356,
+          "nvidia_smi_core_fraction": 0.0004258279660410554,
+          "total_core_fraction": 0.004121290228867411,
+          "n_rows": 470
+        },
+        "error": null
+      },
+      "stop": {
+        "stopped_utc": "2026-11-10T16:26:03Z",
+        "pid": 797368,
+        "method": "sigint",
+        "exit_code": 0,
+        "waited_s": 1,
+        "sigint_timeout_s": 60,
+        "stop_rc": 0
+      },
+      "parsed": {
+        "placement": {
+          "fit_attempted": true,
+          "fit_succeeded": true,
+          "initial_projection_mib": 14594,
+          "free_device_mib_at_fit": 15803,
+          "offloaded_layers": [
+            42,
+            42
+          ],
+          "load_mode": "mmap",
+          "tensor_overrides_to_cpu": true,
+          "model_buffers": {
+            "CPU_Mapped": {
+              "count": 124,
+              "mib": 19370.81
+            },
+            "CUDA0": {
+              "count": 1,
+              "mib": 1326.28
+            }
+          },
+          "kv_buffers": [
+            {
+              "device": "CUDA0",
+              "mib": 340.0
+            },
+            {
+              "device": "CUDA0",
+              "mib": 64.0
+            }
+          ],
+          "kv": {
+            "mib": 340.0,
+            "cells": 32768,
+            "layers": 10,
+            "k_type": "q8_0",
+            "k_mib": 170.0,
+            "v_type": "q8_0",
+            "v_mib": 170.0
+          },
+          "recurrent_state_buffers": [
+            {
+              "device": "CUDA0",
+              "mib": 125.62
+            }
+          ],
+          "compute_buffers": [
+            {
+              "device": "CUDA0",
+              "mib": 1348.03
+            },
+            {
+              "device": "CUDA_Host",
+              "mib": 384.19
+            },
+            {
+              "device": "CUDA0",
+              "mib": 638.28
+            },
+            {
+              "device": "CUDA_Host",
+              "mib": 320.14
+            },
+            {
+              "device": "CUDA0",
+              "mib": 638.28
+            },
+            {
+              "device": "CUDA_Host",
+              "mib": 320.14
+            },
+            {
+              "device": "CUDA0",
+              "mib": 1348.03
+            },
+            {
+              "device": "CUDA_Host",
+              "mib": 384.19
+            }
+          ],
+          "contexts": [
+            {
+              "n_seq_max": 1,
+              "n_ctx": 32768,
+              "n_ctx_seq": 32768,
+              "n_batch": 4096,
+              "n_ubatch": 4096,
+              "flash_attn": "enabled",
+              "kv_unified": "false"
+            },
+            {
+              "n_seq_max": 1,
+              "n_ctx": 32768,
+              "n_ctx_seq": 32768,
+              "n_batch": 4096,
+              "n_ubatch": 4096,
+              "flash_attn": "enabled",
+              "kv_unified": "false"
+            }
+          ],
+          "n_ctx": 32768,
+          "n_slots": 1,
+          "n_ctx_slot": 32768,
+          "server_kv_unified": "false",
+          "prompt_cache": "2048 MiB",
+          "checkpoints": {
+            "max": 32,
+            "min_spacing": 8192
+          },
+          "warnings": [
+            "srv  server_setup: security: no API key is set and CORS allows all origins (see https://github.com/ggml-org/llama.cpp/pull/25655)",
+            "llama_model_loader: tensor overrides to CPU are used with mmap enabled - consider using --load-mode none for better performance",
+            "srv          init: chat template supports preserving reasoning, it is enabled by default (may use more tokens, disable via --no-reasoning-preserve)",
+            "srv         alloc:  - making room for prompt cache entry, removing oldest entry (size = 291.402 MiB)",
+            "srv         alloc:  - making room for prompt cache entry, removing oldest entry (size = 291.402 MiB)",
+            "srv         alloc:  - making room for prompt cache entry, removing oldest entry (size = 155.916 MiB)",
+            "srv         alloc:  - making room for prompt cache entry, removing oldest entry (size = 457.535 MiB)",
+            "srv         alloc:  - making room for prompt cache entry, removing oldest entry (size = 660.285 MiB)",
+            "srv         alloc:  - making room for prompt cache entry, removing oldest entry (size = 558.910 MiB)",
+            "srv         alloc:  - making room for prompt cache entry, removing oldest entry (size = 155.916 MiB)",
+            "srv         alloc:  - making room for prompt cache entry, removing oldest entry (size = 558.910 MiB)",
+            "srv         alloc:  - making room for prompt cache entry, removing oldest entry (size = 660.285 MiB)",
+            "srv         alloc:  - making room for prompt cache entry, removing oldest entry (size = 457.535 MiB)",
+            "srv         alloc:  - making room for prompt cache entry, removing oldest entry (size = 155.916 MiB)",
+            "srv         alloc:  - making room for prompt cache entry, removing oldest entry (size = 558.910 MiB)",
+            "srv         alloc:  - making room for prompt cache entry, removing oldest entry (size = 457.535 MiB)",
+            "srv         alloc:  - making room for prompt cache entry, removing oldest entry (size = 660.285 MiB)",
+            "srv         alloc:  - making room for prompt cache entry, removing oldest entry (size = 155.916 MiB)",
+            "srv         alloc:  - making room for prompt cache entry, removing oldest entry (size = 558.910 MiB)",
+            "srv         alloc:  - making room for prompt cache entry, removing oldest entry (size = 457.535 MiB)"
+          ]
+        },
+        "moe_cache": {
+          "present": true,
+          "classes": [
+            {
+              "name": "ubatch <= 8",
+              "hits": 2377582,
+              "misses": 101264,
+              "cpu": 0,
+              "hit_rate_pct": 95.91,
+              "uploaded_mib": 186242.18
+            }
+          ],
+          "overall_hit_rate_pct": 95.91,
+          "large_batch_copies": {
+            "experts": 1417209,
+            "mib": 859080.33
+          },
+          "config": {
+            "cache_mib": 10749.89,
+            "host_expert_mib": 19098.0,
+            "cpu_share_pct": 0
+          }
+        },
+        "checkpoints": {
+          "created": 69,
+          "created_detail": [
+            {
+              "index": 1,
+              "max": 32,
+              "pos_min": 4095,
+              "pos_max": 4095,
+              "n_tokens": 4096
+            },
+            {
+              "index": 2,
+              "max": 32,
+              "pos_min": 8187,
+              "pos_max": 8187,
+              "n_tokens": 8188
+            },
+            {
+              "index": 1,
+              "max": 32,
+              "pos_min": 4095,
+              "pos_max": 4095,
+              "n_tokens": 4096
+            },
+            {
+              "index": 2,
+              "max": 32,
+              "pos_min": 8187,
+              "pos_max": 8187,
+              "n_tokens": 8188
+            },
+            {
+              "index": 1,
+              "max": 32,
+              "pos_min": 2043,
+              "pos_max": 2043,
+              "n_tokens": 2044
+            },
+            {
+              "index": 1,
+              "max": 32,
+              "pos_min": 4095,
+              "pos_max": 4095,
+              "n_tokens": 4096
+            },
+            {
+              "index": 2,
+              "max": 32,
+              "pos_min": 8187,
+              "pos_max": 8187,
+              "n_tokens": 8188
+            },
+            {
+              "index": 3,
+              "max": 32,
+              "pos_min": 8191,
+              "pos_max": 8191,
+              "n_tokens": 8192
+            },
+            {
+              "index": 4,
+              "max": 32,
+              "pos_min": 11187,
+              "pos_max": 11187,
+              "n_tokens": 11188
+            },
+            {
+              "index": 1,
+              "max": 32,
+              "pos_min": 20479,
+              "pos_max": 20479,
+              "n_tokens": 20480
+            },
+            {
+              "index": 2,
+              "max": 32,
+              "pos_min": 24571,
+              "pos_max": 24571,
+              "n_tokens": 24572
+            },
+            {
+              "index": 3,
+              "max": 32,
+              "pos_min": 24575,
+              "pos_max": 24575,
+              "n_tokens": 24576
+            },
+            {
+              "index": 4,
+              "max": 32,
+              "pos_min": 27571,
+              "pos_max": 27571,
+              "n_tokens": 27572
+            },
+            {
+              "index": 1,
+              "max": 32,
+              "pos_min": 12287,
+              "pos_max": 12287,
+              "n_tokens": 12288
+            },
+            {
+              "index": 2,
+              "max": 32,
+              "pos_min": 16379,
+              "pos_max": 16379,
+              "n_tokens": 16380
+            },
+            {
+              "index": 3,
+              "max": 32,
+              "pos_min": 16383,
+              "pos_max": 16383,
+              "n_tokens": 16384
+            },
+            {
+              "index": 4,
+              "max": 32,
+              "pos_min": 19379,
+              "pos_max": 19379,
+              "n_tokens": 19380
+            },
+            {
+              "index": 1,
+              "max": 32,
+              "pos_min": 2043,
+              "pos_max": 2043,
+              "n_tokens": 2044
+            },
+            {
+              "index": 1,
+              "max": 32,
+              "pos_min": 12287,
+              "pos_max": 12287,
+              "n_tokens": 12288
+            },
+            {
+              "index": 2,
+              "max": 32,
+              "pos_min": 16379,
+              "pos_max": 16379,
+              "n_tokens": 16380
+            },
+            {
+              "index": 3,
+              "max": 32,
+              "pos_min": 16383,
+              "pos_max": 16383,
+              "n_tokens": 16384
+            },
+            {
+              "index": 4,
+              "max": 32,
+              "pos_min": 19379,
+              "pos_max": 19379,
+              "n_tokens": 19380
+            },
+            {
+              "index": 1,
+              "max": 32,
+              "pos_min": 20479,
+              "pos_max": 20479,
+              "n_tokens": 20480
+            },
+            {
+              "index": 2,
+              "max": 32,
+              "pos_min": 24571,
+              "pos_max": 24571,
+              "n_tokens": 24572
+            },
+            {
+              "index": 3,
+              "max": 32,
+              "pos_min": 24575,
+              "pos_max": 24575,
+              "n_tokens": 24576
+            },
+            {
+              "index": 4,
+              "max": 32,
+              "pos_min": 27571,
+              "pos_max": 27571,
+              "n_tokens": 27572
+            },
+            {
+              "index": 1,
+              "max": 32,
+              "pos_min": 4095,
+              "pos_max": 4095,
+              "n_tokens": 4096
+            },
+            {
+              "index": 2,
+              "max": 32,
+              "pos_min": 8187,
+              "pos_max": 8187,
+              "n_tokens": 8188
+            },
+            {
+              "index": 3,
+              "max": 32,
+              "pos_min": 8191,
+              "pos_max": 8191,
+              "n_tokens": 8192
+            },
+            {
+              "index": 4,
+              "max": 32,
+              "pos_min": 11187,
+              "pos_max": 11187,
+              "n_tokens": 11188
+            },
+            {
+              "index": 1,
+              "max": 32,
+              "pos_min": 2043,
+              "pos_max": 2043,
+              "n_tokens": 2044
+            },
+            {
+              "index": 1,
+              "max": 32,
+              "pos_min": 12287,
+              "pos_max": 12287,
+              "n_tokens": 12288
+            },
+            {
+              "index": 2,
+              "max": 32,
+              "pos_min": 16379,
+              "pos_max": 16379,
+              "n_tokens": 16380
+            },
+            {
+              "index": 3,
+              "max": 32,
+              "pos_min": 16383,
+              "pos_max": 16383,
+              "n_tokens": 16384
+            },
+            {
+              "index": 4,
+              "max": 32,
+              "pos_min": 19379,
+              "pos_max": 19379,
+              "n_tokens": 19380
+            },
+            {
+              "index": 1,
+              "max": 32,
+              "pos_min": 4095,
+              "pos_max": 4095,
+              "n_tokens": 4096
+            },
+            {
+              "index": 2,
+              "max": 32,
+              "pos_min": 8187,
+              "pos_max": 8187,
+              "n_tokens": 8188
+            },
+            {
+              "index": 3,
+              "max": 32,
+              "pos_min": 8191,
+              "pos_max": 8191,
+              "n_tokens": 8192
+            },
+            {
+              "index": 4,
+              "max": 32,
+              "pos_min": 11187,
+              "pos_max": 11187,
+              "n_tokens": 11188
+            },
+            {
+              "index": 1,
+              "max": 32,
+              "pos_min": 20479,
+              "pos_max": 20479,
+              "n_tokens": 20480
+            },
+            {
+              "index": 2,
+              "max": 32,
+              "pos_min": 24571,
+              "pos_max": 24571,
+              "n_tokens": 24572
+            },
+            {
+              "index": 3,
+              "max": 32,
+              "pos_min": 24575,
+              "pos_max": 24575,
+              "n_tokens": 24576
+            },
+            {
+              "index": 4,
+              "max": 32,
+              "pos_min": 27571,
+              "pos_max": 27571,
+              "n_tokens": 27572
+            },
+            {
+              "index": 1,
+              "max": 32,
+              "pos_min": 2043,
+              "pos_max": 2043,
+              "n_tokens": 2044
+            },
+            {
+              "index": 1,
+              "max": 32,
+              "pos_min": 12287,
+              "pos_max": 12287,
+              "n_tokens": 12288
+            },
+            {
+              "index": 2,
+              "max": 32,
+              "pos_min": 16379,
+              "pos_max": 16379,
+              "n_tokens": 16380
+            },
+            {
+              "index": 3,
+              "max": 32,
+              "pos_min": 16383,
+              "pos_max": 16383,
+              "n_tokens": 16384
+            },
+            {
+              "index": 4,
+              "max": 32,
+              "pos_min": 19379,
+              "pos_max": 19379,
+              "n_tokens": 19380
+            },
+            {
+              "index": 1,
+              "max": 32,
+              "pos_min": 4095,
+              "pos_max": 4095,
+              "n_tokens": 4096
+            },
+            {
+              "index": 2,
+              "max": 32,
+              "pos_min": 8187,
+              "pos_max": 8187,
+              "n_tokens": 8188
+            },
+            {
+              "index": 3,
+              "max": 32,
+              "pos_min": 8191,
+              "pos_max": 8191,
+              "n_tokens": 8192
+            },
+            {
+              "index": 4,
+              "max": 32,
+              "pos_min": 11187,
+              "pos_max": 11187,
+              "n_tokens": 11188
+            },
+            {
+              "index": 1,
+              "max": 32,
+              "pos_min": 20479,
+              "pos_max": 20479,
+              "n_tokens": 20480
+            },
+            {
+              "index": 2,
+              "max": 32,
+              "pos_min": 24571,
+              "pos_max": 24571,
+              "n_tokens": 24572
+            },
+            {
+              "index": 3,
+              "max": 32,
+              "pos_min": 24575,
+              "pos_max": 24575,
+              "n_tokens": 24576
+            },
+            {
+              "index": 4,
+              "max": 32,
+              "pos_min": 27571,
+              "pos_max": 27571,
+              "n_tokens": 27572
+            },
+            {
+              "index": 1,
+              "max": 32,
+              "pos_min": 2043,
+              "pos_max": 2043,
+              "n_tokens": 2044
+            },
+            {
+              "index": 1,
+              "max": 32,
+              "pos_min": 4095,
+              "pos_max": 4095,
+              "n_tokens": 4096
+            },
+            {
+              "index": 2,
+              "max": 32,
+              "pos_min": 8187,
+              "pos_max": 8187,
+              "n_tokens": 8188
+            },
+            {
+              "index": 3,
+              "max": 32,
+              "pos_min": 8191,
+              "pos_max": 8191,
+              "n_tokens": 8192
+            },
+            {
+              "index": 4,
+              "max": 32,
+              "pos_min": 11187,
+              "pos_max": 11187,
+              "n_tokens": 11188
+            },
+            {
+              "index": 1,
+              "max": 32,
+              "pos_min": 12287,
+              "pos_max": 12287,
+              "n_tokens": 12288
+            },
+            {
+              "index": 2,
+              "max": 32,
+              "pos_min": 16379,
+              "pos_max": 16379,
+              "n_tokens": 16380
+            },
+            {
+              "index": 3,
+              "max": 32,
+              "pos_min": 16383,
+              "pos_max": 16383,
+              "n_tokens": 16384
+            },
+            {
+              "index": 4,
+              "max": 32,
+              "pos_min": 19379,
+              "pos_max": 19379,
+              "n_tokens": 19380
+            },
+            {
+              "index": 1,
+              "max": 32,
+              "pos_min": 20479,
+              "pos_max": 20479,
+              "n_tokens": 20480
+            },
+            {
+              "index": 2,
+              "max": 32,
+              "pos_min": 24571,
+              "pos_max": 24571,
+              "n_tokens": 24572
+            },
+            {
+              "index": 3,
+              "max": 32,
+              "pos_min": 24575,
+              "pos_max": 24575,
+              "n_tokens": 24576
+            },
+            {
+              "index": 4,
+              "max": 32,
+              "pos_min": 27571,
+              "pos_max": 27571,
+              "n_tokens": 27572
+            }
+          ],
+          "erased": 0,
+          "restored_from_checkpoint": 0,
+          "speculative_checkpoints_created": 0
+        },
+        "spec_stats": [
+          {
+            "ratio": 0.81429,
+            "accepted": 57,
+            "generated": 70,
+            "mean_len": 1.81
+          },
+          {
+            "ratio": 0.8,
+            "accepted": 56,
+            "generated": 70,
+            "mean_len": 1.8
+          },
+          {
+            "ratio": 0.8009,
+            "accepted": 177,
+            "generated": 221,
+            "mean_len": 1.8
+          },
+          {
+            "ratio": 0.8341,
+            "accepted": 181,
+            "generated": 217,
+            "mean_len": 1.83
+          },
+          {
+            "ratio": 0.76549,
+            "accepted": 173,
+            "generated": 226,
+            "mean_len": 1.77
+          },
+          {
+            "ratio": 0.80909,
+            "accepted": 178,
+            "generated": 220,
+            "mean_len": 1.81
+          },
+          {
+            "ratio": 0.73799,
+            "accepted": 169,
+            "generated": 229,
+            "mean_len": 1.74
+          },
+          {
+            "ratio": 0.79279,
+            "accepted": 176,
+            "generated": 222,
+            "mean_len": 1.79
+          },
+          {
+            "ratio": 0.90431,
+            "accepted": 189,
+            "generated": 209,
+            "mean_len": 1.9
+          },
+          {
+            "ratio": 0.78125,
+            "accepted": 175,
+            "generated": 224,
+            "mean_len": 1.78
+          },
+          {
+            "ratio": 0.83028,
+            "accepted": 181,
+            "generated": 218,
+            "mean_len": 1.83
+          },
+          {
+            "ratio": 0.76106,
+            "accepted": 172,
+            "generated": 226,
+            "mean_len": 1.76
+          },
+          {
+            "ratio": 0.7533,
+            "accepted": 171,
+            "generated": 227,
+            "mean_len": 1.75
+          },
+          {
+            "ratio": 0.80909,
+            "accepted": 178,
+            "generated": 220,
+            "mean_len": 1.81
+          },
+          {
+            "ratio": 0.76549,
+            "accepted": 173,
+            "generated": 226,
+            "mean_len": 1.77
+          },
+          {
+            "ratio": 0.79279,
+            "accepted": 176,
+            "generated": 222,
+            "mean_len": 1.79
+          },
+          {
+            "ratio": 0.80543,
+            "accepted": 178,
+            "generated": 221,
+            "mean_len": 1.81
+          },
+          {
+            "ratio": 0.75771,
+            "accepted": 172,
+            "generated": 227,
+            "mean_len": 1.76
+          },
+          {
+            "ratio": 0.8341,
+            "accepted": 181,
+            "generated": 217,
+            "mean_len": 1.83
+          },
+          {
+            "ratio": 0.77333,
+            "accepted": 174,
+            "generated": 225,
+            "mean_len": 1.77
+          },
+          {
+            "ratio": 0.73043,
+            "accepted": 168,
+            "generated": 230,
+            "mean_len": 1.73
+          },
+          {
+            "ratio": 0.7973,
+            "accepted": 177,
+            "generated": 222,
+            "mean_len": 1.8
+          }
+        ]
+      },
+      "startup_excerpt": [
+        "0.00.160.408 I cmn  common_param: common_params_print_info: build 12208 (57d04820d) with GNU 16.2.1 for Linux x86_64",
+        "0.00.160.409 I cmn  common_param: common_params_print_info: verbosity = 4 (adjust with the `-lv N` CLI arg)",
+        "0.00.222.714 I cmn  common_fit_a: fitting params to device memory ...",
+        "0.00.222.715 I cmn  common_fit_a: (for bugs during this step try to reproduce them with -fit off, or provide --verbose logs if the bug only occurs with -fit on)",
+        "0.00.222.745 I common_params_fit_impl: getting device memory data for initial parameters:",
+        "0.00.355.753 I common_memory_breakdown_print: | memory breakdown [MiB]  | total    free     self   model   context   compute    unaccounted |",
+        "0.00.483.275 I common_memory_breakdown_print: | memory breakdown [MiB]  | total    free     self   model   context   compute    unaccounted |",
+        "0.00.495.916 I common_params_fit_impl: projected to use 14594 MiB of device memory vs. 15803 MiB of free device memory",
+        "0.00.495.920 I common_params_fit_impl: will leave 1208 >= 1024 MiB of free device memory, no changes needed",
+        "0.00.495.921 I common_fit_params: successfully fit params to free device memory",
+        "0.00.495.925 I common_fit_params: fitting params to free memory took 0.27 seconds",
+        "0.00.521.645 I llama_model_loader: Dumping metadata keys/values. Note: KV overrides do not apply in this output.",
+        "0.00.596.194 I print_info: n_ctx_train           = 262144",
+        "0.00.596.212 I print_info: n_ctx_orig_yarn       = 262144",
+        "0.00.596.312 I load_tensors: loading model tensors, this can take a while... (load_mode = mmap)",
+        "0.00.596.440 W llama_model_loader: tensor overrides to CPU are used with mmap enabled - consider using --load-mode none for better performance",
+        "0.00.916.121 I load_tensors: offloading output layer to GPU",
+        "0.00.916.123 I load_tensors: offloading 40 repeating layers to GPU",
+        "0.00.916.123 I load_tensors: offloaded 42/42 layers to GPU",
+        "0.00.916.128 I load_tensors:   CPU_Mapped model buffer size =   272.81 MiB",
+        "0.00.916.129 I load_tensors:   CPU_Mapped model buffer size =   210.00 MiB",
+        "0.00.916.129 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.129 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.130 I load_tensors:   CPU_Mapped model buffer size =   210.00 MiB",
+        "0.00.916.130 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.130 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.130 I load_tensors:   CPU_Mapped model buffer size =   210.00 MiB",
+        "0.00.916.131 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.131 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.131 I load_tensors:   CPU_Mapped model buffer size =   210.00 MiB",
+        "0.00.916.131 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.132 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.132 I load_tensors:   CPU_Mapped model buffer size =   210.00 MiB",
+        "0.00.916.132 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.132 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.132 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.133 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.133 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.133 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.133 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.133 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.134 I load_tensors:   CPU_Mapped model buffer size =   210.00 MiB",
+        "0.00.916.134 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.134 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.134 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.134 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.135 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.135 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.135 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.135 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.135 I load_tensors:   CPU_Mapped model buffer size =   210.00 MiB",
+        "0.00.916.136 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.136 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.137 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.137 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.137 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.137 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.137 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.137 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.138 I load_tensors:   CPU_Mapped model buffer size =   210.00 MiB",
+        "0.00.916.138 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.138 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.138 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.138 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.138 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.138 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.138 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.139 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.139 I load_tensors:   CPU_Mapped model buffer size =   210.00 MiB",
+        "0.00.916.139 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.139 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.139 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.139 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.139 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.140 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.140 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.140 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.140 I load_tensors:   CPU_Mapped model buffer size =   210.00 MiB",
+        "0.00.916.140 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.140 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.140 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.141 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.141 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.141 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.141 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.141 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.141 I load_tensors:   CPU_Mapped model buffer size =   210.00 MiB",
+        "0.00.916.142 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.142 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.142 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.142 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.142 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.142 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.142 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.142 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.143 I load_tensors:   CPU_Mapped model buffer size =   210.00 MiB",
+        "0.00.916.143 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.143 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.143 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.143 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.143 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.143 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.144 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.144 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.144 I load_tensors:   CPU_Mapped model buffer size =   210.00 MiB",
+        "0.00.916.144 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.144 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.144 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.144 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.145 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.145 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.145 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.145 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.145 I load_tensors:   CPU_Mapped model buffer size =   210.00 MiB",
+        "0.00.916.145 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.145 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.146 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.146 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.146 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.146 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.146 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.146 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.146 I load_tensors:   CPU_Mapped model buffer size =   210.00 MiB",
+        "0.00.916.147 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.147 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.147 I load_tensors:   CPU_Mapped model buffer size =   210.00 MiB",
+        "0.00.916.147 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.147 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.147 I load_tensors:   CPU_Mapped model buffer size =   210.00 MiB",
+        "0.00.916.147 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.148 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.148 I load_tensors:   CPU_Mapped model buffer size =   210.00 MiB",
+        "0.00.916.148 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.148 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.148 I load_tensors:   CPU_Mapped model buffer size =   210.00 MiB",
+        "0.00.916.148 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.148 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.149 I load_tensors:   CPU_Mapped model buffer size =   210.00 MiB",
+        "0.00.916.149 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.149 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.149 I load_tensors:   CPU_Mapped model buffer size =   210.00 MiB",
+        "0.00.916.149 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.149 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+        "0.00.916.150 I load_tensors:        CUDA0 model buffer size =  1326.28 MiB",
+        "0.01.040.446 I llama_context: constructing llama_context",
+        "0.01.040.448 I llama_context: n_seq_max             = 1",
+        "0.01.040.448 I llama_context: n_ctx                 = 32768",
+        "0.01.040.449 I llama_context: n_ctx_seq             = 32768",
+        "0.01.040.449 I llama_context: n_batch               = 4096",
+        "0.01.040.449 I llama_context: n_ubatch              = 4096",
+        "0.01.040.449 I llama_context: causal_attn           = 1",
+        "0.01.040.451 I llama_context: flash_attn            = enabled",
+        "0.01.040.451 I llama_context: kv_unified            = false",
+        "0.01.040.455 I llama_context: freq_base             = 10000000.0",
+        "0.01.040.455 I llama_context: freq_scale            = 1",
+        "0.01.040.455 I llama_context: n_rs_seq              = 1",
+        "0.01.040.455 I llama_context: n_outputs_max         = 2",
+        "0.01.040.455 I llama_context: n_outputs_max_per_seq = 2",
+        "0.01.040.456 I llama_context: n_ctx_seq (32768) < n_ctx_train (262144) -- the full capacity of the model will not be utilized",
+        "0.01.040.885 I llama_context:  CUDA_Host  output buffer size =     0.95 MiB"
+      ],
+      "placement_check": {
+        "explicit_placement": true,
+        "fit_setting": "default (on)",
+        "fit_attempted": true,
+        "fit_succeeded": true,
+        "fit_no_changes_needed": true,
+        "fit_intervened": false,
+        "required_reduction_mib": null,
+        "expert_layers_on_cpu": null,
+        "offloaded_layers": [
+          42,
+          42
+        ],
+        "tensor_overrides_to_cpu": true
+      },
+      "status": "complete",
+      "reason": null,
+      "vram": {
+        "before_launch_mib": 3.0,
+        "total_mib": 16311.0,
+        "loaded_mib": 14760.0,
+        "after_warmup_min_free_mib": 1205.0,
+        "after_warmup_used_mib": 15106.0,
+        "peak_used_mib": 15118.0,
+        "min_free_mib": 1193.0
+      },
+      "windows": [
+        {
+          "window_id": "s2a-P6-32K-b4096-mtp1-fc15e834-r0-a1",
+          "repetition": 0,
+          "attempt": 1,
+          "t0_epoch": 1794327739.6525006,
+          "t1_epoch": 1794327784.3800802,
+          "n_samples": 89,
+          "thermal": {
+            "flag": null,
+            "n_samples": 89,
+            "gpu_slowdown_samples": 0,
+            "gpu_slowdown_by_reason": {
+              "reason_hw_slowdown": 0,
+              "reason_hw_thermal_slowdown": 0,
+              "reason_sw_thermal_slowdown": 0,
+              "reason_hw_power_brake_slowdown": 0
+            },
+            "tctl_ge_95_samples": 0,
+            "sw_power_cap_samples": 0,
+            "max_tctl_c": 67.0,
+            "max_gpu_temp_c": 65.0
+          },
+          "paging": {
+            "flag": null,
+            "major_faults": 0,
+            "server_vmswap_max_kib": 0,
+            "server_vmswap_samples": 0,
+            "system_swap_in_pages": 6643,
+            "process_samples": 89,
+            "vmswap_samples_read": 89
+          },
+          "vmswap_start_mib": 0.0,
+          "vmswap_end_mib": 0.0,
+          "vmswap_max_mib": 0.0,
+          "swap_activity_mib": 0.0,
+          "rss_anon_start_mib": 1658.67578125,
+          "rss_anon_end_mib": 3205.98828125,
+          "rss_file_start_mib": 20483.05859375,
+          "rss_file_end_mib": 20451.93359375,
+          "rss_shmem_start_mib": 824.625,
+          "rss_shmem_end_mib": 824.625,
+          "min_free_vram_mib": 1195.0,
+          "peak_used_mib": 15116.0,
+          "request_flags": [],
+          "flags": []
+        },
+        {
+          "window_id": "s2a-P6-32K-b4096-mtp1-fc15e834-r1-a1",
+          "repetition": 1,
+          "attempt": 1,
+          "t0_epoch": 1794327784.3823946,
+          "t1_epoch": 1794327830.1420743,
+          "n_samples": 91,
+          "thermal": {
+            "flag": null,
+            "n_samples": 91,
+            "gpu_slowdown_samples": 0,
+            "gpu_slowdown_by_reason": {
+              "reason_hw_slowdown": 0,
+              "reason_hw_thermal_slowdown": 0,
+              "reason_sw_thermal_slowdown": 0,
+              "reason_hw_power_brake_slowdown": 0
+            },
+            "tctl_ge_95_samples": 0,
+            "sw_power_cap_samples": 0,
+            "max_tctl_c": 70.0,
+            "max_gpu_temp_c": 63.0
+          },
+          "paging": {
+            "flag": null,
+            "major_faults": 23,
+            "server_vmswap_max_kib": 868648,
+            "server_vmswap_samples": 53,
+            "system_swap_in_pages": 9172,
+            "process_samples": 91,
+            "vmswap_samples_read": 91
+          },
+          "vmswap_start_mib": 0.0,
+          "vmswap_end_mib": 848.2890625,
+          "vmswap_max_mib": 848.2890625,
+          "swap_activity_mib": 848.2890625,
+          "rss_anon_start_mib": 2963.89453125,
+          "rss_anon_end_mib": 2465.52734375,
+          "rss_file_start_mib": 20432.55859375,
+          "rss_file_end_mib": 20467.82421875,
+          "rss_shmem_start_mib": 824.625,
+          "rss_shmem_end_mib": 620.58203125,
+          "min_free_vram_mib": 1195.0,
+          "peak_used_mib": 15116.0,
+          "request_flags": [],
+          "flags": []
+        },
+        {
+          "window_id": "s2a-P6-32K-b4096-mtp1-fc15e834-r2-a1",
+          "repetition": 2,
+          "attempt": 1,
+          "t0_epoch": 1794327830.1443038,
+          "t1_epoch": 1794327874.7688234,
+          "n_samples": 90,
+          "thermal": {
+            "flag": null,
+            "n_samples": 90,
+            "gpu_slowdown_samples": 0,
+            "gpu_slowdown_by_reason": {
+              "reason_hw_slowdown": 0,
+              "reason_hw_thermal_slowdown": 0,
+              "reason_sw_thermal_slowdown": 0,
+              "reason_hw_power_brake_slowdown": 0
+            },
+            "tctl_ge_95_samples": 0,
+            "sw_power_cap_samples": 0,
+            "max_tctl_c": 68.75,
+            "max_gpu_temp_c": 58.0
+          },
+          "paging": {
+            "flag": "paging",
+            "major_faults": 8296,
+            "server_vmswap_max_kib": 893292,
+            "server_vmswap_samples": 90,
+            "system_swap_in_pages": 24619,
+            "process_samples": 90,
+            "vmswap_samples_read": 90
+          },
+          "vmswap_start_mib": 848.2734375,
+          "vmswap_end_mib": 840.03125,
+          "vmswap_max_mib": 872.35546875,
+          "swap_activity_mib": -8.2421875,
+          "rss_anon_start_mib": 2065.86328125,
+          "rss_anon_end_mib": 2172.41015625,
+          "rss_file_start_mib": 20467.88671875,
+          "rss_file_end_mib": 20459.47265625,
+          "rss_shmem_start_mib": 620.58203125,
+          "rss_shmem_end_mib": 620.3125,
+          "min_free_vram_mib": 1193.0,
+          "peak_used_mib": 15118.0,
+          "request_flags": [],
+          "flags": [
+            "paging"
+          ]
+        },
+        {
+          "window_id": "s2a-P6-32K-b4096-mtp1-fc15e834-r3-a1",
+          "repetition": 3,
+          "attempt": 1,
+          "t0_epoch": 1794327874.7710187,
+          "t1_epoch": 1794327918.5421567,
+          "n_samples": 87,
+          "thermal": {
+            "flag": null,
+            "n_samples": 87,
+            "gpu_slowdown_samples": 0,
+            "gpu_slowdown_by_reason": {
+              "reason_hw_slowdown": 0,
+              "reason_hw_thermal_slowdown": 0,
+              "reason_sw_thermal_slowdown": 0,
+              "reason_hw_power_brake_slowdown": 0
+            },
+            "tctl_ge_95_samples": 0,
+            "sw_power_cap_samples": 0,
+            "max_tctl_c": 68.75,
+            "max_gpu_temp_c": 60.0
+          },
+          "paging": {
+            "flag": "paging",
+            "major_faults": 1243,
+            "server_vmswap_max_kib": 860172,
+            "server_vmswap_samples": 87,
+            "system_swap_in_pages": 3448,
+            "process_samples": 87,
+            "vmswap_samples_read": 87
+          },
+          "vmswap_start_mib": 840.01171875,
+          "vmswap_end_mib": 835.15625,
+          "vmswap_max_mib": 840.01171875,
+          "swap_activity_mib": -4.85546875,
+          "rss_anon_start_mib": 2146.84765625,
+          "rss_anon_end_mib": 2382.46875,
+          "rss_file_start_mib": 20459.84765625,
+          "rss_file_end_mib": 20454.78515625,
+          "rss_shmem_start_mib": 620.3125,
+          "rss_shmem_end_mib": 620.3125,
+          "min_free_vram_mib": 1195.0,
+          "peak_used_mib": 15116.0,
+          "request_flags": [],
+          "flags": [
+            "paging"
+          ]
+        },
+        {
+          "window_id": "s2a-P6-32K-b4096-mtp1-fc15e834-r4-a1",
+          "repetition": 4,
+          "attempt": 1,
+          "t0_epoch": 1794327918.5444734,
+          "t1_epoch": 1794327962.403703,
+          "n_samples": 88,
+          "thermal": {
+            "flag": null,
+            "n_samples": 88,
+            "gpu_slowdown_samples": 0,
+            "gpu_slowdown_by_reason": {
+              "reason_hw_slowdown": 0,
+              "reason_hw_thermal_slowdown": 0,
+              "reason_sw_thermal_slowdown": 0,
+              "reason_hw_power_brake_slowdown": 0
+            },
+            "tctl_ge_95_samples": 0,
+            "sw_power_cap_samples": 0,
+            "max_tctl_c": 69.25,
+            "max_gpu_temp_c": 59.0
+          },
+          "paging": {
+            "flag": "paging",
+            "major_faults": 1683,
+            "server_vmswap_max_kib": 873160,
+            "server_vmswap_samples": 88,
+            "system_swap_in_pages": 4406,
+            "process_samples": 88,
+            "vmswap_samples_read": 88
+          },
+          "vmswap_start_mib": 844.14453125,
+          "vmswap_end_mib": 846.13671875,
+          "vmswap_max_mib": 852.6953125,
+          "swap_activity_mib": 1.9921875,
+          "rss_anon_start_mib": 2122.2421875,
+          "rss_anon_end_mib": 2391.9140625,
+          "rss_file_start_mib": 20440.484375,
+          "rss_file_end_mib": 20091.0859375,
+          "rss_shmem_start_mib": 619.7421875,
+          "rss_shmem_end_mib": 619.7421875,
+          "min_free_vram_mib": 1195.0,
+          "peak_used_mib": 15116.0,
+          "request_flags": [],
+          "flags": [
+            "paging"
+          ]
+        }
+      ],
+      "finished_utc": "2026-11-10T16:26:03Z",
+      "repetitions_done": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "n_requests": 37
+    }
+  ],
+  "flags": [
+    "paging"
+  ]
+}
