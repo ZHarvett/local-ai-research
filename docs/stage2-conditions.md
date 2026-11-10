@@ -75,3 +75,11 @@ from the measurement telemetry.
 - **Lowest minimum free VRAM: 421 MiB (P2-128K-b4096-mtp1), 443 MiB (mtp3), 503 MiB (mtp2): three cells below the 512 MiB eligibility line**; P2-mtp0 549 MiB, P6-mtp0 1,381 MiB.
 - Polls (7 min apart): busy 1.7 to 7.4 % with the server's own share 3.1 to 6.6 % and everything else 0.6 to 3.2 % (one sample, taken as the server exited, has no valid server/other split). No interfering process identified; `missioncenter` open as before.
 - Lowest MemAvailable: 20.1 GiB (telemetry, P2-mtp1), 21.1 GiB at a poll. Highest CPU Tctl 74 °C, GPU 72 °C.
+
+## Re-run pass for the 2a sessions (--rerun-flagged, once per session), Phase 0 conditions, 2026-11-10T19:22Z
+- pgrep llama-server: empty. GPU lock: free. nvidia-smi memory.used: 3 MiB. MemAvailable: 25.2 GiB. Swap in use: 3.18 GiB of 30.46 GiB.
+- CPU busy over 10 s: 0.78 %. Load average (1 min): 0.79.
+- Top 5 by memory (names): chrome 0.40 GiB, claude 0.34 GiB, antigravity-ide 0.31 GiB, antigravity-ide 0.30 GiB, chrome 0.29 GiB.
+- Top 5 by CPU, ps lifetime average (names): chrome 5.4 %, missioncenter-m 3.5 %, missioncenter 2.1 %, antigravity-ide 1.4 %, claude 1.3 %.
+- Desktop apps open (names): antigravity-ide chrome claude cosmic-comp kilo spotify 
+- Units to re-run (attempt-1 paging flags): s2a-32K 4 (P6-mtp0 rep 4; P6-mtp1 reps 2, 3, 4), s2a-64K 6 (P6-mtp1 and P6-mtp2 reps 2, 3, 4), s2a-128K 5 (P2-mtp2 reps 0, 1; P2-mtp3 reps 0, 1, 2).
