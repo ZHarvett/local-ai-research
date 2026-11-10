@@ -87,5 +87,8 @@ from the measurement telemetry.
 ### Re-run s2a-32K (--rerun-flagged, once): 2026-11-10 19:22:16Z to 19:32:22Z (10.1 min)
 - 4 units re-run (attempt 2): P6-mtp0 repetition 4, P6-mtp1 repetitions 2, 3, 4. **3 clean, 1 still paging-flagged** (P6-mtp1 repetition 4, swap activity 0 MiB). The re-run adds `canary-rerun-start` and `canary-rerun-end`; drift none. Polls: busy 7.4 % (server 6.3 %), one sample 34.1 % of which the server 33.1 %; MemAvailable at least 21.7 GiB.
 
-### Re-run s2a-64K (--rerun-flagged, once): 2026-11-10 19:34:47Z to about 19:50Z
+### Re-run s2a-64K (--rerun-flagged, once): 2026-11-10 19:34:47Z to 19:49:14Z (14.5 min)
 - 6 units re-run (attempt 2): P6-mtp1 and P6-mtp2 repetitions 2, 3, 4. **6 clean** (one, P6-mtp1 repetition 4, grew VmSwap by 486 MiB without a flag). Drift none. Polls: busy 7.2 % (server 6.3 %), one sample 33.0 % of which the server 33.6 % (the end canary); MemAvailable at least 22.5 GiB.
+
+### Re-run s2a-128K (--rerun-flagged, once): 2026-11-10 19:50:42Z to about 20:10Z
+- 5 units re-run (attempt 2): P2-mtp2 repetitions 0, 1 and P2-mtp3 repetitions 0, 1, 2. **3 clean, 2 still paging-flagged** (P2-mtp2 repetition 0 with swap activity 749 MiB, repetition 1 with -6 MiB; both within the changed criterion f limit of 1,024 MiB). Drift none. Polls: busy 11.7 % (server 10.3 %), one sample 41.1 % of which the server 40.8 % (the end canary); MemAvailable at least 20.6 GiB.
