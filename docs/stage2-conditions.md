@@ -83,3 +83,6 @@ from the measurement telemetry.
 - Top 5 by CPU, ps lifetime average (names): chrome 5.4 %, missioncenter-m 3.5 %, missioncenter 2.1 %, antigravity-ide 1.4 %, claude 1.3 %.
 - Desktop apps open (names): antigravity-ide chrome claude cosmic-comp kilo spotify 
 - Units to re-run (attempt-1 paging flags): s2a-32K 4 (P6-mtp0 rep 4; P6-mtp1 reps 2, 3, 4), s2a-64K 6 (P6-mtp1 and P6-mtp2 reps 2, 3, 4), s2a-128K 5 (P2-mtp2 reps 0, 1; P2-mtp3 reps 0, 1, 2).
+
+### Re-run s2a-32K (--rerun-flagged, once): 2026-11-10 19:22:16Z to 19:32:22Z (10.1 min)
+- 4 units re-run (attempt 2): P6-mtp0 repetition 4, P6-mtp1 repetitions 2, 3, 4. **3 clean, 1 still paging-flagged** (P6-mtp1 repetition 4, swap activity 0 MiB). The re-run adds `canary-rerun-start` and `canary-rerun-end`; drift none. Polls: busy 7.4 % (server 6.3 %), one sample 34.1 % of which the server 33.1 %; MemAvailable at least 21.7 GiB.
