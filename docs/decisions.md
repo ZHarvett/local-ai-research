@@ -984,3 +984,24 @@ again when later prompt variants use those experts. Nothing in the 2a data tests
   paging-flagged window shows `swap_activity_mib` above 1,024 (the 2f mechanism returning).** This applies to every later Stage 2 session. `docs/runbook-stage2.md` and the `stage2 gate`
   tool still print the 20 % rule (the tool is not changed); the gate output is read with this rule and the figures are reported.
 - `--rerun-flagged` is now allowed (the 2f decision is made) and runs once per session with flagged units, never twice.
+
+## Stage 2a: re-run pass and a defect that blocks the 2a decision (2026-11-10, not fixed)
+
+**Re-run pass** (one `--rerun-flagged` per session, commits `d660916`, `ba25f94`, `a8010c5`): 15 units re-run (32K 4, 64K 6, 128K 5), 12 clean, 3 still paging-flagged (`s2a-P6-32K-b4096-mtp1` repetition 4;
+`s2a-P2-128K-b4096-mtp2` repetitions 0 and 1). No flagged window of attempt 2 had swap activity above 1,024 MiB (largest 749 MiB). The paging diagnostic is `data/analysis/stage2/2a-paging.md` (`075e88f`).
+The step-A reading "repetitions 2 to 4 only" holds at 32K and 64K but not at 128K: the 128K flags are in repetitions 0 and 1 (P2-mtp2) and 0, 1, 2 (P2-mtp3), and the two P2-mtp2 units were flagged again on the fresh server of attempt 2.
+
+**Decision tool output (`python -m smallpc.stage2 decide --stage 2a`) is not clean and its content is wrong for the re-run cells.** Status: `HUMAN DECISION NEEDED: 32K: P6-32K-b4096: the MTP-off cell is missing or not eligible`.
+The `s2a-P6-32K-b4096-mtp0` cell is eligible (`data/analysis/stage2/2a.json`, `eligibility`). Cause, found by reading `src/smallpc/stage2/decide.py` and `src/smallpc/sweep/session.py` (nothing in `src/` was changed):
+- `Session._job_from_resolved` (`session.py`, the re-run job) builds `Job(name, "measured", profile, data, reps, attempt=2)` without `coords=` and `resolution=`. The re-run rewrites the cell summary `data/raw/<session>/cells/<cell>.json`
+  with `"coords": {}` and `"resolution": {}` (the committed pre-re-run version has them; `git show 5a53bbe:data/raw/s2a-32K/cells/s2a-P6-32K-b4096-mtp1-fc15e834.json`).
+- `decide_2a` picks the top placement's cells with `_coord(c, "placement") == top.placement`, so the six re-run cells (32K P6-mtp0, P6-mtp1; 64K P6-mtp1, P6-mtp2; 128K P2-mtp2, P2-mtp3) drop out of the
+  top placement's cell list. Effect in the committed output: 32K says the MTP-off cell is missing and compares only mtp2 with mtp3; 64K compares only mtp3 (best draft length 3, winner mtp0 by T_reread);
+  128K reports no eligible MTP cell. **`data/analysis/stage2/2a.md`, `2a.json` and `2a-2a2-input.json` must not be used to generate the 2a2 spec.** The raw data (`records.jsonl`, `events.jsonl`, telemetry) is intact; only the
+  cell-summary fields `coords` and `resolution` of those six cells were blanked, and `data/raw/` is not edited by hand.
+- An in-memory run of `decide_2a` with the placement taken from the cell name (nothing written, not a result) gives no "human decision needed" at any context, but a different content from the committed output
+  (32K: best draft length 2, MTP wins on T_turn_400; 64K: best draft length 1, MTP wins; 128K: no eligible MTP cell because of minimum free VRAM). That preview is not a decision.
+
+**Eligibility, independent of the defect** (`eligibility` in `2a.json`): `s2a-P6-32K-b4096-mtp1` is ineligible only because of paging (one unresolved flagged unit, n_clean 4 of 5); `s2a-P2-128K-b4096-mtp1` (421 MiB) and `-mtp3` (443 MiB)
+are ineligible only because of minimum free VRAM below 512 MiB; `s2a-P2-128K-b4096-mtp2` fails both (503 MiB, and two unresolved flagged units, n_clean 3). The continuation's stop rule (a cell ineligible only because of paging-flagged
+units) applies to `s2a-P6-32K-b4096-mtp1`, so everything stops before 2a2 for the step lead.
