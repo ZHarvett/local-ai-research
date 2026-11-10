@@ -1,6 +1,6 @@
 # Step 0 Plan: Baseline Setup
 
-*Version 1.5 · 9 November 2026*
+*Version 1.6 · 10 November 2026*
 *Part of "Local AI on a Small PC" (project plan dated 5 November 2026). This file is the reference for Step 0. Any change produces a new version, recorded in §14.*
 
 ---
@@ -196,13 +196,19 @@ Add the stock configuration for each C, for 57 cells in total.
 
 Output: for each context, the shortlist of §3.3 (the top 2 eligible placements by T_turn_400, with the stock reference row), plus VRAM breakdowns and expert-cache hit rates.
 
-**Stage 2: Features** (5 repetitions; WP12; about 4–5 hours)
+**Stage 2: Features** (5 repetitions per cell; WP12; about 6 to 7 hours of GPU time, in several sessions)
 
-- **2a MTP.** Run the top placement for each C with MTP off and with draft lengths 1, 2 and 3. Then run the second-best placement with the best draft length. Cache sizes are re-probed with MTP on, because the head and its draft context cost VRAM. Record acceptance and the effect on decode **and on prefill**.
-- **2b KV type.** FP16 vs 8-bit KV at 64K, on the Stage 2a winner.
-- **2c Load mode.** `--load-mode` auto (mmap) vs none at 64K, with paging metrics.
-- **2d Threads (optional).** `-t 8` vs the default at 64K.
-- **2e llama-bench cross-check.** Run llama-bench at the 64K winner, labelled as a cross-check, to show how far random-token numbers differ from real-prompt numbers.
+Stage 2 starts from the Stage 1 shortlist: for each context, the two eligible placements with the lowest mean T_turn_400 (all six are `-b 4096`; at 32K and 64K one is P6 and one is P2, and at 128K the pair is P2 and P6 in the same way). "Top" means first in the Stage 1 order, even where the pair is too close to call at n = 2. Every Stage 2 cell is a candidate cell with the §5.4 defaults, `-lv 4` and `--metrics`, runs 5 repetitions, and each sub-stage is its own session with its own start and end canaries. The decision rules below are declared before any Stage 2 measurement.
+
+- **2f Host prompt cache (`--cache-ram`). Runs first.** Reason: in Stage 1, 14 of 38 windows at 128K and one at 64K were paging-flagged, all in the second repetition of a long-running server, in cells with a large memory-mapped model. The 15 re-runs on fresh servers were all clean, and the server's anonymous memory grew in step with its host prompt cache (default 8,192 MiB), which every unique benchmark prompt fills. That points to host-memory pressure on a 32 GB machine, and the benchmark's requests never hit that cache, so it only costs memory here. Cells, with MTP off: the top placement at 128K with `--cache-ram` 8192 (the default), 4096, 2048 and 0; and at 64K with 8192 and 2048. Rule: the chosen value is the largest tested value with no paging-flagged window in any of its 5 repetitions, unless its mean T_turn_400 is more than 3% above the mean of the 8192 cell's clean units. If the 8192 cell is already clean, the default stays. If no tested value is clean, stop and report: the cause is then not the host cache. The chosen value is used in every later candidate cell and in the tuned configs. Stock keeps the default. The trade-off is documented: a small host cache means that switching between conversations re-reads the prompt instead of restoring it (this matters for Step 5).
+- **2a MTP.** Per context, 6 cells: both shortlisted placements with MTP off (these are also the 5-repetition measurement of the shortlist), the top placement with draft lengths 1, 2 and 3, and the second placement with the best draft length of the top placement. The best draft length is chosen by the §3.3 rules among the three; if the CIs include zero, the smaller draft length wins. Cache sizes of P6 cells are re-probed with MTP on, because the head and its draft context cost VRAM. Record acceptance, and the effect on decode **and on prefill**. MTP joins a tuned config only if it wins by §3.3 on T_turn_400 and passes the output sanity check.
+- **2b KV type.** FP16 vs 8-bit KV at 64K, on the 2a winner at 64K, with the cache re-probed for the FP16 cell.
+- **2c Load mode.** `--load-mode` at 64K on the 2a winner, with paging metrics: `auto` against one alternative chosen from the build's own help text and source. Modes that need `sudo` or a raised memory-lock limit are excluded (the limit here is 8 MiB). The choice and its reasoning are recorded before the run.
+- **2d Threads (optional).** `-t 8` against the default at 64K, only if the default differs (check the effective thread count in the log); otherwise skipped and recorded.
+- **2e llama-bench cross-check.** llama-bench at the nearest configuration it supports at 64K, labelled as a cross-check and never used for a decision, to show how far random-token numbers differ from real-prompt numbers. Fields llama-bench cannot express (for example `--moe-cache-mib`) are listed.
+- **Output sanity check (§5.6).** On the 2a winner and runner-up of each context and on the plain `--fit` reference of the same context, before Stage 3.
+
+Order: 2f, 2a, 2b, 2c, 2d, then the sanity check and 2e. The 2a spec is generated from the Stage 1 shortlist and the 2f result by a tool, and the second placement's cell from the 2a main result.
 
 **Stage 3: Final** (at least 5 repetitions, paired; WP13; about 1.5 hours)
 
@@ -579,12 +585,18 @@ WP11 runs in several sessions: preparation and pre-flight, three sweep sessions 
 
 ### WP12: Stage 2 feature experiments
 
-**Tasks:** run Stages 2a–2e as described in §5.4. Write the runner for the output sanity check (§5.6, using `smallpc.sanity`) and run it on each shortlisted candidate. Then recommend whether MTP belongs in the tuned configs.
+WP12 runs in several sessions: preparation and pre-flight (tools, specs, runbook, short GPU checks), the 2f session and its decision, the 2a to 2d sessions, and the sanity check, 2e and the analysis.
+
+**Tasks:**
+- Preparation: a tool that builds the Stage 2 specs from the Stage 1 shortlist, the 2f decision and the 2a result; a tool that applies the declared rules of §5.4 to session data; the runner for the output sanity check (§5.6, using `smallpc.sanity`); a wrapper for the llama-bench cross-check; the runbook; short GPU checks of every new code path.
+- Sessions: each sub-stage as its own session from a clean committed tree. Anything that changes code or configs between sessions is committed first.
+- Analysis: per sub-stage, with CIs, the swap sensitivity of §5.5 and the decision rules of §5.4.
 
 **Acceptance:**
-- All results have CIs.
-- MTP's effect on prefill is quantified.
-- The MTP recommendation is recorded in `docs/decisions.md`.
+- Every Stage 2 cell is measured with 5 repetitions and CIs, or recorded as did not fit.
+- The `--cache-ram` decision follows its declared rule and is recorded in `docs/decisions.md`.
+- MTP's effect on decode and on prefill is quantified, and the MTP recommendation is recorded in `docs/decisions.md`.
+- The sanity check has been run on the candidates that go forward.
 
 ### WP13: Final run and reproducibility
 
@@ -780,6 +792,7 @@ Each entry records the date, WP, status, commit, key results (with numbers) and 
 - **Release.** Step 0's release follows the lighter standard agreed earlier: a tagged baseline release in the umbrella repo.
 - **MTP state across save and restore.** On the pinned build, neither `/slots` save/restore nor the host-RAM prompt cache lost the MTP draft state (identical draft counts at 181 and 3,191 tokens of history, and the log shows the draft state saved and restored). There was no negative control and no history above 8,192 tokens. llama.cpp #28619 (a Step 3b starter PR that Step 5 depends on) may already be fixed, and Step 3b and Step 5 should confirm it.
 - **Memory behaviour on this machine.** The system uses zram swap with `vm.swappiness` 150, and the kernel swaps cold pages of llama-server's memory even with about 20 GiB available. Step 1 benchmark runs on this PC will see the same behaviour. Step 0 flags only major page faults, and reports swap activity separately.
+- **Host prompt cache on a 32 GB machine.** With the default `--cache-ram` of 8,192 MiB, a long-running server's host prompt cache plus a 20 GiB memory-mapped model pushed the machine into paging at 128K and 64K in Stage 1. Stage 2f measures smaller values. Step 1 and Step 5 should expect the same effect, and Step 5's plan to park states in host RAM competes for the same memory.
 - **Real agent turns.** Step 0's 3,000 + 400 turn is a standardised workload. Step 1 should report per-turn new tokens and generated tokens from real tasks, to show how far real use is from it.
 
 ---
@@ -789,6 +802,7 @@ Each entry records the date, WP, status, commit, key results (with numbers) and 
 | Version | Date | Change |
 |---|---|---|
 | 1.0 | 6 Nov 2026 | Initial plan |
+| 1.6 | 10 Nov 2026 | After Stage 1: Stage 2 is written out with its decision rules declared before measurement (§5.4); a new first sub-stage, 2f, tests the host prompt cache size, because the paging seen in the 64K and 128K sessions tracked its growth; the Stage 2 estimate rises to 6 to 7 hours; WP12 is split into preparation, sessions and analysis (§5.4, WP12); a note on host-memory pressure for the executive chat (§13) |
 | 1.5 | 9 Nov 2026 | After the WP11 pre-flight: the max-fit definition for P6 and P7 states that `--fit` keeps its default margin, which is the binding limit on this card (§5.4); the Stage 1 time estimate drops to about 4 to 5 hours, because the larger batch settings prefill 2.3 to 2.9 times faster than the default (§5.4); the pre-flight is recorded as done, and its probe cache retired (§5.4) |
 | 1.4 | 9 Nov 2026 | Lessons from WP9–WP10: the paging flag counts only llama-server major faults, with swap growth recorded as `swap_activity` and a swap sensitivity added to every report (§5.5, §5.6); paired-ratio intervals become the wider of bootstrap and t on log ratios, and the measured coverage of the intervals is stated (§5.5); eligibility and the tie-break are written as WP10 implemented them, with the literal step 2 that could never apply removed, and screening applies no tie-break (§3.3); the output sanity check gets declared thresholds and a stage (§5.6, WP12); transient precondition failures are retried (§5.3); Stage 1 runs as three sessions with shuffled cell order, a recomputed time estimate of about 8 h, a clean-tree rule and a pre-flight (§5.4, WP11); a note on memory behaviour for the executive chat (§13) |
 | 1.3 | 9 Nov 2026 | Lessons from WP5–WP8: the idle precondition uses CPU busy time instead of the lagging load average, with a recorded wait (§5.3); the paging flag counts only llama-server's own faults and swap, since system-wide zram swap-in never reaches zero (§5.6); a new `accounting` flag and `prompt_n + cache_n` assertions for Requests A and B, and Request A's one generated token documented (§5.3, §5.6, WP9); every cell runs with `-lv 4`, and hit rates are decode-batch only (§5.4); the canary is defined, with fresh nonces (§5.1, §5.2); K = 1,024, the variant policy r mod 5 and the special-token exclusion recorded (§5.2); the MTP notes updated with WP5's findings (§13) |
