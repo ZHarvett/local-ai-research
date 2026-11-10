@@ -50,13 +50,29 @@
         "tag": "smallpc-sweep-s2a-64K-1794329364",
         "line": "local-ai-research sweep 1000 <user> 808995 systemd-inhibit sleep:idle smallpc-sweep-s2a-64K-1794329364 block"
       }
+    },
+    {
+      "start_utc": "2026-11-10T19:34:47Z",
+      "pid": 860043,
+      "mode": "rerun",
+      "code_commit": "d660916310",
+      "inhibit": {
+        "checked": true,
+        "active": true,
+        "tag": "smallpc-sweep-s2a-64K-1794339287",
+        "line": "local-ai-research sweep 1000 <user> 860018 systemd-inhibit sleep:idle smallpc-sweep-s2a-64K-1794339287 block"
+      },
+      "warnings": [
+        "code commit changed: session f0ae746670 -> d660916310; new records carry the new commit"
+      ],
+      "resumed": true
     }
   ],
   "inhibit": {
     "checked": true,
     "active": true,
-    "tag": "smallpc-sweep-s2a-64K-1794329364",
-    "line": "local-ai-research sweep 1000 <user> 808995 systemd-inhibit sleep:idle smallpc-sweep-s2a-64K-1794329364 block"
+    "tag": "smallpc-sweep-s2a-64K-1794339287",
+    "line": "local-ai-research sweep 1000 <user> 860018 systemd-inhibit sleep:idle smallpc-sweep-s2a-64K-1794339287 block"
   },
   "drift": {
     "main": {
@@ -119,7 +135,69 @@
         "tg_16k"
       ],
       "complete": true
+    },
+    "rerun": {
+      "metrics": {
+        "pp_fresh_16k": {
+          "flag": null,
+          "relative_difference": 0.0025365883793270886,
+          "threshold": 0.05,
+          "start_mean": 955.5019655910049,
+          "end_mean": 957.9256807733473,
+          "start_values": [
+            952.2981399961964,
+            954.8979726718738,
+            959.3097841049442
+          ],
+          "end_values": [
+            964.6816641771434,
+            957.770863141886,
+            951.3245150010126
+          ]
+        },
+        "tg_16k": {
+          "flag": null,
+          "relative_difference": 0.0005813909404348535,
+          "threshold": 0.05,
+          "start_mean": 78.15697689287143,
+          "end_mean": 78.20241665116872,
+          "start_values": [
+            78.2398197542799,
+            78.11125038884329,
+            78.11986053549109
+          ],
+          "end_values": [
+            78.21238249030579,
+            78.27298793301246,
+            78.12187953018793
+          ]
+        },
+        "tg_short": {
+          "flag": null,
+          "relative_difference": 8.612378527444149e-06,
+          "threshold": 0.05,
+          "start_mean": 88.27934766139094,
+          "end_mean": 88.28010795654916,
+          "start_values": [
+            88.27507841880086,
+            88.30688479426266,
+            88.2560797711093
+          ],
+          "end_values": [
+            88.6997220964346,
+            87.94033810084574,
+            88.20026367236719
+          ]
+        }
+      },
+      "flag": null,
+      "decided_on": [
+        "pp_fresh_16k",
+        "tg_16k"
+      ],
+      "complete": true
     }
   },
-  "finished_utc": "2026-11-10T17:35:51Z"
+  "finished_utc": "2026-11-10T17:35:51Z",
+  "rerun_finished_utc": "2026-11-10T19:49:14Z"
 }
