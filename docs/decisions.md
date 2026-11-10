@@ -877,3 +877,48 @@ Where the plan's text leaves a choice, `smallpc.stage2` implements the following
   Stage 1 outputs `data/analysis/paging-stage1-64K|128K.*` are regenerated with `--label screening` (only the banner and note change).
 - A completed re-run writes `rerun_finished_utc` instead of overwriting `finished_utc` of `session.json`. The `session.json` files of
   `stage1-64K` and `stage1-128K` keep the overwritten value (Stage 1 data is not edited); the main-run end is in `runs[0]` and `events.jsonl`.
+
+## WP12 part 1: findings of the short GPU checks and the 2c / 2d / 2e choices (2026-11-10)
+
+All runs below are **functional-test data** (`ft-` sessions, `data/loadmode/`, `data/sanity/ft-*`, `data/microbench/ft-*`), produced with the desktop apps open. They test code
+paths; none is a result.
+
+### `--cache-ram 0` means "disabled" (confirmed before any 2f session)
+Help text of the pinned build: "set the maximum cache size in MiB (default: 8192, 0 for decision models, -1 - no limit, 0 - disable)". Source
+(`tools/server/server-context.cpp`): `cache_ram_mib == 0` creates no prompt cache ("prompt cache is disabled - use `--cache-ram N` to enable it") and also disables
+`--cache-idle-slots`. "Decision models" are a separate typed-model concept (`<arch>.decision.type` in the model metadata), not MTP and not this model, so MTP cells keep the default cache.
+Pre-flight (`ft-2f-cram`, P6-32K-b4096, one repetition): the rendered flag is `--cache-ram 0` / `--cache-ram 8192`; the `0` server logs "prompt cache is disabled" and
+"--cache-idle-slots requires --cache-ram, disabling" and prints **no** `cache state` line; the 8192 server logs "prompt cache is enabled, size limit: 8192 MiB", 6 `cache state` lines,
+1,740.5 MiB (5 prompts) at the end. Both cells complete, no flags. The 2f cells therefore test what the plan says.
+
+### 2c: the alternative to `--load-mode auto` is `dio`
+What the pinned build does (`include/llama.h`, `src/llama-model-loader.cpp`, `src/llama-model.cpp`, `src/llama-mmap.cpp`):
+- `auto` and `mmap`: the model file is memory-mapped; the CPU-resident tensors are a `CPU_Mapped` buffer of file-backed pages (RssFile), which the kernel may drop and re-read from the SSD (these are the major faults of Stage 1). `auto` is `mmap` unless a device lacks mmap support.
+- `none`: no mmap. Tensors are read with ordinary buffered `read()` into newly allocated host buffers; the page cache keeps a reclaimable copy of the file.
+- `dio`: no mmap. The file is opened with `O_DIRECT` and read in aligned blocks into the same kind of host buffer, bypassing the page cache ("use DirectIO if available").
+- `mlock` and `mmap+mlock`: lock the model in RAM. **Excluded**: the memory-lock limit is 8 MiB, and the plan excludes modes that need a raised limit or sudo.
+Measured at 32K with P6-32K-b4096 (one short request, `data/loadmode/ft-smoke-*.json`): `auto` holds the experts as 20.4 GiB of RssFile (CPU_Mapped, evictable); `none` and `dio` both put them in an
+**18.9 GiB `CUDA_Host` buffer (pinned memory)** with RssFile about 0.2 GiB and RssAnon under 1 GiB, so the kernel cannot drop or swap those pages. Load 10 s (auto, page cache warm), 21 s (none), 19 s (dio); the first
+request ran at 1,110 to 1,132 tok/s prefill and 57 to 59 tok/s decode in all three (one request each: no speed claim).
+**Choice: `dio`.** It is the remedy that matches what Stage 1 showed (the flagged windows lost 1.5 to 8.1 GiB of RssFile and faulted): the model stops being evictable file memory. Of the two modes with
+that effect, `dio` leaves no second 20 GiB copy in the page cache (`none` fills it at every cold load, which pushes other processes' cache out on a 32 GB machine) and its load time does not depend on what the page cache holds.
+It needs no sudo and no lock limit, loaded here without a fallback, and is a constant in `smallpc.stage2.specgen` (`LOAD_MODE_ALT`, pinned by a test).
+Risks 2c will show, not hide: pinned memory cannot be reclaimed, so the pressure moves to the other processes (the desktop apps); the 2c paging table (faults, swap activity of llama-server, host cache, MemAvailable) is part of the decision output. `load_mode` is in the probe key, so both 2c cells probe fresh.
+
+### 2d: not needed
+The effective thread count is 8: all 82 Stage 1 server logs print `n_threads = 8 (n_threads_batch = 8) / 16` (16 is the hardware thread count of the Ryzen 7 9700X, 8 cores) and no resolved Stage 1 config sets `-t`. `-t 8` is the default, so 2d is skipped and recorded
+(`python -m smallpc.stage2 decide --stage 2d --default-threads 8`).
+
+### MTP pre-flight (`ft-2a-mtp`, P6-32K-b4096, one repetition, draft lengths 1 and 3)
+Both cells complete, no flags, no error lines in either log; "creating MTP draft context" and "adding speculative implementation 'draft-mtp'" appear. Max-fit with MTP on is **10,752 MiB** for both draft lengths (4 steps, 21.4 s each) against 11,520 MiB without MTP in Stage 1 (b4096):
+the draft context takes 768 MiB of cache room (3 steps of 256). Free VRAM at the first probe step (cache 4,096) was 7,841 MiB (n = 1) and 7,715 MiB (n = 3) against 8,803 MiB without MTP: **962 and 1,088 MiB** of VRAM for the MTP head and draft context. From the logs (CUDA0): model +23 MiB (head), recurrent state +63 MiB (n = 1) or +188 MiB (n = 3), draft KV 64 MiB, draft compute buffer 638 MiB.
+Acceptance: 80.2% (709 / 884) at n = 1, 52.2% (973 / 1,863) at n = 3. PP_fresh with MTP, anecdotal (one repetition against two Stage 1 repetitions of the same placement): 2,275 / 2,221 / 2,151 tok/s (n = 1) and 2,243 / 2,251 / 2,186 (n = 3) at 8K / 16K / 24K against a Stage 1 mean of 2,468 / 2,482 / 2,384: **about 9% lower** with MTP; TG 104 / 104 / 94 (n = 1) against 93 / 87 / 81. The 10752 and 10752 probes were moved to `data/probes/functional-test-cache.jsonl`; the committed `data/probes/cache.jsonl` is unchanged, so real Stage 2 MTP probes are measured in their own sessions.
+
+### Sanity runner (`data/sanity/ft-sanity-32K.json`)
+P6-32K-b4096 against P1-32K-b2048, three prompts, 512 tokens each: **PASS** (first divergence at tokens 120, 41 and 222: information only; distinct 4-gram ratio 0.943 / 0.894 / 0.868 against 0.917 / 0.904 / 0.929; no repeated-token run longer than 1; 8-gram repeat 2 / 2 / 2 against 2 / 2 / 3). 47 s for both servers.
+The pinned server returns the ids in `tokens` with `"return_tokens": true` (README of the server).
+
+### 2e: the cross-check cell is P2-64K-b4096
+`python -m smallpc.stage2 bench-crosscheck --list-expressibility` ranks the Stage 1 64K candidates by the number of inference fields llama-bench cannot express. P1 and P2 (fit placements) have none: `--fit-target` is `-fitt`, and only the context is approximated (`-fitc`, the minimum context of the fit).
+P3 to P5 lose the expert cache, P6 and P7 lose the cache and the context, P8 and P9 lose the context. The default is P2-64K-b4096: nothing inexpressible, one approximation, and it is on the 64K shortlist. (The brief expected a P8 or P9; those cannot carry the context at all.)
+Smoke (`data/microbench/ft-crosscheck-P2-64K-b4096.json`, 1 repetition, 175 s): parses, labelled "cross-check, random-token prompts, never used for a decision", nothing inexpressible; fresh prefill 2,682 / 2,493 / 2,324 tok/s at 16K / 32K / 48K, decode 70.5 / 64.5 / 59.4 tok/s at those depths.

@@ -1,0 +1,11 @@
+{"utc": "2026-11-10T10:57:30Z", "event": "session_open", "mode": "run", "resumed": false, "cells": 2, "filters": {}}
+{"utc": "2026-11-10T10:57:30Z", "event": "probe_cache_hit", "kind": "max_fit", "key": "fa1ba1e2ea976435b27b", "value": 11520}
+{"utc": "2026-11-10T10:57:30Z", "event": "cell_start", "cell": "s2f-P6-32K-b4096-mtp0-cram8192", "hash": "7591e90371e07655", "todo": [0], "instance": 0, "restarts": 0, "role": "measured"}
+{"utc": "2026-11-10T10:57:40Z", "event": "precondition", "cell": "s2f-P6-32K-b4096-mtp0-cram8192", "attempt": 1, "ok": true, "aborts": [], "hard": [], "warnings": [], "idle": {"ok": true, "threshold_busy_pct": 10.0, "window_s": 10.0, "max_wait_s": 600.0, "busy_pct": 1.34, "busy_pct_history": [1.34], "attempts": 1, "elapsed_s": 10.0, "waited_s": 0.0, "loadavg_1m": 0.84, "error": null}, "mem_available_gib": 25.16}
+{"utc": "2026-11-10T10:58:05Z", "event": "server_start", "cell": "s2f-P6-32K-b4096-mtp0-cram8192", "run_id": "ft-2f-cram-s2f-P6-32K-b4096-mtp0-cram8192-7591e903-i0", "rc": 0, "started": true, "healthy": true, "load_time_s": 25.36}
+{"utc": "2026-11-10T10:59:02Z", "event": "cell_record", "cell": "s2f-P6-32K-b4096-mtp0-cram8192", "status": "complete", "final": true, "reason": null}
+{"utc": "2026-11-10T10:59:02Z", "event": "probe_cache_hit", "kind": "max_fit", "key": "fa1ba1e2ea976435b27b", "value": 11520}
+{"utc": "2026-11-10T10:59:02Z", "event": "cell_start", "cell": "s2f-P6-32K-b4096-mtp0-cram0", "hash": "8a9e138ad0445531", "todo": [0], "instance": 0, "restarts": 0, "role": "measured"}
+{"utc": "2026-11-10T10:59:12Z", "event": "precondition", "cell": "s2f-P6-32K-b4096-mtp0-cram0", "attempt": 1, "ok": true, "aborts": [], "hard": [], "warnings": [], "idle": {"ok": true, "threshold_busy_pct": 10.0, "window_s": 10.0, "max_wait_s": 600.0, "busy_pct": 0.93, "busy_pct_history": [0.93], "attempts": 1, "elapsed_s": 10.0, "waited_s": 0.0, "loadavg_1m": 1.12, "error": null}, "mem_available_gib": 25.76}
+{"utc": "2026-11-10T10:59:14Z", "event": "server_start", "cell": "s2f-P6-32K-b4096-mtp0-cram0", "run_id": "ft-2f-cram-s2f-P6-32K-b4096-mtp0-cram0-8a9e138a-i0", "rc": 0, "started": true, "healthy": true, "load_time_s": 2.28}
+{"utc": "2026-11-10T11:00:09Z", "event": "cell_record", "cell": "s2f-P6-32K-b4096-mtp0-cram0", "status": "complete", "final": true, "reason": null}

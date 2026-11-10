@@ -1,0 +1,102 @@
+{
+ "label": "functional-test",
+ "base_cell": "P6-32K-b4096",
+ "resolved_from": "stage1-32K",
+ "overrides": {
+  "load_mode": "auto"
+ },
+ "effective_fields": {
+  "profile": "candidate",
+  "context": 32768,
+  "cpu_moe": true,
+  "moe_cache_mib": 11520,
+  "batch": 4096,
+  "ubatch": 4096,
+  "cache_type_k": "q8_0",
+  "cache_type_v": "q8_0",
+  "flash_attn": "on",
+  "parallel": 1,
+  "metrics": true,
+  "log_verbosity": 4,
+  "load_mode": "auto"
+ },
+ "run_id": "ft-smoke-P6-32K-b4096-20261110T110826-717526-0",
+ "ok": true,
+ "error": null,
+ "load_time_s": 10.32,
+ "memory_after_load": {
+  "rss_anon_kib": 471200,
+  "rss_file_kib": 20431892,
+  "vmswap_kib": 0
+ },
+ "request": {
+  "workload": "short-v0-2048-r0",
+  "prompt_n": 2048,
+  "predicted_n": 64,
+  "prompt_per_second": 1131.8149990909005,
+  "predicted_per_second": 57.24951519656577,
+  "stop_type": "limit",
+  "http_status": 200
+ },
+ "memory_after_request": {
+  "rss_anon_kib": 812052,
+  "rss_file_kib": 20458920,
+  "vmswap_kib": 0
+ },
+ "memory_peak": {
+  "rss_anon_kib": 812052,
+  "rss_file_kib": 20458920,
+  "vmswap_kib": 0
+ },
+ "stop": {
+  "stopped_utc": "2026-11-10T11:08:39Z",
+  "pid": 717582,
+  "method": "sigint",
+  "exit_code": 0,
+  "waited_s": 0,
+  "sigint_timeout_s": 60,
+  "stop_rc": 0
+ },
+ "log_loader_lines": [
+  "0.00.241.116 I srv    load_model: loading model '/mnt/data/local-ai-research/models/Ornith-1.5-35B-Q4_K_M.gguf'",
+  "0.00.241.117 I srv    load_model: local path '/mnt/data/local-ai-research/models/Ornith-1.5-35B-Q4_K_M.gguf'",
+  "0.00.491.242 I load_tensors: loading model tensors, this can take a while... (load_mode = mmap)",
+  "0.00.491.400 W llama_model_loader: tensor overrides to CPU are used with mmap enabled - consider using --load-mode none for better performance",
+  "0.09.312.215 I load_tensors: offloading output layer to GPU",
+  "0.09.312.218 I load_tensors: offloading 40 repeating layers to GPU",
+  "0.09.312.218 I load_tensors: offloaded 42/42 layers to GPU",
+  "0.09.312.224 I load_tensors:   CPU_Mapped model buffer size =   272.81 MiB",
+  "0.09.312.224 I load_tensors:   CPU_Mapped model buffer size =   210.00 MiB",
+  "0.09.312.225 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+  "0.09.312.225 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+  "0.09.312.225 I load_tensors:   CPU_Mapped model buffer size =   210.00 MiB",
+  "0.09.312.225 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+  "0.09.312.225 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+  "0.09.312.226 I load_tensors:   CPU_Mapped model buffer size =   210.00 MiB",
+  "0.09.312.226 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+  "0.09.312.226 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+  "0.09.312.226 I load_tensors:   CPU_Mapped model buffer size =   210.00 MiB",
+  "0.09.312.226 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+  "0.09.312.226 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+  "0.09.312.226 I load_tensors:   CPU_Mapped model buffer size =   210.00 MiB",
+  "0.09.312.227 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+  "0.09.312.227 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+  "0.09.312.227 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+  "0.09.312.227 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+  "0.09.312.227 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+  "0.09.312.227 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+  "0.09.312.228 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+  "0.09.312.228 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+  "0.09.312.228 I load_tensors:   CPU_Mapped model buffer size =   210.00 MiB",
+  "0.09.312.228 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+  "0.09.312.228 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+  "0.09.312.228 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+  "0.09.312.229 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+  "0.09.312.229 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+  "0.09.312.229 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+  "0.09.312.229 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+  "0.09.312.229 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB",
+  "0.09.312.229 I load_tensors:   CPU_Mapped model buffer size =   210.00 MiB",
+  "0.09.312.229 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB"
+ ]
+}

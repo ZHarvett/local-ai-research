@@ -1,0 +1,13 @@
+{
+  "session_id": "ft-2f-cram",
+  "state": "complete",
+  "phase": "done",
+  "cells_total": 2,
+  "cells_done": 1,
+  "started_utc": "2026-11-10T10:57:30Z",
+  "updated_utc": "2026-11-10T11:00:09Z",
+  "cell": "s2f-P6-32K-b4096-mtp0-cram0",
+  "repetition": 0,
+  "depth": 16384,
+  "kind": "B"
+}

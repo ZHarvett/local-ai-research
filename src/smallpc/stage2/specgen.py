@@ -40,7 +40,7 @@ CRAM_DEFAULT = 8192  # llama-server's --cache-ram default (help text of the pinn
 DRAFT_LENGTHS = (1, 2, 3)
 # 2c: the one alternative to `--load-mode auto` (chosen in WP12 part 1, docs/decisions.md;
 # pinned by tests/test_stage2_spec.py)
-LOAD_MODE_ALT = "none"
+LOAD_MODE_ALT = "dio"
 THREADS_EXPLICIT = 8
 NO_VALUE = "default"  # --cache-ram default: do not set the flag
 

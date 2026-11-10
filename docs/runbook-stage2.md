@@ -139,5 +139,33 @@ human: the 2f choice did not hold. Any failed criterion means **stop and report;
 9. Everything that `decide` refuses: a session started with `--allow-dirty`, a functional-test spec or id, or a session that is not complete. There is no flag
    to override this; start the session again from a clean tree.
 
-## 5. Expected duration
-PLACEHOLDER (filled in by WP12 part 1, check 8).
+## 5. Expected duration (computed in WP12 part 1 from the Stage 1 per-cell times and the pre-flight checks)
+Inputs, all measured (seconds):
+- **Per repetition**, Stage 1 `b4096` cells, mean of 2 repetitions (`phases_s.measure` and the window lengths): P2 40.4 (32K), 63.8 (64K), 128.6 (128K); P6 43.7, 69.8, 141.5.
+- **Fixed per cell** (idle check 10 s, launch 2 to 11 s, warm-up 9 to 12 s, shutdown, parse): P2 30.2, 31.3, 30.8; P6 24.5, 24.4, 26.0.
+- **MTP cell** (pre-flight ft-2a-mtp, 32K, one repetition each): per repetition 44.7 s (n = 1) and 46.3 s (n = 3) against 43.7 s without MTP, so x1.04 is used; fixed +4 s (draft context, a longer warm-up).
+- **Canary** (3 repetitions, start plus end): 185 to 198 s each end, so 372 s per session.
+- **Probe sequence** (max-fit, 5 steps assumed; MTP probes took 4 steps): 21.4 s a step at 32K (pre-flight), 35.8 s at 64K and 77.5 s at 128K (Stage 1 probes), so 107 s, 184 s and 388 s.
+- **llama-bench** (pre-flight, 1 repetition, both invocations): 175 s; 5 repetitions are estimated at 14 minutes.
+- **Sanity** (pre-flight: reference plus one candidate, 3 prompts of 512 tokens, 47 s in all): about 35 s per server, 3 servers per context.
+
+Cell time = fixed + 5 x repetition (x1.04 and +4 s for MTP). Stage 1 probes for P6 without MTP are reused; P2 needs no probe.
+
+| session | arithmetic | expected |
+|---|---|---|
+| **2f** (4 x P2-128K, 2 x P6-64K, canary) | 4 x (30.8 + 5 x 128.6 = 674) + 2 x (24.4 + 5 x 69.8 = 373) + 372 | **64 min** |
+| **2a-32K** (P6 x4 incl. 3 MTP, P2) | 243 + 3 x 256 + 232 + 372 + 3 probes x 107 | **32 min** |
+| **2a-64K** | 373 + 3 x 391 + 350 + 372 + 3 x 184 | **47 min** |
+| **2a-128K** (P2 x4 incl. 3 MTP, P6; no probe: P2 is fit, P6 reuses Stage 1) | 674 + 3 x 704 + 734 + 372 | **65 min** |
+| 2a total | | **2.4 h** |
+| **2a2** (second placement mtp0 and MTP, plus the anchor; 32K 18, 64K 25, 128K 49 incl. one 128K probe) | 3 sessions | **1.5 h** (1.2 h without the anchor) |
+| **2b** (2 x P6-64K, FP16 cell re-probed, canary) | 2 x 373 + 184 + 372 | **22 min** |
+| **2c** (2 x P6-64K, both cells probe fresh because `load_mode` is part of the key, canary) | 2 x 373 + 2 x 184 + 2 x 20 + 372 | **25 min** |
+| **2d** | skipped (default is 8 threads) | 0 |
+| **sanity** (3 contexts x 3 servers) | 9 x 35 + 3 x 30 | **7 min** |
+| **2e** | llama-bench, 5 repetitions | **14 min** |
+| **Stage 2 in all** | | **6.1 h** (upper bound 7.1 h with 15% for paging-slowed repetitions, idle waits and cold loads; 5.8 h without the 2a2 anchor) |
+
+Against the brief and plan v1.6: 2f was estimated at about 80 min and comes to **64 min** (P6-64K probes are reused); 2a was estimated at about 4 h and comes to **2.4 h**
+(MTP barely changes a cell's time and only the P6 contexts probe); 2b to 2d at about 20 min each and come to 22, 25 and 0. The plan's "6 to 7 hours" holds (6.1 h). Allow extra
+time for a re-run of flagged repetitions (after the 2f decision only). Probing in 2a is the least certain figure (5 steps assumed; the pre-flight needed 4).

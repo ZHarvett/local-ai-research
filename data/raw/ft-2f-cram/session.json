@@ -1,0 +1,57 @@
+{
+  "schema": 1,
+  "session_id": "ft-2f-cram",
+  "created_utc": "2026-11-10T10:57:30Z",
+  "spec": {
+    "name": "ft-2f",
+    "path": "configs/sweeps/ft-2f.toml"
+  },
+  "spec_sha256": "ebe9ed701182bc027b456c8fd2ccf2226757b40a495e86a2379d4023b3b30fac",
+  "manifest_sha256": "ed750c1c73355d08d3f76742eb164721ebdfe7206ce2a7fcad89fd3bd5e9f27e",
+  "sampling_sha256": "09b6a27e5b086b3891ff66e0dd64f25deb12530e505cc69e4153c95716ee6743",
+  "git": {
+    "commit": "debe7510e7b24e0a4c28835ed3b8ae41e4313b00",
+    "short": "debe7510e7",
+    "dirty": false,
+    "dirty_paths": []
+  },
+  "filters": {},
+  "model_sha256": "42739874cc2ccfdb8523b23fbe52e29b2a7555c8176737ca9ca0b5d59859d41f",
+  "llama_cpp_commit": "57d04820dfef7a3519aac276d018a6fd71251895",
+  "allow_dirty": false,
+  "model": {
+    "sha256": "42739874cc2ccfdb8523b23fbe52e29b2a7555c8176737ca9ca0b5d59859d41f",
+    "verified": true,
+    "declared": "42739874cc2ccfdb8523b23fbe52e29b2a7555c8176737ca9ca0b5d59859d41f",
+    "size_bytes": 21713463040
+  },
+  "shuffle_seed": 20261109,
+  "cell_order": [
+    "s2f-P6-32K-b4096-mtp0-cram8192",
+    "s2f-P6-32K-b4096-mtp0-cram0"
+  ],
+  "cell_order_rule": "seeded shuffle respecting @n_fit dependencies (smallpc.sweep.spec.order_cells), not spec order",
+  "repetitions": 1,
+  "state": "complete",
+  "runs": [
+    {
+      "start_utc": "2026-11-10T10:57:30Z",
+      "pid": 713149,
+      "mode": "run",
+      "code_commit": "debe7510e7",
+      "inhibit": {
+        "checked": true,
+        "active": true,
+        "tag": "smallpc-sweep-ft-2f-cram-1794308250",
+        "line": "local-ai-research sweep 1000 <user> 713136 systemd-inhibit sleep:idle smallpc-sweep-ft-2f-cram-1794308250 block"
+      }
+    }
+  ],
+  "inhibit": {
+    "checked": true,
+    "active": true,
+    "tag": "smallpc-sweep-ft-2f-cram-1794308250",
+    "line": "local-ai-research sweep 1000 <user> 713136 systemd-inhibit sleep:idle smallpc-sweep-ft-2f-cram-1794308250 block"
+  },
+  "finished_utc": "2026-11-10T11:00:09Z"
+}

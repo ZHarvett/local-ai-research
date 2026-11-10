@@ -1,0 +1,14 @@
+{
+  "session_id": "ft-2a-mtp",
+  "state": "complete",
+  "phase": "done",
+  "cells_total": 2,
+  "cells_done": 1,
+  "started_utc": "2026-11-10T11:00:21Z",
+  "updated_utc": "2026-11-10T11:05:35Z",
+  "cell": "s2a-P6-32K-b4096-mtp1",
+  "probe": "max_fit=10752",
+  "repetition": 0,
+  "depth": 16384,
+  "kind": "B"
+}

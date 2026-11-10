@@ -256,11 +256,9 @@ def test_2c_compares_auto_with_the_chosen_alternative(tmp_path, sl):
     assert res["cells"] == 2
     modes = {n.rsplit("-", 1)[1]: opt(a, "--load-mode") for n, a in argvs.items()}
     assert modes == {"lmauto": "auto", f"lm{specgen.LOAD_MODE_ALT}": specgen.LOAD_MODE_ALT}
-    assert specgen.LOAD_MODE_ALT not in (
-        "mlock",
-        "mmap+mlock",
-        "auto",
-    )  # no memlock, a real alternative
+    # no memlock (the limit is 8 MiB) and a real alternative to auto; the WP12 choice is pinned
+    assert specgen.LOAD_MODE_ALT not in ("mlock", "mmap+mlock", "auto", "mmap")
+    assert specgen.LOAD_MODE_ALT == "dio" and "lmdio" in modes
 
 
 def test_2d_threads_only_when_the_default_differs(tmp_path, sl):
