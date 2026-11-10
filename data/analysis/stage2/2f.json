@@ -1,0 +1,754 @@
+{
+ "stage": "2f",
+ "status": "decided",
+ "chosen_cache_ram": 2048,
+ "proposed_cache_ram": 2048,
+ "reason": "every context chooses 2048: 2048 MiB is used from here on",
+ "human_decision_needed": [],
+ "contexts": {
+  "128K": {
+   "values": [
+    {
+     "cache_ram": 8192,
+     "cell": "s2f-P2-128K-b4096-mtp0-cram8192",
+     "status": "complete",
+     "windows_attempt1": 5,
+     "paging_flagged_repetitions": [
+      1,
+      2
+     ],
+     "paging_clean": false,
+     "not_clean_because": "paging flag in repetition(s) [1, 2]",
+     "n_clean_units": 3,
+     "t_turn_400_mean": 9.178110464216097,
+     "t_turn_400": {
+      "n": 3,
+      "mean": 9.178110464216097,
+      "min": 9.165411435254805,
+      "max": 9.186279863826233,
+      "ci": [
+       9.150416947215838,
+       9.205803981216356
+      ]
+     },
+     "ratio_vs_8192": null,
+     "rejected_by_3pct": null,
+     "windows": [
+      {
+       "session": "s2f",
+       "repetition": 0,
+       "attempt": 1,
+       "faults": 239,
+       "paging_flagged": false,
+       "swap_activity_mib": 11.9453125,
+       "rss_anon_growth_mib": 2642.38671875,
+       "host_cache_first": [
+        2,
+        549.896
+       ],
+       "host_cache_last": [
+        6,
+        3793.705
+       ],
+       "min_free_vram_mib": 551.0,
+       "t_turn_400": 9.182640093567253
+      },
+      {
+       "session": "s2f",
+       "repetition": 1,
+       "attempt": 1,
+       "faults": 15130,
+       "paging_flagged": true,
+       "swap_activity_mib": 4443.88671875,
+       "rss_anon_growth_mib": -1974.484375,
+       "host_cache_first": [
+        6,
+        3793.705
+       ],
+       "host_cache_last": [
+        10,
+        7037.514
+       ],
+       "min_free_vram_mib": 551.0,
+       "t_turn_400": 9.188035421888053
+      },
+      {
+       "session": "s2f",
+       "repetition": 2,
+       "attempt": 1,
+       "faults": 3203,
+       "paging_flagged": true,
+       "swap_activity_mib": -1710.4453125,
+       "rss_anon_growth_mib": 3031.5390625,
+       "host_cache_first": [
+        10,
+        7037.514
+       ],
+       "host_cache_last": [
+        9,
+        7177.78
+       ],
+       "min_free_vram_mib": 551.0,
+       "t_turn_400": 9.155722819548872
+      },
+      {
+       "session": "s2f",
+       "repetition": 3,
+       "attempt": 1,
+       "faults": 554,
+       "paging_flagged": false,
+       "swap_activity_mib": -997.6796875,
+       "rss_anon_growth_mib": 1268.47265625,
+       "host_cache_first": [
+        9,
+        7177.78
+       ],
+       "host_cache_last": [
+        9,
+        7518.53
+       ],
+       "min_free_vram_mib": 551.0,
+       "t_turn_400": 9.165411435254805
+      },
+      {
+       "session": "s2f",
+       "repetition": 4,
+       "attempt": 1,
+       "faults": 922,
+       "paging_flagged": false,
+       "swap_activity_mib": 0.1171875,
+       "rss_anon_growth_mib": 270.515625,
+       "host_cache_first": [
+        9,
+        7518.53
+       ],
+       "host_cache_last": [
+        9,
+        7518.53
+       ],
+       "min_free_vram_mib": 551.0,
+       "t_turn_400": 9.186279863826233
+      }
+     ]
+    },
+    {
+     "cache_ram": 4096,
+     "cell": "s2f-P2-128K-b4096-mtp0-cram4096",
+     "status": "complete",
+     "windows_attempt1": 5,
+     "paging_flagged_repetitions": [
+      1
+     ],
+     "paging_clean": false,
+     "not_clean_because": "paging flag in repetition(s) [1]",
+     "n_clean_units": 4,
+     "t_turn_400_mean": 9.053453054302423,
+     "t_turn_400": {
+      "n": 4,
+      "mean": 9.053453054302423,
+      "min": 9.049132826232247,
+      "max": 9.056675670008355,
+      "ci": [
+       9.048396622174648,
+       9.058509486430198
+      ]
+     },
+     "ratio_vs_8192": null,
+     "rejected_by_3pct": null,
+     "windows": [
+      {
+       "session": "s2f",
+       "repetition": 0,
+       "attempt": 1,
+       "faults": 19,
+       "paging_flagged": false,
+       "swap_activity_mib": 1172.9453125,
+       "rss_anon_growth_mib": 1282.109375,
+       "host_cache_first": [
+        2,
+        549.896
+       ],
+       "host_cache_last": [
+        6,
+        3793.705
+       ],
+       "min_free_vram_mib": 551.0,
+       "t_turn_400": 9.054571886382623
+      },
+      {
+       "session": "s2f",
+       "repetition": 1,
+       "attempt": 1,
+       "faults": 1202,
+       "paging_flagged": true,
+       "swap_activity_mib": -1057.0234375,
+       "rss_anon_growth_mib": 1694.55859375,
+       "host_cache_first": [
+        6,
+        3793.705
+       ],
+       "host_cache_last": [
+        4,
+        3243.809
+       ],
+       "min_free_vram_mib": 551.0,
+       "t_turn_400": 9.054428970760233
+      },
+      {
+       "session": "s2f",
+       "repetition": 2,
+       "attempt": 1,
+       "faults": 57,
+       "paging_flagged": false,
+       "swap_activity_mib": -2.19921875,
+       "rss_anon_growth_mib": 991.8671875,
+       "host_cache_first": [
+        4,
+        3243.809
+       ],
+       "host_cache_last": [
+        4,
+        3243.809
+       ],
+       "min_free_vram_mib": 551.0,
+       "t_turn_400": 9.056675670008355
+      },
+      {
+       "session": "s2f",
+       "repetition": 3,
+       "attempt": 1,
+       "faults": 118,
+       "paging_flagged": false,
+       "swap_activity_mib": -0.53515625,
+       "rss_anon_growth_mib": 257.1328125,
+       "host_cache_first": [
+        4,
+        3243.809
+       ],
+       "host_cache_last": [
+        5,
+        3933.971
+       ],
+       "min_free_vram_mib": 549.0,
+       "t_turn_400": 9.053431834586467
+      },
+      {
+       "session": "s2f",
+       "repetition": 4,
+       "attempt": 1,
+       "faults": 49,
+       "paging_flagged": false,
+       "swap_activity_mib": -0.140625,
+       "rss_anon_growth_mib": -420.65625,
+       "host_cache_first": [
+        5,
+        3933.971
+       ],
+       "host_cache_last": [
+        4,
+        3243.809
+       ],
+       "min_free_vram_mib": 551.0,
+       "t_turn_400": 9.049132826232247
+      }
+     ]
+    },
+    {
+     "cache_ram": 2048,
+     "cell": "s2f-P2-128K-b4096-mtp0-cram2048",
+     "status": "complete",
+     "windows_attempt1": 5,
+     "paging_flagged_repetitions": [],
+     "paging_clean": true,
+     "not_clean_because": null,
+     "n_clean_units": 5,
+     "t_turn_400_mean": 9.120816478863826,
+     "t_turn_400": {
+      "n": 5,
+      "mean": 9.120816478863826,
+      "min": 9.024309939849624,
+      "max": 9.169507727652466,
+      "ci": [
+       9.051548446853475,
+       9.190084510874177
+      ]
+     },
+     "ratio_vs_8192": 0.993757540228389,
+     "rejected_by_3pct": false,
+     "windows": [
+      {
+       "session": "s2f",
+       "repetition": 0,
+       "attempt": 1,
+       "faults": 0,
+       "paging_flagged": false,
+       "swap_activity_mib": 0.0,
+       "rss_anon_growth_mib": 1596.11328125,
+       "host_cache_first": [
+        2,
+        549.896
+       ],
+       "host_cache_last": [
+        1,
+        1371.662
+       ],
+       "min_free_vram_mib": 551.0,
+       "t_turn_400": 9.024309939849624
+      },
+      {
+       "session": "s2f",
+       "repetition": 1,
+       "attempt": 1,
+       "faults": 889,
+       "paging_flagged": false,
+       "swap_activity_mib": 450.60546875,
+       "rss_anon_growth_mib": -706.23828125,
+       "host_cache_first": [
+        1,
+        1371.662
+       ],
+       "host_cache_last": [
+        2,
+        1721.074
+       ],
+       "min_free_vram_mib": 551.0,
+       "t_turn_400": 9.137093950710108
+      },
+      {
+       "session": "s2f",
+       "repetition": 2,
+       "attempt": 1,
+       "faults": 294,
+       "paging_flagged": false,
+       "swap_activity_mib": -1.1484375,
+       "rss_anon_growth_mib": -77.63671875,
+       "host_cache_first": [
+        2,
+        1721.074
+       ],
+       "host_cache_last": [
+        1,
+        1030.912
+       ],
+       "min_free_vram_mib": 549.0,
+       "t_turn_400": 9.138300531328321
+      },
+      {
+       "session": "s2f",
+       "repetition": 3,
+       "attempt": 1,
+       "faults": 110,
+       "paging_flagged": false,
+       "swap_activity_mib": 12.1640625,
+       "rss_anon_growth_mib": 599.375,
+       "host_cache_first": [
+        1,
+        1030.912
+       ],
+       "host_cache_last": [
+        1,
+        1030.912
+       ],
+       "min_free_vram_mib": 551.0,
+       "t_turn_400": 9.134870244778613
+      },
+      {
+       "session": "s2f",
+       "repetition": 4,
+       "attempt": 1,
+       "faults": 38,
+       "paging_flagged": false,
+       "swap_activity_mib": -0.1328125,
+       "rss_anon_growth_mib": 1281.52734375,
+       "host_cache_first": [
+        1,
+        1030.912
+       ],
+       "host_cache_last": [
+        3,
+        1872.147
+       ],
+       "min_free_vram_mib": 551.0,
+       "t_turn_400": 9.169507727652466
+      }
+     ]
+    },
+    {
+     "cache_ram": 0,
+     "cell": "s2f-P2-128K-b4096-mtp0-cram0",
+     "status": "complete",
+     "windows_attempt1": 5,
+     "paging_flagged_repetitions": [],
+     "paging_clean": true,
+     "not_clean_because": null,
+     "n_clean_units": 5,
+     "t_turn_400_mean": 9.021484028905599,
+     "t_turn_400": {
+      "n": 5,
+      "mean": 9.021484028905599,
+      "min": 8.992284657477027,
+      "max": 9.04898281871345,
+      "ci": [
+       8.989379807347342,
+       9.053588250463855
+      ]
+     },
+     "ratio_vs_8192": 0.9829347842433191,
+     "rejected_by_3pct": false,
+     "windows": [
+      {
+       "session": "s2f",
+       "repetition": 0,
+       "attempt": 1,
+       "faults": 0,
+       "paging_flagged": false,
+       "swap_activity_mib": 0.0,
+       "rss_anon_growth_mib": 275.99609375,
+       "host_cache_first": null,
+       "host_cache_last": null,
+       "min_free_vram_mib": 551.0,
+       "t_turn_400": 9.044825800334168
+      },
+      {
+       "session": "s2f",
+       "repetition": 1,
+       "attempt": 1,
+       "faults": 0,
+       "paging_flagged": false,
+       "swap_activity_mib": 0.0,
+       "rss_anon_growth_mib": 270.7421875,
+       "host_cache_first": null,
+       "host_cache_last": null,
+       "min_free_vram_mib": 551.0,
+       "t_turn_400": 8.998681102756892
+      },
+      {
+       "session": "s2f",
+       "repetition": 2,
+       "attempt": 1,
+       "faults": 0,
+       "paging_flagged": false,
+       "swap_activity_mib": 0.0,
+       "rss_anon_growth_mib": 260.640625,
+       "host_cache_first": null,
+       "host_cache_last": null,
+       "min_free_vram_mib": 551.0,
+       "t_turn_400": 9.04898281871345
+      },
+      {
+       "session": "s2f",
+       "repetition": 3,
+       "attempt": 1,
+       "faults": 0,
+       "paging_flagged": false,
+       "swap_activity_mib": 0.0,
+       "rss_anon_growth_mib": 259.5546875,
+       "host_cache_first": null,
+       "host_cache_last": null,
+       "min_free_vram_mib": 551.0,
+       "t_turn_400": 8.992284657477027
+      },
+      {
+       "session": "s2f",
+       "repetition": 4,
+       "attempt": 1,
+       "faults": 0,
+       "paging_flagged": false,
+       "swap_activity_mib": 0.0,
+       "rss_anon_growth_mib": 269.125,
+       "host_cache_first": null,
+       "host_cache_last": null,
+       "min_free_vram_mib": 551.0,
+       "t_turn_400": 9.02264576524645
+      }
+     ]
+    }
+   ],
+   "chosen": 2048,
+   "status": "decided",
+   "reason": "2048 is the largest tested value with no paging-flagged window and its mean T_turn_400 is -0.62% against the 8192 cell's clean units (limit +3%)"
+  },
+  "64K": {
+   "values": [
+    {
+     "cache_ram": 8192,
+     "cell": "s2f-P6-64K-b4096-mtp0-cram8192",
+     "status": "complete",
+     "windows_attempt1": 5,
+     "paging_flagged_repetitions": [
+      2,
+      3,
+      4
+     ],
+     "paging_clean": false,
+     "not_clean_because": "paging flag in repetition(s) [2, 3, 4]",
+     "n_clean_units": 2,
+     "t_turn_400_mean": 7.1436229181286555,
+     "t_turn_400": {
+      "n": 2,
+      "mean": 7.1436229181286555,
+      "min": 7.054106299081037,
+      "max": 7.233139537176274,
+      "ci": [
+       6.006224756509619,
+       8.281021079747692
+      ]
+     },
+     "ratio_vs_8192": null,
+     "rejected_by_3pct": null,
+     "windows": [
+      {
+       "session": "s2f",
+       "repetition": 0,
+       "attempt": 1,
+       "faults": 0,
+       "paging_flagged": false,
+       "swap_activity_mib": 0.0,
+       "rss_anon_growth_mib": 1619.23046875,
+       "host_cache_first": [
+        2,
+        549.896
+       ],
+       "host_cache_last": [
+        6,
+        2771.455
+       ],
+       "min_free_vram_mib": 1295.0,
+       "t_turn_400": 7.054106299081037
+      },
+      {
+       "session": "s2f",
+       "repetition": 1,
+       "attempt": 1,
+       "faults": 751,
+       "paging_flagged": false,
+       "swap_activity_mib": 2569.17578125,
+       "rss_anon_growth_mib": -791.71484375,
+       "host_cache_first": [
+        6,
+        2771.455
+       ],
+       "host_cache_last": [
+        9,
+        4302.852
+       ],
+       "min_free_vram_mib": 1295.0,
+       "t_turn_400": 7.233139537176274
+      },
+      {
+       "session": "s2f",
+       "repetition": 2,
+       "attempt": 1,
+       "faults": 12153,
+       "paging_flagged": true,
+       "swap_activity_mib": 2406.28125,
+       "rss_anon_growth_mib": -365.69140625,
+       "host_cache_first": [
+        10,
+        4993.014
+       ],
+       "host_cache_last": [
+        14,
+        7212.659
+       ],
+       "min_free_vram_mib": 1295.0,
+       "t_turn_400": 6.9944953346544665
+      },
+      {
+       "session": "s2f",
+       "repetition": 3,
+       "attempt": 1,
+       "faults": 56879,
+       "paging_flagged": true,
+       "swap_activity_mib": 1190.83203125,
+       "rss_anon_growth_mib": -118.54296875,
+       "host_cache_first": [
+        14,
+        7212.659
+       ],
+       "host_cache_last": [
+        14,
+        8043.087
+       ],
+       "min_free_vram_mib": 1295.0,
+       "t_turn_400": 6.825373742690058
+      },
+      {
+       "session": "s2f",
+       "repetition": 4,
+       "attempt": 1,
+       "faults": 159451,
+       "paging_flagged": true,
+       "swap_activity_mib": -392.87890625,
+       "rss_anon_growth_mib": 632.2265625,
+       "host_cache_first": [
+        14,
+        8043.087
+       ],
+       "host_cache_last": [
+        15,
+        8023.785
+       ],
+       "min_free_vram_mib": 1293.0,
+       "t_turn_400": 6.816415199665831
+      }
+     ]
+    },
+    {
+     "cache_ram": 2048,
+     "cell": "s2f-P6-64K-b4096-mtp0-cram2048",
+     "status": "complete",
+     "windows_attempt1": 5,
+     "paging_flagged_repetitions": [],
+     "paging_clean": true,
+     "not_clean_because": null,
+     "n_clean_units": 5,
+     "t_turn_400_mean": 6.845358681288493,
+     "t_turn_400": {
+      "n": 5,
+      "mean": 6.845358681288493,
+      "min": 6.577304197159566,
+      "max": 7.2066714436090225,
+      "ci": [
+       6.504547816951393,
+       7.186169545625593
+      ]
+     },
+     "ratio_vs_8192": 0.9582474830686758,
+     "rejected_by_3pct": false,
+     "windows": [
+      {
+       "session": "s2f",
+       "repetition": 0,
+       "attempt": 1,
+       "faults": 0,
+       "paging_flagged": false,
+       "swap_activity_mib": 0.0,
+       "rss_anon_growth_mib": 1623.61328125,
+       "host_cache_first": [
+        2,
+        549.896
+       ],
+       "host_cache_last": [
+        2,
+        1550.699
+       ],
+       "min_free_vram_mib": 1295.0,
+       "t_turn_400": 7.0355393876357555
+      },
+      {
+       "session": "s2f",
+       "repetition": 1,
+       "attempt": 1,
+       "faults": 828,
+       "paging_flagged": false,
+       "swap_activity_mib": 547.58984375,
+       "rss_anon_growth_mib": -136.7890625,
+       "host_cache_first": [
+        2,
+        1550.699
+       ],
+       "host_cache_last": [
+        2,
+        1380.324
+       ],
+       "min_free_vram_mib": 1295.0,
+       "t_turn_400": 7.2066714436090225
+      },
+      {
+       "session": "s2f",
+       "repetition": 2,
+       "attempt": 1,
+       "faults": 786,
+       "paging_flagged": false,
+       "swap_activity_mib": -0.32421875,
+       "rss_anon_growth_mib": 410.56640625,
+       "host_cache_first": [
+        2,
+        1380.324
+       ],
+       "host_cache_last": [
+        2,
+        1548.786
+       ],
+       "min_free_vram_mib": 1295.0,
+       "t_turn_400": 6.810208855064016
+      },
+      {
+       "session": "s2f",
+       "repetition": 3,
+       "attempt": 1,
+       "faults": 526,
+       "paging_flagged": false,
+       "swap_activity_mib": -0.2421875,
+       "rss_anon_growth_mib": 73.546875,
+       "host_cache_first": [
+        2,
+        1548.786
+       ],
+       "host_cache_last": [
+        2,
+        1550.699
+       ],
+       "min_free_vram_mib": 1295.0,
+       "t_turn_400": 6.577304197159566
+      },
+      {
+       "session": "s2f",
+       "repetition": 4,
+       "attempt": 1,
+       "faults": 307,
+       "paging_flagged": false,
+       "swap_activity_mib": -0.19921875,
+       "rss_anon_growth_mib": 403.53515625,
+       "host_cache_first": [
+        2,
+        1550.699
+       ],
+       "host_cache_last": [
+        3,
+        1701.772
+       ],
+       "min_free_vram_mib": 1295.0,
+       "t_turn_400": 6.5970695229741025
+      }
+     ]
+    }
+   ],
+   "chosen": 2048,
+   "status": "decided",
+   "reason": "2048 is the largest tested value with no paging-flagged window and its mean T_turn_400 is -4.18% against the 8192 cell's clean units (limit +3%)"
+  }
+ },
+ "warnings": [],
+ "label": "results",
+ "banner": "RESULTS. Only cells with at least 5 clean repetitions are reportable.",
+ "provenance": {
+  "stage": "2f",
+  "sessions": [
+   {
+    "session_id": "s2f",
+    "spec_path": "configs/sweeps/stage2-2f.toml",
+    "spec_sha256": "b8a16bdd2a7bfb480b025c622e6eb77d666549d62271189e333f30add86c7a2d",
+    "spec_file_matches": true,
+    "session_git_commit": "7b7daf148a305fb87a4899d68bece23682369438",
+    "state": "complete",
+    "filters": {}
+   }
+  ],
+  "warnings": [],
+  "plan_version": "1.6",
+  "code": {
+   "commit": "6f246cb78bdc4b246c3d7e099372e2c0da50171a",
+   "dirty": false
+  },
+  "llama_cpp_commit": "57d04820dfef7a3519aac276d018a6fd71251895",
+  "llama_cpp_build_info_commit": "57d04820dfef7a3519aac276d018a6fd71251895",
+  "rule_text": [
+   "\"Top\" means first in the Stage 1 order, even where the pair is too close to call at n = 2.",
+   "- **2f Host prompt cache (`--cache-ram`). Runs first.** Reason: in Stage 1, 14 of 38 windows at 128K and one at 64K were paging-flagged, all in the second repetition of a long-running server, in cells with a large memory-mapped model. The 15 re-runs on fresh servers were all clean, and the server's anonymous memory grew in step with its host prompt cache (default 8,192 MiB), which every unique benchmark prompt fills. That points to host-memory pressure on a 32 GB machine, and the benchmark's requests never hit that cache, so it only costs memory here. Cells, with MTP off: the top placement at 128K with `--cache-ram` 8192 (the default), 4096, 2048 and 0; and at 64K with 8192 and 2048. Rule: the chosen value is the largest tested value with no paging-flagged window in any of its 5 repetitions, unless its mean T_turn_400 is more than 3% above the mean of the 8192 cell's clean units. If the 8192 cell is already clean, the default stays. If no tested value is clean, stop and report: the cause is then not the host cache. The chosen value is used in every later candidate cell and in the tuned configs. Stock keeps the default. The trade-off is documented: a small host cache means that switching between conversations re-reads the prompt instead of restoring it (this matters for Step 5)."
+  ],
+  "eligibility_override": false
+ },
+ "analysis_warnings": []
+}
