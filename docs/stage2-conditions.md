@@ -107,3 +107,10 @@ from the measurement telemetry.
 - Cells: 3 of 3 complete (P2-32K mtp0, P2-32K mtp2, P6-32K mtp2), none `did_not_fit`. **No flags at all** (0 of 15 measured attempt-1 windows paging-flagged; no window with swap activity above 1,024 MiB); drift none.
 - P6-32K-mtp2 took its expert-cache size from the runner's probe cache (`probe_cache_hit`, key `69cf427da1b214de5028`, 10,752 MiB, the same key as the 2a probe: same config, llama.cpp commit, model and GPU), not from a new binary search; minimum free VRAM 1,131 MiB, the same as in 2a.
 - Lowest minimum free VRAM 567 MiB (P2-mtp0), P2-mtp2 615 MiB, P6-mtp2 1,131 MiB. Runner idle gate: first check passed every time (busy at most 0.51 %), no idle waits, no retries; lowest MemAvailable 22.3 GiB (telemetry). Polls: server's share 20.3 % at most, everything else at most 0.7 %. Highest CPU Tctl 75 °C, GPU 67 °C.
+
+## Session s2a2-64K (2a2, 64K), Phase 0 conditions, 2026-11-10T22:55Z
+- pgrep llama-server: empty. GPU lock: free. nvidia-smi memory.used: 3 MiB. MemAvailable: 26.8 GiB. Swap in use: 2.31 GiB of 30.46 GiB.
+- CPU busy over 10 s: 0.39 %. Load average (1 min): 0.87.
+- Top 5 by memory (names): claude 0.34 GiB, antigravity-ide 0.31 GiB, antigravity-ide 0.12 GiB, cosmic-comp 0.11 GiB, antigravity-ide 0.11 GiB.
+- Top 5 by CPU, ps lifetime average (names): antigravity-ide 1.4 %, claude 1.3 %, cosmic-comp 1.0 %, antigravity-ide 0.5 %, kswapd0 0.2 %.
+- Desktop apps open (names): antigravity-ide claude cosmic-comp kilo 
