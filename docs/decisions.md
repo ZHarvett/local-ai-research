@@ -744,3 +744,60 @@ flag of any kind in any window, no warning event, no `fit_changed_explicit_place
 - **Probe cache:** `data/probes/cache.jsonl` now holds the pre-flight's two max-fit probes (32K and 128K, b2048). A real session
   with the same configuration, llama.cpp commit, model and GPU reuses them (recorded as `probe_cache`, `cached_from`). Committed
   with the pre-flight data so that the tree is clean.
+
+## WP11 part 2: re-run mode fixes (2026-11-10)
+
+Plan v1.5 is adopted (commit `3941bb0`, line 3 reads `*Version 1.5 · 9 November 2026*`); the pre-flight probe cache was retired
+(`git mv data/probes/cache.jsonl data/probes/preflight-cache.jsonl`, `6943239`), so every probe of the three real sessions was
+measured fresh.
+
+### Incident (10 Nov 2026)
+After the three Stage 1 sessions (`stage1-32K`, `-64K`, `-128K`, each started with `--only context=...`), the runbook's
+`scripts/run-sweep.sh configs/sweeps/stage1.toml --rerun-flagged stage1-32K` exited with code 2:
+`cannot resume: --only filter differs: session {'context': '32K'} vs {}`. The refused command also **overwrote
+`data/raw/stage1-32K/session.json`** (a 4-line stub: `state`, `last_error`, `exit_code`) and `progress.json` (an "aborted"
+stub). `records.jsonl`, `events.jsonl`, the cell files and the telemetry were not touched. Both files were restored from the
+committed versions (`git checkout -- ...`, commit `18bd463`; `git status` and `git diff HEAD --stat` empty afterwards). The 32K
+session has no flagged repetition, so no re-run of it was needed or made. `--rerun-flagged` was not run for 64K or 128K before the fix.
+
+### Bug 1: `--rerun-flagged` ignored the session's `--only` filter
+`Session.rerun_flagged` opened the session with `filters` taken from its own command line, and the runbook's re-run command has
+no `--only` (it "re-runs the session as it was started"). `provenance.resume_check` requires the filters to be equal, so every
+session started with `--only` was refused.
+
+### Bug 2: a refused start overwrote the session's files
+`open()` raised `ProvenanceError` (a `SessionAbort`) before `self.session` was loaded. The abort handler of `run()` and
+`rerun_flagged()` then called `update_session(state="aborted", ...)`, which wrote the (empty) in-memory dict plus those keys over
+`session.json`, and `progress()` wrote over `progress.json` (and `run()` appended a `session_abort` event). The same path was taken by:
+a resume with a changed spec, manifest or sampling hash; a changed filter; a new session on an existing id (`already exists; use
+--resume`); and `InhibitError` or a dirty tree for a new session (which created a directory with a stub `session.json`). A
+`KeyboardInterrupt` before the session was loaded did the same.
+
+### Why the tests did not catch it
+The pre-flight's re-run test (and `test_rerun_appends_attempt_2_...`) used a session created **without** a filter, so stored and
+current filters were both `{}`; the refusal tests called `open()` directly and never looked at what the handler of `run()` wrote.
+Neither checked that a refusal leaves the session's files unchanged.
+
+### Fix (`src/smallpc/sweep/session.py` only; tests in `tests/test_sweep_refusals.py`)
+- `rerun_flagged` first reads the stored filter from `session.json` (read-only, `_adopt_stored_filters`) and uses it. A `--only`
+  given on the command line must equal it, otherwise the re-run is refused with a clear message. Cell and unit selection are unchanged.
+- `Session._loaded` is set only after every provenance check has passed. Until then `update_session`, `progress` and the handlers
+  write nothing; a refusal goes only to stderr (the job log) as `smallpc.sweep: refused, no session file touched: ...`, with the
+  same exit code as before. `open()` no longer creates the session directory before the checks.
+- `update_session` and `progress` are read-modify-write (`_merge_write`): the given keys are merged into the JSON object on disk and
+  every other key is kept. An existing file that cannot be read as a JSON object is never replaced (`ProvenanceError`). A resumed
+  `open()` merges only `runs`, `state` and `inhibit`.
+- Audit of every writer of `session.json`, `progress.json` and `events.jsonl` in `src/` and `scripts/`: `open()`,
+  `update_session()`, `progress()`, the `except KeyboardInterrupt` and `except SessionAbort` handlers of `run()` and of
+  `rerun_flagged()` (all fixed above), `finish_drift` (calls `update_session`, now a merge) and the cell-summary and snapshot
+  writers (already merge or write-once, only reached after loading). `status.py`, `runner.py`, `analysis.py` and
+  `paging_analysis.py` only read.
+- Tests (CI-safe, mock server): filtered session re-run runs only the flagged unit as attempt 2; a conflicting `--only` is refused
+  (both stored `{context: 32K}` against `64K`, and stored `{}` against `32K`) with every file of the session byte-identical; a
+  resume refused for a spec, manifest or filter change or a missing `--resume` leaves every file byte-identical; a refused new
+  session leaves no directory; `update_session` and `progress` merge and keep unrelated keys; an unreadable `session.json` (three
+  kinds of garbage) is never overwritten. All 14 fail on the old code and pass on the new.
+- Known, left as is: a completed re-run sets `finished_utc` of `session.json` to the end of the re-run (the original main-run
+  end is in `runs[0]` and in `events.jsonl`); the progress file keeps keys of an earlier run until they are overwritten.
+- Not changed: flags, eligibility, selection, statistics, the request protocol, the workload code, the spec or anything that
+  decides what is measured. Re-run records carry the new code commit and a `code_commit_changed` warning event, by design.

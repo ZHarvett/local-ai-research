@@ -20,6 +20,7 @@ import os
 import re
 import signal
 import subprocess
+import sys
 import tomllib
 from pathlib import Path
 
@@ -76,6 +77,9 @@ class Session:
         self.started_monotonic = 0.0
         self.last_error: str | None = None
         self._progress: dict = {}
+        # True once every provenance check has passed and the session's own files may be written.
+        # Until then a refused start must leave an existing session byte-for-byte untouched.
+        self._loaded = False
 
     # ------------------------------------------------------------------ small file helpers
 
@@ -85,10 +89,39 @@ class Session:
         with open(self.dir / "events.jsonl", "a") as f:
             f.write(line + "\n")
 
+    @staticmethod
+    def _read_json_file(path: Path) -> dict | None:
+        """The JSON object in ``path``; None if the file does not exist. A file that exists but
+        cannot be read as a JSON object raises ``ProvenanceError``: it is never overwritten."""
+        if not path.exists():
+            return None
+        try:
+            obj = json.loads(path.read_text())
+        except (OSError, ValueError) as e:
+            raise ProvenanceError(
+                f"{path.name} of the session is unreadable ({e}); not touching it"
+            ) from e
+        if not isinstance(obj, dict):
+            raise ProvenanceError(
+                f"{path.name} of the session is not a JSON object; not touching it"
+            )
+        return obj
+
+    def _merge_write(self, path: Path, updates: dict) -> None:
+        """Read-modify-write: merge ``updates`` into the JSON object already in ``path`` (keys not
+        mentioned are kept) and write it atomically. Refuses if the existing file is unreadable.
+        Only a loaded session may write (see ``_loaded``)."""
+        if not self._loaded:
+            raise ProvenanceError(f"refusing to write {path.name}: the session was not opened")
+        merged = {**(self._read_json_file(path) or {}), **updates}
+        write_json_atomic(path, scrub_json(merged, Identity.current()))
+
     def progress(self, **kw) -> None:
         self._progress.update(kw)
         self._progress["updated_utc"] = utc_now()
-        write_json_atomic(self.dir / "progress.json", {"session_id": self.sid, **self._progress})
+        if not self._loaded:
+            return
+        self._merge_write(self.dir / "progress.json", {"session_id": self.sid, **self._progress})
 
     def save_snapshot(self, snap: dict) -> None:
         sid = snap.get("snapshot_id")
@@ -156,7 +189,6 @@ class Session:
         return {"checked": True, "active": True, "tag": tag, "line": " ".join(line.split())}
 
     def open(self, *, resume: bool) -> None:
-        self.dir.mkdir(parents=True, exist_ok=True)
         cur = self.current_provenance()
         defs = sp.expand(self.spec, self.env.root)
         sp.validate_cells(defs)
@@ -174,13 +206,14 @@ class Session:
         if sj.exists():
             if not resume:
                 raise ProvenanceError(f"session {self.sid} already exists; use --resume")
-            stored = json.loads(sj.read_text())
+            stored = self._read_json_file(sj) or {}
             errors, warnings = provenance.resume_check(stored, cur)
             if errors:
                 raise ProvenanceError("cannot resume: " + "; ".join(errors))
             self.order = stored["cell_order"]
             if sorted(self.order) != sorted(c.name for c in defs):
                 raise ProvenanceError("the cells of the spec no longer match the session's order")
+            self._loaded = True  # every check passed: from here on the session's files may change
             for w in warnings:
                 self.event("warning", kind="code_commit_changed", message=w)
             run_entry["warnings"] = warnings
@@ -197,6 +230,7 @@ class Session:
                     + ", ".join(self.env.git["dirty_paths"][:8])
                     + "; commit them or pass --allow-dirty"
                 )
+            self._loaded = True
             self.order = [c.name for c in sp.order_cells(defs, self.spec.shuffle_seed)]
             self.session = {
                 "schema": 1,
@@ -215,7 +249,10 @@ class Session:
                 "runs": [run_entry],
             }
         self.session["inhibit"] = inhibit
-        write_json_atomic(self.dir / "session.json", scrub_json(self.session, Identity.current()))
+        if resume:  # merge into the stored file; a new session writes all of its keys
+            self._merge_write(sj, {k: self.session[k] for k in ("runs", "state", "inhibit")})
+        else:
+            self._merge_write(sj, self.session)
         self.event(
             "session_open",
             mode=self.mode,
@@ -225,8 +262,16 @@ class Session:
         )
 
     def update_session(self, **kw) -> None:
+        """Merge ``kw`` into the session file (read-modify-write); other keys are kept."""
+        self._merge_write(self.dir / "session.json", kw)
         self.session.update(kw)
-        write_json_atomic(self.dir / "session.json", scrub_json(self.session, Identity.current()))
+
+    def _refused(self, e: BaseException) -> None:
+        """A start that was refused before the session was loaded: nothing of the session is
+        written (not session.json, progress.json, events.jsonl or records.jsonl). The message goes
+        to stderr, which the detached job log captures."""
+        self.last_error = str(e)
+        print(f"smallpc.sweep: refused, no session file touched: {e}", file=sys.stderr)
 
     # ------------------------------------------------------------------ preconditions
 
@@ -565,15 +610,19 @@ class Session:
             self.progress(state="complete", phase="done")
         except KeyboardInterrupt:
             code = EXIT_INTERRUPTED
-            self.update_session(state="interrupted")
-            self.progress(state="interrupted", phase="interrupted")
-            self.event("session_interrupted")
+            if self._loaded:
+                self.update_session(state="interrupted")
+                self.progress(state="interrupted", phase="interrupted")
+                self.event("session_interrupted")
         except SessionAbort as e:
             code = e.exit_code
-            self.last_error = str(e)
-            self.update_session(state="aborted", last_error=str(e), exit_code=code)
-            self.progress(state="aborted", phase="aborted", last_error=str(e))
-            self.event("session_abort", error=str(e), exit_code=code)
+            if not self._loaded:
+                self._refused(e)
+            else:
+                self.last_error = str(e)
+                self.update_session(state="aborted", last_error=str(e), exit_code=code)
+                self.progress(state="aborted", phase="aborted", last_error=str(e))
+                self.event("session_abort", error=str(e), exit_code=code)
         return code
 
     def _done_count(self) -> int:
@@ -859,6 +908,7 @@ class Session:
         re-run."""
         code = EXIT_OK
         try:
+            self._adopt_stored_filters()
             self.open(resume=True)
             self.stop_orphans()
             idx = rec.Index(self.store.load())
@@ -901,12 +951,32 @@ class Session:
             self.progress(state="complete", phase="done")
         except KeyboardInterrupt:
             code = EXIT_INTERRUPTED
-            self.update_session(state="interrupted")
+            if self._loaded:
+                self.update_session(state="interrupted")
         except SessionAbort as e:
             code = e.exit_code
-            self.update_session(state="aborted", last_error=str(e), exit_code=code)
-            self.progress(state="aborted", phase="aborted", last_error=str(e))
+            if not self._loaded:
+                self._refused(e)
+            else:
+                self.update_session(state="aborted", last_error=str(e), exit_code=code)
+                self.progress(state="aborted", phase="aborted", last_error=str(e))
         return code
+
+    def _adopt_stored_filters(self) -> None:
+        """A re-run is of the session as it was started, so it takes that session's ``--only``
+        filter from ``session.json``. A filter given on the command line must equal it. Read-only:
+        nothing is written here."""
+        stored = self._read_json_file(self.dir / "session.json")
+        if stored is None:
+            raise ProvenanceError(f"no session {self.sid} to re-run")
+        stored_filters = stored.get("filters") or {}
+        if self.filters and self.filters != stored_filters:
+            raise ProvenanceError(
+                f"--rerun-flagged re-runs session {self.sid} with the --only filter it was started "
+                f"with, {stored_filters or 'none'}; the command line gave {self.filters}. "
+                "Leave --only out (the stored filter is used)"
+            )
+        self.filters = dict(stored_filters)
 
     def _job_from_resolved(self, name: str, reps: list[int]) -> Job:
         with open(self.dir / "resolved" / f"{name}.toml", "rb") as f:

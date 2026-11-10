@@ -21,3 +21,6 @@ All notable changes to this project are documented here.
 - Plan v1.4 adopted. WP11 part 1: paging flag on llama-server major faults only, swap growth recorded as
   `swap_activity_mib` (window summaries and request `flag_detail`, with the RssAnon/RssFile/RssShmem start and end),
   a "Swap sensitivity" report section, paired-ratio intervals as the wider of bootstrap and t on the log ratios.
+- WP11 part 2: plan v1.5 adopted; Stage 1 sessions run. Fix: `--rerun-flagged` uses the session's stored `--only` filter, and a
+  refused or failed start no longer overwrites `session.json` / `progress.json` (read-modify-write, nothing written before the session
+  is loaded); `tests/test_sweep_refusals.py`.
