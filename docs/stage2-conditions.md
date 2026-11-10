@@ -25,3 +25,10 @@ from the measurement telemetry.
 - Polls (7 min apart, 5 s CPU samples): busy 0.3 to 7.9 % except one sample of 32.1 % at 13:43:40, taken seconds after the runner launched the P2-128K cram2048 server (warm-up phase); the system-wide CPU is not in the telemetry, so the cause of that one sample is not proven; the idle gate that preceded that cell read 0.49 %. The process names printed in the poll log for that sample come from `ps` lifetime averages and do not identify an interferer. Desktop apps open (names): antigravity-ide, chrome, claude, cosmic-comp, kilo, spotify; all at about 1 % CPU or less at rest.
 - Lowest MemAvailable: 16.3 GiB at a poll (14:05, P6-64K cram8192), 15.7 GiB in the telemetry (P2-128K cram8192 cell; 16.8 GiB in P6-64K cram8192; 19.7 GiB cram4096; 20.9 to 23.1 GiB for cram2048 and cram0). Never below 15 GiB; the 3 GiB stop line was not approached.
 - Highest CPU temperature (Tctl) 82 °C, highest GPU temperature 72 °C.
+
+## Session s2a-32K (2a MTP, 32K), Phase 0 conditions, 2026-11-10T16:17Z
+- pgrep llama-server: empty. GPU lock: free. nvidia-smi memory.used: 3 MiB. MemAvailable: 25.0 GiB. Swap in use: 2.46 GiB of 30.46 GiB.
+- CPU busy over 10 s: 1.08 %. Load average (1 min): 0.68.
+- Top 5 by memory (names): spotify 0.50 GiB, chrome 0.40 GiB, chrome 0.37 GiB, claude 0.34 GiB, chrome 0.30 GiB.
+- Top 5 by CPU, ps lifetime average (names): chrome 9.1 %, antigravity-ide 1.2 %, claude 1.1 %, cosmic-comp 1.0 %, spotify 0.9 %.
+- Desktop apps open (names): antigravity-ide chrome claude cosmic-comp kilo spotify 
