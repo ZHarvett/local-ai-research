@@ -133,6 +133,9 @@ class Session:
         rel = f"cells/{job.name}-{job.hash8}.json"
         path = self.dir / rel
         cur = json.loads(path.read_text()) if path.exists() else {}
+        # an instance of a job that carries no coordinates or resolution never blanks what an
+        # earlier instance of the cell recorded (a re-run job did, before WP12 part 2d)
+        keep = {k: cur[k] for k in ("coords", "resolution") if cur.get(k) and not getattr(job, k)}
         cur.update(
             {
                 "cell": job.name,
@@ -147,6 +150,7 @@ class Session:
                 "llama_cpp_commit": self.env.llama_commit,
             }
         )
+        cur.update(keep)
         cur.setdefault("instances", []).append(instance_summary)
         cur["flags"] = sorted(
             {f for i in cur["instances"] for w in i.get("windows", []) for f in w["flags"]}
@@ -983,5 +987,19 @@ class Session:
         with open(self.dir / "resolved" / f"{name}.toml", "rb") as f:
             data = tomllib.load(f)
         profile = data.pop("profile")
-        job = Job(name, "measured", profile, data, reps, attempt=2)
+        # a re-run job carries what the first-run job (run_cell) carries: the cell's coordinates
+        # (from the spec) and its token resolution (from this session's resolutions.jsonl), so the
+        # cell summary written after the re-run keeps both
+        cdef = next((c for c in self.cells if c.name == name), None)
+        prior = self._load_resolutions().get(name) or {}
+        job = Job(
+            name,
+            "measured",
+            profile,
+            data,
+            reps,
+            attempt=2,
+            resolution=dict(prior.get("resolution") or {}),
+            coords=dict(cdef.coords) if cdef else {},
+        )
         return self.prepare_job(job)

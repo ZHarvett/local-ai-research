@@ -341,3 +341,76 @@ def test_model_sha_is_cached_and_a_missing_file_is_marked_unverified(tmp_path):
     assert provenance.model_sha256(f, "0" * 64, cache)["verified"] is False  # declared differs
     miss = provenance.model_sha256(tmp_path / "none.gguf", "d" * 64, cache)
     assert miss["verified"] is False and miss["sha256"] == "d" * 64
+
+
+# ------------------------------------------------------------------ re-run keeps the cell summary
+
+
+def _cell_summaries(sess) -> dict:
+    return {
+        json.loads(p.read_text())["cell"]: json.loads(p.read_text())
+        for p in sorted((sess.dir / "cells").glob("*.json"))
+    }
+
+
+def test_rerun_keeps_coords_resolution_and_every_summary_key(tmp_path, free_port):
+    """WP12 part 2d: a re-run job carries the cell's coords and resolution (the decide tool picks
+    cells by coords), and the re-run's summary write loses no key a first-run summary has."""
+    sess, _, _ = run_session(
+        tmp_path, free_port, {"cache_miss_B": {"on": [1]}}, reps=2, canary=True
+    )
+    # the mini spec has no tokens, so give one cell a token resolution as a probe would have
+    res = {"moe_cache_mib": {"token": "max_fit", "base": 9000, "value": 9000}}
+    rf = sess.dir / "resolutions.jsonl"
+    lines = [json.loads(x) for x in rf.read_text().splitlines()]
+    for ln in lines:
+        if ln["cell"] == "Pa-32K":
+            ln["resolution"] = res
+    rf.write_text("".join(json.dumps(x) + "\n" for x in lines))
+    for p in (sess.dir / "cells").glob("Pa-32K-*.json"):
+        d = json.loads(p.read_text())
+        d["resolution"] = res
+        p.write_text(json.dumps(d))
+    before = _cell_summaries(sess)
+    assert before["Pa-32K"]["coords"] == {"placement": "Pa", "context": "32K"}
+    assert before["stock-32K"]["coords"] == {"context": "32K"}
+
+    env2 = make_env(tmp_path, free_port)
+    sp = mini_spec(tmp_path, reps=2, canary=True)
+    s2 = Session(env2, load_sweep(sp), sp, "s1", mode="rerun")
+    assert s2.rerun_flagged() == 0
+    after = _cell_summaries(s2)
+    assert set(before) <= set(after)  # plus the re-run canaries
+    for name, old in before.items():
+        new = after[name]
+        assert set(old) <= set(new), name  # no key lost (compare key sets)
+        assert new["coords"] == old["coords"], name
+        assert new["resolution"] == old["resolution"], name
+        for k in old:
+            if k != "instances":
+                assert new[k] == old[k], (name, k)
+        if name in ("Pa-32K", "Pb-32K", "stock-32K"):
+            assert len(new["instances"]) == len(old["instances"]) + 1  # the attempt-2 instance
+            assert new["instances"][: len(old["instances"])] == old["instances"]
+    assert after["Pa-32K"]["resolution"] == res
+    # a decide-style lookup by coords still finds the re-run cell
+    from smallpc import analysis
+    from smallpc.stage2.decide import _coord
+
+    cells = analysis.analyse([s2.dir])["cells"]
+    assert [c for c in cells.values() if _coord(c, "placement") == "Pa"]
+    assert {_coord(c, "placement") for c in cells.values()} >= {"Pa", "Pb"}
+
+
+def test_the_summary_writer_does_not_blank_coords_or_resolution_for_a_bare_job(tmp_path, free_port):
+    sess, _, _ = run_session(tmp_path, free_port, reps=1)
+    from smallpc.sweep.core import Job
+
+    p = next((sess.dir / "cells").glob("Pa-32K-*.json"))
+    old = json.loads(p.read_text())
+    job = Job("Pa-32K", old["role"], old["profile"], {"context": 32768}, [0], attempt=2)
+    job.config_hash, job.argv = old["config_hash"], old["argv"]
+    sess.write_cell_summary(job, {"instance": 9, "windows": []})
+    new = json.loads(p.read_text())
+    assert new["coords"] == old["coords"] and old["coords"]
+    assert new["instances"][-1]["instance"] == 9
