@@ -55,3 +55,23 @@ Machine conditions of the three Stage 1 screening sessions (WP11 part 2, plan v1
   second repetition of the cell. Only stock-64K repetition 1 also had more than 1,000 major faults, so it alone carries
   the `paging` flag (7 requests, one window); it is a re-run candidate (phase 4). zram swap, swappiness 150.
 - Apps open (names): chrome, claude, antigravity-ide, cosmic-comp.
+
+## Session stage1-128K
+
+- Pre-start (2026-11-10 01:22 UTC): tree clean, no llama-server, GPU lock free, GPU 3 MiB, MemAvailable 26.4 GiB,
+  CPU busy 0.3 % (5 s), load 1.04 (1 min), swap 2.65 GiB used. Apps open (names): chrome, claude, antigravity-ide, cosmic-comp.
+- Session ran 2026-11-10 01:22 to 03:34 UTC (2.19 h; estimate 2.18 h, upper bound 2.57 h), 19 polls. `systemd-inhibit sleep:idle`
+  active. Code commit `47dfc69f58`, tree clean. Runner idle gate passed at the first check before every cell (highest 1.13 %,
+  no waits, no retries); MemAvailable at the runner's preconditions 26.1 to 26.7 GiB.
+- CPU busy (5 s samples): 1.7 to 38.8 %; above 10 % in six polls: 38.8 % (antigravity-ide, claude; P1-128K-b4096 short point,
+  repetition 0), 17.4 % (antigravity-ide, claude; P9-128K-b2048), 15.8 % (antigravity-ide, python = the runner, claude), 14.2 %
+  (kswapd0, claude, antigravity-ide), 12.2 % (chrome, antigravity-ide, claude), 10.4 % (claude, antigravity-ide). Highest 38.8 %.
+- Memory between polls fell to **18.1 GiB** MemAvailable (03:08, during stock-128K), 19.3 GiB (02:26), 19.8 GiB (02:47) and 19.9 GiB
+  (03:30); the kernel's `kswapd0` was seen busy once (02:04).
+- **Paging flag: 14 of 38 measured windows (36.8 %).** All 14 are repetition 1 (the second repetition) of: P1-128K-b2048, P2 (both
+  batches), P3 (both), P4 (both), P5 (both), P6 (both), P7 (both) and stock-128K. Swap growth in those windows 2.3 to 5.4 GiB (stock
+  -128K: -0.5 GiB, i.e. swap-in). None in P1-b4096, P8 or P9 (explicit `--n-cpu-moe`). 20 windows had swap activity above 64 MiB.
+  Gate criterion f (at most 20 %) FAILED: 14 of 38 windows flagged for paging, all in repetition 1, in cells with `--fit`, `-cmoe`
+  or the stock placement, none in P1-b4096, P8 or P9. **Accepted by Zack and the step lead as a recorded deviation** (criterion f
+  was a stop rule set for this run to get a human decision, not a plan rule; no rule was changed). G3 was not met.
+- Apps open (names): chrome, claude, antigravity-ide, cosmic-comp.

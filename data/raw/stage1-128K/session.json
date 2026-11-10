@@ -1,0 +1,139 @@
+{
+  "schema": 1,
+  "session_id": "stage1-128K",
+  "created_utc": "2026-11-10T01:21:54Z",
+  "spec": {
+    "name": "stage1",
+    "path": "configs/sweeps/stage1.toml"
+  },
+  "spec_sha256": "0b0cd1789469c61682201ac5eade0dfe05d12f80530eea24b5fe4de4a0c90185",
+  "manifest_sha256": "ed750c1c73355d08d3f76742eb164721ebdfe7206ce2a7fcad89fd3bd5e9f27e",
+  "sampling_sha256": "09b6a27e5b086b3891ff66e0dd64f25deb12530e505cc69e4153c95716ee6743",
+  "git": {
+    "commit": "47dfc69f58ef5d94096c24893a4ca5ec3f29029f",
+    "short": "47dfc69f58",
+    "dirty": false,
+    "dirty_paths": []
+  },
+  "filters": {
+    "context": "128K"
+  },
+  "model_sha256": "42739874cc2ccfdb8523b23fbe52e29b2a7555c8176737ca9ca0b5d59859d41f",
+  "llama_cpp_commit": "57d04820dfef7a3519aac276d018a6fd71251895",
+  "allow_dirty": false,
+  "model": {
+    "sha256": "42739874cc2ccfdb8523b23fbe52e29b2a7555c8176737ca9ca0b5d59859d41f",
+    "verified": true,
+    "declared": "42739874cc2ccfdb8523b23fbe52e29b2a7555c8176737ca9ca0b5d59859d41f",
+    "size_bytes": 21713463040
+  },
+  "shuffle_seed": 20261109,
+  "cell_order": [
+    "P3-128K-b2048",
+    "P7-128K-b2048",
+    "P6-128K-b2048",
+    "P5-128K-b4096",
+    "P2-128K-b2048",
+    "P5-128K-b2048",
+    "P6-128K-b4096",
+    "P4-128K-b2048",
+    "P7-128K-b4096",
+    "P3-128K-b4096",
+    "P4-128K-b4096",
+    "P1-128K-b2048",
+    "P8-128K-b2048",
+    "P1-128K-b4096",
+    "stock-128K",
+    "P2-128K-b4096",
+    "P8-128K-b4096",
+    "P9-128K-b4096",
+    "P9-128K-b2048"
+  ],
+  "cell_order_rule": "seeded shuffle respecting @n_fit dependencies (smallpc.sweep.spec.order_cells), not spec order",
+  "repetitions": 2,
+  "state": "complete",
+  "runs": [
+    {
+      "start_utc": "2026-11-10T01:21:54Z",
+      "pid": 435692,
+      "mode": "run",
+      "code_commit": "47dfc69f58",
+      "inhibit": {
+        "checked": true,
+        "active": true,
+        "tag": "smallpc-sweep-stage1-128K-1794273714",
+        "line": "local-ai-research sweep 1000 <user> 435679 systemd-inhibit sleep:idle smallpc-sweep-stage1-128K-1794273714 block"
+      }
+    }
+  ],
+  "inhibit": {
+    "checked": true,
+    "active": true,
+    "tag": "smallpc-sweep-stage1-128K-1794273714",
+    "line": "local-ai-research sweep 1000 <user> 435679 systemd-inhibit sleep:idle smallpc-sweep-stage1-128K-1794273714 block"
+  },
+  "drift": {
+    "main": {
+      "metrics": {
+        "pp_fresh_16k": {
+          "flag": null,
+          "relative_difference": 0.0021082840612054923,
+          "threshold": 0.05,
+          "start_mean": 960.0002287691165,
+          "end_mean": 962.024181950184,
+          "start_values": [
+            962.7305633636716,
+            956.1461334906992,
+            961.1239894529783
+          ],
+          "end_values": [
+            965.4213689514736,
+            958.9188377393325,
+            961.7323391597463
+          ]
+        },
+        "tg_16k": {
+          "flag": null,
+          "relative_difference": 0.00022458340817617237,
+          "threshold": 0.05,
+          "start_mean": 78.51904827367974,
+          "end_mean": 78.50141419821169,
+          "start_values": [
+            78.65939162579106,
+            78.3876120068604,
+            78.51014118838775
+          ],
+          "end_values": [
+            78.73158095382423,
+            78.67971106601543,
+            78.09295057479542
+          ]
+        },
+        "tg_short": {
+          "flag": null,
+          "relative_difference": 0.004207645340164052,
+          "threshold": 0.05,
+          "start_mean": 88.73212860031083,
+          "end_mean": 89.10548192773877,
+          "start_values": [
+            89.18333545674608,
+            88.6748838725722,
+            88.33816647161422
+          ],
+          "end_values": [
+            90.3780043041675,
+            88.44341583101676,
+            88.495025648032
+          ]
+        }
+      },
+      "flag": null,
+      "decided_on": [
+        "pp_fresh_16k",
+        "tg_16k"
+      ],
+      "complete": true
+    }
+  },
+  "finished_utc": "2026-11-10T03:33:36Z"
+}

@@ -1,0 +1,12 @@
+profile = "candidate"
+context = 131072
+fit = "off"
+n_cpu_moe = 20
+batch = 4096
+ubatch = 4096
+cache_type_k = "q8_0"
+cache_type_v = "q8_0"
+flash_attn = "on"
+parallel = 1
+metrics = true
+log_verbosity = 4

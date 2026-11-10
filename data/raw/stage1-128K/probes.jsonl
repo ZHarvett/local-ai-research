@@ -1,0 +1,10 @@
+{"utc": "2026-11-10T01:32:41Z", "kind": "max_fit", "cell": "P7-128K-b2048", "value": 4096, "ok": true, "free_mib": 8015.0, "reason": null, "detail": {"total_mib": 16311.0}, "seconds": 113.1}
+{"utc": "2026-11-10T01:34:25Z", "kind": "max_fit", "cell": "P7-128K-b2048", "value": 11520, "ok": false, "free_mib": 591.0, "reason": "fit_intervened", "detail": {"required_reduction_mib": 624}, "seconds": 103.9}
+{"utc": "2026-11-10T01:36:09Z", "kind": "max_fit", "cell": "P7-128K-b2048", "value": 11264, "ok": false, "free_mib": 849.0, "reason": "fit_intervened", "detail": {"required_reduction_mib": 366}, "seconds": 104.0}
+{"utc": "2026-11-10T01:37:52Z", "kind": "max_fit", "cell": "P7-128K-b2048", "value": 11008, "ok": false, "free_mib": 1103.0, "reason": "fit_intervened", "detail": {"required_reduction_mib": 112}, "seconds": 103.5}
+{"utc": "2026-11-10T01:39:35Z", "kind": "max_fit", "cell": "P7-128K-b2048", "value": 10752, "ok": true, "free_mib": 1361.0, "reason": null, "detail": {"total_mib": 16311.0}, "seconds": 103.5}
+{"utc": "2026-11-10T02:10:04Z", "kind": "max_fit", "cell": "P6-128K-b4096", "value": 4096, "ok": true, "free_mib": 7017.0, "reason": null, "detail": {"total_mib": 16311.0}, "seconds": 79.1}
+{"utc": "2026-11-10T02:11:21Z", "kind": "max_fit", "cell": "P6-128K-b4096", "value": 10496, "ok": false, "free_mib": 617.0, "reason": "fit_intervened", "detail": {"required_reduction_mib": 560}, "seconds": 77.4}
+{"utc": "2026-11-10T02:12:39Z", "kind": "max_fit", "cell": "P6-128K-b4096", "value": 10240, "ok": false, "free_mib": 875.0, "reason": "fit_intervened", "detail": {"required_reduction_mib": 302}, "seconds": 77.5}
+{"utc": "2026-11-10T02:13:56Z", "kind": "max_fit", "cell": "P6-128K-b4096", "value": 9984, "ok": false, "free_mib": 1129.0, "reason": "fit_intervened", "detail": {"required_reduction_mib": 48}, "seconds": 77.5}
+{"utc": "2026-11-10T02:15:13Z", "kind": "max_fit", "cell": "P6-128K-b4096", "value": 9728, "ok": true, "free_mib": 1387.0, "reason": null, "detail": {"total_mib": 16311.0}, "seconds": 76.9}
