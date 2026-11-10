@@ -120,3 +120,10 @@ from the measurement telemetry.
 - P6-64K-mtp1 took its cache size from the probe cache (`probe_cache_hit`, key `cc6dbf39d6c746f9679a`, 9,984 MiB, same key as the 2a probe), not a new binary search.
 - **Minimum free VRAM: P2-64K-mtp1 397 MiB (below the 512 MiB eligibility line)**, P2-mtp0 545 MiB, P6-mtp1 1,105 MiB.
 - Runner idle gate: first check always passed (busy at most 0.53 %), no waits or retries; lowest MemAvailable 21.8 GiB (telemetry). Polls: server's share at most 18.8 %, everything else at most 0.6 %. Highest Tctl 74 °C, GPU 70 °C.
+
+## Session s2a2-128K (2a2, 128K), Phase 0 conditions, 2026-11-10T23:21Z
+- pgrep llama-server: empty. GPU lock: free. nvidia-smi memory.used: 3 MiB. MemAvailable: 26.9 GiB. Swap in use: 2.31 GiB of 30.46 GiB.
+- CPU busy over 10 s: 0.64 %. Load average (1 min): 0.99.
+- Top 5 by memory (names): claude 0.35 GiB, antigravity-ide 0.30 GiB, cosmic-comp 0.11 GiB, antigravity-ide 0.11 GiB, antigravity-ide 0.11 GiB.
+- Top 5 by CPU, ps lifetime average (names): antigravity-ide 1.4 %, claude 1.3 %, cosmic-comp 1.0 %, antigravity-ide 0.5 %, kswapd0 0.2 %.
+- Desktop apps open (names): antigravity-ide claude cosmic-comp kilo 
