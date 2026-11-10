@@ -1,0 +1,723 @@
+{
+ "stage": "2a",
+ "contexts": {
+  "32K": {
+   "top": "P6-32K-b4096",
+   "second": "P2-32K-b4096",
+   "eligibility": {
+    "s2a-P2-32K-b4096-mtp0": {
+     "eligible": true,
+     "reasons": [],
+     "sanity": "pending"
+    },
+    "s2a-P6-32K-b4096-mtp0": {
+     "eligible": true,
+     "reasons": [],
+     "sanity": "pending"
+    },
+    "s2a-P6-32K-b4096-mtp1": {
+     "eligible": false,
+     "reasons": [
+      "flagged unit(s) s2a-32K:4 (paging)",
+      "n_clean 4 is below 5 (final mode)"
+     ],
+     "sanity": "pending"
+    },
+    "s2a-P6-32K-b4096-mtp2": {
+     "eligible": true,
+     "reasons": [],
+     "sanity": "pending"
+    },
+    "s2a-P6-32K-b4096-mtp3": {
+     "eligible": true,
+     "reasons": [],
+     "sanity": "pending"
+    }
+   },
+   "draft_length": {
+    "best_n": 2,
+    "best_mean_n": 2,
+    "tied": [
+     2
+    ],
+    "reason": "draft length 2 has the best mean T_turn_400 and the others are distinguishable",
+    "candidates": [
+     {
+      "n": 2,
+      "cell": "s2a-P6-32K-b4096-mtp2",
+      "t_turn_400_mean": 5.627287789640768,
+      "vs_best": null
+     },
+     {
+      "n": 3,
+      "cell": "s2a-P6-32K-b4096-mtp3",
+      "t_turn_400_mean": 5.914295114619884,
+      "vs_best": {
+       "t_turn_400_difference": {
+        "n": 5,
+        "mean": 0.2870073249791153,
+        "ci": [
+         0.14746463105307317,
+         0.4265500189051574
+        ],
+        "ci_method": "t",
+        "excludes_zero": true,
+        "differences": [
+         0.3780228454469521,
+         0.41508958897243176,
+         0.13731242355889783,
+         0.22960479615706042,
+         0.2750069707602343
+        ]
+       },
+       "t_reread_difference": {
+        "n": 5,
+        "mean": 0.11359400000000033,
+        "ci": [
+         0.07356751587846529,
+         0.1536204841215354
+        ],
+        "ci_method": "t",
+        "excludes_zero": true,
+        "differences": [
+         0.1475216666666661,
+         0.06208766666666676,
+         0.12656500000000204,
+         0.12525633333333275,
+         0.10653933333333399
+        ]
+       },
+       "distinguishable": true,
+       "step": "1 (T_turn_400)"
+      }
+     }
+    ],
+    "human_decision_needed": []
+   },
+   "human_decision_needed": [
+    "P6-32K-b4096: the MTP-off cell is missing or not eligible, so MTP cannot be compared"
+   ],
+   "acceptance": {
+    "2": {
+     "pooled": {
+      "B": 0.6651724809978562,
+      "short": 0.6598718695398952,
+      "all": 0.6638434579439252,
+      "counts": {
+       "B": [
+        3413,
+        5131
+       ],
+       "short": [
+        1133,
+        1717
+       ]
+      },
+      "note": "draft counts exist only for Request B and the short point: Request A (n_predict 0) has no drafts"
+     },
+     "per_repetition": {
+      "n": 5,
+      "mean": 0.6657838044821298,
+      "min": 0.6337760910815939,
+      "max": 0.7008032128514057,
+      "ci": [
+       0.6285364282032818,
+       0.7030311807609778
+      ]
+     }
+    },
+    "3": {
+     "pooled": {
+      "B": 0.5524091919940697,
+      "short": 0.5252263906856404,
+      "all": 0.5454545454545454,
+      "counts": {
+       "B": [
+        3726,
+        6745
+       ],
+       "short": [
+        1218,
+        2319
+       ]
+      },
+      "note": "draft counts exist only for Request B and the short point: Request A (n_predict 0) has no drafts"
+     },
+     "per_repetition": {
+      "n": 5,
+      "mean": 0.5535460766940158,
+      "min": 0.5123849964614295,
+      "max": 0.6026645768025078,
+      "ci": [
+       0.5094069638165839,
+       0.5976851895714477
+      ]
+     }
+    }
+   },
+   "mtp_vs_off": null,
+   "top_config": {
+    "mtp": 0,
+    "cell": null
+   },
+   "second_placement": {
+    "cell": "s2a-P2-32K-b4096-mtp0",
+    "eligible": true,
+    "t_turn_400": {
+     "n": 5,
+     "mean": 6.2954153784461155,
+     "min": 6.280521238095237,
+     "max": 6.306904136173767,
+     "ci": [
+      6.280375897431396,
+      6.310454859460835
+     ]
+    }
+   },
+   "input_2a2": {
+    "top_cell": "P6-32K-b4096",
+    "second_cell": "P2-32K-b4096",
+    "top_mtp": 0,
+    "second_mtp": 2
+   }
+  },
+  "64K": {
+   "top": "P6-64K-b4096",
+   "second": "P2-64K-b4096",
+   "eligibility": {
+    "s2a-P2-64K-b4096-mtp0": {
+     "eligible": true,
+     "reasons": [],
+     "sanity": "pending"
+    },
+    "s2a-P6-64K-b4096-mtp0": {
+     "eligible": true,
+     "reasons": [],
+     "sanity": "pending"
+    },
+    "s2a-P6-64K-b4096-mtp1": {
+     "eligible": true,
+     "reasons": [],
+     "sanity": "pending"
+    },
+    "s2a-P6-64K-b4096-mtp2": {
+     "eligible": true,
+     "reasons": [],
+     "sanity": "pending"
+    },
+    "s2a-P6-64K-b4096-mtp3": {
+     "eligible": true,
+     "reasons": [],
+     "sanity": "pending"
+    }
+   },
+   "draft_length": {
+    "best_n": 3,
+    "best_mean_n": 3,
+    "tied": [
+     3
+    ],
+    "reason": "draft length 3 has the best mean T_turn_400 and the others are distinguishable",
+    "candidates": [
+     {
+      "n": 3,
+      "cell": "s2a-P6-64K-b4096-mtp3",
+      "t_turn_400_mean": 6.834156783291563,
+      "vs_best": null
+     }
+    ],
+    "human_decision_needed": []
+   },
+   "human_decision_needed": [],
+   "acceptance": {
+    "3": {
+     "pooled": {
+      "B": 0.5608259763579231,
+      "short": 0.5308159722222222,
+      "all": 0.5531323022143095,
+      "counts": {
+       "B": [
+        3748,
+        6683
+       ],
+       "short": [
+        1223,
+        2304
+       ]
+      },
+      "note": "draft counts exist only for Request B and the short point: Request A (n_predict 0) has no drafts"
+     },
+     "per_repetition": {
+      "n": 5,
+      "mean": 0.5623320258039349,
+      "min": 0.5077464788732394,
+      "max": 0.6155679110405083,
+      "ci": [
+       0.5114026783473825,
+       0.6132613732604874
+      ]
+     }
+    }
+   },
+   "mtp_vs_off": {
+    "mtp_cell": "s2a-P6-64K-b4096-mtp3",
+    "off_cell": "s2a-P6-64K-b4096-mtp0",
+    "winner": "s2a-P6-64K-b4096-mtp0",
+    "section_3_3_step": "t_reread",
+    "decision_text": "T_turn_400 tied; the paired T_reread CI excludes zero: lower T_reread wins",
+    "mtp_wins_on_t_turn_400": false,
+    "t_turn_400_difference_off_minus_mtp": {
+     "n": 5,
+     "mean": 0.021179861782362686,
+     "ci": [
+      -0.4526471927092617,
+      0.4950069162739871
+     ],
+     "ci_method": "t",
+     "excludes_zero": false,
+     "differences": [
+      0.08936338262322341,
+      -0.20265576608186997,
+      0.6580818661382137,
+      -0.16250379197995013,
+      -0.2763863817878036
+     ]
+    },
+    "t_reread_difference_off_minus_mtp": {
+     "n": 5,
+     "mean": -2.0035058000000006,
+     "ci": [
+      -2.0594063653372845,
+      -1.9476052346627164
+     ],
+     "ci_method": "t",
+     "excludes_zero": true,
+     "differences": [
+      -2.0191230000000004,
+      -2.018393333333334,
+      -1.923741333333334,
+      -2.034004333333332,
+      -2.022267000000003
+     ]
+    },
+    "mtp_t_turn_400_mean": 6.834156783291563,
+    "off_t_turn_400_mean": 6.855336645073926
+   },
+   "effects": {
+    "pp_fresh": {
+     "pooled": {
+      "n": 5,
+      "geomean": 0.880043058456455,
+      "ci": [
+       0.8775792952155568,
+       0.8825137385985842
+      ],
+      "ci_method": "t"
+     },
+     "per_depth": {
+      "16384": {
+       "n": 5,
+       "geomean": 0.8826355357236847,
+       "ci": [
+        0.8793631233792992,
+        0.8859201258388533
+       ],
+       "ci_method": "t"
+      },
+      "32768": {
+       "n": 5,
+       "geomean": 0.8747030895056369,
+       "ci": [
+        0.8659970338259139,
+        0.8834966690480729
+       ],
+       "ci_method": "t"
+      },
+      "49152": {
+       "n": 5,
+       "geomean": 0.8827818633087845,
+       "ci": [
+        0.8800192843268945,
+        0.8855531146490729
+       ],
+       "ci_method": "t"
+      }
+     },
+     "mtp_mean": {
+      "16384": 2138.620527319734,
+      "32768": 1998.9140554087594,
+      "49152": 1885.0154523085355
+     },
+     "off_mean": {
+      "16384": 2422.988753487869,
+      "32768": 2285.1758993151034,
+      "49152": 2135.2922559992794
+     }
+    },
+    "tg": {
+     "pooled": {
+      "n": 5,
+      "geomean": 1.04807071009522,
+      "ci": [
+       0.9520539531879647,
+       1.1537709703124674
+      ],
+      "ci_method": "t"
+     },
+     "per_depth": {
+      "16384": {
+       "n": 5,
+       "geomean": 0.9907224228657008,
+       "ci": [
+        0.960555316519007,
+        1.021836954404554
+       ],
+       "ci_method": "t"
+      },
+      "32768": {
+       "n": 5,
+       "geomean": 0.999169893539193,
+       "ci": [
+        0.9474696709554459,
+        1.053691222800174
+       ],
+       "ci_method": "t"
+      },
+      "49152": {
+       "n": 5,
+       "geomean": 1.172281523700765,
+       "ci": [
+        0.9325277023272414,
+        1.473676296565332
+       ],
+       "ci_method": "t"
+      }
+     },
+     "mtp_mean": {
+      "16384": 89.07760810692699,
+      "32768": 80.17618793705341,
+      "49152": 82.11116435782787
+     },
+     "off_mean": {
+      "16384": 89.87233655146284,
+      "32768": 80.18099452989034,
+      "49152": 69.28040092875447
+     }
+    }
+   },
+   "effects_all_draft_lengths": {
+    "3": {
+     "pp_fresh": {
+      "pooled": {
+       "n": 5,
+       "geomean": 0.880043058456455,
+       "ci": [
+        0.8775792952155568,
+        0.8825137385985842
+       ],
+       "ci_method": "t"
+      },
+      "per_depth": {
+       "16384": {
+        "n": 5,
+        "geomean": 0.8826355357236847,
+        "ci": [
+         0.8793631233792992,
+         0.8859201258388533
+        ],
+        "ci_method": "t"
+       },
+       "32768": {
+        "n": 5,
+        "geomean": 0.8747030895056369,
+        "ci": [
+         0.8659970338259139,
+         0.8834966690480729
+        ],
+        "ci_method": "t"
+       },
+       "49152": {
+        "n": 5,
+        "geomean": 0.8827818633087845,
+        "ci": [
+         0.8800192843268945,
+         0.8855531146490729
+        ],
+        "ci_method": "t"
+       }
+      },
+      "mtp_mean": {
+       "16384": 2138.620527319734,
+       "32768": 1998.9140554087594,
+       "49152": 1885.0154523085355
+      },
+      "off_mean": {
+       "16384": 2422.988753487869,
+       "32768": 2285.1758993151034,
+       "49152": 2135.2922559992794
+      }
+     },
+     "tg": {
+      "pooled": {
+       "n": 5,
+       "geomean": 1.04807071009522,
+       "ci": [
+        0.9520539531879647,
+        1.1537709703124674
+       ],
+       "ci_method": "t"
+      },
+      "per_depth": {
+       "16384": {
+        "n": 5,
+        "geomean": 0.9907224228657008,
+        "ci": [
+         0.960555316519007,
+         1.021836954404554
+        ],
+        "ci_method": "t"
+       },
+       "32768": {
+        "n": 5,
+        "geomean": 0.999169893539193,
+        "ci": [
+         0.9474696709554459,
+         1.053691222800174
+        ],
+        "ci_method": "t"
+       },
+       "49152": {
+        "n": 5,
+        "geomean": 1.172281523700765,
+        "ci": [
+         0.9325277023272414,
+         1.473676296565332
+        ],
+        "ci_method": "t"
+       }
+      },
+      "mtp_mean": {
+       "16384": 89.07760810692699,
+       "32768": 80.17618793705341,
+       "49152": 82.11116435782787
+      },
+      "off_mean": {
+       "16384": 89.87233655146284,
+       "32768": 80.18099452989034,
+       "49152": 69.28040092875447
+      }
+     }
+    }
+   },
+   "mtp_vs_off_without_heavy_swap_units": {
+    "mtp_cell": "s2a-P6-64K-b4096-mtp3",
+    "off_cell": "s2a-P6-64K-b4096-mtp0",
+    "winner": "s2a-P6-64K-b4096-mtp0",
+    "section_3_3_step": "no_mtp",
+    "decision_text": "still tied; prefer no MTP",
+    "mtp_wins_on_t_turn_400": false,
+    "t_turn_400_difference_off_minus_mtp": {
+     "n": 0,
+     "mean": null,
+     "ci": null,
+     "ci_method": "unavailable (no matching repetitions)",
+     "excludes_zero": null,
+     "differences": []
+    },
+    "t_reread_difference_off_minus_mtp": {
+     "n": 0,
+     "mean": null,
+     "ci": null,
+     "ci_method": "unavailable (no matching repetitions)",
+     "excludes_zero": null,
+     "differences": []
+    },
+    "mtp_t_turn_400_mean": 6.783723203007519,
+    "off_t_turn_400_mean": 7.049375664374114
+   },
+   "top_config": {
+    "mtp": 0,
+    "cell": "s2a-P6-64K-b4096-mtp0"
+   },
+   "second_placement": {
+    "cell": "s2a-P2-64K-b4096-mtp0",
+    "eligible": true,
+    "t_turn_400": {
+     "n": 5,
+     "mean": 7.169580675243665,
+     "min": 7.156103349484823,
+     "max": 7.182831377610694,
+     "ci": [
+      7.154609611051761,
+      7.18455173943557
+     ]
+    }
+   },
+   "input_2a2": {
+    "top_cell": "P6-64K-b4096",
+    "second_cell": "P2-64K-b4096",
+    "top_mtp": 0,
+    "second_mtp": 3
+   }
+  },
+  "128K": {
+   "top": "P2-128K-b4096",
+   "second": "P6-128K-b4096",
+   "eligibility": {
+    "s2a-P2-128K-b4096-mtp0": {
+     "eligible": true,
+     "reasons": [],
+     "sanity": "pending"
+    },
+    "s2a-P2-128K-b4096-mtp1": {
+     "eligible": false,
+     "reasons": [
+      "minimum free VRAM 421 MiB is below 512"
+     ],
+     "sanity": "pending"
+    },
+    "s2a-P2-128K-b4096-mtp2": {
+     "eligible": false,
+     "reasons": [
+      "minimum free VRAM 503 MiB is below 512",
+      "flagged unit(s) s2a-128K:0, s2a-128K:1 (paging)",
+      "n_clean 3 is below 5 (final mode)"
+     ],
+     "sanity": "pending"
+    },
+    "s2a-P2-128K-b4096-mtp3": {
+     "eligible": false,
+     "reasons": [
+      "minimum free VRAM 443 MiB is below 512"
+     ],
+     "sanity": "pending"
+    },
+    "s2a-P6-128K-b4096-mtp0": {
+     "eligible": true,
+     "reasons": [],
+     "sanity": "pending"
+    }
+   },
+   "draft_length": {
+    "best_n": null,
+    "reason": "no eligible MTP cell",
+    "candidates": []
+   },
+   "human_decision_needed": [],
+   "acceptance": {
+    "1": {
+     "pooled": {
+      "B": 0.7763480392156863,
+      "short": 0.7535211267605634,
+      "all": 0.7704545454545455,
+      "counts": {
+       "B": [
+        2534,
+        3264
+       ],
+       "short": [
+        856,
+        1136
+       ]
+      },
+      "note": "draft counts exist only for Request B and the short point: Request A (n_predict 0) has no drafts"
+     },
+     "per_repetition": {
+      "n": 5,
+      "mean": 0.7775652721105499,
+      "min": 0.7394468704512372,
+      "max": 0.8133535660091047,
+      "ci": [
+       0.7336459226950098,
+       0.82148462152609
+      ]
+     }
+    }
+   },
+   "mtp_vs_off": null,
+   "top_config": {
+    "mtp": 0,
+    "cell": "s2a-P2-128K-b4096-mtp0"
+   },
+   "second_placement": {
+    "cell": "s2a-P6-128K-b4096-mtp0",
+    "eligible": true,
+    "t_turn_400": {
+     "n": 5,
+     "mean": 8.732916218546366,
+     "min": 8.475439571428572,
+     "max": 9.087027685045948,
+     "ci": [
+      8.354088080073293,
+      9.11174435701944
+     ]
+    }
+   },
+   "input_2a2": {
+    "top_cell": "P2-128K-b4096",
+    "second_cell": "P6-128K-b4096",
+    "top_mtp": 0,
+    "second_mtp": null
+   }
+  }
+ },
+ "human_decision_needed": [
+  "32K: P6-32K-b4096: the MTP-off cell is missing or not eligible, so MTP cannot be compared"
+ ],
+ "sanity": "pending: the check runs after 2a, on the winners",
+ "label": "results",
+ "banner": "RESULTS. Only cells with at least 5 clean repetitions are reportable.",
+ "provenance": {
+  "stage": "2a",
+  "sessions": [
+   {
+    "session_id": "s2a-32K",
+    "spec_path": "configs/sweeps/stage2-2a.toml",
+    "spec_sha256": "a4e031802c25d4053295b5677e939af5481b4151371b0bf77f2a82ece885e880",
+    "spec_file_matches": true,
+    "session_git_commit": "60edde1c8f7845937abe79828c707ab28dc425ca",
+    "state": "complete",
+    "filters": {
+     "context": "32K"
+    }
+   },
+   {
+    "session_id": "s2a-64K",
+    "spec_path": "configs/sweeps/stage2-2a.toml",
+    "spec_sha256": "a4e031802c25d4053295b5677e939af5481b4151371b0bf77f2a82ece885e880",
+    "spec_file_matches": true,
+    "session_git_commit": "f0ae74667040cc9a5eb996a66b2750754d4e9050",
+    "state": "complete",
+    "filters": {
+     "context": "64K"
+    }
+   },
+   {
+    "session_id": "s2a-128K",
+    "spec_path": "configs/sweeps/stage2-2a.toml",
+    "spec_sha256": "a4e031802c25d4053295b5677e939af5481b4151371b0bf77f2a82ece885e880",
+    "spec_file_matches": true,
+    "session_git_commit": "6ec38e010f61720412c19ab2e37a5a883f6698bc",
+    "state": "complete",
+    "filters": {
+     "context": "128K"
+    }
+   }
+  ],
+  "warnings": [],
+  "plan_version": "1.6",
+  "code": {
+   "commit": "075e88f627beafffa4f6f1d6d4b5f4170689e7b3",
+   "dirty": false
+  },
+  "llama_cpp_commit": "57d04820dfef7a3519aac276d018a6fd71251895",
+  "llama_cpp_build_info_commit": "57d04820dfef7a3519aac276d018a6fd71251895",
+  "rule_text": [
+   "\"Top\" means first in the Stage 1 order, even where the pair is too close to call at n = 2.",
+   "- **2a MTP.** Per context, 6 cells: both shortlisted placements with MTP off (these are also the 5-repetition measurement of the shortlist), the top placement with draft lengths 1, 2 and 3, and the second placement with the best draft length of the top placement. The best draft length is chosen by the \u00a73.3 rules among the three; if the CIs include zero, the smaller draft length wins. Cache sizes of P6 cells are re-probed with MTP on, because the head and its draft context cost VRAM. Record acceptance, and the effect on decode **and on prefill**. MTP joins a tuned config only if it wins by \u00a73.3 on T_turn_400 and passes the output sanity check.",
+   "A candidate is eligible for a context if:\n- its final cell status is complete (it started without errors and finished);\n- the minimum free VRAM across its measured windows, in the final attempt, is at least 512 MiB;\n- it has no unresolved flagged unit, where a unit is one repetition and an attempt-2 unit replaces the attempt-1 unit it re-ran;\n- it has enough clean units: 2 in screening, 5 in final selection;\n- it has not failed the output sanity check (\u00a75.6). In screening the check may be \"not run\". In final selection it must have passed.\n\nAmong eligible candidates, order them by the **mean T_turn_400** (the estimated standardised turn, \u00a75.3): the mean over repetitions of each repetition's mean over the three depths of \u00a75.3. A repetition counts only if all three depths are clean. Final selection then compares the best-mean candidate with the runner-up, using the paired per-repetition difference of T_turn_400 and its 95% CI (\u00a75.5):\n1. If the CI excludes zero, the best-mean candidate wins.\n2. If the CI includes zero, compare the paired difference of **T_reread** in the same way. If that CI excludes zero, the candidate with the lower mean T_reread wins.\n3. If both CIs include zero, the candidates are tied on speed: prefer fewer moving parts, which means no MTP over MTP, then no expert cache over a cache.\n4. If still tied, prefer the lower peak VRAM use (total minus the minimum free VRAM over its windows).\n\nAny other eligible candidate whose paired T_turn_400 difference from the winner has a CI that includes zero is reported as \"statistically tied with the winner\", for information only. Screening (2 repetitions) applies no tie-break: its shortlist is simply the two eligible candidates with the lowest mean T_turn_400 per context, and pairs whose means differ by less than the larger of their two ranges are marked \"too close to call at n = 2\". The stock cell is a reference row and is never shortlisted."
+  ],
+  "eligibility_override": false
+ },
+ "analysis_warnings": []
+}

@@ -1,0 +1,81 @@
+{
+ "stage": "2a",
+ "contexts": {
+  "32K": {
+   "input_2a2": {
+    "top_cell": "P6-32K-b4096",
+    "second_cell": "P2-32K-b4096",
+    "top_mtp": 0,
+    "second_mtp": 2
+   }
+  },
+  "64K": {
+   "input_2a2": {
+    "top_cell": "P6-64K-b4096",
+    "second_cell": "P2-64K-b4096",
+    "top_mtp": 0,
+    "second_mtp": 3
+   }
+  },
+  "128K": {
+   "input_2a2": {
+    "top_cell": "P2-128K-b4096",
+    "second_cell": "P6-128K-b4096",
+    "top_mtp": 0,
+    "second_mtp": null
+   }
+  }
+ },
+ "provenance": {
+  "stage": "2a",
+  "sessions": [
+   {
+    "session_id": "s2a-32K",
+    "spec_path": "configs/sweeps/stage2-2a.toml",
+    "spec_sha256": "a4e031802c25d4053295b5677e939af5481b4151371b0bf77f2a82ece885e880",
+    "spec_file_matches": true,
+    "session_git_commit": "60edde1c8f7845937abe79828c707ab28dc425ca",
+    "state": "complete",
+    "filters": {
+     "context": "32K"
+    }
+   },
+   {
+    "session_id": "s2a-64K",
+    "spec_path": "configs/sweeps/stage2-2a.toml",
+    "spec_sha256": "a4e031802c25d4053295b5677e939af5481b4151371b0bf77f2a82ece885e880",
+    "spec_file_matches": true,
+    "session_git_commit": "f0ae74667040cc9a5eb996a66b2750754d4e9050",
+    "state": "complete",
+    "filters": {
+     "context": "64K"
+    }
+   },
+   {
+    "session_id": "s2a-128K",
+    "spec_path": "configs/sweeps/stage2-2a.toml",
+    "spec_sha256": "a4e031802c25d4053295b5677e939af5481b4151371b0bf77f2a82ece885e880",
+    "spec_file_matches": true,
+    "session_git_commit": "6ec38e010f61720412c19ab2e37a5a883f6698bc",
+    "state": "complete",
+    "filters": {
+     "context": "128K"
+    }
+   }
+  ],
+  "warnings": [],
+  "plan_version": "1.6",
+  "code": {
+   "commit": "075e88f627beafffa4f6f1d6d4b5f4170689e7b3",
+   "dirty": false
+  },
+  "llama_cpp_commit": "57d04820dfef7a3519aac276d018a6fd71251895",
+  "llama_cpp_build_info_commit": "57d04820dfef7a3519aac276d018a6fd71251895",
+  "rule_text": [
+   "\"Top\" means first in the Stage 1 order, even where the pair is too close to call at n = 2.",
+   "- **2a MTP.** Per context, 6 cells: both shortlisted placements with MTP off (these are also the 5-repetition measurement of the shortlist), the top placement with draft lengths 1, 2 and 3, and the second placement with the best draft length of the top placement. The best draft length is chosen by the \u00a73.3 rules among the three; if the CIs include zero, the smaller draft length wins. Cache sizes of P6 cells are re-probed with MTP on, because the head and its draft context cost VRAM. Record acceptance, and the effect on decode **and on prefill**. MTP joins a tuned config only if it wins by \u00a73.3 on T_turn_400 and passes the output sanity check.",
+   "A candidate is eligible for a context if:\n- its final cell status is complete (it started without errors and finished);\n- the minimum free VRAM across its measured windows, in the final attempt, is at least 512 MiB;\n- it has no unresolved flagged unit, where a unit is one repetition and an attempt-2 unit replaces the attempt-1 unit it re-ran;\n- it has enough clean units: 2 in screening, 5 in final selection;\n- it has not failed the output sanity check (\u00a75.6). In screening the check may be \"not run\". In final selection it must have passed.\n\nAmong eligible candidates, order them by the **mean T_turn_400** (the estimated standardised turn, \u00a75.3): the mean over repetitions of each repetition's mean over the three depths of \u00a75.3. A repetition counts only if all three depths are clean. Final selection then compares the best-mean candidate with the runner-up, using the paired per-repetition difference of T_turn_400 and its 95% CI (\u00a75.5):\n1. If the CI excludes zero, the best-mean candidate wins.\n2. If the CI includes zero, compare the paired difference of **T_reread** in the same way. If that CI excludes zero, the candidate with the lower mean T_reread wins.\n3. If both CIs include zero, the candidates are tied on speed: prefer fewer moving parts, which means no MTP over MTP, then no expert cache over a cache.\n4. If still tied, prefer the lower peak VRAM use (total minus the minimum free VRAM over its windows).\n\nAny other eligible candidate whose paired T_turn_400 difference from the winner has a CI that includes zero is reported as \"statistically tied with the winner\", for information only. Screening (2 repetitions) applies no tie-break: its shortlist is simply the two eligible candidates with the lowest mean T_turn_400 per context, and pairs whose means differ by less than the larger of their two ranges are marked \"too close to call at n = 2\". The stock cell is a reference row and is never shortlisted."
+  ],
+  "eligibility_override": false
+ }
+}
