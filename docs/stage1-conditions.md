@@ -75,3 +75,15 @@ Machine conditions of the three Stage 1 screening sessions (WP11 part 2, plan v1
   or the stock placement, none in P1-b4096, P8 or P9. **Accepted by Zack and the step lead as a recorded deviation** (criterion f
   was a stop rule set for this run to get a human decision, not a plan rule; no rule was changed). G3 was not met.
 - Apps open (names): chrome, claude, antigravity-ide, cosmic-comp.
+
+## Re-run pass (plan: one `--rerun-flagged` per session, never twice, no attempt 3)
+
+- **stage1-32K:** no repetition carries a re-runnable flag (0 of 326 requests flagged, window flags none, drift none), so nothing
+  was re-run. A first attempt of the runbook command on 2026-11-10 08:33 UTC was refused by a bug in the runner
+  (`--rerun-flagged` ignored the stored `--only`) and overwrote `session.json` / `progress.json`; both were restored from commit
+  `18bd463` and the runner was fixed (`7b800c0`, `docs/decisions.md` "WP11 part 2: re-run mode fixes"). No re-run of 32K was made.
+- **stage1-64K** (2026-11-10 08:46 to 08:56 UTC, code commit `7b800c0355`, tree clean): planned and ran 1 unit, stock-64K repetition 1
+  (the only paging-flagged window), as attempt 2, plus its own start and end canaries (indices 110 to 115; re-run drift: no flag).
+  Attempt 2 is clean (7 requests, no flags). `code_commit_changed` warning recorded, as expected. Machine: MemAvailable 25.3 GiB
+  before, 22.6 to 26.1 GiB at the two polls; CPU busy 0.4 to 7.2 % (never above 10 %); apps open: chrome, claude, antigravity-ide, cosmic-comp.
+  Note: a completed re-run sets `finished_utc` in `session.json` to the end of the re-run.
