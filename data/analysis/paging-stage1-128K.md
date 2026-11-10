@@ -1,6 +1,6 @@
 # Paging analysis of `stage1-128K`
 
-**Functional-test data (WP9 mini-sweep), not results.** This is an investigation; `flags.paging` is unchanged.
+**SCREENING DATA (2 repetitions). Used only for shortlisting, never reported as results.** This is an investigation; `flags.paging` is unchanged.
 
 ## Per-window table
 

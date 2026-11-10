@@ -947,7 +947,8 @@ class Session:
             if todo and self.spec.canary:
                 self.run_canary("end", "rerun")
                 self.finish_drift("rerun")
-            self.update_session(state="complete", finished_utc=utc_now())
+            # the main run's finished_utc stays as it was; the re-run records its own end
+            self.update_session(state="complete", rerun_finished_utc=utc_now())
             self.progress(state="complete", phase="done")
         except KeyboardInterrupt:
             code = EXIT_INTERRUPTED

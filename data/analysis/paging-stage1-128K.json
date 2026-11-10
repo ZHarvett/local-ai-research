@@ -1,6 +1,7 @@
 {
  "session_id": "stage1-128K",
- "note": "Functional-test data (WP9 mini-sweep): not a result.",
+ "label": "screening",
+ "note": "SCREENING DATA (2 repetitions). Used only for shortlisting, never reported as results.",
  "rules": {
   "R0": "v1.3 as is: majflt > 1,000 or VmSwap > 0 at any sample",
   "R1": "majflt > 1,000 or VmSwap growth > 64 MiB in the window",

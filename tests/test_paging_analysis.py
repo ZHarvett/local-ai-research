@@ -159,11 +159,11 @@ def test_attribution_shares_counters_out_by_time_and_adds_up():
 # ----------------------------------------------------------------- a small session on disk
 
 
-def _write_session(tmp: Path, *, with_vmswap: bool) -> Path:
-    sess = tmp / "s1"
+def _write_session(tmp: Path, *, with_vmswap: bool, sid: str = "s1") -> Path:
+    sess = tmp / sid
     (sess / "cells").mkdir(parents=True)
     (sess / "telemetry").mkdir()
-    (sess / "session.json").write_text(json.dumps({"session_id": "s1"}))
+    (sess / "session.json").write_text(json.dumps({"session_id": sid}))
     cols = ["t_epoch", "majflt", "pswpin", "memavailable_kib", "server_rss_kib"]
     if with_vmswap:
         cols.append("server_vmswap_kib")
@@ -178,7 +178,7 @@ def _write_session(tmp: Path, *, with_vmswap: bool) -> Path:
             w.writerow(row)
     base = {
         "schema": 1,
-        "session_id": "s1",
+        "session_id": sid,
         "cell": "c",
         "config_hash": "0" * 16,
         "attempt": 1,
@@ -271,3 +271,52 @@ def test_cli_writes_json_and_markdown(tmp_path, monkeypatch):
 @pytest.mark.parametrize("col", ["server_rss_anon_kib", "server_rss_file_kib", "pswpout"])
 def test_new_telemetry_columns_are_known_to_the_reader(col):
     assert col in telemetry.COLUMNS and col in telemetry._FLOAT_COLS
+
+
+# ------------------------------------------------------------------ the data label (WP12)
+
+
+@pytest.mark.parametrize(
+    ("sid", "label"),
+    [
+        ("stage1-64K", "screening"),
+        ("stage1-128K", "screening"),
+        ("stage2f-128K", "screening"),
+        ("mini-20261109", "functional-test"),
+        ("ft-2f-cram", "functional-test"),
+        ("preflight-20261109", "functional-test"),
+    ],
+)
+def test_default_label_follows_the_session_name(sid, label):
+    assert pa.default_label(sid) == label
+
+
+@pytest.mark.parametrize(
+    ("label", "needle", "absent"),
+    [
+        ("functional-test", "FUNCTIONAL-TEST DATA", "SCREENING DATA"),
+        ("screening", "SCREENING DATA", "FUNCTIONAL-TEST DATA"),
+        ("results", "RESULTS.", "FUNCTIONAL-TEST DATA"),
+    ],
+)
+def test_the_banner_and_note_follow_the_label(tmp_path, label, needle, absent):
+    sess = _write_session(tmp_path, with_vmswap=True, sid="stage1-x")
+    res = pa.analyse_session(sess, attribute=[], label=label)
+    md = pa.render_markdown(res)
+    assert res["label"] == label and needle in res["note"]
+    assert needle in md and absent not in md and absent not in res["note"]
+    assert "WP9 mini-sweep" not in md and "WP9 mini-sweep" not in res["note"]
+
+
+def test_the_cli_label_default_and_override(tmp_path):
+    stage = _write_session(tmp_path, with_vmswap=True, sid="stage1-x")
+    mini = _write_session(tmp_path, with_vmswap=True, sid="mini-x")
+    out = tmp_path / "out"
+    assert pa.main([str(stage), "--out-dir", str(out)]) == 0
+    assert pa.main([str(mini), "--out-dir", str(out)]) == 0
+    assert pa.main([str(stage), "--out-dir", str(out / "o"), "--label", "functional-test"]) == 0
+    assert json.loads((out / "paging-stage1-x.json").read_text())["label"] == "screening"
+    assert "SCREENING DATA" in (out / "paging-stage1-x.md").read_text()
+    assert json.loads((out / "paging-mini-x.json").read_text())["label"] == "functional-test"
+    assert "FUNCTIONAL-TEST DATA" in (out / "paging-mini-x.md").read_text()
+    assert json.loads((out / "o/paging-stage1-x.json").read_text())["label"] == "functional-test"

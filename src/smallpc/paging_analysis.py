@@ -31,7 +31,7 @@ import re
 import sys
 from pathlib import Path
 
-from . import flags, telemetry
+from . import flags, labels, telemetry
 from .scrub import Identity, scrub_json
 
 SWAP_LIMIT_KIB = 64 * 1024  # R1 and R2: 64 MiB
@@ -60,6 +60,12 @@ CAVEATS = [
 
 
 # ------------------------------------------------------------------------------ pure functions
+
+
+def default_label(session_id: str) -> str:
+    """The data label of a session's output: ``screening`` for the Stage 1 and Stage 2 sessions
+    (ids starting with "stage"), otherwise ``functional-test``."""
+    return "screening" if session_id.startswith("stage") else "functional-test"
 
 
 def _vals(rows: list[dict], key: str) -> list[float]:
@@ -279,7 +285,9 @@ def _segments_of_instance(session: Path, cell: dict, ins: dict, reqs: list[dict]
     return segs
 
 
-def analyse_session(session: Path, attribute: list[str] | None = None) -> dict:
+def analyse_session(
+    session: Path, attribute: list[str] | None = None, label: str | None = None
+) -> dict:
     session = Path(session)
     reqs = _load_records(session)
     sj = json.loads((session / "session.json").read_text())
@@ -326,9 +334,11 @@ def analyse_session(session: Path, attribute: list[str] | None = None) -> dict:
             q["speed_unflagged_windows"] = sum(same) / len(same) if same else None
     windows = [s for s in segs if s["segment"] == "window"]
     agree = sum(1 for w in windows if (("paging" in w["recorded_flags"]) == w["rules"]["R0"]))
+    label = label or default_label(sj["session_id"])
     result = {
         "session_id": sj["session_id"],
-        "note": "Functional-test data (WP9 mini-sweep): not a result.",
+        "label": label,
+        "note": labels.banner(label),
         "rules": RULE_TEXT,
         "definitions": {
             "growth": "max(VmSwap) - first VmSwap sample of the window, never negative",
@@ -411,7 +421,7 @@ def render_markdown(res: dict) -> str:
     L.append(f"# Paging analysis of `{res['session_id']}`")
     L.append("")
     L.append(
-        "**Functional-test data (WP9 mini-sweep), not results.** This is an investigation; "
+        f"**{res.get('note') or labels.banner(res.get('label'))}** This is an investigation; "
         "`flags.paging` is unchanged."
     )
     L.append("")
@@ -561,13 +571,19 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("session", type=Path, help="a session directory under data/raw/")
     ap.add_argument("--out-dir", type=Path, default=Path("data/analysis"))
     ap.add_argument(
+        "--label",
+        choices=labels.LABELS,
+        help="data label of the output (default: screening for sessions whose id starts with "
+        "'stage', otherwise functional-test)",
+    )
+    ap.add_argument(
         "--attribute",
         action="append",
         help="CELL:REPETITION windows to attribute to requests (default stock-32K:1; windows "
         "with more than 1,000 major faults are always attributed)",
     )
     a = ap.parse_args(argv)
-    res = analyse_session(a.session, a.attribute)
+    res = analyse_session(a.session, a.attribute, a.label)
     sid = re.sub(r"[^A-Za-z0-9._-]", "_", res["session_id"])
     a.out_dir.mkdir(parents=True, exist_ok=True)
     res = scrub_json(res, Identity.current())

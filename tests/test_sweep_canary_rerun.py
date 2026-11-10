@@ -124,6 +124,43 @@ def test_rerun_appends_attempt_2_for_flagged_repetitions_only(tmp_path, free_por
     assert all(r["attempt"] in (1, 2) for r in reqs2)
 
 
+def test_a_completed_rerun_leaves_finished_utc_alone(tmp_path, free_port):
+    """WP12: a re-run records its own end as ``rerun_finished_utc`` (merged into session.json) and
+    never overwrites the main run's ``finished_utc``; the status and report readers do not care."""
+    from smallpc import analysis
+    from smallpc.sweep import status
+
+    sess, _, _ = run_session(
+        tmp_path, free_port, {"cache_miss_B": {"on": [1]}}, reps=2, canary=True
+    )
+    sj = sess.dir / "session.json"
+    before = json.loads(sj.read_text())
+    assert before["state"] == "complete" and before["finished_utc"]
+    assert "rerun_finished_utc" not in before
+    info_before = analysis.session_info(analysis.load_session(sess.dir))
+    status_before = status.report(sess.dir)
+
+    env2 = make_env(tmp_path, free_port)
+    sp = mini_spec(tmp_path, reps=2, canary=True)
+    s2 = Session(env2, load_sweep(sp), sp, "s1", mode="rerun")
+    assert s2.rerun_flagged() == 0
+    after = json.loads(sj.read_text())
+    assert after["finished_utc"] == before["finished_utc"]  # not overwritten
+    assert after["rerun_finished_utc"] and after["state"] == "complete"
+    assert after["created_utc"] == before["created_utc"]  # other keys are merged, not replaced
+    assert set(before) <= set(after)
+    info_after = analysis.session_info(analysis.load_session(sess.dir))
+    # the analysis reads no end time of the session: same keys, no finished_utc anywhere in it
+    assert set(info_after) == set(info_before)
+    assert info_after["created_utc"] == info_before["created_utc"]
+    assert "finished_utc" not in json.dumps(info_after) + json.dumps(info_before)
+    status_after = status.report(sess.dir)
+    # the status tool reads state, cell order and records, never the end time of the main run
+    assert status_after["state"] == status_before["state"] == "complete"
+    assert status_after["cells_done"] == status_before["cells_done"]
+    assert status_after["records"]["requests"] > status_before["records"]["requests"]
+
+
 def test_short_gen_is_not_rerun(tmp_path, free_port):
     sess, _, _ = run_session(tmp_path, free_port, {"short_gen_B": {"on": [0], "value": 50}}, reps=1)
     idx = rec.Index(sess.store.load())
