@@ -1,0 +1,224 @@
+{
+ "stage": "2a",
+ "sessions": [
+  "data/raw/s2a-32K",
+  "data/raw/s2a-64K",
+  "data/raw/s2a-128K"
+ ],
+ "keys": [
+  "best_draft_length",
+  "mtp_wins_on_t_turn_400",
+  "mtp_vs_off_winner",
+  "top_config_mtp",
+  "second_mtps"
+ ],
+ "treated_as_eligible": {
+  "s2a-P6-32K-b4096-mtp1": {
+   "reasons": [
+    "flagged unit(s) s2a-32K:4 (paging)",
+    "n_clean 4 is below 5 (final mode)"
+   ],
+   "n_clean": 4,
+   "n_total": 5
+  }
+ },
+ "by_rule": {
+  "32K": {
+   "best_draft_length": 2,
+   "tied_draft_lengths": [
+    2
+   ],
+   "mtp_wins_on_t_turn_400": true,
+   "mtp_vs_off_winner": "s2a-P6-32K-b4096-mtp2",
+   "off_minus_mtp": {
+    "n": 5,
+    "mean": 0.2883940850459483,
+    "ci": [
+     0.1213916721621473,
+     0.45539649792974934
+    ],
+    "ci_method": "t",
+    "excludes_zero": true,
+    "differences": [
+     0.2267767309941524,
+     0.4951140618212193,
+     0.30957548370927324,
+     0.2813418596491237,
+     0.12916228905597293
+    ]
+   },
+   "top_config_mtp": 2,
+   "second_mtps": [
+    2
+   ],
+   "borrowed_draft_lengths": [],
+   "human_decision_needed": []
+  },
+  "64K": {
+   "best_draft_length": 1,
+   "tied_draft_lengths": [
+    1,
+    2
+   ],
+   "mtp_wins_on_t_turn_400": true,
+   "mtp_vs_off_winner": "s2a-P6-64K-b4096-mtp1",
+   "off_minus_mtp": {
+    "n": 5,
+    "mean": 0.16845774907423613,
+    "ci": [
+     0.05183319905715855,
+     0.2850822990913137
+    ],
+    "ci_method": "t",
+    "excludes_zero": true,
+    "differences": [
+     0.17266634335839637,
+     0.03944562740183866,
+     0.2989250294146215,
+     0.1373406157059316,
+     0.19391112949039258
+    ]
+   },
+   "top_config_mtp": 1,
+   "second_mtps": [
+    1
+   ],
+   "borrowed_draft_lengths": [],
+   "human_decision_needed": []
+  },
+  "128K": {
+   "best_draft_length": null,
+   "tied_draft_lengths": null,
+   "mtp_wins_on_t_turn_400": null,
+   "mtp_vs_off_winner": null,
+   "off_minus_mtp": null,
+   "top_config_mtp": 0,
+   "second_mtps": [
+    1,
+    2
+   ],
+   "borrowed_draft_lengths": [
+    1,
+    2
+   ],
+   "human_decision_needed": []
+  }
+ },
+ "if_treated_eligible": {
+  "32K": {
+   "best_draft_length": 1,
+   "tied_draft_lengths": [
+    1,
+    2
+   ],
+   "mtp_wins_on_t_turn_400": true,
+   "mtp_vs_off_winner": "s2a-P6-32K-b4096-mtp1",
+   "off_minus_mtp": {
+    "n": 4,
+    "mean": 0.1866941401420219,
+    "ci": [
+     0.14184942594651478,
+     0.23153885433752902
+    ],
+    "ci_method": "t",
+    "excludes_zero": true,
+    "differences": [
+     0.19050814035087793,
+     0.22414874018379205,
+     0.17362598913951555,
+     0.15849369089390208
+    ]
+   },
+   "top_config_mtp": 1,
+   "second_mtps": [
+    1
+   ],
+   "borrowed_draft_lengths": [],
+   "human_decision_needed": []
+  },
+  "64K": {
+   "best_draft_length": 1,
+   "tied_draft_lengths": [
+    1,
+    2
+   ],
+   "mtp_wins_on_t_turn_400": true,
+   "mtp_vs_off_winner": "s2a-P6-64K-b4096-mtp1",
+   "off_minus_mtp": {
+    "n": 5,
+    "mean": 0.16845774907423613,
+    "ci": [
+     0.05183319905715855,
+     0.2850822990913137
+    ],
+    "ci_method": "t",
+    "excludes_zero": true,
+    "differences": [
+     0.17266634335839637,
+     0.03944562740183866,
+     0.2989250294146215,
+     0.1373406157059316,
+     0.19391112949039258
+    ]
+   },
+   "top_config_mtp": 1,
+   "second_mtps": [
+    1
+   ],
+   "borrowed_draft_lengths": [],
+   "human_decision_needed": []
+  },
+  "128K": {
+   "best_draft_length": null,
+   "tied_draft_lengths": null,
+   "mtp_wins_on_t_turn_400": null,
+   "mtp_vs_off_winner": null,
+   "off_minus_mtp": null,
+   "top_config_mtp": 0,
+   "second_mtps": [
+    1
+   ],
+   "borrowed_draft_lengths": [
+    1
+   ],
+   "human_decision_needed": []
+  }
+ },
+ "changes": {
+  "32K": {
+   "best_draft_length": {
+    "by_rule": 2,
+    "if_treated_eligible": 1
+   },
+   "mtp_vs_off_winner": {
+    "by_rule": "s2a-P6-32K-b4096-mtp2",
+    "if_treated_eligible": "s2a-P6-32K-b4096-mtp1"
+   },
+   "top_config_mtp": {
+    "by_rule": 2,
+    "if_treated_eligible": 1
+   },
+   "second_mtps": {
+    "by_rule": [
+     2
+    ],
+    "if_treated_eligible": [
+     1
+    ]
+   }
+  },
+  "128K": {
+   "second_mtps": {
+    "by_rule": [
+     1,
+     2
+    ],
+    "if_treated_eligible": [
+     1
+    ]
+   }
+  }
+ },
+ "decision_changes": true,
+ "note": "information only; the declared rule's result stands"
+}
