@@ -1,0 +1,13 @@
+{
+  "session_id": "s2a-128K",
+  "state": "complete",
+  "phase": "done",
+  "cells_total": 5,
+  "cells_done": 4,
+  "started_utc": "2026-11-10T18:12:53Z",
+  "updated_utc": "2026-11-10T19:20:10Z",
+  "cell": "canary-end",
+  "repetition": 105,
+  "depth": 16384,
+  "kind": "B"
+}

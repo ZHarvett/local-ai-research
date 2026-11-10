@@ -1,0 +1,125 @@
+{
+  "schema": 1,
+  "session_id": "s2a-128K",
+  "created_utc": "2026-11-10T18:12:53Z",
+  "spec": {
+    "name": "stage2-2a",
+    "path": "configs/sweeps/stage2-2a.toml"
+  },
+  "spec_sha256": "a4e031802c25d4053295b5677e939af5481b4151371b0bf77f2a82ece885e880",
+  "manifest_sha256": "ed750c1c73355d08d3f76742eb164721ebdfe7206ce2a7fcad89fd3bd5e9f27e",
+  "sampling_sha256": "09b6a27e5b086b3891ff66e0dd64f25deb12530e505cc69e4153c95716ee6743",
+  "git": {
+    "commit": "6ec38e010f61720412c19ab2e37a5a883f6698bc",
+    "short": "6ec38e010f",
+    "dirty": false,
+    "dirty_paths": []
+  },
+  "filters": {
+    "context": "128K"
+  },
+  "model_sha256": "42739874cc2ccfdb8523b23fbe52e29b2a7555c8176737ca9ca0b5d59859d41f",
+  "llama_cpp_commit": "57d04820dfef7a3519aac276d018a6fd71251895",
+  "allow_dirty": false,
+  "model": {
+    "sha256": "42739874cc2ccfdb8523b23fbe52e29b2a7555c8176737ca9ca0b5d59859d41f",
+    "verified": true,
+    "declared": "42739874cc2ccfdb8523b23fbe52e29b2a7555c8176737ca9ca0b5d59859d41f",
+    "size_bytes": 21713463040
+  },
+  "shuffle_seed": 20261109,
+  "cell_order": [
+    "s2a-P2-128K-b4096-mtp2",
+    "s2a-P2-128K-b4096-mtp1",
+    "s2a-P2-128K-b4096-mtp3",
+    "s2a-P6-128K-b4096-mtp0",
+    "s2a-P2-128K-b4096-mtp0"
+  ],
+  "cell_order_rule": "seeded shuffle respecting @n_fit dependencies (smallpc.sweep.spec.order_cells), not spec order",
+  "repetitions": 5,
+  "state": "complete",
+  "runs": [
+    {
+      "start_utc": "2026-11-10T18:12:53Z",
+      "pid": 830863,
+      "mode": "run",
+      "code_commit": "6ec38e010f",
+      "inhibit": {
+        "checked": true,
+        "active": true,
+        "tag": "smallpc-sweep-s2a-128K-1794334373",
+        "line": "local-ai-research sweep 1000 <user> 830850 systemd-inhibit sleep:idle smallpc-sweep-s2a-128K-1794334373 block"
+      }
+    }
+  ],
+  "inhibit": {
+    "checked": true,
+    "active": true,
+    "tag": "smallpc-sweep-s2a-128K-1794334373",
+    "line": "local-ai-research sweep 1000 <user> 830850 systemd-inhibit sleep:idle smallpc-sweep-s2a-128K-1794334373 block"
+  },
+  "drift": {
+    "main": {
+      "metrics": {
+        "pp_fresh_16k": {
+          "flag": null,
+          "relative_difference": 0.002114760180321068,
+          "threshold": 0.05,
+          "start_mean": 956.7057941058397,
+          "end_mean": 958.7289974234972,
+          "start_values": [
+            953.4149935447799,
+            956.1608647279821,
+            960.541524044757
+          ],
+          "end_values": [
+            965.7977669935076,
+            948.3512643535518,
+            962.037960923432
+          ]
+        },
+        "tg_16k": {
+          "flag": null,
+          "relative_difference": 0.006830649814155028,
+          "threshold": 0.05,
+          "start_mean": 78.68250654354699,
+          "end_mean": 78.14505389484806,
+          "start_values": [
+            78.2332232382084,
+            78.58193289102933,
+            79.23236350140324
+          ],
+          "end_values": [
+            78.15672362313416,
+            78.09206408481384,
+            78.18637397659622
+          ]
+        },
+        "tg_short": {
+          "flag": null,
+          "relative_difference": 0.0026102206257807934,
+          "threshold": 0.05,
+          "start_mean": 88.54248983850967,
+          "end_mean": 88.3113744052752,
+          "start_values": [
+            88.30803791269899,
+            88.30336699189158,
+            89.01606461093844
+          ],
+          "end_values": [
+            88.15047706198658,
+            88.53473024421828,
+            88.24891590962073
+          ]
+        }
+      },
+      "flag": null,
+      "decided_on": [
+        "pp_fresh_16k",
+        "tg_16k"
+      ],
+      "complete": true
+    }
+  },
+  "finished_utc": "2026-11-10T19:20:10Z"
+}

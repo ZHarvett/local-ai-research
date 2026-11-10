@@ -66,3 +66,12 @@ from the measurement telemetry.
 - Top 5 by CPU, ps lifetime average (names): chrome 4.9 %, missioncenter-m 3.5 %, missioncenter 2.4 %, antigravity-ide 1.3 %, claude 1.2 %.
 - Desktop apps open (names): antigravity-ide chrome claude cosmic-comp kilo spotify 
 - Also open: missioncenter (system monitor app), seen since the 64K session.
+
+### Session s2a-128K result (2026-11-10 18:12:53Z to 19:20:10Z)
+- Duration 67.3 min (runbook estimate 65 min). Runner exit 0, state complete, `systemd-inhibit` active, one run. Gate criteria a to e PASS.
+- Cells: 5 of 5 complete (P2-128K-b4096 mtp0 to mtp3, P6-128K-b4096 mtp0), none `did_not_fit`. No probe steps (P2 is a fit placement; P6-mtp0 read the Stage 1 probe).
+- Flags: `paging` only (35 request flags = 5 flagged windows of 25 measured attempt-1 windows, 20.0 %): P2-mtp2 repetitions 0, 1 (swap activity 551 and 319 MiB) and P2-mtp3 repetitions 0, 1, 2 (771, -1 and -16 MiB). Changed criterion f (at most 40 % flagged, no flagged window above 1,024 MiB swap activity): PASS (largest 771 MiB). No accounting, warm_prefill, cache_miss, thermal or short_gen flag; drift none.
+- Runner idle gate: first check passed every time (busy at most 0.97 %), no idle waits, no retries; MemAvailable at the checks 24.4 GiB or more.
+- **Lowest minimum free VRAM: 421 MiB (P2-128K-b4096-mtp1), 443 MiB (mtp3), 503 MiB (mtp2): three cells below the 512 MiB eligibility line**; P2-mtp0 549 MiB, P6-mtp0 1,381 MiB.
+- Polls (7 min apart): busy 1.7 to 7.4 % with the server's own share 3.1 to 6.6 % and everything else 0.6 to 3.2 % (one sample, taken as the server exited, has no valid server/other split). No interfering process identified; `missioncenter` open as before.
+- Lowest MemAvailable: 20.1 GiB (telemetry, P2-mtp1), 21.1 GiB at a poll. Highest CPU Tctl 74 °C, GPU 72 °C.
