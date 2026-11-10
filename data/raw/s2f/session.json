@@ -1,0 +1,124 @@
+{
+  "schema": 1,
+  "session_id": "s2f",
+  "created_utc": "2026-11-10T13:22:09Z",
+  "spec": {
+    "name": "stage2-2f",
+    "path": "configs/sweeps/stage2-2f.toml"
+  },
+  "spec_sha256": "b8a16bdd2a7bfb480b025c622e6eb77d666549d62271189e333f30add86c7a2d",
+  "manifest_sha256": "ed750c1c73355d08d3f76742eb164721ebdfe7206ce2a7fcad89fd3bd5e9f27e",
+  "sampling_sha256": "09b6a27e5b086b3891ff66e0dd64f25deb12530e505cc69e4153c95716ee6743",
+  "git": {
+    "commit": "7b7daf148a305fb87a4899d68bece23682369438",
+    "short": "7b7daf148a",
+    "dirty": false,
+    "dirty_paths": []
+  },
+  "filters": {},
+  "model_sha256": "42739874cc2ccfdb8523b23fbe52e29b2a7555c8176737ca9ca0b5d59859d41f",
+  "llama_cpp_commit": "57d04820dfef7a3519aac276d018a6fd71251895",
+  "allow_dirty": false,
+  "model": {
+    "sha256": "42739874cc2ccfdb8523b23fbe52e29b2a7555c8176737ca9ca0b5d59859d41f",
+    "verified": true,
+    "declared": "42739874cc2ccfdb8523b23fbe52e29b2a7555c8176737ca9ca0b5d59859d41f",
+    "size_bytes": 21713463040
+  },
+  "shuffle_seed": 20261109,
+  "cell_order": [
+    "s2f-P2-128K-b4096-mtp0-cram4096",
+    "s2f-P6-64K-b4096-mtp0-cram8192",
+    "s2f-P2-128K-b4096-mtp0-cram2048",
+    "s2f-P2-128K-b4096-mtp0-cram8192",
+    "s2f-P6-64K-b4096-mtp0-cram2048",
+    "s2f-P2-128K-b4096-mtp0-cram0"
+  ],
+  "cell_order_rule": "seeded shuffle respecting @n_fit dependencies (smallpc.sweep.spec.order_cells), not spec order",
+  "repetitions": 5,
+  "state": "complete",
+  "runs": [
+    {
+      "start_utc": "2026-11-10T13:22:09Z",
+      "pid": 757888,
+      "mode": "run",
+      "code_commit": "7b7daf148a",
+      "inhibit": {
+        "checked": true,
+        "active": true,
+        "tag": "smallpc-sweep-s2f-1794316929",
+        "line": "local-ai-research sweep 1000 <user> 757875 systemd-inhibit sleep:idle smallpc-sweep-s2f-1794316929 block"
+      }
+    }
+  ],
+  "inhibit": {
+    "checked": true,
+    "active": true,
+    "tag": "smallpc-sweep-s2f-1794316929",
+    "line": "local-ai-research sweep 1000 <user> 757875 systemd-inhibit sleep:idle smallpc-sweep-s2f-1794316929 block"
+  },
+  "drift": {
+    "main": {
+      "metrics": {
+        "pp_fresh_16k": {
+          "flag": null,
+          "relative_difference": 0.011931107426107904,
+          "threshold": 0.05,
+          "start_mean": 945.0003911181184,
+          "end_mean": 956.2752923022626,
+          "start_values": [
+            950.5673089436002,
+            941.1661441444434,
+            943.2677202663119
+          ],
+          "end_values": [
+            959.7223553217378,
+            952.6599412193001,
+            956.4435803657498
+          ]
+        },
+        "tg_16k": {
+          "flag": null,
+          "relative_difference": 0.002260810320677737,
+          "threshold": 0.05,
+          "start_mean": 78.40153661026335,
+          "end_mean": 78.57878761338883,
+          "start_values": [
+            78.68894359205758,
+            78.45188284518828,
+            78.06378339354418
+          ],
+          "end_values": [
+            78.33385654067088,
+            78.9183713067834,
+            78.48413499271219
+          ]
+        },
+        "tg_short": {
+          "flag": null,
+          "relative_difference": 0.004316168333659209,
+          "threshold": 0.05,
+          "start_mean": 88.56932664191105,
+          "end_mean": 88.95160676489638,
+          "start_values": [
+            88.88819580354149,
+            88.68233387898529,
+            88.13745024320635
+          ],
+          "end_values": [
+            88.74118954562066,
+            88.85931365867869,
+            89.25431709038979
+          ]
+        }
+      },
+      "flag": null,
+      "decided_on": [
+        "pp_fresh_16k",
+        "tg_16k"
+      ],
+      "complete": true
+    }
+  },
+  "finished_utc": "2026-11-10T14:26:03Z"
+}
