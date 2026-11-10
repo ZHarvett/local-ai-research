@@ -87,3 +87,9 @@ Machine conditions of the three Stage 1 screening sessions (WP11 part 2, plan v1
   Attempt 2 is clean (7 requests, no flags). `code_commit_changed` warning recorded, as expected. Machine: MemAvailable 25.3 GiB
   before, 22.6 to 26.1 GiB at the two polls; CPU busy 0.4 to 7.2 % (never above 10 %); apps open: chrome, claude, antigravity-ide, cosmic-comp.
   Note: a completed re-run sets `finished_utc` in `session.json` to the end of the re-run.
+- **stage1-128K** (2026-11-10 08:57 to 09:48 UTC, code commit `60c3bfc6e7`, tree clean): planned and ran the 14 paging-flagged
+  units (repetition 1 of P1-b2048, P2, P3, P4, P5, P6, P7 at both batches where flagged, and stock-128K) as attempt 2, plus its own
+  start and end canaries (re-run drift: no flag). All 14 attempt-2 units are clean (98 requests, no flags). Machine: MemAvailable
+  25.7 GiB before, 21.5 to 26.0 GiB at the 8 polls; CPU busy 6.7 to 7.3 % at every poll (never above 10 %); apps open: chrome,
+  claude, antigravity-ide, cosmic-comp. Each attempt-2 unit ran as the first measured repetition of a fresh server (attempt 1 was the
+  second repetition of a long-running one).

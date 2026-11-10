@@ -2,13 +2,14 @@
   "session_id": "stage1-128K",
   "state": "complete",
   "phase": "done",
-  "cells_total": 19,
-  "cells_done": 18,
+  "cells_total": 14,
+  "cells_done": 0,
   "started_utc": "2026-11-10T01:21:54Z",
-  "updated_utc": "2026-11-10T03:33:36Z",
-  "cell": "canary-end",
-  "repetition": 105,
+  "updated_utc": "2026-11-10T09:48:07Z",
+  "cell": "canary-rerun-end",
+  "repetition": 115,
   "depth": 16384,
   "kind": "B",
-  "probe": "max_fit=9728"
+  "probe": "max_fit=9728",
+  "mode": "rerun"
 }
