@@ -1,0 +1,231 @@
+{
+  "schema": 1,
+  "snapshot_id": "df1c18a3a266c0b1",
+  "identity": {
+    "kernel": "7.3.1-1-cachyos",
+    "driver_version": "615.78.08",
+    "cuda": {
+      "driver_supports_cuda": "13.4",
+      "nvcc_release": "13.4 (V13.4.92)"
+    },
+    "cpu": {
+      "scaling_driver": "amd-pstate-epp",
+      "governor": {
+        "performance": 16
+      },
+      "epp": {
+        "performance": 16
+      },
+      "amd_pstate_status": "active",
+      "boost": "1",
+      "model": "AMD Ryzen 7 9700X 8-Core Processor",
+      "logical_cpus": 16
+    },
+    "gpu": {
+      "name": "NVIDIA GeForce RTX 5060 Ti",
+      "driver_version": "615.78.08",
+      "persistence_mode": "Disabled",
+      "pcie_gen_max": "4",
+      "pcie_gen_gpu_max": "5",
+      "pcie_gen_host_max": "4",
+      "pcie_width_max": "8",
+      "power_limit_w": "180.00",
+      "power_default_limit_w": "180.00",
+      "power_max_limit_w": "180.00",
+      "memory_total_mib": "16311",
+      "clock_graphics_max_mhz": "3090",
+      "clock_memory_max_mhz": "14001"
+    },
+    "pcie_note": "pcie_gen_max is what the card/driver report as the current maximum; gpumax is the card's own maximum and hostmax what the host side allows. The link downshifts at idle (Gen1 in P8), so the current link is only meaningful under load (microbench pcie.json).",
+    "memory_tuning": {
+      "swappiness": "150",
+      "thp_enabled": "always",
+      "thp_defrag": "defer+madvise",
+      "mem_total_kib": 31937292
+    },
+    "llama_cpp": {
+      "tag": "b12208",
+      "commit": "57d04820dfef7a3519aac276d018a6fd71251895",
+      "build_date": "2026-11-08T15:42:22Z",
+      "binaries_sha256": {
+        "llama-server": "c6b14a4bb904b323d927254ba8b092296d57a4eaddffa38f2e88f21865144e0b",
+        "llama-bench": "bb692e886be18c1603e1b3b1f04ebb6cbf4a1cee6092495e2f3ac2f22bd86ca9",
+        "llama-cli": "44b6f66c6d47af38a19bfa6f0a59088e7dc4a2ae471d3a6ef793136b49bc1b2c"
+      },
+      "cmake_flags": [
+        "-G",
+        "Ninja",
+        "-DGGML_CUDA=ON",
+        "-DCMAKE_CUDA_ARCHITECTURES=120",
+        "-DGGML_NATIVE=ON",
+        "-DCMAKE_BUILD_TYPE=Release",
+        "-DCMAKE_CUDA_COMPILER=/opt/cuda/bin/nvcc",
+        "-DCMAKE_CUDA_HOST_COMPILER=/usr/bin/g++"
+      ],
+      "nvcc": "Cuda compilation tools, release 13.4, V13.4.92 Build cuda_13.4.r13.4/compiler.38855100_0"
+    },
+    "model": {
+      "repo": "ornith-ai/Ornith-1.5-35B-A3B-GGUF",
+      "revision": "f60452672689e0040be350560267a614cc172a18",
+      "file": "Ornith-1.5-35B-Q4_K_M.gguf",
+      "size_bytes": 21713463040,
+      "sha256": "42739874cc2ccfdb8523b23fbe52e29b2a7555c8176737ca9ca0b5d59859d41f",
+      "base_repo": "ornith-ai/Ornith-1.5-35B-A3B",
+      "base_revision": "10fbf86fed7ecee4a061f8b499a618f46001cac1"
+    },
+    "harnesses": {
+      "node": "26.13.0",
+      "npm": "12.2.1",
+      "lockfile_sha256": "d21af6e8f2daea1e6903e42b81268f4fde9385fbade49e78eec7d190e79ccb77",
+      "plugins_version": "0.2.1-rc.5",
+      "plugins_count": 295,
+      "age_check": {
+        "cutoff_utc": "2026-11-01T18:25:11Z",
+        "packages_checked": 643,
+        "too_new": 0
+      },
+      "opencode": {
+        "package": "opencode-ai",
+        "pinned_version": "1.19.5",
+        "published_utc": "2026-10-28T06:17:11.100Z",
+        "integrity": "sha512-tEqMvQahfhdDj8vceYpXtoIrvjPXm5XRfetWnPN5YISueU7adNx9JcUA3zZ+2GKuDVgDpGdQe1ZLtCZDjqodvA==",
+        "installed_version": "1.19.5"
+      },
+      "dsh": {
+        "package": "@deepseek-ai/dsh",
+        "pinned_version": "0.2.1-rc.5",
+        "published_utc": "2026-10-29T14:15:23.355Z",
+        "integrity": "sha512-WkyJZv4zl9sCAxSzRctGm58m0rilGqwR6pniBiLOz5CPDfHfDuAUicg0AAazXI7oj/Cph6/cjNTncA/rpLTXpw==",
+        "installed_version": "0.2.1-rc.5"
+      }
+    },
+    "bios_manual_fields": {
+      "expo": "enabled; re-checked by Zack after the BIOS change (around 2026-11-08): dmidecode shows 6000 MT/s configured speed",
+      "igpu": "BIOS (Gigabyte board): Settings > IO Ports > Integrated Graphics = Forced, Initial Display Output = IGD Video, UMA Mode = Auto; set by Zack in the BIOS around 2026-11-08 (exact date unknown, previous values unknown); both monitors are plugged into the motherboard outputs",
+      "pbo_eco_mode": "BIOS default, never changed by Zack; exact mode not recorded"
+    },
+    "display": {
+      "connected_on_nvidia": [],
+      "connected_on_amdgpu": [
+        "card2-HDMI-A-2"
+      ],
+      "connectors": [
+        {
+          "connector": "card1-DP-1",
+          "status": "disconnected",
+          "gpu": "NVIDIA"
+        },
+        {
+          "connector": "card1-DP-2",
+          "status": "disconnected",
+          "gpu": "NVIDIA"
+        },
+        {
+          "connector": "card1-DP-3",
+          "status": "disconnected",
+          "gpu": "NVIDIA"
+        },
+        {
+          "connector": "card1-HDMI-A-1",
+          "status": "disconnected",
+          "gpu": "NVIDIA"
+        },
+        {
+          "connector": "card2-DP-4",
+          "status": "disconnected",
+          "gpu": "AMD (amdgpu)"
+        },
+        {
+          "connector": "card2-DP-5",
+          "status": "disconnected",
+          "gpu": "AMD (amdgpu)"
+        },
+        {
+          "connector": "card2-DP-6",
+          "status": "disconnected",
+          "gpu": "AMD (amdgpu)"
+        },
+        {
+          "connector": "card2-HDMI-A-2",
+          "status": "connected",
+          "gpu": "AMD (amdgpu)"
+        },
+        {
+          "connector": "card2-Writeback-1",
+          "status": "unknown",
+          "gpu": "AMD (amdgpu)"
+        }
+      ]
+    },
+    "desktop_gpu_steering": {
+      "gpu_process_names": [],
+      "mechanism": "BIOS: Integrated Graphics = Forced, Initial Display Output = IGD Video (docs/environment.md)"
+    }
+  },
+  "state": {
+    "timestamp_utc": "2026-11-09T23:17:40Z",
+    "gpu": {
+      "pcie_gen_current": "4",
+      "pcie_width_current": "8",
+      "clock_graphics_mhz": "2842",
+      "clock_memory_mhz": "13801",
+      "temperature_c": "31",
+      "pstate": "P1",
+      "memory_used_mib": "14874"
+    },
+    "gpu_processes": [
+      {
+        "pid": 386687,
+        "type": "C",
+        "name": "/mnt/data/local-ai-research/third_party/llama.cpp/build/bin/llama-server",
+        "vram_mib": 14864.0
+      }
+    ],
+    "gpu_processes_compute": [
+      {
+        "pid": 386687,
+        "type": "C",
+        "name": "/mnt/data/local-ai-research/third_party/llama.cpp/build/bin/llama-server",
+        "vram_mib": 14864.0
+      }
+    ],
+    "gpu_processes_graphics": [],
+    "llama_server_pids": [
+      386687
+    ],
+    "desktop_gpu_steering": {
+      "memory_used_mib_before_any_server": null,
+      "note": "a llama-server was running: memory.used includes it",
+      "processes_on_card": [
+        {
+          "pid": 386687,
+          "type": "C",
+          "name": "/mnt/data/local-ai-research/third_party/llama.cpp/build/bin/llama-server",
+          "vram_mib": 14864.0
+        }
+      ]
+    },
+    "memory": {
+      "mem_total_kib": 31937292,
+      "mem_available_kib": 26752152,
+      "mem_available_gib": 25.51,
+      "cached_kib": 25782696,
+      "swap_total_kib": 31936508,
+      "swap_used_kib": 2370036,
+      "zram_bytes_name_disksize_data_compr_total": "/dev/zram0 32702988288 2318237696 602493953 623349760",
+      "vmstat": {
+        "pswpin": 2067942,
+        "pswpout": 6243479,
+        "pgmajfault": 2267531
+      },
+      "swappiness": "150",
+      "thp_enabled": "always",
+      "thp_defrag": "defer+madvise"
+    },
+    "loadavg": "1.75 0.77 1.02 1/1687 386902",
+    "gpu_lock": {
+      "held": true,
+      "file": "/mnt/data/local-ai-research/.locks/gpu.lock"
+    }
+  }
+}

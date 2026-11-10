@@ -1,0 +1,4 @@
+profile = "stock"
+context = 32768
+metrics = true
+log_verbosity = 4

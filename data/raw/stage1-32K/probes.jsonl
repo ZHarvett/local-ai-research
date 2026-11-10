@@ -1,0 +1,10 @@
+{"utc": "2026-11-09T23:23:10Z", "kind": "max_fit", "cell": "P7-32K-b2048", "value": 4096, "ok": true, "free_mib": 9547.0, "reason": null, "detail": {"total_mib": 16311.0}, "seconds": 27.3}
+{"utc": "2026-11-09T23:23:37Z", "kind": "max_fit", "cell": "P7-32K-b2048", "value": 13056, "ok": false, "free_mib": 589.0, "reason": "fit_intervened", "detail": {"required_reduction_mib": 625}, "seconds": 27.3}
+{"utc": "2026-11-09T23:24:04Z", "kind": "max_fit", "cell": "P7-32K-b2048", "value": 12800, "ok": false, "free_mib": 843.0, "reason": "fit_intervened", "detail": {"required_reduction_mib": 371}, "seconds": 27.3}
+{"utc": "2026-11-09T23:24:32Z", "kind": "max_fit", "cell": "P7-32K-b2048", "value": 12544, "ok": false, "free_mib": 1101.0, "reason": "fit_intervened", "detail": {"required_reduction_mib": 113}, "seconds": 27.3}
+{"utc": "2026-11-09T23:24:59Z", "kind": "max_fit", "cell": "P7-32K-b2048", "value": 12288, "ok": true, "free_mib": 1355.0, "reason": null, "detail": {"total_mib": 16311.0}, "seconds": 27.3}
+{"utc": "2026-11-09T23:35:43Z", "kind": "max_fit", "cell": "P6-32K-b4096", "value": 4096, "ok": true, "free_mib": 8803.0, "reason": null, "detail": {"total_mib": 16311.0}, "seconds": 19.8}
+{"utc": "2026-11-09T23:36:03Z", "kind": "max_fit", "cell": "P6-32K-b4096", "value": 12288, "ok": false, "free_mib": 611.0, "reason": "fit_intervened", "detail": {"required_reduction_mib": 563}, "seconds": 19.8}
+{"utc": "2026-11-09T23:36:22Z", "kind": "max_fit", "cell": "P6-32K-b4096", "value": 12032, "ok": false, "free_mib": 867.0, "reason": "fit_intervened", "detail": {"required_reduction_mib": 309}, "seconds": 19.8}
+{"utc": "2026-11-09T23:36:42Z", "kind": "max_fit", "cell": "P6-32K-b4096", "value": 11776, "ok": false, "free_mib": 1125.0, "reason": "fit_intervened", "detail": {"required_reduction_mib": 51}, "seconds": 19.8}
+{"utc": "2026-11-09T23:37:02Z", "kind": "max_fit", "cell": "P6-32K-b4096", "value": 11520, "ok": true, "free_mib": 1379.0, "reason": null, "detail": {"total_mib": 16311.0}, "seconds": 19.8}

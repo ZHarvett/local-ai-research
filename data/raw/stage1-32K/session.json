@@ -1,0 +1,139 @@
+{
+  "schema": 1,
+  "session_id": "stage1-32K",
+  "created_utc": "2026-11-09T23:17:12Z",
+  "spec": {
+    "name": "stage1",
+    "path": "configs/sweeps/stage1.toml"
+  },
+  "spec_sha256": "0b0cd1789469c61682201ac5eade0dfe05d12f80530eea24b5fe4de4a0c90185",
+  "manifest_sha256": "ed750c1c73355d08d3f76742eb164721ebdfe7206ce2a7fcad89fd3bd5e9f27e",
+  "sampling_sha256": "09b6a27e5b086b3891ff66e0dd64f25deb12530e505cc69e4153c95716ee6743",
+  "git": {
+    "commit": "77fbe02fd10867b7a9c8ebdd33a884e856ecec56",
+    "short": "77fbe02fd1",
+    "dirty": false,
+    "dirty_paths": []
+  },
+  "filters": {
+    "context": "32K"
+  },
+  "model_sha256": "42739874cc2ccfdb8523b23fbe52e29b2a7555c8176737ca9ca0b5d59859d41f",
+  "llama_cpp_commit": "57d04820dfef7a3519aac276d018a6fd71251895",
+  "allow_dirty": false,
+  "model": {
+    "sha256": "42739874cc2ccfdb8523b23fbe52e29b2a7555c8176737ca9ca0b5d59859d41f",
+    "verified": true,
+    "declared": "42739874cc2ccfdb8523b23fbe52e29b2a7555c8176737ca9ca0b5d59859d41f",
+    "size_bytes": 21713463040
+  },
+  "shuffle_seed": 20261109,
+  "cell_order": [
+    "P3-32K-b2048",
+    "P7-32K-b2048",
+    "P6-32K-b2048",
+    "P5-32K-b4096",
+    "P2-32K-b2048",
+    "P5-32K-b2048",
+    "P6-32K-b4096",
+    "P4-32K-b2048",
+    "P7-32K-b4096",
+    "P3-32K-b4096",
+    "P4-32K-b4096",
+    "P1-32K-b2048",
+    "P8-32K-b2048",
+    "P1-32K-b4096",
+    "stock-32K",
+    "P2-32K-b4096",
+    "P8-32K-b4096",
+    "P9-32K-b4096",
+    "P9-32K-b2048"
+  ],
+  "cell_order_rule": "seeded shuffle respecting @n_fit dependencies (smallpc.sweep.spec.order_cells), not spec order",
+  "repetitions": 2,
+  "state": "complete",
+  "runs": [
+    {
+      "start_utc": "2026-11-09T23:17:12Z",
+      "pid": 386593,
+      "mode": "run",
+      "code_commit": "77fbe02fd1",
+      "inhibit": {
+        "checked": true,
+        "active": true,
+        "tag": "smallpc-sweep-stage1-32K-1794266232",
+        "line": "local-ai-research sweep 1000 <user> 386580 systemd-inhibit sleep:idle smallpc-sweep-stage1-32K-1794266232 block"
+      }
+    }
+  ],
+  "inhibit": {
+    "checked": true,
+    "active": true,
+    "tag": "smallpc-sweep-stage1-32K-1794266232",
+    "line": "local-ai-research sweep 1000 <user> 386580 systemd-inhibit sleep:idle smallpc-sweep-stage1-32K-1794266232 block"
+  },
+  "drift": {
+    "main": {
+      "metrics": {
+        "pp_fresh_16k": {
+          "flag": null,
+          "relative_difference": 0.0039044499591720716,
+          "threshold": 0.05,
+          "start_mean": 960.2166134047251,
+          "end_mean": 956.4674956877207,
+          "start_values": [
+            963.3102501055384,
+            956.428282093338,
+            960.9113080152988
+          ],
+          "end_values": [
+            959.8047772080109,
+            953.1716052133553,
+            956.4261046417956
+          ]
+        },
+        "tg_16k": {
+          "flag": null,
+          "relative_difference": 0.010110299794412922,
+          "threshold": 0.05,
+          "start_mean": 78.0680537166842,
+          "end_mean": 78.85734514412621,
+          "start_values": [
+            78.08998549757413,
+            77.99183724530485,
+            78.12233840717363
+          ],
+          "end_values": [
+            78.96950925892757,
+            78.74178909633436,
+            78.86073707711671
+          ]
+        },
+        "tg_short": {
+          "flag": null,
+          "relative_difference": 0.00861317893540712,
+          "threshold": 0.05,
+          "start_mean": 88.19240376137908,
+          "end_mean": 88.95202071571951,
+          "start_values": [
+            88.23170397312448,
+            88.36747403679453,
+            87.97803327421828
+          ],
+          "end_values": [
+            88.91192527298077,
+            88.92983970563554,
+            89.0142971685422
+          ]
+        }
+      },
+      "flag": null,
+      "decided_on": [
+        "pp_fresh_16k",
+        "tg_16k"
+      ],
+      "complete": true
+    }
+  },
+  "finished_utc": "2026-11-10T00:06:51Z"
+}
