@@ -279,3 +279,22 @@ Newest entry last. Each entry: date, WP, status, commit, key results, open issue
   - Screening CIs at n = 2 are wide for the expert-cache cells (P3 to P7: repetition-to-repetition TG differences of up to 10 to 15 %, in unflagged sessions too) and t-intervals can go below zero (`T_B` of P4-64K-b4096).
   - Output sanity check not run (allowed in screening); P2-128K-b4096 is shortlisted with 551 MiB minimum free VRAM, 39 MiB above the line.
   - `smallpc.paging_analysis` banner still says "Functional-test data (WP9 mini-sweep)" on the Stage 1 outputs (tool label, not changed); a completed re-run sets `finished_utc` in `session.json` to the end of the re-run.
+
+---
+
+## 2026-11-10 — WP12 (part 1): Plan v1.6, Stage 2 tooling and pre-flight
+
+- **Status:** done; no real Stage 2 session was started. All acceptance criteria pass; CI commands pass locally (848 tests, ruff check and format, shellcheck, `scrub --check` 0 findings in 2,631 files).
+- **Commits:** `2fc89c1` (`Plan v1.6`), `9aaf59a` (`WP12: record decisions`), `be53d79` (`WP12: label and finished_utc fixes`), `debe751` (`WP12: stage 2 tooling`), `b852e5b` (`WP12: stage 2 checks and runbook`), then `WP12: progress log (part 1)` (this entry).
+- **Part A:** plan v1.6 adopted (line 3 `*Version 1.6 · 10 November 2026*`). `paging_analysis` takes `--label` (Stage 1 outputs regenerated with `screening`; only the banner and note lines changed); a completed re-run writes `rerun_finished_utc` and leaves `finished_utc` alone (tests fail on the old code).
+- **Part B (`smallpc.stage2`, `smallpc.sanity run`, `docs/runbook-stage2.md`):** spec generator (2f 6 cells, 2a 15, 2a2 9 or 6, 2b 2, 2c 2, 2d 2 or "not needed", functional-test presets, `configs/sweeps/stage2-2f.toml` generated), decision tool (2f, 2a, 2a2, 2b, 2c, 2d; refuses `allow_dirty`, functional-test spec headers, `ft-` ids and incomplete sessions; provenance in every output), gate (`stage2 gate`), sanity runner, llama-bench wrapper, `stage2 smoke`; `hostcache` moved out of `tools/stage1_diagnostics.py` (output byte-identical).
+- **Pre-flight findings** (all functional-test data):
+  - `--cache-ram 0` is documented and logged as disabled (no prompt cache, no `cache state` line); 8192 prints the cache state (1,740 MiB after 5 prompts). "Decision models" in the help text are not MTP.
+  - MTP at 32K (P6-32K-b4096): max-fit 10,752 MiB against 11,520 MiB without MTP; the MTP head and draft context cost 962 MiB (n = 1) and 1,088 MiB (n = 3) of VRAM; acceptance 80.2% (n = 1) and 52.2% (n = 3); PP_fresh about 9% lower than the Stage 1 cell (anecdotal); no errors in the logs.
+  - Sanity runner: P6-32K-b4096 passes against P1-32K-b2048 (47 s).
+  - Load mode: alternative to `auto` is `dio` (the model becomes 18.9 GiB of pinned `CUDA_Host` memory instead of 20.4 GiB of evictable file pages); `none` behaves the same but fills the page cache. `mlock` modes are out (8 MiB limit).
+  - Threads: the default is 8 in all 82 Stage 1 logs, so 2d is not needed.
+  - llama-bench default cell: P2-64K-b4096 (nothing inexpressible, one approximation); 1 repetition takes 175 s.
+  - Estimates: Stage 2 about 6.1 h (2f 64 min, 2a 2.4 h, 2a2 1.5 h, 2b 22, 2c 25, sanity 7, 2e 14 min); upper bound 7.1 h.
+- **Differences from plan v1.6's assumptions:** the 2a2 anchor and same-session comparators add cells (confirmed by Zack); 2a is about 2.4 h, not 4 h; the cross-check cell is a P2 cell, not P8/P9; P6 with MTP probes about 768 MiB lower; the pinned-memory behaviour of `dio` was not anticipated.
+- **Open issues:** (1) 2f combined value across 128K and 64K is the tool's interpretation (smallest; human confirms when they differ). (2) 2c with `dio` pins 18.9 GiB: the machine may be short of memory for the desktop apps; the paging table will show it. (3) The probe step count for MTP at 64K is assumed (5). (4) `--rerun-flagged` must not run before the 2f decision.
