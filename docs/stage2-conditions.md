@@ -58,3 +58,11 @@ from the measurement telemetry.
 - Polls (7 min apart): busy 0.6 to 14.7 %, of which the server's own share 0.0 to 14.5 % and everything else 0.2 to 1.1 %. `missioncenter` (a system-monitor app) was running at the start (top-CPU list, lifetime average 3.6 %), not in the 32K list. No interfering process identified.
 - Lowest MemAvailable: 21.1 GiB (telemetry, P6-mtp3), 21.4 GiB at a poll. Highest CPU Tctl 75 °C, GPU 71 °C.
 - Stopped here by the continuation's stop rule: the 128K session was not started, no re-run and no decision were made.
+
+## Session s2a-128K (2a MTP, 128K), Phase 0 conditions, 2026-11-10T18:12Z
+- pgrep llama-server: empty. GPU lock: free. nvidia-smi memory.used: 3 MiB. MemAvailable: 24.3 GiB. Swap in use: 2.83 GiB of 30.46 GiB.
+- CPU busy over 10 s: 1.22 %. Load average (1 min): 0.85.
+- Top 5 by memory (names): chrome 0.42 GiB, chrome 0.39 GiB, claude 0.35 GiB, chrome 0.33 GiB, antigravity-ide 0.32 GiB.
+- Top 5 by CPU, ps lifetime average (names): chrome 4.9 %, missioncenter-m 3.5 %, missioncenter 2.4 %, antigravity-ide 1.3 %, claude 1.2 %.
+- Desktop apps open (names): antigravity-ide chrome claude cosmic-comp kilo spotify 
+- Also open: missioncenter (system monitor app), seen since the 64K session.
