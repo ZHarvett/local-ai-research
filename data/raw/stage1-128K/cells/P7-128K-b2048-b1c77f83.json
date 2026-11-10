@@ -33,8 +33,54 @@
     "4"
   ],
   "resolved_config": "resolved/P7-128K-b2048.toml",
-  "coords": {},
-  "resolution": {},
+  "coords": {
+    "placement": "P7",
+    "context": "128K",
+    "batch": "b2048"
+  },
+  "resolution": {
+    "moe_cache_mib": {
+      "source": "binary_search",
+      "probe_key": "20371e56e5ee287e74b0",
+      "n_steps": 5,
+      "steps": [
+        {
+          "value": 4096,
+          "ok": true,
+          "free_mib": 8015.0,
+          "reason": null
+        },
+        {
+          "value": 11520,
+          "ok": false,
+          "free_mib": 591.0,
+          "reason": "fit_intervened"
+        },
+        {
+          "value": 11264,
+          "ok": false,
+          "free_mib": 849.0,
+          "reason": "fit_intervened"
+        },
+        {
+          "value": 11008,
+          "ok": false,
+          "free_mib": 1103.0,
+          "reason": "fit_intervened"
+        },
+        {
+          "value": 10752,
+          "ok": true,
+          "free_mib": 1361.0,
+          "reason": null
+        }
+      ],
+      "verified": true,
+      "token": "max_fit-2048",
+      "base": 10752,
+      "value": 8704
+    }
+  },
   "model_sha256": "42739874cc2ccfdb8523b23fbe52e29b2a7555c8176737ca9ca0b5d59859d41f",
   "llama_cpp_commit": "57d04820dfef7a3519aac276d018a6fd71251895",
   "instances": [

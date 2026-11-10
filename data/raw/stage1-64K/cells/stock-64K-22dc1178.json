@@ -18,7 +18,9 @@
     "4"
   ],
   "resolved_config": "resolved/stock-64K.toml",
-  "coords": {},
+  "coords": {
+    "context": "64K"
+  },
   "resolution": {},
   "model_sha256": "42739874cc2ccfdb8523b23fbe52e29b2a7555c8176737ca9ca0b5d59859d41f",
   "llama_cpp_commit": "57d04820dfef7a3519aac276d018a6fd71251895",

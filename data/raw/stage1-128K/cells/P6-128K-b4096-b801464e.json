@@ -33,8 +33,54 @@
     "4"
   ],
   "resolved_config": "resolved/P6-128K-b4096.toml",
-  "coords": {},
-  "resolution": {},
+  "coords": {
+    "placement": "P6",
+    "context": "128K",
+    "batch": "b4096"
+  },
+  "resolution": {
+    "moe_cache_mib": {
+      "source": "binary_search",
+      "probe_key": "01475d56ccfc06047086",
+      "n_steps": 5,
+      "steps": [
+        {
+          "value": 4096,
+          "ok": true,
+          "free_mib": 7017.0,
+          "reason": null
+        },
+        {
+          "value": 10496,
+          "ok": false,
+          "free_mib": 617.0,
+          "reason": "fit_intervened"
+        },
+        {
+          "value": 10240,
+          "ok": false,
+          "free_mib": 875.0,
+          "reason": "fit_intervened"
+        },
+        {
+          "value": 9984,
+          "ok": false,
+          "free_mib": 1129.0,
+          "reason": "fit_intervened"
+        },
+        {
+          "value": 9728,
+          "ok": true,
+          "free_mib": 1387.0,
+          "reason": null
+        }
+      ],
+      "verified": true,
+      "token": "max_fit",
+      "base": 9728,
+      "value": 9728
+    }
+  },
   "model_sha256": "42739874cc2ccfdb8523b23fbe52e29b2a7555c8176737ca9ca0b5d59859d41f",
   "llama_cpp_commit": "57d04820dfef7a3519aac276d018a6fd71251895",
   "instances": [

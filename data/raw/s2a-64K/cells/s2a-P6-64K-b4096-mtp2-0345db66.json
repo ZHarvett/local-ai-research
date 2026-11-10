@@ -39,8 +39,49 @@
     "4"
   ],
   "resolved_config": "resolved/s2a-P6-64K-b4096-mtp2.toml",
-  "coords": {},
-  "resolution": {},
+  "coords": {
+    "placement": "P6",
+    "context": "64K",
+    "batch": "b4096",
+    "mtp": "mtp2"
+  },
+  "resolution": {
+    "moe_cache_mib": {
+      "source": "binary_search",
+      "probe_key": "04f06652e69412fc337c",
+      "n_steps": 4,
+      "steps": [
+        {
+          "value": 4096,
+          "ok": true,
+          "free_mib": 6921.0,
+          "reason": null
+        },
+        {
+          "value": 10496,
+          "ok": false,
+          "free_mib": 523.0,
+          "reason": "fit_intervened"
+        },
+        {
+          "value": 10240,
+          "ok": false,
+          "free_mib": 777.0,
+          "reason": "fit_intervened"
+        },
+        {
+          "value": 9984,
+          "ok": true,
+          "free_mib": 1033.0,
+          "reason": null
+        }
+      ],
+      "verified": true,
+      "token": "max_fit",
+      "base": 9984,
+      "value": 9984
+    }
+  },
   "model_sha256": "42739874cc2ccfdb8523b23fbe52e29b2a7555c8176737ca9ca0b5d59859d41f",
   "llama_cpp_commit": "57d04820dfef7a3519aac276d018a6fd71251895",
   "instances": [

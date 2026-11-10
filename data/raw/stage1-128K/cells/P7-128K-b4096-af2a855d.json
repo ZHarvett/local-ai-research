@@ -33,8 +33,22 @@
     "4"
   ],
   "resolved_config": "resolved/P7-128K-b4096.toml",
-  "coords": {},
-  "resolution": {},
+  "coords": {
+    "placement": "P7",
+    "context": "128K",
+    "batch": "b4096"
+  },
+  "resolution": {
+    "moe_cache_mib": {
+      "source": "probe_cache",
+      "probe_key": "01475d56ccfc06047086",
+      "n_steps": 0,
+      "cached_from": "stage1-128K",
+      "token": "max_fit-2048",
+      "base": 9728,
+      "value": 7680
+    }
+  },
   "model_sha256": "42739874cc2ccfdb8523b23fbe52e29b2a7555c8176737ca9ca0b5d59859d41f",
   "llama_cpp_commit": "57d04820dfef7a3519aac276d018a6fd71251895",
   "instances": [

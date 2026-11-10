@@ -35,8 +35,23 @@
     "4"
   ],
   "resolved_config": "resolved/s2a-P6-32K-b4096-mtp0.toml",
-  "coords": {},
-  "resolution": {},
+  "coords": {
+    "placement": "P6",
+    "context": "32K",
+    "batch": "b4096",
+    "mtp": "mtp0"
+  },
+  "resolution": {
+    "moe_cache_mib": {
+      "source": "probe_cache",
+      "probe_key": "fa1ba1e2ea976435b27b",
+      "n_steps": 0,
+      "cached_from": "stage1-32K",
+      "token": "max_fit",
+      "base": 11520,
+      "value": 11520
+    }
+  },
   "model_sha256": "42739874cc2ccfdb8523b23fbe52e29b2a7555c8176737ca9ca0b5d59859d41f",
   "llama_cpp_commit": "57d04820dfef7a3519aac276d018a6fd71251895",
   "instances": [
