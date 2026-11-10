@@ -298,3 +298,15 @@ Newest entry last. Each entry: date, WP, status, commit, key results, open issue
   - Estimates: Stage 2 about 6.1 h (2f 64 min, 2a 2.4 h, 2a2 1.5 h, 2b 22, 2c 25, sanity 7, 2e 14 min); upper bound 7.1 h.
 - **Differences from plan v1.6's assumptions:** the 2a2 anchor and same-session comparators add cells (confirmed by Zack); 2a is about 2.4 h, not 4 h; the cross-check cell is a P2 cell, not P8/P9; P6 with MTP probes about 768 MiB lower; the pinned-memory behaviour of `dio` was not anticipated.
 - **Open issues:** (1) 2f combined value across 128K and 64K is the tool's interpretation (smallest; human confirms when they differ). (2) 2c with `dio` pins 18.9 GiB: the machine may be short of memory for the desktop apps; the paging table will show it. (3) The probe step count for MTP at 64K is assumed (5). (4) `--rerun-flagged` must not run before the 2f decision.
+
+---
+
+## 2026-11-10 — WP12 (part 2a): Stage 2f session (host prompt cache)
+
+- **Status:** 2f session run and decided; stopped at the checkpoint for the step lead (no 2a spec generated, the decision was not applied to anything).
+- **Commits:** `7b7daf1` (`WP12: stage 2 conditions log`), `6f246cb` (`WP12: Stage 2f session data`), `de4e611` (`WP12: Stage 2f decision`), then `WP12: progress log (2f)` (this entry).
+- **Session `s2f`** (13:22:09Z to 14:26:03Z, 63.9 min against the 64 min estimate): 6 of 6 cells complete, `systemd-inhibit` active, one attempt per unit, no idle waits or precondition retries, drift none (+1.2 % PP_fresh 16K), no thermal, accounting, warm_prefill or cache_miss flag. Gate PASS (a to e; f not applied to 2f). Paging-flagged windows (attempt 1): 128K cram 8192 2 of 5 (reps 1, 2), 4096 1 of 5 (rep 1, 1,202 faults), 2048 0, 0 0; 64K cram 8192 3 of 5 (reps 2, 3, 4; up to 159,451 faults), 2048 0.
+- **Decision (tool output):** `status: decided`, chosen `--cache-ram` **2048**; no human decision needed.
+  Both contexts choose 2048 (128K: mean T_turn_400 -0.62 % against the 8192 cell's clean units; 64K: -4.18 %, limit +3 %).
+- **Conditions** (`docs/stage2-conditions.md`): G3 not met, desktop apps open and idle (antigravity-ide, chrome, claude, cosmic-comp, kilo, spotify); the runner's idle gate read 0.49 to 1.54 % before every cell; one 5 s poll sample of 32.1 % CPU at the start of a cell (cause not identified); lowest MemAvailable 15.7 GiB (telemetry, 8192 cell), 16.3 GiB at a poll.
+- **Open issues:** the tool's 3 % comparison is unpaired and uses the 8192 cell's clean units (3 of 5 at 128K, 2 of 5 at 64K); the same-repetition paired differences are -0.75 % (128K) and -0.31 % (64K), so the decision does not depend on it. The chosen 2048 cells are "clean" by threshold, with repetition-1 fault counts of 889 (128K) and 828 (64K) against the limit of 1,000 and 450 to 548 MiB of swap growth. `--rerun-flagged` was not run.
