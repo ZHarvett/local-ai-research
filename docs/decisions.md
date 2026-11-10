@@ -1005,3 +1005,25 @@ The `s2a-P6-32K-b4096-mtp0` cell is eligible (`data/analysis/stage2/2a.json`, `e
 **Eligibility, independent of the defect** (`eligibility` in `2a.json`): `s2a-P6-32K-b4096-mtp1` is ineligible only because of paging (one unresolved flagged unit, n_clean 4 of 5); `s2a-P2-128K-b4096-mtp1` (421 MiB) and `-mtp3` (443 MiB)
 are ineligible only because of minimum free VRAM below 512 MiB; `s2a-P2-128K-b4096-mtp2` fails both (503 MiB, and two unresolved flagged units, n_clean 3). The continuation's stop rule (a cell ineligible only because of paging-flagged
 units) applies to `s2a-P6-32K-b4096-mtp1`, so everything stops before 2a2 for the step lead.
+
+## Stage 2a decisions (2026-11-11)
+
+Made by the step lead after the stop report of part 2c. Recorded before any code change.
+
+1. **Re-run summary bug.** `Session._job_from_resolved` (`src/smallpc/sweep/session.py`) builds the re-run `Job` without `coords` and `resolution`, so a re-run blanks them in the cell
+   summary; the decide tool selects by coords, so six cells dropped out. The writer is fixed in B1; the six summaries (and any Stage 1 ones found in B2) are repaired in B3 from their
+   pre-re-run committed versions; the committed outputs `data/analysis/stage2/2a.md`, `2a.json` and `2a-2a2-input.json` are superseded and regenerated in step C (old versions stay in git
+   history). Why the tests missed it: the re-run tests did not check `coords` or `resolution` in the cell summary.
+2. **`s2a-P6-32K-b4096-mtp1`** is ineligible under the declared rule (repetition 4 still flagged after the one re-run, n_clean 4 of 5). The rule stands. Step C reports a sensitivity
+   (mtp1 counted as eligible on its 4 clean units), for information only; the decision follows the rule.
+3. **The 128K gap.** `s2a-P2-128K-b4096-mtp1`, `-mtp2` and `-mtp3` are all ineligible (minimum free VRAM 421, 503 and 443 MiB, below 512; mtp2 also has n_clean 3), so the top placement
+   has no eligible MTP cell and no best draft length. Rule, declared before any 2a2 data: when a context's top placement has no eligible MTP cell, 2a2 tests the second placement at every
+   draft length that won in the other contexts (as decided by the tool), and the anchor is the top placement with MTP off. The same rule applies to any later context in the same situation.
+4. **Why this rule.** All P2 MTP cells at 128K fail the VRAM margin because P2's `--fit-target 256` leaves no room for the draft context (about 1 GiB); P6 at 128K leaves about 1.3 GiB free
+   and deserves an MTP test. This is a Stage 2 tooling rule; the step lead will fold it into the plan at the end of Stage 2.
+5. **Paging picture** (part 2c report): 15 of 75 attempt-1 windows flagged (20.0%): MTP cells 14 of 45, non-MTP 1 of 30; faults from file pages of the mapped model, host cache capped at
+   1.3 to 1.9 GiB; one unflagged window with 2,209 MiB swap growth; 12 of 15 attempt-2 units clean. The 2f choice (`--cache-ram 2048`) stays.
+
+Rule changes for this continuation: code changes are limited to the re-run job builder and summary writer, the Stage 2 decide tool and spec generator (step B4 only) and their tests, plus
+`tools/`; the only allowed edit of `data/raw/` is the scripted coords/resolution repair (B3) with an audit log; the swap tripwire now applies to all windows (stop if more than 10% of a
+session's measured windows show `swap_activity_mib` above 1,024 MiB); a cell ineligible only for paging is a rule outcome, not a stop, except as step C says.
