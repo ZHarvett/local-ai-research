@@ -5,16 +5,28 @@
    "input_2a2": {
     "top_cell": "P6-32K-b4096",
     "second_cell": "P2-32K-b4096",
-    "top_mtp": 0,
-    "second_mtp": 2
+    "top_mtp": 2,
+    "second_mtp": 2,
+    "best_n": 2,
+    "best_n_reason": null,
+    "borrowed_draft_lengths": [],
+    "second_mtps": [
+     2
+    ]
    }
   },
   "64K": {
    "input_2a2": {
     "top_cell": "P6-64K-b4096",
     "second_cell": "P2-64K-b4096",
-    "top_mtp": 0,
-    "second_mtp": 3
+    "top_mtp": 1,
+    "second_mtp": 1,
+    "best_n": 1,
+    "best_n_reason": null,
+    "borrowed_draft_lengths": [],
+    "second_mtps": [
+     1
+    ]
    }
   },
   "128K": {
@@ -22,7 +34,17 @@
     "top_cell": "P2-128K-b4096",
     "second_cell": "P6-128K-b4096",
     "top_mtp": 0,
-    "second_mtp": null
+    "second_mtp": null,
+    "best_n": null,
+    "best_n_reason": "no eligible MTP cell",
+    "borrowed_draft_lengths": [
+     1,
+     2
+    ],
+    "second_mtps": [
+     1,
+     2
+    ]
    }
   }
  },
@@ -66,7 +88,7 @@
   "warnings": [],
   "plan_version": "1.6",
   "code": {
-   "commit": "075e88f627beafffa4f6f1d6d4b5f4170689e7b3",
+   "commit": "3a46517278d806187d60f17299766732a678ff36",
    "dirty": false
   },
   "llama_cpp_commit": "57d04820dfef7a3519aac276d018a6fd71251895",
