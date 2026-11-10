@@ -801,3 +801,79 @@ Neither checked that a refusal leaves the session's files unchanged.
   end is in `runs[0]` and in `events.jsonl`); the progress file keeps keys of an earlier run until they are overwritten.
 - Not changed: flags, eligibility, selection, statistics, the request protocol, the workload code, the spec or anything that
   decides what is measured. Re-run records carry the new code commit and a `code_commit_changed` warning event, by design.
+
+
+## WP12 decisions (2026-11-10)
+
+WP12 part 1 prepares Stage 2 (tools, specs, runbook, short GPU checks). Plan v1.6 is adopted (commit `2fc89c1`, line 3 reads
+`*Version 1.6 · 10 November 2026*`). These decisions are recorded before any code of this work package and before any Stage 2 data.
+
+### Stage 1 shortlist (screening data, n = 2)
+Label: **screening data, n = 2**. Never a result. Mean T_turn_400 in seconds with the 95% interval of `smallpc.stats`
+(`data/analysis/select-screening.json`; the "too close" note is the §3.3 screening rule, larger of the two ranges). Order is the Stage 1 order.
+
+| context | rank | cell | mean T_turn_400 (s) | 95% CI | n | note |
+|---|---|---|---|---|---|---|
+| 32K | 1 | `P6-32K-b4096` | 6.14 | [3.57, 8.70] | 2 | too close to call at n = 2 |
+| 32K | 2 | `P2-32K-b4096` | 6.26 | [6.24, 6.29] | 2 | too close to call at n = 2 |
+| 32K | ref | `stock-32K` (stock, not shortlisted) | 8.45 | [8.40, 8.50] | 2 | - |
+| 64K | 1 | `P6-64K-b4096` | 7.00 | [6.28, 7.72] | 2 | - |
+| 64K | 2 | `P2-64K-b4096` | 7.16 | [7.06, 7.26] | 2 | - |
+| 64K | ref | `stock-64K` (stock, not shortlisted) | 9.36 | [9.09, 9.63] | 2 | - |
+| 128K | 1 | `P2-128K-b4096` | 9.06 | [8.30, 9.81] | 2 | too close to call at n = 2 |
+| 128K | 2 | `P6-128K-b4096` | 9.09 | [8.88, 9.30] | 2 | too close to call at n = 2 |
+| 128K | ref | `stock-128K` (stock, not shortlisted) | 11.29 | [10.89, 11.69] | 2 | - |
+
+Per the plan, "top" is the first cell above even where the pair is too close to call (32K and 128K).
+
+### Stage 1 paging findings
+Paging-flagged windows (more than 1,000 major faults) occurred only in repetition 1 of long-running servers at 128K (14 of 38 windows)
+and 64K (1 of 38), and all 15 attempt-2 windows on fresh servers were clean. The server's anonymous memory tracked its host prompt cache
+(`--cache-ram`, default 8,192 MiB), which every unique benchmark prompt fills: a hypothesis consistent with the data, not proof
+(`reports/stage1/diagnostics.md`).
+
+### Stage 2 rules (quoted from plan v1.6 section 5.4, not paraphrased)
+Definition of "top":
+> "Top" means first in the Stage 1 order, even where the pair is too close to call at n = 2.
+
+2f, rule text:
+> Rule: the chosen value is the largest tested value with no paging-flagged window in any of its 5 repetitions, unless its mean T_turn_400 is more than 3% above the mean of the 8192 cell's clean units. If the 8192 cell is already clean, the default stays. If no tested value is clean, stop and report: the cause is then not the host cache. The chosen value is used in every later candidate cell and in the tuned configs. Stock keeps the default.
+
+2a, full bullet:
+> - **2a MTP.** Per context, 6 cells: both shortlisted placements with MTP off (these are also the 5-repetition measurement of the shortlist), the top placement with draft lengths 1, 2 and 3, and the second placement with the best draft length of the top placement. The best draft length is chosen by the §3.3 rules among the three; if the CIs include zero, the smaller draft length wins. Cache sizes of P6 cells are re-probed with MTP on, because the head and its draft context cost VRAM. Record acceptance, and the effect on decode **and on prefill**. MTP joins a tuned config only if it wins by §3.3 on T_turn_400 and passes the output sanity check.
+
+### Machine state
+The desktop apps stay open for Stage 2 (gate G3 not met), as in Stage 1; they are idle and the runner's idle gate checks CPU before every
+cell. Stage 3 and Stage 4 will need a quiet machine (browser and IDE closed).
+
+### Tooling interpretations (declared before any Stage 2 data; confirmed by Zack on 10 Nov 2026)
+Where the plan's text leaves a choice, `smallpc.stage2` implements the following, and the decision output always says which rule applied.
+1. **Pairing.** Paired comparisons exist only between cells of one session (`smallpc.analysis` keys units by session and repetition).
+   So every 2b, 2c and 2d spec holds both of its cells (2b re-runs the 8-bit cell under its own `s2b-` name even if it equals a 2a cell), and
+   the 2a2 spec also holds the second placement with MTP off.
+2. **2a2 anchor.** 2a2 also re-runs the top placement's 2a-best configuration (the "anchor") so the final top-versus-second comparison is
+   inside one session. Without it the comparison would have no shared repetitions and `smallpc.select`'s tie-break would treat it as a tie
+   and prefer fewer moving parts regardless of speed. Cost: 3 cells per context instead of 2 (`--no-anchor` turns it off).
+3. **Draft length.** Among the top placement's MTP cells (draft length 1, 2, 3) the best-mean cell wins unless other cells are not
+   distinguishable from it by §3.3 steps 1 and 2 (the paired T_turn_400 CI and the paired T_reread CI both include zero); then the smallest
+   such draft length wins. The result does not depend on cell order.
+4. **2f across contexts.** Each context is decided as written. The value used by later cells is the smallest of the per-context choices, and
+   the output is marked "human confirmation needed" whenever they differ. If the 8192 cell has no clean unit the 3% condition cannot be
+   evaluated and the tool reports "no automatic decision". The paging flag of 2f is read from attempt-1 windows, so `--rerun-flagged` must not
+   run before the 2f decision.
+5. **decide stages.** `decide` also has a `2a2` stage, which produces the per-context winner and runner-up that 2b to 2d and the sanity
+   check start from.
+6. **Probes.** P6 cells without MTP reuse the Stage 1 probe by cache key (the same VRAM picture); MTP cells (and the FP16-KV cell) probe fresh.
+7. **Eligibility to drive a decision.** `decide` refuses a session whose `session.json` records `allow_dirty`, whose spec header says
+   functional-test, or whose id starts with `ft-` (the functional-test prefix of the spec generator). Every decision output records the session
+   ids, spec hashes, plan version, code commit, llama.cpp commit and the verbatim rule text.
+8. **Session gates.** The Stage 1 gate applies to every Stage 2 session, except that criterion f (at most 20% of measured windows
+   paging-flagged) does not apply to 2f (the gate reports flagged windows per cell and the next step is `decide`); from 2a onward it applies with
+   the chosen `--cache-ram`, and more than 20% flagged stops the programme for a human (the 2f choice did not hold). `docs/runbook-stage2.md`
+   lists every point that needs a human decision.
+
+### Fixes in this work package (no change to flags, eligibility, selection, statistics, the request protocol or the workload code)
+- `smallpc.paging_analysis` takes `--label` (default `screening` for sessions whose id starts with "stage", else `functional-test`); the
+  Stage 1 outputs `data/analysis/paging-stage1-64K|128K.*` are regenerated with `--label screening` (only the banner and note change).
+- A completed re-run writes `rerun_finished_utc` instead of overwriting `finished_utc` of `session.json`. The `session.json` files of
+  `stage1-64K` and `stage1-128K` keep the overwritten value (Stage 1 data is not edited); the main-run end is in `runs[0]` and `events.jsonl`.
