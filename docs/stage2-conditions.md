@@ -48,3 +48,13 @@ from the measurement telemetry.
 - Top 5 by memory (names): chrome 0.40 GiB, spotify 0.33 GiB, claude 0.32 GiB, antigravity-ide 0.31 GiB, chrome 0.31 GiB.
 - Top 5 by CPU, ps lifetime average (names): missioncenter-m 3.6 %, chrome 3.5 %, missioncenter 2.7 %, antigravity-ide 1.3 %, claude 1.2 %.
 - Desktop apps open (names): antigravity-ide chrome claude cosmic-comp kilo spotify 
+
+### Session s2a-64K result (2026-11-10 16:49:24Z to 17:35:51Z): gate criterion f FAILED
+- Duration 46.5 min (runbook estimate 47 min). Runner exit 0, state complete, `systemd-inhibit` active, one run.
+- Cells: 5 of 5 complete (P6-64K-b4096 mtp0 to mtp3, P2-64K-b4096 mtp0), none `did_not_fit`. MTP cells probed fresh (4 steps each); mtp0 read the Stage 1 probe.
+- Flags: `paging` only (42 request flags = 6 flagged windows of 25 measured attempt-1 windows, **24.0 %**, criterion f FAIL): P6-mtp1 repetitions 2, 3, 4 and P6-mtp2 repetitions 2, 3, 4. No accounting, warm_prefill, cache_miss, thermal or short_gen flag; drift none.
+- Runner idle gate: first check passed every time (busy at most 1.65 %), no idle waits, no retries; MemAvailable at the checks 25.0 GiB or more.
+- Lowest minimum free VRAM: 545 MiB (P2-64K-b4096-mtp0); P6 cells 1,039 to 1,293 MiB.
+- Polls (7 min apart): busy 0.6 to 14.7 %, of which the server's own share 0.0 to 14.5 % and everything else 0.2 to 1.1 %. `missioncenter` (a system-monitor app) was running at the start (top-CPU list, lifetime average 3.6 %), not in the 32K list. No interfering process identified.
+- Lowest MemAvailable: 21.1 GiB (telemetry, P6-mtp3), 21.4 GiB at a poll. Highest CPU Tctl 75 °C, GPU 71 °C.
+- Stopped here by the continuation's stop rule: the 128K session was not started, no re-run and no decision were made.
