@@ -92,3 +92,12 @@ from the measurement telemetry.
 
 ### Re-run s2a-128K (--rerun-flagged, once): 2026-11-10 19:50:42Z to about 20:10Z
 - 5 units re-run (attempt 2): P2-mtp2 repetitions 0, 1 and P2-mtp3 repetitions 0, 1, 2. **3 clean, 2 still paging-flagged** (P2-mtp2 repetition 0 with swap activity 749 MiB, repetition 1 with -6 MiB; both within the changed criterion f limit of 1,024 MiB). Drift none. Polls: busy 11.7 % (server 10.3 %), one sample 41.1 % of which the server 40.8 % (the end canary); MemAvailable at least 20.6 GiB.
+
+## Stage 2a2 sessions (s2a2-32K, s2a2-64K, s2a2-128K), Phase 0 conditions, 2026-11-10T22:34Z
+- Code: tree clean at the start; commits `b9b7ec5` (re-run summary writer fix), `93a00b0` (summary repair), `3a46517` (borrowed draft lengths), `a8417aa` (2a decision), `b6322a7` (2a2 spec). Spec `configs/sweeps/stage2-2a2.toml` (10 cells: 32K 3, 64K 3, 128K 4; `--cache-ram 2048`).
+- pgrep llama-server: empty. GPU lock: free. nvidia-smi memory.used: 3 MiB. MemAvailable: 25.4 GiB. Swap in use: 1.61 GiB of 30.46 GiB.
+- CPU busy over 10 s: 0.28 %. Load average (1 min): 0.21.
+- Top 5 by memory (names): claude 0.38 GiB, antigravity-ide 0.36 GiB, antigravity-ide 0.32 GiB, antigravity-ide 0.29 GiB, cosmic-comp 0.22 GiB.
+- Top 5 by CPU, ps lifetime average (names): antigravity-ide 1.4 %, claude 1.3 %, cosmic-comp 1.0 %, antigravity-ide 0.5 %, kswapd0 0.2 %.
+- Desktop apps open (names): antigravity-ide claude cosmic-comp kilo 
+- `missioncenter` (system monitor app) is no longer open.
