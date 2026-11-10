@@ -1,0 +1,139 @@
+{
+  "schema": 1,
+  "session_id": "stage1-64K",
+  "created_utc": "2026-11-10T00:08:39Z",
+  "spec": {
+    "name": "stage1",
+    "path": "configs/sweeps/stage1.toml"
+  },
+  "spec_sha256": "0b0cd1789469c61682201ac5eade0dfe05d12f80530eea24b5fe4de4a0c90185",
+  "manifest_sha256": "ed750c1c73355d08d3f76742eb164721ebdfe7206ce2a7fcad89fd3bd5e9f27e",
+  "sampling_sha256": "09b6a27e5b086b3891ff66e0dd64f25deb12530e505cc69e4153c95716ee6743",
+  "git": {
+    "commit": "18bd4634c4ab245681a94b0dfccbfb26973c2a30",
+    "short": "18bd4634c4",
+    "dirty": false,
+    "dirty_paths": []
+  },
+  "filters": {
+    "context": "64K"
+  },
+  "model_sha256": "42739874cc2ccfdb8523b23fbe52e29b2a7555c8176737ca9ca0b5d59859d41f",
+  "llama_cpp_commit": "57d04820dfef7a3519aac276d018a6fd71251895",
+  "allow_dirty": false,
+  "model": {
+    "sha256": "42739874cc2ccfdb8523b23fbe52e29b2a7555c8176737ca9ca0b5d59859d41f",
+    "verified": true,
+    "declared": "42739874cc2ccfdb8523b23fbe52e29b2a7555c8176737ca9ca0b5d59859d41f",
+    "size_bytes": 21713463040
+  },
+  "shuffle_seed": 20261109,
+  "cell_order": [
+    "P3-64K-b2048",
+    "P7-64K-b2048",
+    "P6-64K-b2048",
+    "P5-64K-b4096",
+    "P2-64K-b2048",
+    "P5-64K-b2048",
+    "P6-64K-b4096",
+    "P4-64K-b2048",
+    "P7-64K-b4096",
+    "P3-64K-b4096",
+    "P4-64K-b4096",
+    "P1-64K-b2048",
+    "P8-64K-b2048",
+    "P1-64K-b4096",
+    "stock-64K",
+    "P2-64K-b4096",
+    "P8-64K-b4096",
+    "P9-64K-b4096",
+    "P9-64K-b2048"
+  ],
+  "cell_order_rule": "seeded shuffle respecting @n_fit dependencies (smallpc.sweep.spec.order_cells), not spec order",
+  "repetitions": 2,
+  "state": "complete",
+  "runs": [
+    {
+      "start_utc": "2026-11-10T00:08:39Z",
+      "pid": 407702,
+      "mode": "run",
+      "code_commit": "18bd4634c4",
+      "inhibit": {
+        "checked": true,
+        "active": true,
+        "tag": "smallpc-sweep-stage1-64K-1794269319",
+        "line": "local-ai-research sweep 1000 <user> 407689 systemd-inhibit sleep:idle smallpc-sweep-stage1-64K-1794269319 block"
+      }
+    }
+  ],
+  "inhibit": {
+    "checked": true,
+    "active": true,
+    "tag": "smallpc-sweep-stage1-64K-1794269319",
+    "line": "local-ai-research sweep 1000 <user> 407689 systemd-inhibit sleep:idle smallpc-sweep-stage1-64K-1794269319 block"
+  },
+  "drift": {
+    "main": {
+      "metrics": {
+        "pp_fresh_16k": {
+          "flag": null,
+          "relative_difference": 0.007623248990344295,
+          "threshold": 0.05,
+          "start_mean": 955.0463126213641,
+          "end_mean": 962.326868459787,
+          "start_values": [
+            957.6329818992521,
+            951.6036589346546,
+            955.9022970301859
+          ],
+          "end_values": [
+            965.6289377492311,
+            958.8633910533902,
+            962.48827657674
+          ]
+        },
+        "tg_16k": {
+          "flag": null,
+          "relative_difference": 0.0011826197512094043,
+          "threshold": 0.05,
+          "start_mean": 78.45533566575146,
+          "end_mean": 78.54811849529754,
+          "start_values": [
+            78.3372708119452,
+            78.52553063774933,
+            78.50320554755984
+          ],
+          "end_values": [
+            78.43374687641044,
+            78.71659205688428,
+            78.49401655259788
+          ]
+        },
+        "tg_short": {
+          "flag": null,
+          "relative_difference": 0.005327570989309698,
+          "threshold": 0.05,
+          "start_mean": 88.2225419753214,
+          "end_mean": 88.69255383055228,
+          "start_values": [
+            88.33044174740195,
+            88.4645154195424,
+            87.87266875901989
+          ],
+          "end_values": [
+            88.33407904416771,
+            88.81354453298098,
+            88.93003791450815
+          ]
+        }
+      },
+      "flag": null,
+      "decided_on": [
+        "pp_fresh_16k",
+        "tg_16k"
+      ],
+      "complete": true
+    }
+  },
+  "finished_utc": "2026-11-10T01:20:22Z"
+}

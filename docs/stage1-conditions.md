@@ -37,3 +37,21 @@ Machine conditions of the three Stage 1 screening sessions (WP11 part 2, plan v1
   every cell (highest 1.46 % over 10 s, no waits, no retries). MemAvailable at the preconditions 24.7 to 26.4 GiB
   (never below the 24 GiB warn line); between polls 22.7 to 26.2 GiB. No swap activity above 4 MiB in any window.
 - Apps open (names): chrome, claude, kilo, antigravity-ide, cosmic-comp.
+
+## Session stage1-64K
+
+- Pre-start (2026-11-10 00:08 UTC): tree clean, no llama-server, GPU lock free, GPU 3 MiB, MemAvailable 26.3 GiB,
+  CPU busy 0.3 % (5 s), load 0.86 (1 min), swap 2.32 GiB used. Apps open (names): chrome, claude, antigravity-ide, cosmic-comp.
+- Session ran 2026-11-10 00:08 to 01:20 UTC (1.20 h; estimate 1.28 h, upper bound 1.48 h), 11 polls. `systemd-inhibit sleep:idle`
+  active. Code commit `18bd4634c4`, tree clean. Runner idle gate passed at the first check before every cell (highest 0.99 %,
+  no waits, no retries).
+- CPU busy (5 s samples): 0.7 to 27.2 %; above 10 % in three polls: 27.2 % (antigravity-ide, claude; during P2-64K-b2048
+  repetition 1, short point), 20.3 % (antigravity-ide, claude; P1-64K-b4096) and 14.2 % (antigravity-ide, claude; stock-64K).
+  Highest 27.2 %. ("claude" is this Claude Code session's own tool processes.)
+- Memory: MemAvailable at the runner's preconditions 26.05 to 26.71 GiB, but between polls it fell as low as **20.2 GiB**
+  (01:05, during stock-64K) and was 21.2 GiB at 00:51; the 20 GiB abort line was not crossed at any precondition.
+- **Swap activity (note, not a flag):** 6 of the 38 measured windows had `swap_activity_mib` above 64 (P4-64K-b2048 359,
+  P5-64K-b2048 730, P7-64K-b2048 2,557, P8-64K-b2048 500, P8-64K-b4096 2,665, stock-64K 6,172), all in repetition 1, the
+  second repetition of the cell. Only stock-64K repetition 1 also had more than 1,000 major faults, so it alone carries
+  the `paging` flag (7 requests, one window); it is a re-run candidate (phase 4). zram swap, swappiness 150.
+- Apps open (names): chrome, claude, antigravity-ide, cosmic-comp.

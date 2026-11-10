@@ -1,0 +1,14 @@
+{
+  "session_id": "stage1-64K",
+  "state": "complete",
+  "phase": "done",
+  "cells_total": 19,
+  "cells_done": 18,
+  "started_utc": "2026-11-10T00:08:39Z",
+  "updated_utc": "2026-11-10T01:20:22Z",
+  "cell": "canary-end",
+  "repetition": 105,
+  "depth": 16384,
+  "kind": "B",
+  "probe": "max_fit=11008"
+}
