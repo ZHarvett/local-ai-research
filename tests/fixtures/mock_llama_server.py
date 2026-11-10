@@ -30,17 +30,26 @@ B = streaming, F = any other); without ``on`` it applies to all of them:
     vram_base_mib    N                  used = base + moe cache + context * vram_per_ctx_mib
     vram_total_mib   N                  above this at start: out-of-memory exit
     vram_per_layer_mib N                used += (40 - n_cpu_moe) * N when --n-cpu-moe is given
+    vram_per_draft_mib N                used += draft length * N when --spec-type is given (MTP head
+                                        and draft context)
     speed_factor     X                  multiplies prefill and decode speed (a drifting machine)
     n_part           N                  expert layers the fake --fit puts on the CPU (default 17)
     fit_intervene    true               the fake --fit asks to reduce device memory
     no_id_slot       true               responses carry no id_slot
     time_scale       X                  sleep X * simulated seconds per request (default 0)
+    output           {"mode": M}        what ``return_tokens`` requests (the sanity check) get back:
+                                        healthy (default: pseudo-random token ids that depend only
+                                        on the prompt, so two healthy servers agree), loop (one
+                                        token forever), short ({"n": N}: stops after N tokens) or
+                                        diverge ({"at": I}: healthy until index I, then different)
 """
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
+import random
 import signal
 import sys
 import threading
@@ -61,6 +70,7 @@ n_parallel = int(arg("-np", "-1"))
 ubatch = int(arg("-ub", "512"))
 cache_mib = int(arg("--moe-cache-mib", "0"))
 cmoe = "-cmoe" in args
+draft_n = int(arg("--spec-draft-n-max", "0"))
 n_cpu_moe = arg("--n-cpu-moe")
 fit_on = arg("--fit", "on") == "on"
 unified = n_parallel in (-1, 0)  # stock: automatic slots, unified KV
@@ -82,6 +92,7 @@ def vram_used() -> float:
         + cache_mib
         + n_ctx * BEHAVIOR.get("vram_per_ctx_mib", 0.02)
         + ((40 - int(n_cpu_moe)) * BEHAVIOR.get("vram_per_layer_mib", 0.0) if n_cpu_moe else 0.0)
+        + (draft_n * BEHAVIOR.get("vram_per_draft_mib", 0.0) if "--spec-type" in args else 0.0)
     )
 
 
@@ -172,6 +183,24 @@ def tg_rate(n: int) -> float:
     return (85.0 - 3.5e-4 * n) * BEHAVIOR.get("speed_factor", 1.0)
 
 
+def gen_tokens(prompt: list[int], n: int) -> list[int]:
+    """The token ids a ``return_tokens`` request gets back (see ``output`` in the module doc)."""
+    cfg = BEHAVIOR.get("output") or {}
+    mode = cfg.get("mode", "healthy")
+    seed = hashlib.sha256(json.dumps(prompt).encode()).hexdigest()
+    rng = random.Random(seed)
+    base = [rng.randrange(1000, 60000) for _ in range(n)]
+    if mode == "loop":
+        return [7] * n
+    if mode == "short":
+        return base[: int(cfg.get("n", 30))]
+    if mode == "diverge":
+        rng2 = random.Random(seed + "-diverge")
+        at = int(cfg.get("at", 200))
+        return base[:at] + [rng2.randrange(1000, 60000) for _ in range(max(n - at, 0))]
+    return base
+
+
 def serve(body: dict) -> dict:
     prompt = body["prompt"]
     n_predict = body.get("n_predict", -1)
@@ -203,6 +232,12 @@ def serve(body: dict) -> dict:
             and applies("short_gen_B", "B", idx)
         ):
             predicted_n, stop_type = int(value("short_gen_B", 50)), "eos"
+        out_tokens = None
+        if body.get("return_tokens") and n_predict != 0:
+            out_tokens = gen_tokens(prompt, pn)
+            predicted_n = len(out_tokens)
+            if predicted_n < pn:
+                stop_type = "eos"
         slots[best] = list(prompt) + [-1] * predicted_n  # generated tokens never match a prompt
         tick[0] += 1
         last_used[best] = tick[0]
@@ -238,6 +273,8 @@ def serve(body: dict) -> dict:
         "timings": timings,
         "content": "",
     }
+    if out_tokens is not None:
+        resp["tokens"] = out_tokens
     if not BEHAVIOR.get("no_id_slot"):
         resp["id_slot"] = best
     sim_s = (prompt_ms + predicted_ms) / 1000

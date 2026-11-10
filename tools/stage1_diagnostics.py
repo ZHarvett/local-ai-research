@@ -15,13 +15,13 @@ k-th ``slot print_timing ... total time`` line to the end time of the k-th reque
 
 from __future__ import annotations
 
-import csv
-import gzip
 import json
-import re
 import statistics as st
 import sys
 from pathlib import Path
+
+from smallpc import hostcache
+from smallpc.hostcache import RE_STATE, RE_TIMING, rel_s  # noqa: F401  (kept for readers of this tool)
 
 # ruff: noqa: E501
 ROOT = Path(__file__).resolve().parents[1]
@@ -29,14 +29,6 @@ RAW = ROOT / "data/raw"
 LOGS = ROOT / "data/logs"
 SWAP_HEAVY_MIB = 64.0
 MIB = 1024.0
-
-TS = r"(\d+)\.(\d\d)\.(\d{3})\.(\d{3})"
-RE_STATE = re.compile(TS + r" .*cache state: (\d+) prompts?, ([\d.]+) MiB")
-RE_TIMING = re.compile(TS + r" I slot print_timing: id\s+\d+ \| task \d+ \|\s+total time")
-
-
-def rel_s(m: tuple[str, ...]) -> float:
-    return int(m[0]) * 60 + int(m[1]) + int(m[2]) / 1e3 + int(m[3]) / 1e6
 
 
 def load_session(sid: str) -> dict:
@@ -57,81 +49,22 @@ def load_session(sid: str) -> dict:
 
 
 def telemetry_rows(sess: dict, tfile: str) -> list[dict]:
-    path = sess["dir"] / tfile
-    out = []
-    with gzip.open(path, "rt") as fh:
-        for r in csv.DictReader(fh):
-            row = {}
-            for k in (
-                "t_epoch",
-                "majflt",
-                "memavailable_kib",
-                "server_vmswap_kib",
-                "server_rss_anon_kib",
-                "server_rss_file_kib",
-                "server_rss_shmem_kib",
-            ):
-                try:
-                    row[k] = float(r[k])
-                except (KeyError, ValueError):
-                    row[k] = None
-            out.append(row)
-    return out
+    return hostcache.telemetry_rows(sess["dir"] / tfile)
 
 
 def cache_series(sess: dict, run_id: str) -> list[tuple[float, int, float]]:
     """[(epoch, n_prompts, MiB)] of the host prompt cache, from the server log of one instance."""
-    log = LOGS / run_id / "server.log"
-    if not log.exists():
-        return []
-    ends = sorted(
-        r["client"]["t_end_epoch"]
-        for r in sess["reqs"]
-        if r["server_run_id"] == run_id and r["client"].get("t_end_epoch")
-    )
-    timings, states = [], []
-    for line in log.read_text(errors="replace").splitlines():
-        m = RE_TIMING.match(line)
-        if m:
-            timings.append(rel_s(m.groups()))
-            continue
-        m = RE_STATE.match(line)
-        if m:
-            g = m.groups()
-            states.append((rel_s(g[:4]), int(g[4]), float(g[5])))
-    if not timings or len(timings) != len(ends):
-        return []
-    offs = [e - t for e, t in zip(ends, timings, strict=True)]
-    off = st.median(offs)
-    return [(off + t, n, mib) for t, n, mib in states]
+    return hostcache.cache_series(sess["reqs"], run_id, LOGS / run_id / "server.log")
 
 
 def window_diag(sess: dict, cell: str, w: dict, run_id: str, tfile: str, cache) -> dict:
     t0, t1 = w["t0_epoch"], w["t1_epoch"]
-    rows = [r for r in telemetry_rows(sess, tfile) if t0 <= (r["t_epoch"] or 0) <= t1]
-    first, last = rows[0], rows[-1]
-
-    def mib(row, k):
-        return None if row[k] is None else row[k] / MIB
-
-    vm = [r["server_vmswap_kib"] for r in rows if r["server_vmswap_kib"] is not None]
-    mem = [r["memavailable_kib"] for r in rows if r["memavailable_kib"] is not None]
-    fl = [r["majflt"] for r in rows if r["majflt"] is not None]
-    c_in = [(n, m) for (t, n, m) in cache if t0 - 1 <= t <= t1 + 1]
+    fig = hostcache.window_figures(telemetry_rows(sess, tfile), t0, t1, cache)
     return {
         "cell": cell,
         "rep": w["repetition"],
         "attempt": w["attempt"],
-        "anon": (mib(first, "server_rss_anon_kib"), mib(last, "server_rss_anon_kib")),
-        "file": (mib(first, "server_rss_file_kib"), mib(last, "server_rss_file_kib")),
-        "shmem": (mib(first, "server_rss_shmem_kib"), mib(last, "server_rss_shmem_kib")),
-        "vmswap": (vm[0] / MIB, vm[-1] / MIB, max(vm) / MIB) if vm else (None, None, None),
-        "faults": (fl[-1] - fl[0]) if fl else None,
-        "memavail_min_gib": min(mem) / MIB / MIB if mem else None,
-        "cache_first": c_in[0] if c_in else None,  # (prompts, MiB) at the window's first save
-        "cache_last": c_in[-1]
-        if c_in
-        else None,  # ... and at its last save (the last slot is not in it)
+        **fig,
         "swap_activity": w.get("swap_activity_mib"),
         "flags": w.get("flags", []),
     }

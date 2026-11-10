@@ -133,3 +133,23 @@ def check_candidate(
         "missing_prompts": [],
         "prompts": prompts,
     }
+
+
+def main(argv: list[str] | None = None) -> int:
+    """``python -m smallpc.sanity run ...``: the runner (``smallpc.sanity_runner``)."""
+    import sys
+
+    args = list(sys.argv[1:] if argv is None else argv)
+    if args[:1] != ["run"]:
+        print(
+            "usage: python -m smallpc.sanity run --cells ... --reference ... --out ...",
+            file=sys.stderr,
+        )
+        return 2
+    from .sanity_runner import main as run_main
+
+    return run_main(args[1:])
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

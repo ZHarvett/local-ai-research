@@ -23,7 +23,11 @@ from pathlib import Path
 from smallpc.sweep.records import Store, stamp_batch
 
 TOTAL_MIB = 16311.0
-DEPTHS = {32768: (8192, 16384, 24576), 65536: (16384, 32768, 49152)}
+DEPTHS = {
+    32768: (8192, 16384, 24576),
+    65536: (16384, 32768, 49152),
+    131072: (32768, 65536, 98304),
+}
 DNF_REASONS = (
     "oom_at_load", "startup_failure", "startup_timeout", "context",
     "crash_mid_cell", "oom_runtime", "hung_server", "request_timeout",
@@ -38,6 +42,10 @@ class RepSpec:
     short_gen: bool = False  # the first Request B generates 40 tokens and carries short_gen
     cache_miss: bool = False  # the first Request B reports a cache miss and carries cache_miss
     swap_mib: float | None = None  # swap_activity_mib of the window (a note, never a flag)
+    faults: int | None = (
+        None  # major faults of the window (also writes the window's paging figures)
+    )
+    anon_mib: tuple[float, float] | None = None  # RssAnon at the window's start and end
     slow: float = 1.0  # multiplies the cell's PP and TG for this repetition
 
 
@@ -61,7 +69,7 @@ class CellSpec:
     placement: str | None = None
     batch: str | None = None
     session_rerun_attempt: int = 2
-    extra: dict = field(default_factory=dict)
+    extra: dict = field(default_factory=dict)  # more fields of the resolved config (WP12)
 
     def rep_specs(self) -> list[RepSpec]:
         return self.reps if self.reps is not None else [RepSpec(i) for i in range(5)]
@@ -199,7 +207,8 @@ def _summary(c: CellSpec, session_id: str) -> dict:
                 "windows": [
                     {"window_id": f"{c.name}-{h[:8]}-r{r.rep}-a{a}", "repetition": r.rep,
                      "attempt": a, "min_free_vram_mib": c.min_free, "flags": sorted(r.flags),
-                     **({} if r.swap_mib is None else {"swap_activity_mib": r.swap_mib})}
+                     **({} if r.swap_mib is None else {"swap_activity_mib": r.swap_mib}),
+                     **_paging_figures(r)}
                     for r in reps
                 ],
                 "parsed": {
@@ -235,12 +244,29 @@ def _summary(c: CellSpec, session_id: str) -> dict:
     }  # fmt: skip
 
 
+def _paging_figures(r: RepSpec) -> dict:
+    """Window keys of a real summary that the WP12 decision tool reads (only if the repetition
+    sets them, so the older golden reports are unchanged)."""
+    if r.faults is None and r.anon_mib is None:
+        return {}
+    out: dict = {
+        "paging": {"flag": "paging" if "paging" in r.flags else None,
+                   "major_faults": r.faults or 0},
+        "t0_epoch": float(r.rep * 100), "t1_epoch": float(r.rep * 100 + 9),
+    }  # fmt: skip
+    if r.anon_mib is not None:
+        out["rss_anon_start_mib"], out["rss_anon_end_mib"] = r.anon_mib
+    return out
+
+
 def _resolved_toml(c: CellSpec) -> str:
     lines = [f'profile = "{c.profile}"', f"context = {c.context}"]
     if c.spec_type:
         lines.append(f'spec_type = "{c.spec_type}"')
     if c.cache_mib:
         lines.append(f"moe_cache_mib = {c.cache_mib}")
+    for k, v in c.extra.items():
+        lines.append(f'{k} = "{v}"' if isinstance(v, str) else f"{k} = {v}")
     return "\n".join(lines) + "\n"
 
 
@@ -271,6 +297,8 @@ def build_session(
     cells: list[CellSpec],
     *,
     seed: int = 7,
+    spec_path: str = "configs/sweeps/fixture.toml",
+    state: str = "complete",
     drift_main: str | None = None,
     drift_rerun: str | None | bool = False,
     canary: bool = True,
@@ -375,7 +403,7 @@ def build_session(
         drift["rerun"] = drift_entry(drift_rerun)
     session = {
         "schema": 1, "session_id": session_id, "created_utc": "2026-01-01T00:00:00Z",
-        "spec": {"name": "fixture", "path": "configs/sweeps/fixture.toml"},
+        "spec": {"name": "fixture", "path": spec_path},
         "spec_sha256": "a" * 64, "manifest_sha256": "b" * 64, "sampling_sha256": "d" * 64,
         "git": {"commit": "f" * 40, "short": "f" * 10, "dirty": allow_dirty,
                 "dirty_paths": ["src/smallpc/sweep/"] if allow_dirty else []},
@@ -383,7 +411,8 @@ def build_session(
         "runs": [{"mode": "run", "code_commit": "abc1234567",
                   "inhibit": {"checked": True, "active": inhibit_active}}],
         "inhibit": {"checked": True, "active": inhibit_active},
-        "drift": drift, "state": "complete",
+        "drift": drift, "state": state,
+        "cell_order": [c.name for c in cells if c.status != "not_applicable"],
     }  # fmt: skip
     (d / "session.json").write_text(json.dumps(session))
     (d / "events.jsonl").write_text("".join(json.dumps(e) + "\n" for e in events))

@@ -107,12 +107,42 @@ def test_probe_key_depends_on_what_changes_the_vram_picture():
     assert key(fields={**BASE, "cache_type_k": "f16"}) != k
     assert key(fields={**BASE, "spec_type": "draft-mtp", "spec_draft_n_max": 2}) != k  # MTP on
     assert key(fields={**BASE, "spec_type": "none"}) == key(fields={**BASE, "spec_type": None})
+    # WP12: with MTP on, the draft length is part of the key (the draft context costs VRAM)
+    mtp = {**BASE, "spec_type": "draft-mtp"}
+    ks = {n: key(fields={**mtp, "spec_draft_n_max": n}) for n in (1, 2, 3)}
+    assert len(set(ks.values()) | {k}) == 4
+    assert ks[2] == key(fields={**mtp, "spec_draft_n_max": 2})  # stable
+    off = {**BASE, "spec_type": None, "spec_draft_n_max": None}
+    assert (
+        key(fields={**BASE, "spec_type": "none", "spec_draft_n_max": None}) == key(fields=off) == k
+    )
     assert key("n_fit") != k and key(d_max=49152) != k
     assert key(llama_commit="d" * 40) != k and key(model_sha256="e" * 64) != k
     assert key(gpu_total_mib=8000.0) != k
     # the searched quantities are not part of the key
     assert key(fields={**BASE, "moe_cache_mib": 1024}) == k
     assert key(fields={**BASE, "n_cpu_moe": 5}) == k
+
+
+def test_max_fit_differs_with_the_draft_length_in_a_fake_vram_model():
+    """WP12: the MTP head and its draft context take VRAM that grows with the draft length, so the
+    largest cache that passes is smaller (and a different cache entry) for a longer draft."""
+
+    def with_draft(n):
+        return fake_vram(base=6655 + 350 * n, slope=1.0, lm=0)
+
+    found = {n: pr.search_max_fit(with_draft(n), cap_mib=TOTAL).value for n in (0, 1, 2, 3)}
+    assert len(set(found.values())) == 4 and found[0] > found[1] > found[2] > found[3]
+    assert all(v % pr.STEP_MIB == 0 for v in found.values())
+    keys = {
+        n: key(fields={**BASE, "spec_type": "draft-mtp", "spec_draft_n_max": n}) for n in (1, 2, 3)
+    }
+    cache = {k: found[n] for n, k in keys.items()}
+    assert len(cache) == 3 and sorted(cache.values(), reverse=True) == [
+        found[1],
+        found[2],
+        found[3],
+    ]
 
 
 def test_cache_is_append_only_and_the_latest_entry_wins(tmp_path):
@@ -282,3 +312,46 @@ def test_cell_records_for_probe_free_sessions_still_validate(tmp_path, free_port
     assert all(rec.RequestRecord.model_validate(r) for r in reqs)
     assert all(rec.CellRecord.model_validate(c) for c in cells)
     assert events(sess)
+
+
+MTP_SPEC = (
+    SPEC.split("[[cells]]")[0].replace(
+        "[axes.context]",
+        """[axes.mtp]
+mtp0 = {}
+mtp1 = { spec_type = "draft-mtp", spec_draft_n_max = 1 }
+mtp3 = { spec_type = "draft-mtp", spec_draft_n_max = 3 }
+[axes.context]""",
+    )
+    + """[[cells]]
+name = "{placement}-{context}-{mtp}"
+profile = "candidate"
+product = { placement = ["P6"], context = ["32K"], mtp = ["mtp0", "mtp1", "mtp3"] }
+"""
+)
+
+
+def test_max_fit_is_probed_per_draft_length_for_mtp_cells(tmp_path, free_port):
+    """WP12: P6 cells with MTP on probe their own max-fit (the draft context costs VRAM in the mock),
+    each under its own cache key, and a second session reuses all three."""
+    behavior = {"vram_per_draft_mib": 400.0}
+    env = probe_env(tmp_path, free_port, behavior)
+    sess, code, _ = run_probe_session(tmp_path, free_port, spec=MTP_SPEC, env=env)
+    assert code == 0
+    res = resolutions(sess)
+    got = {n: res[f"P6-32K-mtp{n}"]["fields"]["moe_cache_mib"] for n in (0, 1, 3)}
+    # 6,655 + 400 n + cache + 512 <= 16,000, in steps of 256
+    assert got == {0: 8704, 1: 8192, 3: 7424}
+    assert {res[f"P6-32K-mtp{n}"]["resolution"]["moe_cache_mib"]["source"] for n in (0, 1, 3)} == {
+        "binary_search"
+    }
+    keys = {res[f"P6-32K-mtp{n}"]["resolution"]["moe_cache_mib"]["probe_key"] for n in (0, 1, 3)}
+    assert len(keys) == 3 and len(env.probe_cache.read_text().splitlines()) == 3
+    for n in (1, 3):  # the resolved config carries the MTP flags the probe ran with
+        toml = (sess.dir / f"resolved/P6-32K-mtp{n}.toml").read_text()
+        assert 'spec_type = "draft-mtp"' in toml and f"spec_draft_n_max = {n}" in toml
+    sess2, code2, _ = run_probe_session(tmp_path, free_port, sid="p2", spec=MTP_SPEC, env=env)
+    assert code2 == 0 and not (sess2.dir / "probes.jsonl").exists()
+    assert {
+        n: resolutions(sess2)[f"P6-32K-mtp{n}"]["fields"]["moe_cache_mib"] for n in (0, 1, 3)
+    } == got
