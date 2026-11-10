@@ -336,6 +336,10 @@ class ContextResult:
     second: Entry
     top_mtp: int  # draft length of the top placement's 2a-best configuration (0 = MTP off)
     second_mtp: int | None  # draft length of the second placement's MTP cell (None: no MTP cell)
+    # draft lengths the second placement is tested at besides MTP off: the best draft length of
+    # this context, or (no eligible MTP cell in the top placement) those borrowed from others
+    second_mtps: tuple[int, ...] = ()
+    borrowed: bool = False
 
 
 def read_2a_result(path: Path, sl: Shortlist) -> dict[str, ContextResult]:
@@ -355,7 +359,18 @@ def read_2a_result(path: Path, sl: Shortlist) -> dict[str, ContextResult]:
                 f"{path}: context {ctx} was decided for {inp['top_cell']}/{inp['second_cell']}, "
                 f"but the shortlist now says {top.cell}/{second.cell}"
             )
-        out[ctx] = ContextResult(ctx, top, second, int(inp["top_mtp"]), inp.get("second_mtp"))
+        if "second_mtps" in inp:
+            mtps = tuple(int(n) for n in inp["second_mtps"])
+        else:  # a 2a result written before the borrowing rule
+            mtps = (int(inp["second_mtp"]),) if inp.get("second_mtp") else ()
+        borrowed = bool(inp.get("borrowed_draft_lengths"))
+        if inp.get("best_n_reason") and not mtps:
+            raise SpecGenError(
+                f"{path}: context {ctx} has no eligible MTP cell and no draft length to borrow"
+            )
+        out[ctx] = ContextResult(
+            ctx, top, second, int(inp["top_mtp"]), inp.get("second_mtp"), mtps, borrowed
+        )
     return out
 
 
@@ -371,25 +386,46 @@ def build_2a2(
     ns: set[int] = set()
     for r in result.values():
         entries += [r.top, r.second]
-        mt = ["mtp0"] + ([f"mtp{r.second_mtp}"] if r.second_mtp else [])
-        ns |= {r.second_mtp or 0, r.top_mtp}
-        blocks.append(_block("2a2", r.second, mt))
+        mt = ["mtp0"] + [f"mtp{n}" for n in r.second_mtps if n]
+        ns |= {*r.second_mtps, r.top_mtp, 0}
+        blocks.append(
+            _block(
+                "2a2",
+                r.second,
+                mt,
+                comment=(
+                    [
+                        f"{r.top.cell} has no eligible MTP cell: the draft lengths that won in the "
+                        f"other contexts are borrowed: {list(r.second_mtps)}"
+                    ]
+                    if r.borrowed
+                    else None
+                ),
+            )
+        )
         if anchor:
+            what = (
+                "the top placement with MTP off (it has no eligible MTP cell)"
+                if r.borrowed
+                else "the 2a-best configuration"
+            )
             blocks.append(
                 _block(
                     "2a2",
                     r.top,
                     [f"mtp{r.top_mtp}"],
-                    comment=[
-                        f"anchor: the 2a-best configuration of {r.top.cell}, re-run in this session"
-                    ],
+                    comment=[f"anchor: {what} of {r.top.cell}, re-run in this session"],
                 )
             )
     axes = _stage1_axes(sl, entries)
     axes["mtp"] = _mtp_axis(sorted(ns))
     extra = [
         "2a input: second placement draft length per context: "
-        + ", ".join(f"{c}={r.second_mtp or 'none'}" for c, r in result.items()),
+        + ", ".join(
+            f"{c}={','.join(map(str, r.second_mtps)) or 'none'}"
+            + (" (borrowed)" if r.borrowed else "")
+            for c, r in result.items()
+        ),
         f"anchor cells: {'yes' if anchor else 'no'}",
     ]
     header = _header(

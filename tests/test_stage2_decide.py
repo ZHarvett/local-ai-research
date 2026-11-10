@@ -313,6 +313,10 @@ def test_2a_mtp_wins_and_a_draft_length_tie_goes_to_the_smaller(tmp_path):
         "second_cell": "P2-32K-b4096",
         "top_mtp": 2,
         "second_mtp": 2,
+        "best_n": 2,
+        "best_n_reason": None,
+        "borrowed_draft_lengths": [],
+        "second_mtps": [2],
     }
     # acceptance per draft length, and the paired prefill effect (PP_fresh with MTP about 10% lower)
     assert set(e["acceptance"]) == {"1", "2", "3"}
@@ -429,6 +433,77 @@ def test_2a_without_an_eligible_mtp_cell_has_no_draft_length(tmp_path):
     e = run("2a", [session_2a(tmp_path, {"32K": cells})])["contexts"]["32K"]
     assert e["draft_length"]["best_n"] is None and e["input_2a2"]["second_mtp"] is None
     assert e["mtp_vs_off"] is None
+
+
+def _no_mtp(ctx):
+    """A context whose top placement has no eligible MTP cell (only MTP off was run)."""
+    return cells_2a(ctx, {0: 80.0})
+
+
+def test_2a_borrows_the_draft_length_of_the_other_context(tmp_path):
+    # 32K and 64K each have a best draft length 2 (a tie goes to the smaller); 128K has none
+    tie = {0: 80.0, 1: 95.0, 2: 110.0, 3: 110.0}
+    d = session_2a(
+        tmp_path,
+        {"32K": cells_2a("32K", tie), "64K": cells_2a("64K", tie), "128K": _no_mtp("128K")},
+    )
+    r = run("2a", [d])
+    assert r["human_decision_needed"] == []
+    e = r["contexts"]["128K"]
+    assert e["draft_length"]["best_n"] is None and e["draft_length"]["reason"] == (
+        "no eligible MTP cell"
+    )
+    assert e["borrowed_draft_lengths"] == [2]
+    assert e["input_2a2"] == {
+        "top_cell": "P2-128K-b4096",
+        "second_cell": "P6-128K-b4096",
+        "top_mtp": 0,  # the anchor is the top placement with MTP off
+        "second_mtp": None,
+        "best_n": None,
+        "best_n_reason": "no eligible MTP cell",
+        "borrowed_draft_lengths": [2],
+        "second_mtps": [2],
+    }
+    # a context with an eligible MTP cell is unchanged: its own best draft length, nothing borrowed
+    e32 = r["contexts"]["32K"]["input_2a2"]
+    assert e32["second_mtps"] == [2] and e32["borrowed_draft_lengths"] == [] and e32["top_mtp"] == 2
+    assert "borrowed draft lengths for the second placement" in render_markdown(r)
+
+
+def test_2a_two_other_contexts_that_disagree_both_lengths_are_borrowed(tmp_path):
+    d = session_2a(
+        tmp_path,
+        {
+            "32K": cells_2a("32K", {0: 80.0, 1: 95.0, 2: 110.0, 3: 110.0}),  # best 2
+            "64K": cells_2a("64K", {0: 80.0, 1: 90.0, 2: 100.0, 3: 125.0}),  # best 3
+            "128K": _no_mtp("128K"),
+        },
+    )
+    r = run("2a", [d])
+    assert r["human_decision_needed"] == []
+    e = r["contexts"]["128K"]["input_2a2"]
+    assert e["borrowed_draft_lengths"] == [2, 3] and e["second_mtps"] == [2, 3]
+    assert e["top_mtp"] == 0 and e["best_n"] is None
+    # the contexts that have their own best draft length borrow nothing
+    assert r["contexts"]["32K"]["input_2a2"]["second_mtps"] == [2]
+    assert r["contexts"]["64K"]["input_2a2"]["second_mtps"] == [3]
+    j, _ = decide.write_outputs(r, tmp_path / "out/2a")
+    sub = json.loads((tmp_path / "out/2a-2a2-input.json").read_text())
+    assert sub["contexts"]["128K"]["input_2a2"]["second_mtps"] == [2, 3]
+
+
+def test_2a_no_context_has_an_eligible_mtp_cell_needs_a_human(tmp_path):
+    d = session_2a(tmp_path, {"32K": _no_mtp("32K"), "128K": _no_mtp("128K")})
+    r = run("2a", [d])
+    assert r["human_decision_needed"]
+    assert any("no eligible MTP cell in any context" in m for m in r["human_decision_needed"])
+    for ctx in ("32K", "128K"):
+        i = r["contexts"][ctx]["input_2a2"]
+        assert i["best_n"] is None and i["borrowed_draft_lengths"] == [] and i["second_mtps"] == []
+    # the spec generator refuses such an input rather than guessing
+    decide.write_outputs(r, tmp_path / "out/2a")
+    with pytest.raises(specgen.SpecGenError, match="no draft length to borrow"):
+        specgen.read_2a_result(tmp_path / "out/2a-2a2-input.json", specgen.load_shortlist(REPO))
 
 
 def test_2a_three_contexts_and_the_2a2_input_files(tmp_path):

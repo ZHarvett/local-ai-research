@@ -421,6 +421,36 @@ def _mtp_effects(res: dict, mtp: dict, off: dict) -> dict:
     return out
 
 
+def _borrow_draft_lengths(contexts: dict[str, dict]) -> None:
+    """Declared rule (docs/decisions.md, "Stage 2a decisions", item 3): when a context's top
+    placement has no eligible MTP cell (no best draft length), 2a2 tests that context's second
+    placement at every draft length that is the best of another context, and the anchor is the top
+    placement with MTP off (``top_mtp`` is already 0 then). Fills ``input_2a2`` for every context:
+    ``best_n`` (None when none), ``borrowed_draft_lengths`` and ``second_mtps`` (the draft lengths
+    the second placement is tested at, besides MTP off). If no context has a best draft length
+    there is nothing to borrow: a human decision."""
+    bests = {c: e["draft_length"]["best_n"] for c, e in contexts.items()}
+    for ctx, e in contexts.items():
+        inp = e["input_2a2"]
+        own = bests[ctx]
+        if own is not None:
+            inp.update(best_n=own, best_n_reason=None, borrowed_draft_lengths=[], second_mtps=[own])
+            continue
+        borrowed = sorted({n for c, n in bests.items() if c != ctx and n is not None})
+        inp.update(
+            best_n=None,
+            best_n_reason="no eligible MTP cell",
+            borrowed_draft_lengths=borrowed,
+            second_mtps=borrowed,
+        )
+        e["borrowed_draft_lengths"] = borrowed
+        if not borrowed:
+            e["human_decision_needed"].append(
+                "no eligible MTP cell in any context: there is no draft length to borrow for "
+                "the second placement"
+            )
+
+
 def decide_2a(res: dict, root: Path, sl: Shortlist) -> dict:
     contexts: dict[str, dict] = {}
     for ctx, cells in _by_context(res).items():
@@ -494,6 +524,7 @@ def decide_2a(res: dict, root: Path, sl: Shortlist) -> dict:
         raise ValueError(
             "no cell of these sessions matches the shortlisted placements: not a 2a session"
         )
+    _borrow_draft_lengths(contexts)
     human = [f"{c}: {m}" for c, e in contexts.items() for m in e["human_decision_needed"]]
     return {"stage": "2a", "contexts": contexts, "human_decision_needed": human,
             "sanity": "pending: the check runs after 2a, on the winners"}  # fmt: skip

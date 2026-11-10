@@ -206,6 +206,47 @@ def test_2a2_has_the_second_placement_and_the_anchor(tmp_path, sl):
     assert res2["cells"] == 6 and not any("mtp1" in n and "P6-32K" in n for n in argvs2)
 
 
+def borrowed_2a(sl, lengths, ctx="128K"):
+    """A 2a result where ``ctx`` has no eligible MTP cell and borrows ``lengths``; the other
+    contexts have their own best draft length 2."""
+    obj = fake_2a(sl, second_mtp=2, top_mtp=1)
+    for block in obj["contexts"].values():
+        block["input_2a2"]["second_mtps"] = [2]
+        block["input_2a2"]["borrowed_draft_lengths"] = []
+    i = obj["contexts"][ctx]["input_2a2"]
+    i.update(top_mtp=0, second_mtp=None, best_n=None, best_n_reason="no eligible MTP cell")
+    i.update(borrowed_draft_lengths=list(lengths), second_mtps=list(lengths))
+    return obj
+
+
+def test_2a2_borrowed_draft_lengths_and_the_mtp_off_anchor(tmp_path, sl):
+    p = write_json(tmp_path, "2a.json", borrowed_2a(sl, [1, 2]))
+    text, res, argvs, _ = build(tmp_path, "2a2", cache_ram="2048", from_2a=p)
+    t, s = sl.top("128K"), sl.second("128K")
+    assert {n for n in argvs if "-128K-" in n} == {
+        f"s2a2-{s.placement}-128K-{s.batch}-mtp0",
+        f"s2a2-{s.placement}-128K-{s.batch}-mtp1",
+        f"s2a2-{s.placement}-128K-{s.batch}-mtp2",
+        f"s2a2-{t.placement}-128K-{t.batch}-mtp0",  # the anchor: top placement, MTP off
+    }
+    # the other contexts are as before: second placement off and best draft length, plus the anchor
+    assert res["by_context"] == {"32K": 3, "64K": 3, "128K": 4} and res["cells"] == 10
+    assert "(borrowed)" in text and "no eligible MTP cell" in text
+    # names are unique and never collide with the 2a names ("s2a-...")
+    assert len(argvs) == len(set(argvs)) and not any(n.startswith("s2a-") for n in argvs)
+    # P6 cells with MTP carry a token to be probed fresh in the session
+    _, _, _, cells = build(tmp_path, "2a2", name="again", cache_ram="2048", from_2a=p)
+    p6 = [c for c in cells if c.coords.get("placement") == "P6" and "-128K-" in c.name]
+    assert {c.name[-4:] for c in p6} == {"mtp0", "mtp1", "mtp2"}
+    assert all("moe_cache_mib" in c.tokens for c in p6)
+
+
+def test_2a2_refuses_a_context_with_nothing_to_test(tmp_path, sl):
+    p = write_json(tmp_path, "2a.json", borrowed_2a(sl, []))
+    with pytest.raises(specgen.SpecGenError, match="no draft length to borrow"):
+        specgen.generate("2a2", root=REPO, cache_ram="2048", from_2a=p)
+
+
 def test_2a2_without_an_mtp_cell_for_the_second_placement(tmp_path, sl):
     p = write_json(tmp_path, "2a.json", fake_2a(sl, second_mtp=None, top_mtp=0))
     _, res, argvs, _ = build(tmp_path, "2a2", cache_ram="default", from_2a=p)

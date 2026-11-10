@@ -172,6 +172,12 @@ def _render_2a(res: dict) -> list[str]:
         dl = e["draft_length"]
         out += [f"## {ctx}: top `{e['top']}`, second `{e['second']}`", ""]
         out += [f"- best draft length: **{dl['best_n']}** ({dl['reason']})"]
+        if dl["best_n"] is None:
+            b = e.get("borrowed_draft_lengths") or []
+            out += [
+                "- borrowed draft lengths for the second placement in 2a2 (the best draft length of "
+                f"each other context that has one): {b or 'none'}"
+            ]
         m = e.get("mtp_vs_off")
         if m:
             out += [
