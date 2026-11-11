@@ -1,0 +1,1001 @@
+{
+ "stage": "2a2",
+ "contexts": {
+  "32K": {
+   "status": "decided",
+   "winner": "s2a2-P6-32K-b4096-mtp2",
+   "runner_up": "s2a2-P2-32K-b4096-mtp2",
+   "decision": {
+    "t_turn_400_difference": {
+     "n": 5,
+     "mean": 0.46376339532890165,
+     "keys": [
+      "s2a2-32K:0",
+      "s2a2-32K:1",
+      "s2a2-32K:2",
+      "s2a2-32K:3",
+      "s2a2-32K:4"
+     ],
+     "bootstrap_ci": [
+      0.35293089223784013,
+      0.551735394319131
+     ],
+     "t_ci": [
+      0.30086939213986186,
+      0.6266573985179414
+     ],
+     "ci": [
+      0.30086939213986186,
+      0.6266573985179414
+     ],
+     "ci_method": "t",
+     "excludes_zero": true,
+     "differences": [
+      0.4352734971123464,
+      0.2495795873015858,
+      0.5806422021720969,
+      0.5092508128654973,
+      0.5440708771929819
+     ]
+    },
+    "step": "ci_excludes_zero",
+    "text": "the paired T_turn_400 CI excludes zero: the best mean wins"
+   },
+   "tied_with_winner": [
+    {
+     "cell": "s2a2-P2-32K-b4096-mtp0",
+     "paired_difference_mean": 0.6855991766081873,
+     "ci": [
+      0.5240384273768045,
+      0.84715992583957
+     ],
+     "tied": false,
+     "comparable": true
+    }
+   ],
+   "ranking": [
+    "s2a2-P6-32K-b4096-mtp2",
+    "s2a2-P2-32K-b4096-mtp2",
+    "s2a2-P2-32K-b4096-mtp0"
+   ],
+   "rows": [
+    {
+     "cell": "s2a2-P2-32K-b4096-mtp0",
+     "profile": "candidate",
+     "reference": false,
+     "status": "complete",
+     "n_clean": 5,
+     "n_total": 5,
+     "t_turn_400": {
+      "n": 5,
+      "mean": 6.305347080868839,
+      "min": 6.297950299916457,
+      "max": 6.315414946533,
+      "bootstrap_ci": [
+       6.300614928320802,
+       6.3111889854636605
+      ],
+      "t_ci": [
+       6.297052072551735,
+       6.313642089185943
+      ],
+      "ci": [
+       6.297052072551735,
+       6.313642089185943
+      ],
+      "ci_method": "t"
+     },
+     "t_reread": {
+      "n": 5,
+      "mean": 5.420639866666667,
+      "min": 5.404873333333334,
+      "max": 5.456718333333334,
+      "bootstrap_ci": [
+       5.407855333333334,
+       5.439143425
+      ],
+      "t_ci": [
+       5.394579328824932,
+       5.446700404508402
+      ],
+      "ci": [
+       5.394579328824932,
+       5.446700404508402
+      ],
+      "ci_method": "t"
+     },
+     "range": 0.0174646466165429,
+     "eligible": true,
+     "reasons": [],
+     "sanity": "pass",
+     "mtp": false,
+     "cache_mib": 0,
+     "peak_vram_mib": 15744.0,
+     "flags": []
+    },
+    {
+     "cell": "s2a2-P2-32K-b4096-mtp2",
+     "profile": "candidate",
+     "reference": false,
+     "status": "complete",
+     "n_clean": 5,
+     "n_total": 5,
+     "t_turn_400": {
+      "n": 5,
+      "mean": 6.083511299589553,
+      "min": 6.028046147034252,
+      "max": 6.1486316266027385,
+      "bootstrap_ci": [
+       6.0362054459482035,
+       6.130817153230903
+      ],
+      "t_ci": [
+       6.0093212680308605,
+       6.157701331148245
+      ],
+      "ci": [
+       6.0093212680308605,
+       6.157701331148245
+      ],
+      "ci_method": "t"
+     },
+     "t_reread": {
+      "n": 5,
+      "mean": 6.4001926,
+      "min": 6.365144333333333,
+      "max": 6.485749666666667,
+      "bootstrap_ci": [
+       6.371804933333333,
+       6.444168133333333
+      ],
+      "t_ci": [
+       6.339539158829509,
+       6.46084604117049
+      ],
+      "ci": [
+       6.339539158829509,
+       6.46084604117049
+      ],
+      "ci_method": "t"
+     },
+     "range": 0.12058547956848642,
+     "eligible": true,
+     "reasons": [],
+     "sanity": "pass",
+     "mtp": true,
+     "cache_mib": 0,
+     "peak_vram_mib": 15696.0,
+     "flags": []
+    },
+    {
+     "cell": "s2a2-P6-32K-b4096-mtp2",
+     "profile": "candidate",
+     "reference": false,
+     "status": "complete",
+     "n_clean": 5,
+     "n_total": 5,
+     "t_turn_400": {
+      "n": 5,
+      "mean": 5.6197479042606515,
+      "min": 5.4876654803675855,
+      "max": 5.778466559732666,
+      "bootstrap_ci": [
+       5.522728625229741,
+       5.716767183291562
+      ],
+      "t_ci": [
+       5.465286031815763,
+       5.77420977670554
+      ],
+      "ci": [
+       5.465286031815763,
+       5.77420977670554
+      ],
+      "ci_method": "t"
+     },
+     "t_reread": {
+      "n": 5,
+      "mean": 7.380914266666667,
+      "min": 7.350914,
+      "max": 7.429998000000001,
+      "bootstrap_ci": [
+       7.355283533333333,
+       7.410619666666667
+      ],
+      "t_ci": [
+       7.337336996820843,
+       7.424491536512491
+      ],
+      "ci": [
+       7.337336996820843,
+       7.424491536512491
+      ],
+      "ci_method": "t"
+     },
+     "range": 0.2908010793650808,
+     "eligible": true,
+     "reasons": [],
+     "sanity": "pass",
+     "mtp": true,
+     "cache_mib": 10752,
+     "peak_vram_mib": 15180.0,
+     "flags": []
+    }
+   ],
+   "mtp_vs_off_by_placement": {
+    "P2-mtp2": {
+     "mtp_cell": "s2a2-P2-32K-b4096-mtp2",
+     "off_cell": "s2a2-P2-32K-b4096-mtp0",
+     "winner": "s2a2-P2-32K-b4096-mtp2",
+     "section_3_3_step": "ci_excludes_zero",
+     "decision_text": "the paired T_turn_400 CI excludes zero: the best mean wins",
+     "mtp_wins_on_t_turn_400": true,
+     "t_turn_400_difference_off_minus_mtp": {
+      "n": 5,
+      "mean": 0.22183578127928563,
+      "ci": [
+       0.1437486791418165,
+       0.29992288341675477
+      ],
+      "ci_method": "t",
+      "excludes_zero": true,
+      "differences": [
+       0.14931867331371862,
+       0.27370583876357557,
+       0.24710726399331762,
+       0.2796344753550546,
+       0.15941265497076174
+      ]
+     },
+     "t_reread_difference_off_minus_mtp": {
+      "n": 5,
+      "mean": -0.9795527333333333,
+      "ci": [
+       -1.0466864158460247,
+       -0.9124190508206418
+      ],
+      "ci_method": "t",
+      "excludes_zero": true,
+      "differences": [
+       -0.9687253333333326,
+       -0.9660039999999999,
+       -0.9332746666666667,
+       -0.9567486666666669,
+       -1.0730110000000002
+      ]
+     },
+     "mtp_t_turn_400_mean": 6.083511299589553,
+     "off_t_turn_400_mean": 6.305347080868839
+    }
+   },
+   "anchor_present": true
+  },
+  "64K": {
+   "status": "decided",
+   "winner": "s2a2-P6-64K-b4096-mtp1",
+   "runner_up": "s2a2-P2-64K-b4096-mtp0",
+   "decision": {
+    "t_turn_400_difference": {
+     "n": 5,
+     "mean": 0.5244552670202631,
+     "keys": [
+      "s2a2-64K:0",
+      "s2a2-64K:1",
+      "s2a2-64K:2",
+      "s2a2-64K:3",
+      "s2a2-64K:4"
+     ],
+     "bootstrap_ci": [
+      0.31188621203007455,
+      0.7298449675856302
+     ],
+     "t_ci": [
+      0.1874449805566583,
+      0.861465553483868
+     ],
+     "ci": [
+      0.1874449805566583,
+      0.861465553483868
+     ],
+     "ci_method": "t",
+     "excludes_zero": true,
+     "differences": [
+      0.41292603258145366,
+      0.16032648120300586,
+      0.46365897921159416,
+      0.7598978604845446,
+      0.8254669816207176
+     ]
+    },
+    "step": "ci_excludes_zero",
+    "text": "the paired T_turn_400 CI excludes zero: the best mean wins"
+   },
+   "tied_with_winner": [],
+   "ranking": [
+    "s2a2-P6-64K-b4096-mtp1",
+    "s2a2-P2-64K-b4096-mtp0"
+   ],
+   "rows": [
+    {
+     "cell": "s2a2-P2-64K-b4096-mtp0",
+     "profile": "candidate",
+     "reference": false,
+     "status": "complete",
+     "n_clean": 5,
+     "n_total": 5,
+     "t_turn_400": {
+      "n": 5,
+      "mean": 7.108008928989139,
+      "min": 7.0869586424394315,
+      "max": 7.13918141186299,
+      "bootstrap_ci": [
+       7.088415780284043,
+       7.127772785296574
+      ],
+      "t_ci": [
+       7.075677147137429,
+       7.1403407108408485
+      ],
+      "ci": [
+       7.075677147137429,
+       7.1403407108408485
+      ],
+      "ci_method": "t"
+     },
+     "t_reread": {
+      "n": 5,
+      "mean": 12.192366733333333,
+      "min": 12.185758,
+      "max": 12.204050666666667,
+      "bootstrap_ci": [
+       12.1868256,
+       12.198842333333333
+      ],
+      "t_ci": [
+       12.18287473594679,
+       12.201858730719877
+      ],
+      "ci": [
+       12.18287473594679,
+       12.201858730719877
+      ],
+      "ci_method": "t"
+     },
+     "range": 0.05222276942355819,
+     "eligible": true,
+     "reasons": [],
+     "sanity": "pass",
+     "mtp": false,
+     "cache_mib": 0,
+     "peak_vram_mib": 15766.0,
+     "flags": []
+    },
+    {
+     "cell": "s2a2-P2-64K-b4096-mtp1",
+     "profile": "candidate",
+     "reference": false,
+     "status": "complete",
+     "n_clean": 5,
+     "n_total": 5,
+     "t_turn_400": {
+      "n": 5,
+      "mean": 7.046567377955642,
+      "min": 6.977510072681706,
+      "max": 7.178991602339181,
+      "bootstrap_ci": [
+       6.993388425229742,
+       7.113942290904681
+      ],
+      "t_ci": [
+       6.9460692793011605,
+       7.147065476610124
+      ],
+      "ci": [
+       6.9460692793011605,
+       7.147065476610124
+      ],
+      "ci_method": "t"
+     },
+     "t_reread": {
+      "n": 5,
+      "mean": 14.270867266666666,
+      "min": 14.242924666666667,
+      "max": 14.322560666666666,
+      "bootstrap_ci": [
+       14.245808266666666,
+       14.300747533333332
+      ],
+      "t_ci": [
+       14.227691371197155,
+       14.314043162136178
+      ],
+      "ci": [
+       14.227691371197155,
+       14.314043162136178
+      ],
+      "ci_method": "t"
+     },
+     "range": 0.20148152965747546,
+     "eligible": false,
+     "reasons": [
+      "minimum free VRAM 397 MiB is below 512"
+     ],
+     "sanity": "pass",
+     "mtp": true,
+     "cache_mib": 0,
+     "peak_vram_mib": 15914.0,
+     "flags": []
+    },
+    {
+     "cell": "s2a2-P6-64K-b4096-mtp1",
+     "profile": "candidate",
+     "reference": false,
+     "status": "complete",
+     "n_clean": 5,
+     "n_total": 5,
+     "t_turn_400": {
+      "n": 5,
+      "mean": 6.583553661968876,
+      "min": 6.308064350877193,
+      "max": 6.978854930659984,
+      "bootstrap_ci": [
+       6.378875928969711,
+       6.799337292564745
+      ],
+      "t_ci": [
+       6.238598017471545,
+       6.928509306466208
+      ],
+      "ci": [
+       6.238598017471545,
+       6.928509306466208
+      ],
+      "ci_method": "t"
+     },
+     "t_reread": {
+      "n": 5,
+      "mean": 16.317378666666666,
+      "min": 16.278942,
+      "max": 16.385701,
+      "bootstrap_ci": [
+       16.283559933333333,
+       16.355640133333335
+      ],
+      "t_ci": [
+       16.26027675269016,
+       16.374480580643173
+      ],
+      "ci": [
+       16.26027675269016,
+       16.374480580643173
+      ],
+      "ci_method": "t"
+     },
+     "range": 0.6707905797827909,
+     "eligible": true,
+     "reasons": [],
+     "sanity": "pass",
+     "mtp": true,
+     "cache_mib": 9984,
+     "peak_vram_mib": 15206.0,
+     "flags": []
+    }
+   ],
+   "mtp_vs_off_by_placement": {},
+   "anchor_present": true
+  },
+  "128K": {
+   "status": "decided",
+   "winner": "s2a2-P6-128K-b4096-mtp0",
+   "runner_up": "s2a2-P6-128K-b4096-mtp1",
+   "decision": {
+    "t_turn_400_difference": {
+     "n": 5,
+     "mean": 0.07538098078529706,
+     "keys": [
+      "s2a2-128K:0",
+      "s2a2-128K:1",
+      "s2a2-128K:2",
+      "s2a2-128K:3",
+      "s2a2-128K:4"
+     ],
+     "bootstrap_ci": [
+      -0.005582856307433914,
+      0.19566270793650808
+     ],
+     "t_ci": [
+      -0.09215468341070152,
+      0.24291664498129564
+     ],
+     "ci": [
+      -0.09215468341070152,
+      0.24291664498129564
+     ],
+     "ci_method": "t",
+     "excludes_zero": false,
+     "differences": [
+      0.02741001420217337,
+      0.30783117042606456,
+      0.002863747702591013,
+      0.06932586716791889,
+      -0.030525895572262485
+     ]
+    },
+    "t_reread_difference": {
+     "n": 5,
+     "mean": 5.470589933333334,
+     "keys": [
+      "s2a2-128K:0",
+      "s2a2-128K:1",
+      "s2a2-128K:2",
+      "s2a2-128K:3",
+      "s2a2-128K:4"
+     ],
+     "bootstrap_ci": [
+      5.407312866666663,
+      5.533867000000003
+     ],
+     "t_ci": [
+      5.370034354925153,
+      5.5711455117415145
+     ],
+     "ci": [
+      5.370034354925153,
+      5.5711455117415145
+     ],
+     "ci_method": "t",
+     "excludes_zero": true,
+     "differences": [
+      5.573565333333335,
+      5.450795666666664,
+      5.535704333333342,
+      5.39409933333333,
+      5.398784999999997
+     ]
+    },
+    "step": "t_reread",
+    "text": "T_turn_400 tied; the paired T_reread CI excludes zero: lower T_reread wins"
+   },
+   "tied_with_winner": [
+    {
+     "cell": "s2a2-P6-128K-b4096-mtp2",
+     "paired_difference_mean": 0.28120531278195526,
+     "ci": [
+      0.19196729416786812,
+      0.3704433313960424
+     ],
+     "tied": false,
+     "comparable": true
+    },
+    {
+     "cell": "s2a2-P2-128K-b4096-mtp0",
+     "paired_difference_mean": 0.3789269550543029,
+     "ci": [
+      0.043781890932432954,
+      0.7140720191761729
+     ],
+     "tied": false,
+     "comparable": true
+    }
+   ],
+   "ranking": [
+    "s2a2-P6-128K-b4096-mtp0",
+    "s2a2-P6-128K-b4096-mtp1",
+    "s2a2-P6-128K-b4096-mtp2",
+    "s2a2-P2-128K-b4096-mtp0"
+   ],
+   "rows": [
+    {
+     "cell": "s2a2-P2-128K-b4096-mtp0",
+     "profile": "candidate",
+     "reference": false,
+     "status": "complete",
+     "n_clean": 5,
+     "n_total": 5,
+     "t_turn_400": {
+      "n": 5,
+      "mean": 9.004533620718464,
+      "min": 8.970819408521304,
+      "max": 9.034676949039264,
+      "bootstrap_ci": [
+       8.984552690058482,
+       9.023989754720134
+      ],
+      "t_ci": [
+       8.972821360071457,
+       9.03624588136547
+      ],
+      "ci": [
+       8.972821360071457,
+       9.03624588136547
+      ],
+      "ci_method": "t"
+     },
+     "t_reread": {
+      "n": 5,
+      "mean": 31.415722666666664,
+      "min": 31.380853000000002,
+      "max": 31.473709,
+      "bootstrap_ci": [
+       31.390741133333336,
+       31.447164999999995
+      ],
+      "t_ci": [
+       31.370657491472357,
+       31.46078784186097
+      ],
+      "ci": [
+       31.370657491472357,
+       31.46078784186097
+      ],
+      "ci_method": "t"
+     },
+     "range": 0.06385754051795978,
+     "eligible": true,
+     "reasons": [],
+     "sanity": "pass",
+     "mtp": false,
+     "cache_mib": 0,
+     "peak_vram_mib": 15762.0,
+     "flags": []
+    },
+    {
+     "cell": "s2a2-P6-128K-b4096-mtp0",
+     "profile": "candidate",
+     "reference": false,
+     "status": "complete",
+     "n_clean": 5,
+     "n_total": 5,
+     "t_turn_400": {
+      "n": 5,
+      "mean": 8.62560666566416,
+      "min": 8.389626465329991,
+      "max": 8.962110001670844,
+      "bootstrap_ci": [
+       8.409396498579783,
+       8.841816832748538
+      ],
+      "t_ci": [
+       8.274659982086527,
+       8.976553349241792
+      ],
+      "ci": [
+       8.274659982086527,
+       8.976553349241792
+      ],
+      "ci_method": "t"
+     },
+     "t_reread": {
+      "n": 5,
+      "mean": 35.64529473333333,
+      "min": 35.627918333333334,
+      "max": 35.676279,
+      "bootstrap_ci": [
+       35.632159,
+       35.66163546666667
+      ],
+      "t_ci": [
+       35.621271931695546,
+       35.669317534971114
+      ],
+      "ci": [
+       35.621271931695546,
+       35.669317534971114
+      ],
+      "ci_method": "t"
+     },
+     "range": 0.5724835363408527,
+     "eligible": true,
+     "reasons": [],
+     "sanity": "pass",
+     "mtp": false,
+     "cache_mib": 9728,
+     "peak_vram_mib": 14930.0,
+     "flags": []
+    },
+    {
+     "cell": "s2a2-P6-128K-b4096-mtp1",
+     "profile": "candidate",
+     "reference": false,
+     "status": "complete",
+     "n_clean": 5,
+     "n_total": 5,
+     "t_turn_400": {
+      "n": 5,
+      "mean": 8.700987646449457,
+      "min": 8.362121282372598,
+      "max": 9.269941172096908,
+      "bootstrap_ci": [
+       8.425489236758562,
+       9.03948006800334
+      ],
+      "t_ci": [
+       8.221992982965558,
+       9.179982309933356
+      ],
+      "ci": [
+       8.221992982965558,
+       9.179982309933356
+      ],
+      "ci_method": "t"
+     },
+     "t_reread": {
+      "n": 5,
+      "mean": 41.11588466666667,
+      "min": 41.04552133333333,
+      "max": 41.207669333333335,
+      "bootstrap_ci": [
+       41.06574333333334,
+       41.172338933333336
+      ],
+      "t_ci": [
+       41.03231888844418,
+       41.199450444889166
+      ],
+      "ci": [
+       41.03231888844418,
+       41.199450444889166
+      ],
+      "ci_method": "t"
+     },
+     "range": 0.9078198897243102,
+     "eligible": true,
+     "reasons": [],
+     "sanity": "pass",
+     "mtp": true,
+     "cache_mib": 8192,
+     "peak_vram_mib": 15252.0,
+     "flags": []
+    },
+    {
+     "cell": "s2a2-P6-128K-b4096-mtp2",
+     "profile": "candidate",
+     "reference": false,
+     "status": "complete",
+     "n_clean": 5,
+     "n_total": 5,
+     "t_turn_400": {
+      "n": 5,
+      "mean": 8.906811978446115,
+      "min": 8.58125430576441,
+      "max": 9.263812100250627,
+      "bootstrap_ci": [
+       8.687885231411862,
+       9.140850196658311
+      ],
+      "t_ci": [
+       8.544693125001345,
+       9.268930831890884
+      ],
+      "ci": [
+       8.544693125001345,
+       9.268930831890884
+      ],
+      "ci_method": "t"
+     },
+     "t_reread": {
+      "n": 5,
+      "mean": 41.465871533333335,
+      "min": 41.39114333333334,
+      "max": 41.552084666666666,
+      "bootstrap_ci": [
+       41.41711646666667,
+       41.51368126666667
+      ],
+      "t_ci": [
+       41.38869704738688,
+       41.54304601927979
+      ],
+      "ci": [
+       41.38869704738688,
+       41.54304601927979
+      ],
+      "ci_method": "t"
+     },
+     "range": 0.6825577944862165,
+     "eligible": true,
+     "reasons": [],
+     "sanity": "pass",
+     "mtp": true,
+     "cache_mib": 7936,
+     "peak_vram_mib": 15056.0,
+     "flags": []
+    }
+   ],
+   "mtp_vs_off_by_placement": {
+    "P6-mtp1": {
+     "mtp_cell": "s2a2-P6-128K-b4096-mtp1",
+     "off_cell": "s2a2-P6-128K-b4096-mtp0",
+     "winner": "s2a2-P6-128K-b4096-mtp0",
+     "section_3_3_step": "t_reread",
+     "decision_text": "T_turn_400 tied; the paired T_reread CI excludes zero: lower T_reread wins",
+     "mtp_wins_on_t_turn_400": false,
+     "t_turn_400_difference_off_minus_mtp": {
+      "n": 5,
+      "mean": -0.07538098078529706,
+      "ci": [
+       -0.24291664498129564,
+       0.09215468341070152
+      ],
+      "ci_method": "t",
+      "excludes_zero": false,
+      "differences": [
+       -0.02741001420217337,
+       -0.30783117042606456,
+       -0.002863747702591013,
+       -0.06932586716791889,
+       0.030525895572262485
+      ]
+     },
+     "t_reread_difference_off_minus_mtp": {
+      "n": 5,
+      "mean": -5.470589933333334,
+      "ci": [
+       -5.5711455117415145,
+       -5.370034354925153
+      ],
+      "ci_method": "t",
+      "excludes_zero": true,
+      "differences": [
+       -5.573565333333335,
+       -5.450795666666664,
+       -5.535704333333342,
+       -5.39409933333333,
+       -5.398784999999997
+      ]
+     },
+     "mtp_t_turn_400_mean": 8.700987646449457,
+     "off_t_turn_400_mean": 8.62560666566416
+    },
+    "P6-mtp2": {
+     "mtp_cell": "s2a2-P6-128K-b4096-mtp2",
+     "off_cell": "s2a2-P6-128K-b4096-mtp0",
+     "winner": "s2a2-P6-128K-b4096-mtp0",
+     "section_3_3_step": "ci_excludes_zero",
+     "decision_text": "the paired T_turn_400 CI excludes zero: the best mean wins",
+     "mtp_wins_on_t_turn_400": false,
+     "t_turn_400_difference_off_minus_mtp": {
+      "n": 5,
+      "mean": -0.28120531278195526,
+      "ci": [
+       -0.3704433313960424,
+       -0.19196729416786812
+      ],
+      "ci_method": "t",
+      "excludes_zero": true,
+      "differences": [
+       -0.2612308345864669,
+       -0.30170209857978314,
+       -0.2679341645781115,
+       -0.3865523383458651,
+       -0.1886071278195498
+      ]
+     },
+     "t_reread_difference_off_minus_mtp": {
+      "n": 5,
+      "mean": -5.820576800000002,
+      "ci": [
+       -5.900811213349659,
+       -5.740342386650346
+      ],
+      "ci_method": "t",
+      "excludes_zero": true,
+      "differences": [
+       -5.917980666666665,
+       -5.8523626666666715,
+       -5.763225000000006,
+       -5.771617333333339,
+       -5.797698333333329
+      ]
+     },
+     "mtp_t_turn_400_mean": 8.906811978446115,
+     "off_t_turn_400_mean": 8.62560666566416
+    }
+   },
+   "anchor_present": true
+  }
+ },
+ "winners": {
+  "32K": {
+   "cell": "s2a2-P6-32K-b4096-mtp2",
+   "placement": "P6",
+   "batch": "b4096",
+   "context": "32K",
+   "mtp": 2
+  },
+  "64K": {
+   "cell": "s2a2-P6-64K-b4096-mtp1",
+   "placement": "P6",
+   "batch": "b4096",
+   "context": "64K",
+   "mtp": 1
+  },
+  "128K": {
+   "cell": "s2a2-P6-128K-b4096-mtp0",
+   "placement": "P6",
+   "batch": "b4096",
+   "context": "128K",
+   "mtp": 0
+  }
+ },
+ "runners_up": {
+  "32K": {
+   "cell": "s2a2-P2-32K-b4096-mtp2",
+   "placement": "P2",
+   "batch": "b4096",
+   "context": "32K",
+   "mtp": 2
+  },
+  "64K": {
+   "cell": "s2a2-P2-64K-b4096-mtp0",
+   "placement": "P2",
+   "batch": "b4096",
+   "context": "64K",
+   "mtp": 0
+  },
+  "128K": {
+   "cell": "s2a2-P6-128K-b4096-mtp1",
+   "placement": "P6",
+   "batch": "b4096",
+   "context": "128K",
+   "mtp": 1
+  }
+ },
+ "human_decision_needed": [],
+ "sanity": "pending: the check runs on the winners and runners-up next",
+ "label": "results",
+ "banner": "RESULTS. Only cells with at least 5 clean repetitions are reportable.",
+ "provenance": {
+  "stage": "2a2",
+  "sessions": [
+   {
+    "session_id": "s2a2-32K",
+    "spec_path": "configs/sweeps/stage2-2a2.toml",
+    "spec_sha256": "06624dd84bcf4517f49d966a22640f494ee1f52592515d13c094426fc78f81a1",
+    "spec_file_matches": true,
+    "session_git_commit": "803d129ecb99952f995110a6f11104f09e1421de",
+    "state": "complete",
+    "filters": {
+     "context": "32K"
+    }
+   },
+   {
+    "session_id": "s2a2-64K",
+    "spec_path": "configs/sweeps/stage2-2a2.toml",
+    "spec_sha256": "06624dd84bcf4517f49d966a22640f494ee1f52592515d13c094426fc78f81a1",
+    "spec_file_matches": true,
+    "session_git_commit": "248d83e78a0443e169ee6ad4f435aee035f07138",
+    "state": "complete",
+    "filters": {
+     "context": "64K"
+    }
+   },
+   {
+    "session_id": "s2a2-128K",
+    "spec_path": "configs/sweeps/stage2-2a2.toml",
+    "spec_sha256": "06624dd84bcf4517f49d966a22640f494ee1f52592515d13c094426fc78f81a1",
+    "spec_file_matches": true,
+    "session_git_commit": "7b60e03586f723494393a170b0720e951afa386c",
+    "state": "complete",
+    "filters": {
+     "context": "128K"
+    }
+   }
+  ],
+  "warnings": [],
+  "plan_version": "1.6",
+  "code": {
+   "commit": "f8b7cd69d2d714316a7a51cda8e270a8587ee7df",
+   "dirty": false
+  },
+  "llama_cpp_commit": "57d04820dfef7a3519aac276d018a6fd71251895",
+  "llama_cpp_build_info_commit": "57d04820dfef7a3519aac276d018a6fd71251895",
+  "rule_text": [
+   "\"Top\" means first in the Stage 1 order, even where the pair is too close to call at n = 2.",
+   "- **2a MTP.** Per context, 6 cells: both shortlisted placements with MTP off (these are also the 5-repetition measurement of the shortlist), the top placement with draft lengths 1, 2 and 3, and the second placement with the best draft length of the top placement. The best draft length is chosen by the \u00a73.3 rules among the three; if the CIs include zero, the smaller draft length wins. Cache sizes of P6 cells are re-probed with MTP on, because the head and its draft context cost VRAM. Record acceptance, and the effect on decode **and on prefill**. MTP joins a tuned config only if it wins by \u00a73.3 on T_turn_400 and passes the output sanity check.",
+   "A candidate is eligible for a context if:\n- its final cell status is complete (it started without errors and finished);\n- the minimum free VRAM across its measured windows, in the final attempt, is at least 512 MiB;\n- it has no unresolved flagged unit, where a unit is one repetition and an attempt-2 unit replaces the attempt-1 unit it re-ran;\n- it has enough clean units: 2 in screening, 5 in final selection;\n- it has not failed the output sanity check (\u00a75.6). In screening the check may be \"not run\". In final selection it must have passed.\n\nAmong eligible candidates, order them by the **mean T_turn_400** (the estimated standardised turn, \u00a75.3): the mean over repetitions of each repetition's mean over the three depths of \u00a75.3. A repetition counts only if all three depths are clean. Final selection then compares the best-mean candidate with the runner-up, using the paired per-repetition difference of T_turn_400 and its 95% CI (\u00a75.5):\n1. If the CI excludes zero, the best-mean candidate wins.\n2. If the CI includes zero, compare the paired difference of **T_reread** in the same way. If that CI excludes zero, the candidate with the lower mean T_reread wins.\n3. If both CIs include zero, the candidates are tied on speed: prefer fewer moving parts, which means no MTP over MTP, then no expert cache over a cache.\n4. If still tied, prefer the lower peak VRAM use (total minus the minimum free VRAM over its windows).\n\nAny other eligible candidate whose paired T_turn_400 difference from the winner has a CI that includes zero is reported as \"statistically tied with the winner\", for information only. Screening (2 repetitions) applies no tie-break: its shortlist is simply the two eligible candidates with the lowest mean T_turn_400 per context, and pairs whose means differ by less than the larger of their two ranges are marked \"too close to call at n = 2\". The stock cell is a reference row and is never shortlisted."
+  ],
+  "eligibility_override": false
+ },
+ "analysis_warnings": []
+}

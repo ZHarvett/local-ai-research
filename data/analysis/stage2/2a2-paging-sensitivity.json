@@ -1,0 +1,128 @@
+{
+ "stage": "2a2",
+ "sessions": [
+  "data/raw/s2a2-32K",
+  "data/raw/s2a2-64K",
+  "data/raw/s2a2-128K"
+ ],
+ "keys": [
+  "status",
+  "winner",
+  "runner_up",
+  "tied_with_winner"
+ ],
+ "treated_as_eligible": {},
+ "by_rule": {
+  "32K": {
+   "status": "decided",
+   "winner": "s2a2-P6-32K-b4096-mtp2",
+   "runner_up": "s2a2-P2-32K-b4096-mtp2",
+   "decision": "ci_excludes_zero",
+   "tied_with_winner": [
+    {
+     "cell": "s2a2-P2-32K-b4096-mtp0",
+     "paired_difference_mean": 0.6855991766081873,
+     "ci": [
+      0.5240384273768045,
+      0.84715992583957
+     ],
+     "tied": false,
+     "comparable": true
+    }
+   ]
+  },
+  "64K": {
+   "status": "decided",
+   "winner": "s2a2-P6-64K-b4096-mtp1",
+   "runner_up": "s2a2-P2-64K-b4096-mtp0",
+   "decision": "ci_excludes_zero",
+   "tied_with_winner": []
+  },
+  "128K": {
+   "status": "decided",
+   "winner": "s2a2-P6-128K-b4096-mtp0",
+   "runner_up": "s2a2-P6-128K-b4096-mtp1",
+   "decision": "t_reread",
+   "tied_with_winner": [
+    {
+     "cell": "s2a2-P6-128K-b4096-mtp2",
+     "paired_difference_mean": 0.28120531278195526,
+     "ci": [
+      0.19196729416786812,
+      0.3704433313960424
+     ],
+     "tied": false,
+     "comparable": true
+    },
+    {
+     "cell": "s2a2-P2-128K-b4096-mtp0",
+     "paired_difference_mean": 0.3789269550543029,
+     "ci": [
+      0.043781890932432954,
+      0.7140720191761729
+     ],
+     "tied": false,
+     "comparable": true
+    }
+   ]
+  }
+ },
+ "if_treated_eligible": {
+  "32K": {
+   "status": "decided",
+   "winner": "s2a2-P6-32K-b4096-mtp2",
+   "runner_up": "s2a2-P2-32K-b4096-mtp2",
+   "decision": "ci_excludes_zero",
+   "tied_with_winner": [
+    {
+     "cell": "s2a2-P2-32K-b4096-mtp0",
+     "paired_difference_mean": 0.6855991766081873,
+     "ci": [
+      0.5240384273768045,
+      0.84715992583957
+     ],
+     "tied": false,
+     "comparable": true
+    }
+   ]
+  },
+  "64K": {
+   "status": "decided",
+   "winner": "s2a2-P6-64K-b4096-mtp1",
+   "runner_up": "s2a2-P2-64K-b4096-mtp0",
+   "decision": "ci_excludes_zero",
+   "tied_with_winner": []
+  },
+  "128K": {
+   "status": "decided",
+   "winner": "s2a2-P6-128K-b4096-mtp0",
+   "runner_up": "s2a2-P6-128K-b4096-mtp1",
+   "decision": "t_reread",
+   "tied_with_winner": [
+    {
+     "cell": "s2a2-P6-128K-b4096-mtp2",
+     "paired_difference_mean": 0.28120531278195526,
+     "ci": [
+      0.19196729416786812,
+      0.3704433313960424
+     ],
+     "tied": false,
+     "comparable": true
+    },
+    {
+     "cell": "s2a2-P2-128K-b4096-mtp0",
+     "paired_difference_mean": 0.3789269550543029,
+     "ci": [
+      0.043781890932432954,
+      0.7140720191761729
+     ],
+     "tied": false,
+     "comparable": true
+    }
+   ]
+  }
+ },
+ "changes": {},
+ "decision_changes": false,
+ "note": "information only; the declared rule's result stands"
+}
