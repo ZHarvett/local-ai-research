@@ -205,3 +205,11 @@ from the measurement telemetry.
 ### 2e result (2026-11-11 10:16:55Z to 10:24:04Z)
 - Duration 7.2 min (estimate 14), run detached under the GPU lock, preconditions ok (idle gate 0.43 %, no waits; MemAvailable 25.5 GiB). Output `data/microbench/crosscheck-P2-64K-b4096.json` (label "cross-check, random-token prompts, never used for a decision") with telemetry; thermal and paging detectors: no flag, highest Tctl 72 C.
 - llama-bench (commit 57d04820d), 5 repetitions, `-b 4096 -ub 4096 -ctk q8_0 -ctv q8_0 -fa on -fitt 256 -fitc 65536`. Expressed: model, batch, ubatch, KV types, flash attention, fit target, parallel; approximated: the context (`-fitc`, only the minimum context of the fit); nothing unexpressed. Real-prompt comparison from `s2a2-P2-64K-b4096-mtp0` (5 clean units): llama-bench is 8.8 to 9.8 % lower for fresh prefill, 8.5 to 9.7 % lower for decode, 4.2 to 7.2 % lower for the 3,000-token turn prefill.
+
+## Sanity diagnostic (part 2g), Phase 0 conditions, 2026-11-11T14:23Z
+- pgrep llama-server: empty. GPU lock: free. nvidia-smi memory.used: 3 MiB. MemAvailable: 24.6 GiB. Swap in use: 2.10 GiB of 30.46 GiB.
+- CPU busy over 10 s: 0.63 %. Load average (1 min): 0.78.
+- Top 5 by memory (names): chrome 0.38 GiB, chrome 0.38 GiB, claude 0.35 GiB, antigravity-ide 0.34 GiB, cosmic-comp 0.31 GiB.
+- Top 5 by CPU, ps lifetime average (names): chrome 1.5 %, claude 1.2 %, antigravity-ide 1.2 %, cosmic-comp 1.0 %, chrome 0.7 %.
+- Desktop apps open (names): antigravity-ide chrome claude cosmic-comp kilo 
+- Runs, each detached under the GPU lock through `scripts/run-detached.sh --gpu`: `diagnostic-32K` (reference `P1-32K-b2048`; cells `s2a-P6-32K-b4096-mtp0` to `mtp3`, `s2a-P2-32K-b4096-mtp0`, and a byte-identical copy of the reference's resolved config named `P1-32K-b2048-selfcheck`, because the runner drops a cell with the reference's own name), `diagnostic-32K-repeat` (the two failing cells again, with the reference), `diagnostic-64K` (reference `P1-64K-b2048`; cell `s2a-P6-64K-b4096-mtp2`), then `tools/sanity_inspect.py` on the two failing cells.
