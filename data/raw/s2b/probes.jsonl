@@ -1,0 +1,3 @@
+{"utc": "2026-11-11T00:40:36Z", "kind": "max_fit", "cell": "s2b-P6-64K-b4096-mtp1-kvf16", "value": 4096, "ok": true, "free_mib": 6391.0, "reason": null, "detail": {"total_mib": 16311.0}, "seconds": 38.5}
+{"utc": "2026-11-11T00:41:15Z", "kind": "max_fit", "cell": "s2b-P6-64K-b4096-mtp1-kvf16", "value": 9728, "ok": false, "free_mib": 761.0, "reason": "fit_intervened", "detail": {"required_reduction_mib": 242}, "seconds": 38.3}
+{"utc": "2026-11-11T00:41:54Z", "kind": "max_fit", "cell": "s2b-P6-64K-b4096-mtp1-kvf16", "value": 9472, "ok": true, "free_mib": 1015.0, "reason": null, "detail": {"total_mib": 16311.0}, "seconds": 38.8}
