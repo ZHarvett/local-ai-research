@@ -155,3 +155,11 @@ from the measurement telemetry.
 
 ### Re-run s2b (--rerun-flagged, once): 2026-11-11 00:55:08Z to about 01:03Z
 - 1 unit re-run (attempt 2): kvf16 repetition 2. Attempt 2 carries no flag (clean). The re-run adds `canary-rerun-start` and `canary-rerun-end`; drift none (PP_fresh 16K difference 0.27 %). **First live use of the fixed re-run summary writer: the kvf16 cell summary kept `coords`, `resolution` and all keys (2 instances now), checked against the pre-re-run version.**
+
+## Session s2b-32K (2b KV type extension, 32K), Phase 0 conditions, 2026-11-11T06:06Z
+- pgrep llama-server: empty. GPU lock: free. nvidia-smi memory.used: 3 MiB. MemAvailable: 25.5 GiB. Swap in use: 1.48 GiB of 30.46 GiB.
+- CPU busy over 10 s: 0.28 %. Load average (1 min): 0.36.
+- Top 5 by memory (names): claude 0.35 GiB, antigravity-ide 0.33 GiB, antigravity-ide 0.33 GiB, antigravity-ide 0.30 GiB, kilo 0.29 GiB.
+- Top 5 by CPU, ps lifetime average (names): antigravity-ide 1.3 %, claude 1.3 %, cosmic-comp 0.9 %, antigravity-ide 0.5 %, kswapd0 0.2 %.
+- Desktop apps open (names): antigravity-ide claude cosmic-comp kilo 
+- Spec configs/sweeps/stage2-2b-ext.toml (commit a6d6f13), run with --only context=32K, session id s2b-32K; rules of /tmp/stage2-rules-2e.txt.
