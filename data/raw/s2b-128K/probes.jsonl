@@ -1,0 +1,4 @@
+{"utc": "2026-11-11T06:39:48Z", "kind": "max_fit", "cell": "s2b-P6-128K-b4096-mtp0-kvf16", "value": 4096, "ok": true, "free_mib": 5825.0, "reason": null, "detail": {"total_mib": 16311.0}, "seconds": 74.9}
+{"utc": "2026-11-11T06:41:03Z", "kind": "max_fit", "cell": "s2b-P6-128K-b4096-mtp0-kvf16", "value": 9216, "ok": false, "free_mib": 707.0, "reason": "fit_intervened", "detail": {"required_reduction_mib": 475}, "seconds": 74.9}
+{"utc": "2026-11-11T06:42:18Z", "kind": "max_fit", "cell": "s2b-P6-128K-b4096-mtp0-kvf16", "value": 8960, "ok": false, "free_mib": 961.0, "reason": "fit_intervened", "detail": {"required_reduction_mib": 221}, "seconds": 74.9}
+{"utc": "2026-11-11T06:43:33Z", "kind": "max_fit", "cell": "s2b-P6-128K-b4096-mtp0-kvf16", "value": 8704, "ok": true, "free_mib": 1219.0, "reason": null, "detail": {"total_mib": 16311.0}, "seconds": 74.9}

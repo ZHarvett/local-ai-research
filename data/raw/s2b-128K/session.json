@@ -1,0 +1,122 @@
+{
+  "schema": 1,
+  "session_id": "s2b-128K",
+  "created_utc": "2026-11-11T06:23:31Z",
+  "spec": {
+    "name": "stage2-2b",
+    "path": "configs/sweeps/stage2-2b-ext.toml"
+  },
+  "spec_sha256": "63f476b9b217051a4908ed2808a27cb9ae67533818fe77a8d78ff497974daf6f",
+  "manifest_sha256": "ed750c1c73355d08d3f76742eb164721ebdfe7206ce2a7fcad89fd3bd5e9f27e",
+  "sampling_sha256": "09b6a27e5b086b3891ff66e0dd64f25deb12530e505cc69e4153c95716ee6743",
+  "git": {
+    "commit": "0d5ecfab6709a52cffc3f8525f9af4f008fde91e",
+    "short": "0d5ecfab67",
+    "dirty": false,
+    "dirty_paths": []
+  },
+  "filters": {
+    "context": "128K"
+  },
+  "model_sha256": "42739874cc2ccfdb8523b23fbe52e29b2a7555c8176737ca9ca0b5d59859d41f",
+  "llama_cpp_commit": "57d04820dfef7a3519aac276d018a6fd71251895",
+  "allow_dirty": false,
+  "model": {
+    "sha256": "42739874cc2ccfdb8523b23fbe52e29b2a7555c8176737ca9ca0b5d59859d41f",
+    "verified": true,
+    "declared": "42739874cc2ccfdb8523b23fbe52e29b2a7555c8176737ca9ca0b5d59859d41f",
+    "size_bytes": 21713463040
+  },
+  "shuffle_seed": 20261109,
+  "cell_order": [
+    "s2b-P6-128K-b4096-mtp0-kvq8",
+    "s2b-P6-128K-b4096-mtp0-kvf16"
+  ],
+  "cell_order_rule": "seeded shuffle respecting @n_fit dependencies (smallpc.sweep.spec.order_cells), not spec order",
+  "repetitions": 5,
+  "state": "complete",
+  "runs": [
+    {
+      "start_utc": "2026-11-11T06:23:31Z",
+      "pid": 1027642,
+      "mode": "run",
+      "code_commit": "0d5ecfab67",
+      "inhibit": {
+        "checked": true,
+        "active": true,
+        "tag": "smallpc-sweep-s2b-128K-1794378210",
+        "line": "local-ai-research sweep 1000 <user> 1027629 systemd-inhibit sleep:idle smallpc-sweep-s2b-128K-1794378210 block"
+      }
+    }
+  ],
+  "inhibit": {
+    "checked": true,
+    "active": true,
+    "tag": "smallpc-sweep-s2b-128K-1794378210",
+    "line": "local-ai-research sweep 1000 <user> 1027629 systemd-inhibit sleep:idle smallpc-sweep-s2b-128K-1794378210 block"
+  },
+  "drift": {
+    "main": {
+      "metrics": {
+        "pp_fresh_16k": {
+          "flag": null,
+          "relative_difference": 0.005485046562340953,
+          "threshold": 0.05,
+          "start_mean": 961.7207968032166,
+          "end_mean": 956.4457134527793,
+          "start_values": [
+            964.3062489269709,
+            957.9882620710672,
+            962.8678794116116
+          ],
+          "end_values": [
+            960.9728536312944,
+            952.0019379375387,
+            956.3623487895047
+          ]
+        },
+        "tg_16k": {
+          "flag": null,
+          "relative_difference": 0.009672914946841709,
+          "threshold": 0.05,
+          "start_mean": 79.13494993654078,
+          "end_mean": 78.36948429648204,
+          "start_values": [
+            78.99904448774762,
+            79.24378785305937,
+            79.16201746881532
+          ],
+          "end_values": [
+            78.05717071514063,
+            78.28771618642679,
+            78.7635659878787
+          ]
+        },
+        "tg_short": {
+          "flag": null,
+          "relative_difference": 0.0010549821440367303,
+          "threshold": 0.05,
+          "start_mean": 89.15529360934566,
+          "end_mean": 89.06123636654145,
+          "start_values": [
+            88.73955141823151,
+            89.35141620874998,
+            89.37491320105548
+          ],
+          "end_values": [
+            88.53596790338175,
+            88.62121383077302,
+            90.02652736546958
+          ]
+        }
+      },
+      "flag": null,
+      "decided_on": [
+        "pp_fresh_16k",
+        "tg_16k"
+      ],
+      "complete": true
+    }
+  },
+  "finished_utc": "2026-11-11T06:58:43Z"
+}

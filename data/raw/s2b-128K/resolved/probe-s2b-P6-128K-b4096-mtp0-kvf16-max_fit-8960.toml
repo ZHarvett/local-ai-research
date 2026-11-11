@@ -1,0 +1,13 @@
+profile = "candidate"
+context = 131072
+cpu_moe = true
+moe_cache_mib = 8960
+batch = 4096
+ubatch = 4096
+cache_type_k = "f16"
+cache_type_v = "f16"
+flash_attn = "on"
+parallel = 1
+cache_ram = 2048
+metrics = true
+log_verbosity = 4
