@@ -144,3 +144,11 @@ from the measurement telemetry.
 - Duration 21.5 min (estimate 0.65 h). Runner exit 0, state complete, `systemd-inhibit` active, one run. Gate criteria a to f PASS. Cells: 2 of 2 complete (P6-64K mtp1 kvq8 and kvf16), none `did_not_fit`.
 - Flags: `paging` only, 1 of 10 attempt-1 windows (10.0 %): kvf16 repetition 2 (swap activity -14 MiB). No window with swap above 1,024 MiB; drift none. kvq8 took its cache size from the probe cache (9,984 MiB, same key as 2a); kvf16 was probed fresh (3 probe steps).
 - Minimum free VRAM: kvq8 1,103 MiB, kvf16 1,019 MiB. Idle gate: first check always passed (busy at most 0.25 %), no waits or retries; lowest MemAvailable 21.9 GiB (telemetry). Polls: server's share at most 14.9 %, everything else at most 0.2 %. Highest Tctl 72 °C, GPU 69 °C.
+
+## Re-run s2b (--rerun-flagged, once), Phase 0 conditions, 2026-11-11T00:54Z
+- pgrep llama-server: empty. GPU lock: free. nvidia-smi memory.used: 3 MiB. MemAvailable: 26.8 GiB. Swap in use: 2.20 GiB of 30.46 GiB.
+- CPU busy over 10 s: 0.66 %. Load average (1 min): 0.42.
+- Top 5 by memory (names): claude 0.34 GiB, antigravity-ide 0.27 GiB, antigravity-ide 0.24 GiB, kilo 0.11 GiB, antigravity-ide 0.10 GiB.
+- Top 5 by CPU, ps lifetime average (names): antigravity-ide 1.4 %, claude 1.3 %, cosmic-comp 1.0 %, antigravity-ide 0.5 %, kswapd0 0.2 %.
+- Desktop apps open (names): antigravity-ide claude cosmic-comp kilo 
+- Unit to re-run: s2b-P6-64K-b4096-mtp1-kvf16 repetition 2 (paging).
