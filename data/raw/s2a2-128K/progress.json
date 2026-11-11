@@ -1,0 +1,14 @@
+{
+  "session_id": "s2a2-128K",
+  "state": "complete",
+  "phase": "done",
+  "cells_total": 4,
+  "cells_done": 3,
+  "started_utc": "2026-11-10T23:21:02Z",
+  "updated_utc": "2026-11-11T00:28:30Z",
+  "cell": "canary-end",
+  "repetition": 105,
+  "depth": 16384,
+  "kind": "B",
+  "probe": "max_fit=7936"
+}

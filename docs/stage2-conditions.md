@@ -127,3 +127,8 @@ from the measurement telemetry.
 - Top 5 by memory (names): claude 0.35 GiB, antigravity-ide 0.30 GiB, cosmic-comp 0.11 GiB, antigravity-ide 0.11 GiB, antigravity-ide 0.11 GiB.
 - Top 5 by CPU, ps lifetime average (names): antigravity-ide 1.4 %, claude 1.3 %, cosmic-comp 1.0 %, antigravity-ide 0.5 %, kswapd0 0.2 %.
 - Desktop apps open (names): antigravity-ide claude cosmic-comp kilo 
+
+### Session s2a2-128K result (2026-11-10 23:21:02Z to 2026-11-11 00:28:30Z)
+- Duration 67.5 min. Runner exit 0, state complete, `systemd-inhibit` active, one run. Gate criteria a to f PASS. Cells: 4 of 4 complete (P6-128K mtp0, mtp1, mtp2; P2-128K mtp0), none `did_not_fit`. **No flags** (0 of 20 attempt-1 windows paging-flagged; none with swap above 1,024 MiB); drift none.
+- P6-128K-mtp1 and -mtp2 were probed fresh (8 probe steps); P6-128K-mtp0 took the Stage 1 probe from the cache (`probe_cache_hit`, 9,728 MiB).
+- Minimum free VRAM: P6 mtp1 1,059 MiB, mtp2 1,255 MiB, mtp0 1,381 MiB, P2-mtp0 549 MiB. Runner idle gate: first check always passed (busy at most 1.44 %), no waits or retries; lowest MemAvailable 21.0 GiB (telemetry). Polls: server's share at most 20.7 % outside the exit sample (one sample taken as the server exited has no valid split). Highest Tctl 73 °C, GPU 70 °C.
