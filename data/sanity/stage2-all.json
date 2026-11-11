@@ -1,0 +1,66 @@
+{
+ "note": "union of data/sanity/stage2-{32K,64K,128K}.json (cells only), written by a one-line script for smallpc.report render --sanity",
+ "cells": {
+  "P1-32K-b2048": {
+   "result": "pass",
+   "reference": true,
+   "config_sha256": "8456046396a155a7b8386337674cdf1e8e568a369bd8188a00e1418e9228f86c"
+  },
+  "s2b-P6-32K-b4096-mtp2-kvf16": {
+   "reference": false,
+   "resolved_from": "s2b-32K",
+   "config_sha256": "43282ff9d2e8b616d1d78b3aabb00fdf9c6b9a1d251cd2685977426fdcf28cae",
+   "result": "fail",
+   "failed_prompts": [
+    "sanity-v5-2048-r0"
+   ]
+  },
+  "s2a2-P2-32K-b4096-mtp2": {
+   "reference": false,
+   "resolved_from": "s2a2-32K",
+   "config_sha256": "36c5ff55da3f965c0706a9676097814e85128b25c74e1251383949b9ca700ff1",
+   "result": "fail",
+   "failed_prompts": [
+    "sanity-v5-2048-r0"
+   ]
+  },
+  "P1-64K-b2048": {
+   "result": "pass",
+   "reference": true,
+   "config_sha256": "1f22c15fc898ce191b16542453c74c5046e1efc093e02c7aa1a830384ba96554"
+  },
+  "s2b-P6-64K-b4096-mtp1-kvf16": {
+   "reference": false,
+   "resolved_from": "s2b",
+   "config_sha256": "6190e26c16d8ad82bfd6c6924f472ae68098b190831b689654d3a6697d2a903f",
+   "result": "pass",
+   "failed_prompts": []
+  },
+  "s2a2-P2-64K-b4096-mtp0": {
+   "reference": false,
+   "resolved_from": "s2a2-64K",
+   "config_sha256": "cc8eb2e6f07fa305ebcc27948298d465121ebe8f2ef65d9076a245f44968e2ce",
+   "result": "pass",
+   "failed_prompts": []
+  },
+  "P1-128K-b2048": {
+   "result": "pass",
+   "reference": true,
+   "config_sha256": "c9bb43ceed0434cb3e347e0010520609ee4e05fd4a9097c26533ea17fc82a348"
+  },
+  "s2b-P6-128K-b4096-mtp0-kvf16": {
+   "reference": false,
+   "resolved_from": "s2b-128K",
+   "config_sha256": "26c2b76fd9a232e594bd900040a533033009a2679b8a6e3a5adefdc68f49c987",
+   "result": "pass",
+   "failed_prompts": []
+  },
+  "s2a2-P6-128K-b4096-mtp1": {
+   "reference": false,
+   "resolved_from": "s2a2-128K",
+   "config_sha256": "e7371e98780f6b6a7174e2b15aaf7260ca1129619fe5fea6d0a68412eef41a23",
+   "result": "pass",
+   "failed_prompts": []
+  }
+ }
+}
