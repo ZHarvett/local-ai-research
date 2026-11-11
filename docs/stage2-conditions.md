@@ -181,3 +181,11 @@ from the measurement telemetry.
 - Duration 35.2 min. Runner exit 0, state complete, `systemd-inhibit` active, one run. Gate criteria a to f PASS. Cells: 2 of 2 complete (P6-128K mtp0 kvq8 and kvf16), none `did_not_fit`. **No flags** (0 of 10 attempt-1 windows paging-flagged; none with swap above 1,024 MiB); drift none. No re-run is needed.
 - kvq8 took its cache size from the probe cache (`probe_cache_hit`, 9,728 MiB, same key and value as the 2a2 mtp0 cell); kvf16 was probed fresh (4 probe steps, 8,704 MiB).
 - Minimum free VRAM: kvq8 1,383 MiB, kvf16 1,211 MiB. Idle gate: first check always passed (busy at most 0.50 %), no waits or retries; lowest MemAvailable 22.4 GiB (telemetry). Polls: server's share at most 6.3 %, everything else at most 0.4 %. Highest Tctl 72 °C, GPU 69 °C.
+
+## Sanity check (step plan 5.6), Phase 0 conditions, 2026-11-11T10:12Z
+- pgrep llama-server: empty. GPU lock: free. nvidia-smi memory.used: 3 MiB. MemAvailable: 25.1 GiB. Swap in use: 1.78 GiB of 30.46 GiB.
+- CPU busy over 10 s: 0.84 %. Load average (1 min): 0.20.
+- Top 5 by memory (names): chrome 0.51 GiB, chrome 0.45 GiB, claude 0.35 GiB, antigravity-ide 0.33 GiB, antigravity-ide 0.30 GiB.
+- Top 5 by CPU, ps lifetime average (names): chrome 1.6 %, antigravity-ide 1.2 %, claude 1.2 %, chrome 1.0 %, cosmic-comp 0.9 %.
+- Desktop apps open (names): antigravity-ide chrome claude cosmic-comp kilo 
+- Three runs (32K, 64K, 128K), detached under the GPU lock via scripts/run-detached.sh --gpu; each: P1-<ctx>-b2048 reference, the final winner (FP16 KV cell) and the 2a2 runner-up.
