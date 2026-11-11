@@ -1,0 +1,232 @@
+{
+ "stage": "2b",
+ "contexts": {
+  "64K": {
+   "cells": {
+    "s2b-P6-64K-b4096-mtp1-kvf16": {
+     "setting": "FP16 KV (-ctk f16 -ctv f16)",
+     "eligible": true,
+     "reasons": [],
+     "t_turn_400": {
+      "n": 5,
+      "mean": 6.486492525647452,
+      "min": 6.199516641604009,
+      "max": 6.932561085213032,
+      "ci": [
+       6.128423619580736,
+       6.844561431714168
+      ]
+     },
+     "t_reread": {
+      "n": 5,
+      "mean": 16.755690933333334,
+      "min": 16.693436000000002,
+      "max": 16.808666666666667,
+      "ci": [
+       16.686472277600753,
+       16.824909589065914
+      ]
+     },
+     "n_clean": 5
+    },
+    "s2b-P6-64K-b4096-mtp1-kvq8": {
+     "setting": "8-bit KV (q8_0)",
+     "eligible": true,
+     "reasons": [],
+     "t_turn_400": {
+      "n": 5,
+      "mean": 6.63733408886946,
+      "min": 6.393915422723475,
+      "max": 6.976187588137009,
+      "ci": [
+       6.329858900278823,
+       6.944809277460098
+      ]
+     },
+     "t_reread": {
+      "n": 5,
+      "mean": 16.541170666666666,
+      "min": 16.513878000000002,
+      "max": 16.602528666666668,
+      "ci": [
+       16.49558620559953,
+       16.586755127733802
+      ]
+     },
+     "n_clean": 5
+    }
+   },
+   "sanity": "pending",
+   "human_decision_needed": [
+    "the verdict changes when units with more than 64 MiB of swap growth are removed"
+   ],
+   "verdict": {
+    "winner": "s2b-P6-64K-b4096-mtp1-kvf16",
+    "loser": "s2b-P6-64K-b4096-mtp1-kvq8",
+    "step": "ci_excludes_zero",
+    "reason": "the paired T_turn_400 CI excludes zero: the best mean wins",
+    "decision": {
+     "step": "ci_excludes_zero",
+     "text": "the paired T_turn_400 CI excludes zero: the best mean wins",
+     "t_turn_400_difference": {
+      "n": 5,
+      "mean": 0.15084156322200873,
+      "ci": [
+       0.04965972656220902,
+       0.25202339988180844
+      ],
+      "ci_method": "t",
+      "excludes_zero": true,
+      "differences": [
+       0.17241261737677682,
+       0.04362650292397685,
+       0.24878431986944083,
+       0.09498559482038349,
+       0.19439878111946562
+      ]
+     }
+    }
+   },
+   "status": "decided",
+   "effects": {
+    "pp_fresh": {
+     "n": 5,
+     "geomean": 0.9856511347568009,
+     "ci": [
+      0.9820617390926188,
+      0.9892536495159657
+     ],
+     "ci_method": "t"
+    },
+    "tg": {
+     "n": 5,
+     "geomean": 1.0296204104959181,
+     "ci": [
+      1.0088721924867488,
+      1.050795331266609
+     ],
+     "ci_method": "t"
+    },
+    "t_turn_400": {
+     "n": 5,
+     "geomean": 0.9770556503712334,
+     "ci": [
+      0.9617823882413068,
+      0.9925714544097473
+     ],
+     "ci_method": "t"
+    }
+   },
+   "effects_note": "paired ratios s2b-P6-64K-b4096-mtp1-kvf16 / s2b-P6-64K-b4096-mtp1-kvq8",
+   "swap_sensitivity": {
+    "units_removed": [
+     {
+      "cell": "s2b-P6-64K-b4096-mtp1-kvf16",
+      "session": "s2b",
+      "repetition": 1,
+      "attempt": 1,
+      "swap_activity_mib": 343.7734375,
+      "source": "summary"
+     },
+     {
+      "cell": "s2b-P6-64K-b4096-mtp1-kvf16",
+      "session": "s2b",
+      "repetition": 3,
+      "attempt": 1,
+      "swap_activity_mib": 267.5234375,
+      "source": "summary"
+     },
+     {
+      "cell": "s2b-P6-64K-b4096-mtp1-kvf16",
+      "session": "s2b",
+      "repetition": 4,
+      "attempt": 1,
+      "swap_activity_mib": 136.2265625,
+      "source": "summary"
+     },
+     {
+      "cell": "s2b-P6-64K-b4096-mtp1-kvq8",
+      "session": "s2b",
+      "repetition": 1,
+      "attempt": 1,
+      "swap_activity_mib": 308.7109375,
+      "source": "summary"
+     },
+     {
+      "cell": "s2b-P6-64K-b4096-mtp1-kvq8",
+      "session": "s2b",
+      "repetition": 2,
+      "attempt": 1,
+      "swap_activity_mib": 508.171875,
+      "source": "summary"
+     }
+    ],
+    "without_heavy_swap_units": {
+     "winner": "s2b-P6-64K-b4096-mtp1-kvq8",
+     "loser": "s2b-P6-64K-b4096-mtp1-kvf16",
+     "step": "peak_vram",
+     "reason": "still tied, same MTP and cache status; prefer the lower peak VRAM use",
+     "decision": {
+      "step": "peak_vram",
+      "text": "still tied, same MTP and cache status; prefer the lower peak VRAM use",
+      "t_turn_400_difference": {
+       "n": 1,
+       "mean": 0.17241261737677682,
+       "ci": null,
+       "ci_method": "unavailable (n < 2)",
+       "excludes_zero": null,
+       "differences": [
+        0.17241261737677682
+       ]
+      },
+      "t_reread_difference": {
+       "n": 1,
+       "mean": -0.25853400000000093,
+       "ci": null,
+       "ci_method": "unavailable (n < 2)",
+       "excludes_zero": null,
+       "differences": [
+        -0.25853400000000093
+       ]
+      }
+     }
+    },
+    "changes_the_verdict": true
+   }
+  }
+ },
+ "human_decision_needed": [
+  "64K: the verdict changes when units with more than 64 MiB of swap growth are removed"
+ ],
+ "sanity": "pending: the check runs on the winners next",
+ "label": "results",
+ "banner": "RESULTS. Only cells with at least 5 clean repetitions are reportable.",
+ "provenance": {
+  "stage": "2b",
+  "sessions": [
+   {
+    "session_id": "s2b",
+    "spec_path": "configs/sweeps/stage2-2b.toml",
+    "spec_sha256": "2d2cbfb7bdb11b18577eb31241b12dd6f5315a1511267cd072c923e39430688a",
+    "spec_file_matches": true,
+    "session_git_commit": "e7d53122796927efe85792371e4104898da8e030",
+    "state": "complete",
+    "filters": {}
+   }
+  ],
+  "warnings": [],
+  "plan_version": "1.6",
+  "code": {
+   "commit": "934d5f7518853719356d950599748a2895852b11",
+   "dirty": false
+  },
+  "llama_cpp_commit": "57d04820dfef7a3519aac276d018a6fd71251895",
+  "llama_cpp_build_info_commit": "57d04820dfef7a3519aac276d018a6fd71251895",
+  "rule_text": [
+   "- **2b KV type.** FP16 vs 8-bit KV at 64K, on the 2a winner at 64K, with the cache re-probed for the FP16 cell.",
+   "A candidate is eligible for a context if:\n- its final cell status is complete (it started without errors and finished);\n- the minimum free VRAM across its measured windows, in the final attempt, is at least 512 MiB;\n- it has no unresolved flagged unit, where a unit is one repetition and an attempt-2 unit replaces the attempt-1 unit it re-ran;\n- it has enough clean units: 2 in screening, 5 in final selection;\n- it has not failed the output sanity check (\u00a75.6). In screening the check may be \"not run\". In final selection it must have passed.\n\nAmong eligible candidates, order them by the **mean T_turn_400** (the estimated standardised turn, \u00a75.3): the mean over repetitions of each repetition's mean over the three depths of \u00a75.3. A repetition counts only if all three depths are clean. Final selection then compares the best-mean candidate with the runner-up, using the paired per-repetition difference of T_turn_400 and its 95% CI (\u00a75.5):\n1. If the CI excludes zero, the best-mean candidate wins.\n2. If the CI includes zero, compare the paired difference of **T_reread** in the same way. If that CI excludes zero, the candidate with the lower mean T_reread wins.\n3. If both CIs include zero, the candidates are tied on speed: prefer fewer moving parts, which means no MTP over MTP, then no expert cache over a cache.\n4. If still tied, prefer the lower peak VRAM use (total minus the minimum free VRAM over its windows).\n\nAny other eligible candidate whose paired T_turn_400 difference from the winner has a CI that includes zero is reported as \"statistically tied with the winner\", for information only. Screening (2 repetitions) applies no tie-break: its shortlist is simply the two eligible candidates with the lowest mean T_turn_400 per context, and pairs whose means differ by less than the larger of their two ranges are marked \"too close to call at n = 2\". The stock cell is a reference row and is never shortlisted."
+  ],
+  "eligibility_override": false
+ },
+ "analysis_warnings": []
+}
