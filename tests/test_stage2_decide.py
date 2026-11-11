@@ -647,6 +647,22 @@ def test_pair_stage_swap_sensitivity_can_change_the_verdict(tmp_path):
     assert any("verdict changes" in h for h in e["human_decision_needed"])
 
 
+def test_pair_stage_swap_sensitivity_with_fewer_than_two_pairs_is_inconclusive(tmp_path):
+    """Step lead's reading: fewer than 2 paired units left after the removal means no paired CI;
+    the recomputation is inconclusive and cannot overturn the verdict (no human decision)."""
+    heavy = [RepSpec(i, swap_mib=500.0, slow=1.4) for i in range(4)] + [RepSpec(4, slow=0.8)]
+    plain = [RepSpec(i) for i in range(5)]
+    d = build_session(tmp_path, "s2b", pair_cells("2b", 80.0, 80.0, reps_a=plain, reps_b=heavy))
+    res = run("2b", [d])
+    e = res["contexts"]["64K"]
+    sw = e["swap_sensitivity"]
+    assert {u["repetition"] for u in sw["units_removed"]} == {0, 1, 2, 3}
+    assert sw["paired_units_left"] == 1 and sw["inconclusive"] is True
+    assert sw["changes_the_verdict"] is False and "inconclusive" in sw["note"]
+    assert e["human_decision_needed"] == [] and res["human_decision_needed"] == []
+    assert "INCONCLUSIVE" in render_markdown(res)
+
+
 def test_pair_stage_with_one_ineligible_cell(tmp_path):
     cells = pair_cells("2b", 80.0, 92.0)
     cells[1].min_free = 300.0

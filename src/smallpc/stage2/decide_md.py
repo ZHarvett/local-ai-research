@@ -329,7 +329,7 @@ def _render_pair(res: dict) -> list[str]:
         sw = e.get("swap_sensitivity")
         if sw:
             out += ["Swap sensitivity (units with more than 64 MiB of swap growth removed): "
-                    f"{'the verdict CHANGES' if sw['changes_the_verdict'] else 'no change'}; removed units: {sw['units_removed'] or 'none'}", ""]  # fmt: skip
+                    f"{'INCONCLUSIVE (fewer than 2 paired units left)' if sw.get('inconclusive') else 'the verdict CHANGES' if sw['changes_the_verdict'] else 'no change'}; removed units: {sw['units_removed'] or 'none'}", ""]  # fmt: skip
         for cell, wins in (e.get("paging") or {}).items():
             out += [f"Paging figures of `{cell}`:", ""]
             rows = [

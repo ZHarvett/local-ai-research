@@ -464,13 +464,15 @@ def read_winner(path: Path, sl: Shortlist, context: str = "64K") -> Winner:
 
 
 def _pair_stage(
-    sl: Shortlist, root: Path, stage: str, title: str, cache: CachePolicy, win: Winner,
-    axis: str, values: dict[str, dict[str, Any]], command: str, extra: list[str] | None = None,
+    sl: Shortlist, root: Path, stage: str, title: str, cache: CachePolicy,
+    wins: Winner | list[Winner], axis: str, values: dict[str, dict[str, Any]], command: str,
+    extra: list[str] | None = None,
 ) -> SpecPlan:  # fmt: skip
-    axes = _stage1_axes(sl, [win.entry])
-    axes["mtp"] = _mtp_axis([win.mtp])
+    wins = [wins] if isinstance(wins, Winner) else list(wins)
+    axes = _stage1_axes(sl, [w.entry for w in wins])
+    axes["mtp"] = _mtp_axis(sorted({w.mtp for w in wins}))
     axes[axis] = values
-    blocks = [_block(stage, win.entry, [f"mtp{win.mtp}"], {axis: list(values)})]
+    blocks = [_block(stage, w.entry, [f"mtp{w.mtp}"], {axis: list(values)}) for w in wins]
     header = _header(
         sl,
         root,
@@ -478,7 +480,7 @@ def _pair_stage(
         title,
         cache,
         command,
-        [f"2a2 winner at 64K: {win.cell} (mtp {win.mtp})", *(extra or [])],
+        [f"2a2 winner at {w.context}: {w.cell} (mtp {w.mtp})" for w in wins] + list(extra or []),
     )
     return _new_plan(sl, False, stage, header, _defaults(cache), axes, blocks)
 
@@ -584,6 +586,7 @@ def generate(
     from_2f: Path | None = None,
     from_2a: Path | None = None,
     winner_from: Path | None = None,
+    contexts: list[str] | None = None,
     anchor: bool = True,
     default_threads: int | None = None,
     command: str | None = None,
@@ -613,9 +616,13 @@ def generate(
     if stage in ("2b", "2c", "2d"):
         if winner_from is None:
             raise SpecGenError(f"{stage} needs --winner-from <2a2 decision json>")
-        win = read_winner(winner_from, sl)
+        ctxs = list(dict.fromkeys(contexts or ["64K"]))
+        if stage != "2b" and ctxs != ["64K"]:
+            raise SpecGenError(f"{stage} is generated for 64K only; --context is for 2b")
+        wins = [read_winner(winner_from, sl, c) for c in ctxs]
+        win = wins[0]
         if stage == "2b":
-            return emit(build_2b(sl, root, cache, win, command))
+            return emit(build_2b(sl, root, cache, wins, command))
         if stage == "2c":
             return emit(build_2c(sl, root, cache, win, command))
         return emit(build_2d(sl, root, cache, win, default_threads, command))

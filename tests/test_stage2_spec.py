@@ -290,6 +290,49 @@ def test_2b_compares_8bit_and_fp16_kv(tmp_path, sl, mtp):
     assert all(f"mtp{mtp}" in n for n in argvs)
 
 
+def test_2b_context_option_tests_each_context_on_its_own_winner(tmp_path, sl):
+    """``--context`` (repeatable): one KV pair per context, on that context's 2a2 winner (here the
+    128K winner is the second placement with MTP off, the 32K winner has draft length 2)."""
+    obj = {"stage": "2a2", "winners": {}}
+    for ctx, entry, mtp in (
+        ("32K", sl.top("32K"), 2),
+        ("64K", sl.top("64K"), 1),
+        ("128K", sl.second("128K"), 0),
+    ):
+        obj["winners"][ctx] = {
+            "cell": f"s2a2-{entry.placement}-{ctx}-{entry.batch}-mtp{mtp}",
+            "placement": entry.placement,
+            "batch": entry.batch,
+            "mtp": mtp,
+        }
+    w = write_json(tmp_path, "2a2.json", obj)
+    text, res, argvs, _ = build(
+        tmp_path, "2b", cache_ram="2048", winner_from=w, contexts=["32K", "128K"]
+    )
+    assert res["cells"] == 4 and res["by_context"] == {"32K": 2, "128K": 2}
+    assert "# 2a2 winner at 32K:" in text and "# 2a2 winner at 128K:" in text
+    for n, a in argvs.items():
+        ctx = n.split("-")[2]
+        mtp = {"32K": 2, "128K": 0}[ctx]
+        assert n.endswith(f"-mtp{mtp}-kvq8") or n.endswith(f"-mtp{mtp}-kvf16")
+        assert ("--spec-type" in a) == (mtp > 0)
+        assert (opt(a, "-ctk"), opt(a, "-ctv")) == (
+            ("f16", "f16") if n.endswith("kvf16") else ("q8_0", "q8_0")
+        )
+    assert opt(next(a for n, a in argvs.items() if "128K" in n), "-c") == "131072"
+    # the default context is unchanged
+    _, res64, _, _ = build(tmp_path, "2b", name="d", cache_ram="2048", winner_from=w)
+    assert res64["by_context"] == {"64K": 2}
+    # the 2b-only option, and a context with no winner
+    with pytest.raises(specgen.SpecGenError, match="64K only"):
+        specgen.generate("2c", root=REPO, cache_ram="default", winner_from=w, contexts=["32K"])
+    with pytest.raises(specgen.SpecGenError, match="no winner for context 128K"):
+        specgen.generate(
+            "2b", root=REPO, cache_ram="2048", contexts=["128K"],
+            winner_from=winner_json(tmp_path, sl),
+        )  # fmt: skip
+
+
 def test_2c_compares_auto_with_the_chosen_alternative(tmp_path, sl):
     _, res, argvs, _ = build(
         tmp_path, "2c", cache_ram="default", winner_from=winner_json(tmp_path, sl)

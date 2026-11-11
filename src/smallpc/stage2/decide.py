@@ -671,14 +671,26 @@ def decide_pair(stage: str, res: dict, sessions: dict, lookup: CacheLookup) -> d
                 changed = (
                     v2["winner"] != v["winner"] or v2["step"] != v["step"] or sign(d1) != sign(d2)
                 )
+                # step lead's reading (Stage 2b decision): fewer than 2 paired units left means
+                # the recomputation has no paired CI; it is inconclusive and cannot overturn
+                paired_n = (d2 or {}).get("n")
+                inconclusive = paired_n is None or paired_n < 2
                 entry["swap_sensitivity"] = {
                     "units_removed": [
                         u for u in res["swap_alt"]["removed"] if u["cell"] in (a["name"], b["name"])
                     ],
                     "without_heavy_swap_units": v2,
-                    "changes_the_verdict": changed,
+                    "paired_units_left": paired_n,
+                    "inconclusive": inconclusive,
+                    "changes_the_verdict": changed and not inconclusive,
                 }
-                if changed:
+                if inconclusive:
+                    entry["swap_sensitivity"]["note"] = (
+                        f"inconclusive: {paired_n or 0} paired unit(s) left, fewer than 2; "
+                        "it cannot overturn the rule's verdict"
+                        + (f" (the recomputed winner would be {v2['winner']})" if changed else "")
+                    )
+                if changed and not inconclusive:
                     entry["human_decision_needed"].append(
                         "the verdict changes when units with more than 64 MiB of swap growth "
                         "are removed"

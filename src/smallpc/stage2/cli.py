@@ -24,6 +24,12 @@ def _spec_parser(sub) -> None:
     p.add_argument("--from-2f", type=Path, help="2f decision json (chosen_cache_ram)")
     p.add_argument("--from-2a", type=Path, help="2a decision json (the 2a2 input)")
     p.add_argument("--winner-from", type=Path, help="2a2 decision json (2b, 2c, 2d)")
+    p.add_argument(
+        "--context",
+        action="append",
+        dest="contexts",
+        help="2b: the context to test (repeatable; default 64K), on the 2a2 winner of that context",
+    )
     p.add_argument("--no-anchor", action="store_true", help="2a2: leave out the anchor cells")
     p.add_argument("--default-threads", type=int, help="2d: n_threads the server uses by default")
 
@@ -38,6 +44,7 @@ def _run_spec(a: argparse.Namespace) -> int:
             from_2f=a.from_2f,
             from_2a=a.from_2a,
             winner_from=a.winner_from,
+            contexts=a.contexts,
             anchor=not a.no_anchor,
             default_threads=a.default_threads,
             command=f"python -m smallpc.stage2 {argv}",
