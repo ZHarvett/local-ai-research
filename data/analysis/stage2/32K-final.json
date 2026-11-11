@@ -1,0 +1,502 @@
+{
+ "stage": "final selection (plan section 3.3, one session)",
+ "mode": "final",
+ "min_clean": 5,
+ "contexts": {
+  "32K": {
+   "rows": [
+    {
+     "cell": "s2a-P2-32K-b4096-mtp0",
+     "profile": "candidate",
+     "reference": false,
+     "status": "complete",
+     "n_clean": 5,
+     "n_total": 5,
+     "t_turn_400": {
+      "n": 5,
+      "mean": 6.2954153784461155,
+      "min": 6.280521238095237,
+      "max": 6.306904136173767,
+      "bootstrap_ci": [
+       6.285797817710942,
+       6.304451164912281
+      ],
+      "t_ci": [
+       6.280375897431396,
+       6.310454859460835
+      ],
+      "ci": [
+       6.280375897431396,
+       6.310454859460835
+      ],
+      "ci_method": "t"
+     },
+     "t_reread": {
+      "n": 5,
+      "mean": 5.4261995333333335,
+      "min": 5.404960333333334,
+      "max": 5.456181333333333,
+      "bootstrap_ci": [
+       5.406807600000001,
+       5.4457452
+      ],
+      "t_ci": [
+       5.393948881920433,
+       5.458450184746234
+      ],
+      "ci": [
+       5.393948881920433,
+       5.458450184746234
+      ],
+      "ci_method": "t"
+     },
+     "range": 0.02638289807852967,
+     "eligible": true,
+     "reasons": [],
+     "sanity": "pass",
+     "mtp": false,
+     "cache_mib": 0,
+     "peak_vram_mib": 15744.0,
+     "flags": []
+    },
+    {
+     "cell": "s2a-P6-32K-b4096-mtp0",
+     "profile": "candidate",
+     "reference": false,
+     "status": "complete",
+     "n_clean": 5,
+     "n_total": 5,
+     "t_turn_400": {
+      "n": 5,
+      "mean": 5.915681874686717,
+      "min": 5.698391771929824,
+      "max": 6.3278596658312445,
+      "bootstrap_ci": [
+       5.75365462823726,
+       6.130979508103592
+      ],
+      "t_ci": [
+       5.607541713572999,
+       6.223822035800435
+      ],
+      "ci": [
+       5.607541713572999,
+       6.223822035800435
+      ],
+      "ci_method": "t"
+     },
+     "t_reread": {
+      "n": 5,
+      "mean": 6.691935466666666,
+      "min": 6.599198666666667,
+      "max": 6.748238999999999,
+      "bootstrap_ci": [
+       6.643961333333334,
+       6.736559133333333
+      ],
+      "t_ci": [
+       6.615274179316741,
+       6.768596754016591
+      ],
+      "ci": [
+       6.615274179316741,
+       6.768596754016591
+      ],
+      "ci_method": "t"
+     },
+     "range": 0.6294678939014204,
+     "eligible": true,
+     "reasons": [],
+     "sanity": "pass",
+     "mtp": false,
+     "cache_mib": 11520,
+     "peak_vram_mib": 14932.0,
+     "flags": []
+    },
+    {
+     "cell": "s2a-P6-32K-b4096-mtp1",
+     "profile": "candidate",
+     "reference": false,
+     "status": "complete",
+     "n_clean": 4,
+     "n_total": 5,
+     "t_turn_400": {
+      "n": 4,
+      "mean": 5.783310260233918,
+      "min": 5.609421472013366,
+      "max": 6.103710925647452,
+      "bootstrap_ci": [
+       5.635727377192982,
+       5.993291514828739
+      ],
+      "t_ci": [
+       5.429646547833076,
+       6.1369739726347605
+      ],
+      "ci": [
+       5.429646547833076,
+       6.1369739726347605
+      ],
+      "ci_method": "t"
+     },
+     "t_reread": {
+      "n": 4,
+      "mean": 7.426880916666668,
+      "min": 7.360061000000001,
+      "max": 7.460463000000001,
+      "bootstrap_ci": [
+       7.383007916666667,
+       7.456155833333334
+      ],
+      "t_ci": [
+       7.354062227245354,
+       7.499699606087981
+      ],
+      "ci": [
+       7.354062227245354,
+       7.499699606087981
+      ],
+      "ci_method": "t"
+     },
+     "range": 0.49428945363408605,
+     "eligible": false,
+     "reasons": [
+      "flagged unit(s) s2a-32K:4 (paging)",
+      "n_clean 4 is below 5 (final mode)"
+     ],
+     "sanity": "pass",
+     "mtp": true,
+     "cache_mib": 10752,
+     "peak_vram_mib": 15116.0,
+     "flags": [
+      "paging"
+     ]
+    },
+    {
+     "cell": "s2a-P6-32K-b4096-mtp2",
+     "profile": "candidate",
+     "reference": false,
+     "status": "complete",
+     "n_clean": 5,
+     "n_total": 5,
+     "t_turn_400": {
+      "n": 5,
+      "mean": 5.627287789640768,
+      "min": 5.486573303258145,
+      "max": 5.832745604010025,
+      "bootstrap_ci": [
+       5.518908732999164,
+       5.749225474018379
+      ],
+      "t_ci": [
+       5.44678338209865,
+       5.807792197182885
+      ],
+      "ci": [
+       5.44678338209865,
+       5.807792197182885
+      ],
+      "ci_method": "t"
+     },
+     "t_reread": {
+      "n": 5,
+      "mean": 7.366279799999999,
+      "min": 7.346049666666666,
+      "max": 7.406509,
+      "bootstrap_ci": [
+       7.350799599999999,
+       7.387003266666667
+      ],
+      "t_ci": [
+       7.336410373937983,
+       7.396149226062016
+      ],
+      "ci": [
+       7.336410373937983,
+       7.396149226062016
+      ],
+      "ci_method": "t"
+     },
+     "range": 0.34617230075188044,
+     "eligible": false,
+     "reasons": [
+      "failed the output sanity check"
+     ],
+     "sanity": "fail",
+     "mtp": true,
+     "cache_mib": 10752,
+     "peak_vram_mib": 15180.0,
+     "flags": []
+    },
+    {
+     "cell": "s2a-P6-32K-b4096-mtp3",
+     "profile": "candidate",
+     "reference": false,
+     "status": "complete",
+     "n_clean": 5,
+     "n_total": 5,
+     "t_turn_400": {
+      "n": 5,
+      "mean": 5.914295114619884,
+      "min": 5.663396211361738,
+      "max": 6.247835192982457,
+      "bootstrap_ci": [
+       5.7206770150375945,
+       6.111902658813702
+      ],
+      "t_ci": [
+       5.602207481538993,
+       6.226382747700776
+      ],
+      "ci": [
+       5.602207481538993,
+       6.226382747700776
+      ],
+      "ci_method": "t"
+     },
+     "t_reread": {
+      "n": 5,
+      "mean": 7.4798738,
+      "min": 7.4685966666666666,
+      "max": 7.504424333333334,
+      "bootstrap_ci": [
+       7.471231800000001,
+       7.4927284
+      ],
+      "t_ci": [
+       7.462292063161191,
+       7.497455536838809
+      ],
+      "ci": [
+       7.462292063161191,
+       7.497455536838809
+      ],
+      "ci_method": "t"
+     },
+     "range": 0.5844389816207185,
+     "eligible": true,
+     "reasons": [],
+     "sanity": "pass",
+     "mtp": true,
+     "cache_mib": 10752,
+     "peak_vram_mib": 15242.0,
+     "flags": []
+    }
+   ],
+   "ranking": [
+    "s2a-P6-32K-b4096-mtp3",
+    "s2a-P6-32K-b4096-mtp0",
+    "s2a-P2-32K-b4096-mtp0"
+   ],
+   "stock": null,
+   "winner": "s2a-P6-32K-b4096-mtp0",
+   "runner_up": "s2a-P6-32K-b4096-mtp3",
+   "decision": {
+    "t_turn_400_difference": {
+     "n": 5,
+     "mean": 0.0013867600668330481,
+     "keys": [
+      "s2a-32K:0",
+      "s2a-32K:1",
+      "s2a-32K:2",
+      "s2a-32K:3",
+      "s2a-32K:4"
+     ],
+     "bootstrap_ci": [
+      -0.10848890576441175,
+      0.11126242589807785
+     ],
+     "t_ci": [
+      -0.17732776129154953,
+      0.18010128142521564
+     ],
+     "ci": [
+      -0.17732776129154953,
+      0.18010128142521564
+     ],
+     "ci_method": "t",
+     "excludes_zero": false,
+     "differences": [
+      -0.15124611445279967,
+      0.08002447284878755,
+      0.1722630601503754,
+      0.05173706349206331,
+      -0.14584468170426135
+     ]
+    },
+    "t_reread_difference": {
+     "n": 5,
+     "mean": -0.7879383333333342,
+     "keys": [
+      "s2a-32K:0",
+      "s2a-32K:1",
+      "s2a-32K:2",
+      "s2a-32K:3",
+      "s2a-32K:4"
+     ],
+     "bootstrap_ci": [
+      -0.8380428666666677,
+      -0.744246066666667
+     ],
+     "t_ci": [
+      -0.8606785844626316,
+      -0.7151980822040368
+     ],
+     "ci": [
+      -0.8606785844626316,
+      -0.7151980822040368
+     ],
+     "ci_method": "t",
+     "excludes_zero": true,
+     "differences": [
+      -0.7561853333333346,
+      -0.7204523333333333,
+      -0.7825856666666677,
+      -0.8036880000000011,
+      -0.8767803333333344
+     ]
+    },
+    "step": "t_reread",
+    "text": "T_turn_400 tied; the paired T_reread CI excludes zero: lower T_reread wins"
+   },
+   "tied_with_winner": [
+    {
+     "cell": "s2a-P2-32K-b4096-mtp0",
+     "paired_difference_mean": 0.3797335037593985,
+     "ci": [
+      0.07870947356707714,
+      0.6807575339517199
+     ],
+     "tied": false,
+     "comparable": true
+    }
+   ],
+   "details": {
+    "s2a-P6-32K-b4096-mtp0": {
+     "vram": {
+      "model_mib": 1302.9,
+      "kv_mib": 340.0,
+      "recurrent_mib": 62.81,
+      "compute_mib": 1348.03,
+      "total_mib": 16311.0,
+      "loaded_mib": 14744.0,
+      "peak_used_mib": 14932.0,
+      "min_free_mib": 1379.0,
+      "expert_cache_mib": 11519.65,
+      "other_mib": 358.6,
+      "kv_type": "q8_0",
+      "expert_layers_on_cpu": null
+     },
+     "min_free_vram_mib": 1379.0,
+     "cache": {
+      "present": true,
+      "decode_hit_rate_pct": 96.99,
+      "classes": [
+       {
+        "name": "ubatch <= 8",
+        "hits": 3166250,
+        "misses": 98217,
+        "cpu": 0,
+        "uploaded_mib": 181284.45,
+        "hit_rate_pct": 96.99
+       }
+      ],
+      "large_batch_copies": {
+       "experts": 1814709,
+       "mib": 1096130.0899999999
+      }
+     }
+    },
+    "s2a-P6-32K-b4096-mtp3": {
+     "vram": {
+      "model_mib": 1326.28,
+      "kv_mib": 404.0,
+      "recurrent_mib": 251.25,
+      "compute_mib": 3972.62,
+      "total_mib": 16311.0,
+      "loaded_mib": 14886.0,
+      "peak_used_mib": 15242.0,
+      "min_free_mib": 1069.0,
+      "expert_cache_mib": 10749.89,
+      "other_mib": -1462.0,
+      "kv_type": "q8_0",
+      "expert_layers_on_cpu": null
+     },
+     "min_free_vram_mib": 1069.0,
+     "cache": {
+      "present": true,
+      "decode_hit_rate_pct": 95.42,
+      "classes": [
+       {
+        "name": "ubatch <= 8",
+        "hits": 2648398,
+        "misses": 127035,
+        "cpu": 0,
+        "uploaded_mib": 233425.97,
+        "hit_rate_pct": 95.42
+       }
+      ],
+      "large_batch_copies": {
+       "experts": 1417752,
+       "mib": 859411.55
+      }
+     }
+    }
+   }
+  }
+ },
+ "sanity_file": {
+  "path": "data/sanity/stage2-all.json",
+  "sha256": "974a4f5ff53232ec79656e665c1a82784544b5bf7d3b750af1294efc03b53c74",
+  "results": {
+   "P1-32K-b2048": "pass",
+   "s2b-P6-32K-b4096-mtp2-kvf16": "fail",
+   "s2a2-P2-32K-b4096-mtp2": "fail",
+   "P1-64K-b2048": "pass",
+   "s2b-P6-64K-b4096-mtp1-kvf16": "pass",
+   "s2a2-P2-64K-b4096-mtp0": "pass",
+   "P1-128K-b2048": "pass",
+   "s2b-P6-128K-b4096-mtp0-kvf16": "pass",
+   "s2a2-P6-128K-b4096-mtp1": "pass",
+   "s2a-P6-32K-b4096-mtp0": "pass",
+   "s2a-P6-32K-b4096-mtp1": "pass",
+   "s2a-P6-32K-b4096-mtp2": "fail",
+   "s2a-P6-32K-b4096-mtp3": "pass",
+   "s2a-P2-32K-b4096-mtp0": "pass",
+   "P1-32K-b2048-selfcheck": "pass",
+   "s2a-P6-64K-b4096-mtp2": "fail"
+  }
+ },
+ "provenance": {
+  "stage": "2a",
+  "sessions": [
+   {
+    "session_id": "s2a-32K",
+    "spec_path": "configs/sweeps/stage2-2a.toml",
+    "spec_sha256": "a4e031802c25d4053295b5677e939af5481b4151371b0bf77f2a82ece885e880",
+    "spec_file_matches": true,
+    "session_git_commit": "60edde1c8f7845937abe79828c707ab28dc425ca",
+    "state": "complete",
+    "filters": {
+     "context": "32K"
+    }
+   }
+  ],
+  "warnings": [],
+  "plan_version": "1.6",
+  "code": {
+   "commit": "5b23955b11481ca0e9d4955cd07f4263a6306ef0",
+   "dirty": false
+  },
+  "llama_cpp_commit": "57d04820dfef7a3519aac276d018a6fd71251895",
+  "llama_cpp_build_info_commit": "57d04820dfef7a3519aac276d018a6fd71251895",
+  "rule_text": [
+   "\"Top\" means first in the Stage 1 order, even where the pair is too close to call at n = 2.",
+   "- **2a MTP.** Per context, 6 cells: both shortlisted placements with MTP off (these are also the 5-repetition measurement of the shortlist), the top placement with draft lengths 1, 2 and 3, and the second placement with the best draft length of the top placement. The best draft length is chosen by the \u00a73.3 rules among the three; if the CIs include zero, the smaller draft length wins. Cache sizes of P6 cells are re-probed with MTP on, because the head and its draft context cost VRAM. Record acceptance, and the effect on decode **and on prefill**. MTP joins a tuned config only if it wins by \u00a73.3 on T_turn_400 and passes the output sanity check.",
+   "A candidate is eligible for a context if:\n- its final cell status is complete (it started without errors and finished);\n- the minimum free VRAM across its measured windows, in the final attempt, is at least 512 MiB;\n- it has no unresolved flagged unit, where a unit is one repetition and an attempt-2 unit replaces the attempt-1 unit it re-ran;\n- it has enough clean units: 2 in screening, 5 in final selection;\n- it has not failed the output sanity check (\u00a75.6). In screening the check may be \"not run\". In final selection it must have passed.\n\nAmong eligible candidates, order them by the **mean T_turn_400** (the estimated standardised turn, \u00a75.3): the mean over repetitions of each repetition's mean over the three depths of \u00a75.3. A repetition counts only if all three depths are clean. Final selection then compares the best-mean candidate with the runner-up, using the paired per-repetition difference of T_turn_400 and its 95% CI (\u00a75.5):\n1. If the CI excludes zero, the best-mean candidate wins.\n2. If the CI includes zero, compare the paired difference of **T_reread** in the same way. If that CI excludes zero, the candidate with the lower mean T_reread wins.\n3. If both CIs include zero, the candidates are tied on speed: prefer fewer moving parts, which means no MTP over MTP, then no expert cache over a cache.\n4. If still tied, prefer the lower peak VRAM use (total minus the minimum free VRAM over its windows).\n\nAny other eligible candidate whose paired T_turn_400 difference from the winner has a CI that includes zero is reported as \"statistically tied with the winner\", for information only. Screening (2 repetitions) applies no tie-break: its shortlist is simply the two eligible candidates with the lowest mean T_turn_400 per context, and pairs whose means differ by less than the larger of their two ranges are marked \"too close to call at n = 2\". The stock cell is a reference row and is never shortlisted."
+  ],
+  "eligibility_override": false
+ },
+ "label": "results",
+ "banner": "RESULTS. Only cells with at least 5 clean repetitions are reportable."
+}
