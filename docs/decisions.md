@@ -1027,3 +1027,20 @@ Made by the step lead after the stop report of part 2c. Recorded before any code
 Rule changes for this continuation: code changes are limited to the re-run job builder and summary writer, the Stage 2 decide tool and spec generator (step B4 only) and their tests, plus
 `tools/`; the only allowed edit of `data/raw/` is the scripted coords/resolution repair (B3) with an audit log; the swap tripwire now applies to all windows (stop if more than 10% of a
 session's measured windows show `swap_activity_mib` above 1,024 MiB); a cell ineligible only for paging is a rule outcome, not a stop, except as step C says.
+
+## Stage 2b decision and extension (2026-11-11)
+
+Made by the step lead after the stop report of part 2d. Recorded before any 2b extension data.
+
+1. **2b at 64K: FP16 KV wins** under the declared rule (`data/analysis/stage2/2b.md`): paired T_turn_400 difference q8 minus f16 +0.151 s [+0.050, +0.252], the CI excludes zero; paired
+   ratios f16/q8: PP_fresh 0.986, TG 1.030, T_turn_400 0.977; minimum free VRAM 1,019 against 1,103 MiB; expert cache 9,472 against 9,984 MiB. The swap sensitivity (units with more than
+   64 MiB swap growth removed) removed 5 of 10 units and left one paired repetition, so it had no CI and fell through to the VRAM tie-break. That is a loss of data, not evidence against
+   the verdict, so it is inconclusive. **General reading, from now on:** if a swap-sensitivity re-computation of a decision has fewer than 2 paired units left, it is "inconclusive" and
+   cannot overturn the rule's verdict; it is reported as such and the work continues. With 2 or more paired units left, a changed verdict stops the work for the step lead.
+2. **32K mtp1 sensitivity** (draft length 1 instead of 2 if `s2a-P6-32K-b4096-mtp1` were eligible on 4 clean units): information only; the rule stands (draft length 2 at 32K).
+3. **Probe-cache reuse** for four P6 cells in 2a2 and 2b (`s2a2-P6-32K-b4096-mtp2`, `s2a2-P6-64K-b4096-mtp1`, `s2a2-P6-128K-b4096-mtp0`, s2b kvq8) instead of fresh probes: accepted. The
+   cache key is the full config, llama.cpp commit, model and GPU, and the values and minimum free VRAM match the 2a measurements.
+4. **2b extension, declared before any of its data:** 2b is also run at 32K and 128K, on the 2a2 winner of each context (`s2a2-P6-32K-b4096-mtp2` and `s2a2-P6-128K-b4096-mtp0`), q8 against
+   f16, with the same rules. Reason: FP16 KV won at 64K, and its VRAM cost grows with context (about 1.3 GiB more at 128K, which shrinks the expert cache). The tuned config of each
+   context uses the KV type that wins at that context.
+5. **2c is still held**; the step lead decides after this continuation. No 2c or 2d spec is generated.
