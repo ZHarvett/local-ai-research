@@ -201,3 +201,7 @@ from the measurement telemetry.
 - Top 5 by CPU, ps lifetime average (names): chrome 2.7 %, antigravity-ide 1.2 %, claude 1.2 %, chrome 0.9 %, cosmic-comp 0.9 %.
 - Desktop apps open (names): antigravity-ide chrome claude cosmic-comp kilo 
 - Cell P2-64K-b4096 (default, fewest inexpressible fields), 5 repetitions, detached under the GPU lock; labelled cross-check, never used for a decision.
+
+### 2e result (2026-11-11 10:16:55Z to 10:24:04Z)
+- Duration 7.2 min (estimate 14), run detached under the GPU lock, preconditions ok (idle gate 0.43 %, no waits; MemAvailable 25.5 GiB). Output `data/microbench/crosscheck-P2-64K-b4096.json` (label "cross-check, random-token prompts, never used for a decision") with telemetry; thermal and paging detectors: no flag, highest Tctl 72 C.
+- llama-bench (commit 57d04820d), 5 repetitions, `-b 4096 -ub 4096 -ctk q8_0 -ctv q8_0 -fa on -fitt 256 -fitc 65536`. Expressed: model, batch, ubatch, KV types, flash attention, fit target, parallel; approximated: the context (`-fitc`, only the minimum context of the fit); nothing unexpressed. Real-prompt comparison from `s2a2-P2-64K-b4096-mtp0` (5 clean units): llama-bench is 8.8 to 9.8 % lower for fresh prefill, 8.5 to 9.7 % lower for decode, 4.2 to 7.2 % lower for the 3,000-token turn prefill.

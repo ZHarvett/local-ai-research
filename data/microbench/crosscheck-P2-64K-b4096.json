@@ -1,0 +1,559 @@
+{
+  "label": "cross-check, random-token prompts, never used for a decision",
+  "data_label": null,
+  "cell": "P2-64K-b4096",
+  "resolved_from": "stage1-64K",
+  "config_sha256": "360ae19fa3f9277d308d55f5b7df793d992ffc76e9a07c5bf118c3963f8bf77c",
+  "repetitions": 5,
+  "depths": [
+    16384,
+    32768,
+    49152
+  ],
+  "llama_bench": {
+    "binary": "llama-bench",
+    "commit": "57d04820d"
+  },
+  "runs": [
+    {
+      "name": "fresh_prefill",
+      "argv": [
+        "llama-bench",
+        "-m",
+        "/mnt/data/local-ai-research/models/Ornith-1.5-35B-Q4_K_M.gguf",
+        "-b",
+        "4096",
+        "-ub",
+        "4096",
+        "-ctk",
+        "q8_0",
+        "-ctv",
+        "q8_0",
+        "-fa",
+        "on",
+        "-fitt",
+        "256",
+        "-fitc",
+        "65536",
+        "-p",
+        "16384,32768,49152",
+        "-n",
+        "0",
+        "-d",
+        "0",
+        "-r",
+        "5",
+        "-o",
+        "json"
+      ],
+      "exit_code": 0,
+      "seconds": 250.6,
+      "stderr_tail": "ggml_cuda_init: found 1 CUDA devices (Total VRAM: 15941 MiB):\n  Device 0: NVIDIA GeForce RTX 5060 Ti, compute capability 12.0, VMM: yes, VRAM: 15941 MiB\n"
+    },
+    {
+      "name": "turn",
+      "argv": [
+        "llama-bench",
+        "-m",
+        "/mnt/data/local-ai-research/models/Ornith-1.5-35B-Q4_K_M.gguf",
+        "-b",
+        "4096",
+        "-ub",
+        "4096",
+        "-ctk",
+        "q8_0",
+        "-ctv",
+        "q8_0",
+        "-fa",
+        "on",
+        "-fitt",
+        "256",
+        "-fitc",
+        "65536",
+        "-p",
+        "3000",
+        "-n",
+        "400",
+        "-d",
+        "16384,32768,49152",
+        "-r",
+        "5",
+        "-o",
+        "json"
+      ],
+      "exit_code": 0,
+      "seconds": 178.6,
+      "stderr_tail": "ggml_cuda_init: found 1 CUDA devices (Total VRAM: 15941 MiB):\n  Device 0: NVIDIA GeForce RTX 5060 Ti, compute capability 12.0, VMM: yes, VRAM: 15941 MiB\n"
+    }
+  ],
+  "tests": [
+    {
+      "invocation": "fresh_prefill",
+      "kind": "prefill",
+      "n_prompt": 16384,
+      "n_gen": 0,
+      "n_depth": 0,
+      "tokens_per_second": {
+        "n": 5,
+        "mean": 2685.3019999999997,
+        "min": 2681.0,
+        "max": 2694.95,
+        "bootstrap_ci": [
+          2682.018,
+          2690.3579999999997
+        ],
+        "t_ci": [
+          2678.468147641906,
+          2692.1358523580934
+        ],
+        "ci": [
+          2678.468147641906,
+          2692.1358523580934
+        ],
+        "ci_method": "t"
+      },
+      "samples_ts": [
+        2683.47,
+        2681.0,
+        2683.34,
+        2694.95,
+        2683.75
+      ],
+      "llama_bench_avg_ts": 2685.302462,
+      "build_commit": "57d04820d"
+    },
+    {
+      "invocation": "fresh_prefill",
+      "kind": "prefill",
+      "n_prompt": 32768,
+      "n_gen": 0,
+      "n_depth": 0,
+      "tokens_per_second": {
+        "n": 5,
+        "mean": 2495.062,
+        "min": 2486.6,
+        "max": 2507.55,
+        "bootstrap_ci": [
+          2489.4980000000005,
+          2502.068
+        ],
+        "t_ci": [
+          2485.3777084515887,
+          2504.746291548411
+        ],
+        "ci": [
+          2485.3777084515887,
+          2504.746291548411
+        ],
+        "ci_method": "t"
+      },
+      "samples_ts": [
+        2491.57,
+        2507.55,
+        2496.12,
+        2486.6,
+        2493.47
+      ],
+      "llama_bench_avg_ts": 2495.062621,
+      "build_commit": "57d04820d"
+    },
+    {
+      "invocation": "fresh_prefill",
+      "kind": "prefill",
+      "n_prompt": 49152,
+      "n_gen": 0,
+      "n_depth": 0,
+      "tokens_per_second": {
+        "n": 5,
+        "mean": 2329.846,
+        "min": 2314.37,
+        "max": 2343.63,
+        "bootstrap_ci": [
+          2320.8759999999993,
+          2338.334
+        ],
+        "t_ci": [
+          2316.961003493628,
+          2342.730996506372
+        ],
+        "ci": [
+          2316.961003493628,
+          2342.730996506372
+        ],
+        "ci_method": "t"
+      },
+      "samples_ts": [
+        2330.39,
+        2330.88,
+        2329.96,
+        2343.63,
+        2314.37
+      ],
+      "llama_bench_avg_ts": 2329.845346,
+      "build_commit": "57d04820d"
+    },
+    {
+      "invocation": "turn",
+      "kind": "prefill",
+      "n_prompt": 3000,
+      "n_gen": 0,
+      "n_depth": 16384,
+      "tokens_per_second": {
+        "n": 5,
+        "mean": 2231.668,
+        "min": 2219.07,
+        "max": 2250.59,
+        "bootstrap_ci": [
+          2223.314,
+          2242.082
+        ],
+        "t_ci": [
+          2216.8418562029888,
+          2246.4941437970115
+        ],
+        "ci": [
+          2216.8418562029888,
+          2246.4941437970115
+        ],
+        "ci_method": "t"
+      },
+      "samples_ts": [
+        2219.07,
+        2225.19,
+        2250.59,
+        2229.32,
+        2234.17
+      ],
+      "llama_bench_avg_ts": 2231.666769,
+      "build_commit": "57d04820d"
+    },
+    {
+      "invocation": "turn",
+      "kind": "decode",
+      "n_prompt": 0,
+      "n_gen": 400,
+      "n_depth": 16384,
+      "tokens_per_second": {
+        "n": 5,
+        "mean": 70.39324,
+        "min": 70.0143,
+        "max": 70.5098,
+        "bootstrap_ci": [
+          70.20068,
+          70.5021
+        ],
+        "t_ci": [
+          70.12878436910619,
+          70.65769563089383
+        ],
+        "ci": [
+          70.12878436910619,
+          70.65769563089383
+        ],
+        "ci_method": "t"
+      },
+      "samples_ts": [
+        70.4507,
+        70.4919,
+        70.5098,
+        70.4995,
+        70.0143
+      ],
+      "llama_bench_avg_ts": 70.393232,
+      "build_commit": "57d04820d"
+    },
+    {
+      "invocation": "turn",
+      "kind": "prefill",
+      "n_prompt": 3000,
+      "n_gen": 0,
+      "n_depth": 32768,
+      "tokens_per_second": {
+        "n": 5,
+        "mean": 1949.078,
+        "min": 1942.39,
+        "max": 1961.45,
+        "bootstrap_ci": [
+          1944.2400000000002,
+          1955.4620000000002
+        ],
+        "t_ci": [
+          1939.8196034249863,
+          1958.3363965750136
+        ],
+        "ci": [
+          1939.8196034249863,
+          1958.3363965750136
+        ],
+        "ci_method": "t"
+      },
+      "samples_ts": [
+        1946.48,
+        1950.1,
+        1944.97,
+        1961.45,
+        1942.39
+      ],
+      "llama_bench_avg_ts": 1949.078737,
+      "build_commit": "57d04820d"
+    },
+    {
+      "invocation": "turn",
+      "kind": "decode",
+      "n_prompt": 0,
+      "n_gen": 400,
+      "n_depth": 32768,
+      "tokens_per_second": {
+        "n": 5,
+        "mean": 64.39318,
+        "min": 64.372,
+        "max": 64.4102,
+        "bootstrap_ci": [
+          64.38136,
+          64.40366
+        ],
+        "t_ci": [
+          64.37534813760196,
+          64.41101186239804
+        ],
+        "ci": [
+          64.37534813760196,
+          64.41101186239804
+        ],
+        "ci_method": "t"
+      },
+      "samples_ts": [
+        64.372,
+        64.3876,
+        64.396,
+        64.4102,
+        64.4001
+      ],
+      "llama_bench_avg_ts": 64.393161,
+      "build_commit": "57d04820d"
+    },
+    {
+      "invocation": "turn",
+      "kind": "prefill",
+      "n_prompt": 3000,
+      "n_gen": 0,
+      "n_depth": 49152,
+      "tokens_per_second": {
+        "n": 5,
+        "mean": 1716.48,
+        "min": 1711.41,
+        "max": 1722.32,
+        "bootstrap_ci": [
+          1713.426,
+          1719.852
+        ],
+        "t_ci": [
+          1711.4964652969686,
+          1721.4635347030314
+        ],
+        "ci": [
+          1711.4964652969686,
+          1721.4635347030314
+        ],
+        "ci_method": "t"
+      },
+      "samples_ts": [
+        1722.32,
+        1716.15,
+        1714.77,
+        1711.41,
+        1717.75
+      ],
+      "llama_bench_avg_ts": 1716.478857,
+      "build_commit": "57d04820d"
+    },
+    {
+      "invocation": "turn",
+      "kind": "decode",
+      "n_prompt": 0,
+      "n_gen": 400,
+      "n_depth": 49152,
+      "tokens_per_second": {
+        "n": 5,
+        "mean": 59.200959999999995,
+        "min": 59.1689,
+        "max": 59.2813,
+        "bootstrap_ci": [
+          59.17512000000001,
+          59.2419
+        ],
+        "t_ci": [
+          59.14404566294795,
+          59.25787433705204
+        ],
+        "ci": [
+          59.14404566294795,
+          59.25787433705204
+        ],
+        "ci_method": "t"
+      },
+      "samples_ts": [
+        59.1775,
+        59.2813,
+        59.1689,
+        59.1828,
+        59.1943
+      ],
+      "llama_bench_avg_ts": 59.20093,
+      "build_commit": "57d04820d"
+    }
+  ],
+  "expressed": [
+    {
+      "field": "model",
+      "value": "/mnt/data/local-ai-research/models/Ornith-1.5-35B-Q4_K_M.gguf",
+      "flag": "-m",
+      "note": null
+    },
+    {
+      "field": "batch",
+      "value": 4096,
+      "flag": "-b",
+      "note": null
+    },
+    {
+      "field": "ubatch",
+      "value": 4096,
+      "flag": "-ub",
+      "note": null
+    },
+    {
+      "field": "cache_type_k",
+      "value": "q8_0",
+      "flag": "-ctk",
+      "note": null
+    },
+    {
+      "field": "cache_type_v",
+      "value": "q8_0",
+      "flag": "-ctv",
+      "note": null
+    },
+    {
+      "field": "flash_attn",
+      "value": "on",
+      "flag": "-fa",
+      "note": null
+    },
+    {
+      "field": "fit",
+      "value": "on",
+      "flag": "-fitt",
+      "note": "margin 256 MiB"
+    },
+    {
+      "field": "fit_target",
+      "value": 256,
+      "flag": "-fitt",
+      "note": null
+    },
+    {
+      "field": "parallel",
+      "value": 1,
+      "flag": null,
+      "note": "llama-bench runs a single sequence"
+    }
+  ],
+  "approximated": [
+    {
+      "field": "context",
+      "value": 65536,
+      "flag": "-fitc",
+      "note": "only the minimum context of the fit; the KV cache that llama-bench allocates follows the test depth, not -c"
+    }
+  ],
+  "unexpressed": [],
+  "not_inference": [
+    {
+      "field": "profile",
+      "value": "candidate",
+      "flag": null,
+      "note": "not an inference setting"
+    },
+    {
+      "field": "metrics",
+      "value": true,
+      "flag": null,
+      "note": "serving only (Prometheus endpoint)"
+    },
+    {
+      "field": "log_verbosity",
+      "value": 4,
+      "flag": null,
+      "note": "logging only"
+    }
+  ],
+  "note": "llama-bench uses random-token prompts of the requested lengths: these figures show how far such numbers differ from the real-prompt figures of the sweep and are never used to choose a configuration.",
+  "environment": {
+    "snapshot_id": "66c04f6c276af71a"
+  },
+  "telemetry": {
+    "csv": "crosscheck-P2-64K-b4096-telemetry.csv",
+    "rows": 858,
+    "detectors": {
+      "thermal": {
+        "flag": null,
+        "n_samples": 858,
+        "gpu_slowdown_samples": 0,
+        "gpu_slowdown_by_reason": {
+          "reason_hw_slowdown": 0,
+          "reason_hw_thermal_slowdown": 0,
+          "reason_sw_thermal_slowdown": 0,
+          "reason_hw_power_brake_slowdown": 0
+        },
+        "tctl_ge_95_samples": 0,
+        "sw_power_cap_samples": 0,
+        "max_tctl_c": 72.0,
+        "max_gpu_temp_c": 70.0
+      },
+      "paging": {
+        "flag": null,
+        "major_faults": 0,
+        "server_vmswap_max_kib": 0,
+        "server_vmswap_samples": 0,
+        "system_swap_in_pages": 27657,
+        "process_samples": 0,
+        "vmswap_samples_read": 0
+      }
+    }
+  },
+  "preconditions": {
+    "ok": true,
+    "aborts": [],
+    "hard_aborts": [],
+    "transient_aborts": [],
+    "warnings": [],
+    "values": {
+      "gpu_lock_held": true,
+      "lock_expected_held_by_wrapper": true,
+      "gpu_compute_processes": 0,
+      "gpu_graphics_processes": 0,
+      "connected_on_nvidia": [],
+      "mem_available_gib": 25.53,
+      "idle": {
+        "ok": true,
+        "threshold_busy_pct": 10.0,
+        "window_s": 10.0,
+        "max_wait_s": 600.0,
+        "busy_pct": 0.43,
+        "busy_pct_history": [
+          0.43
+        ],
+        "attempts": 1,
+        "elapsed_s": 10.0,
+        "waited_s": 0.0,
+        "loadavg_1m": 1.28,
+        "error": null
+      },
+      "loadavg_1m": 1.28
+    },
+    "waited_for_idle_s": 0.0
+  },
+  "started_utc": "2026-11-11T10:16:55Z",
+  "finished_utc": "2026-11-11T10:24:04Z"
+}
