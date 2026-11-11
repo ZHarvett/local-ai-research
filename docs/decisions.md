@@ -1060,3 +1060,23 @@ Made by the step lead after the stop report of part 2e. This is a **human decisi
    llama.cpp's default and lossless, it won by the rule at 64K and 128K, and the tuned configs then need no KV flags.
 4. **64K and 128K:** kvf16 by the rule, unchanged (64K +0.151 s [+0.050, +0.252], the sensitivity inconclusive with 1 paired unit; 128K +0.683 s [+0.435, +0.932], the sensitivity unchanged).
 5. **Consequence:** the provisional tuned configs of all three contexts use FP16 KV: 32K `s2b-P6-32K-b4096-mtp2-kvf16`, 64K `s2b-P6-64K-b4096-mtp1-kvf16`, 128K `s2b-P6-128K-b4096-mtp0-kvf16`. 2c is still held.
+
+## Stage 2 sanity result and closing decisions (2026-11-11)
+
+Made by the step lead after the report of part 2f. Recorded before any diagnostic data.
+
+1. **The sanity result** (`data/sanity/stage2-{32K,64K,128K}.json`). Both 32K candidates, `s2b-P6-32K-b4096-mtp2-kvf16` and `s2a2-P2-32K-b4096-mtp2`, fail prompt `sanity-v5-2048-r0` on the 8-gram
+   rule: the maximum 8-gram repeat is 8 against the reference's 2; the distinct 4-gram ratio is 0.831 and 0.841 against 0.917; the first divergence from the reference is at token 27 for both.
+   Everything at 64K and 128K passes. **The rule stands:** a candidate that fails the sanity check is ineligible (plan §3.3, §5.6), so MTP at draft length 2 cannot be the 32K tuned config. The
+   thresholds are not changed.
+2. **The 2b KV decision at 32K** (FP16, a tie broken by simplicity; "Stage 2b 32K decision") was about draft-length-2 cells, so it is void for the 32K tuned config; the 32K tuned config uses
+   the KV type of the cell that wins in the 32K final selection. 64K and 128K stay FP16 (by the rule).
+3. **2c (`--load-mode dio`) is not run.** Reasons: it was meant to remedy the paging problem, which `--cache-ram 2048` solved (1 flagged window of 100 in 2a2, 2b and the 2b extension); dio
+   pins 18.9 GiB of unswappable memory on a 32 GB machine with the desktop open; no problem is left for it to solve. **2d is skipped** (the default thread count is already 8). Both are plan
+   deviations that the step lead will fold into the plan.
+4. **Pre-declared reading of the sanity diagnostic** (written before its data exists; the diagnostic runs the P6 and P2 cells of `s2a-32K` as measured, with q8 KV, a self-comparison of the
+   reference, a repeat of the two failing cells, and the draft-length-2 control `s2a-P6-64K-b4096-mtp2`):
+   - If the MTP-off 32K cells ALSO fail, or if the reference run differs from itself, or if a repeat of a failing cell passes: STOP and report.
+   - If MTP-off and draft lengths 1 and 3 at 32K pass, and draft length 2 fails at 64K as well: draft length 2 is excluded from all tuned configs (a finding for the executive chat).
+   - If draft length 2 passes at 64K: the failure is specific to the 32K family with draft length 2; it is reported as such.
+   In every case the rule's result stands.
