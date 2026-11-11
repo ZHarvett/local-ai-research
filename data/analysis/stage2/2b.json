@@ -1,6 +1,190 @@
 {
  "stage": "2b",
  "contexts": {
+  "32K": {
+   "cells": {
+    "s2b-P6-32K-b4096-mtp2-kvf16": {
+     "setting": "FP16 KV (-ctk f16 -ctv f16)",
+     "eligible": true,
+     "reasons": [],
+     "t_turn_400": {
+      "n": 5,
+      "mean": 5.545726209022557,
+      "min": 5.3867665873015875,
+      "max": 5.851460494569757,
+      "ci": [
+       5.291090592535366,
+       5.800361825509747
+      ]
+     },
+     "t_reread": {
+      "n": 5,
+      "mean": 7.407910866666667,
+      "min": 7.394280999999999,
+      "max": 7.429748666666666,
+      "ci": [
+       7.3897379405196215,
+       7.426083792813712
+      ]
+     },
+     "n_clean": 5
+    },
+    "s2b-P6-32K-b4096-mtp2-kvq8": {
+     "setting": "8-bit KV (q8_0)",
+     "eligible": true,
+     "reasons": [],
+     "t_turn_400": {
+      "n": 5,
+      "mean": 5.5961492402673345,
+      "min": 5.482668148705096,
+      "max": 5.771270042606516,
+      "ci": [
+       5.437088913774921,
+       5.755209566759748
+      ]
+     },
+     "t_reread": {
+      "n": 5,
+      "mean": 7.369622266666667,
+      "min": 7.3499196666666675,
+      "max": 7.379989000000001,
+      "ci": [
+       7.354992283362354,
+       7.38425224997098
+      ]
+     },
+     "n_clean": 5
+    }
+   },
+   "sanity": "pending",
+   "human_decision_needed": [
+    "the verdict changes when units with more than 64 MiB of swap growth are removed"
+   ],
+   "verdict": {
+    "winner": "s2b-P6-32K-b4096-mtp2-kvq8",
+    "loser": "s2b-P6-32K-b4096-mtp2-kvf16",
+    "step": "t_reread",
+    "reason": "T_turn_400 tied; the paired T_reread CI excludes zero: lower T_reread wins",
+    "decision": {
+     "step": "t_reread",
+     "text": "T_turn_400 tied; the paired T_reread CI excludes zero: lower T_reread wins",
+     "t_turn_400_difference": {
+      "n": 5,
+      "mean": 0.050423031244778115,
+      "ci": [
+       -0.05005996170551467,
+       0.1509060241950709
+      ],
+      "ci_method": "t",
+      "excludes_zero": false,
+      "differences": [
+       0.02670158228905528,
+       -0.08019045196324104,
+       0.08769350375939844,
+       0.09590156140350814,
+       0.12200896073516976
+      ]
+     },
+     "t_reread_difference": {
+      "n": 5,
+      "mean": -0.03828859999999956,
+      "ci": [
+       -0.05172772774106755,
+       -0.024849472258931575
+      ],
+      "ci_method": "t",
+      "excludes_zero": true,
+      "differences": [
+       -0.03802599999999945,
+       -0.04673299999999969,
+       -0.034489666666668306,
+       -0.022434666666665493,
+       -0.04975966666666487
+      ]
+     }
+    }
+   },
+   "status": "decided",
+   "effects": {
+    "pp_fresh": {
+     "n": 5,
+     "geomean": 0.995144717022767,
+     "ci": [
+      0.9926723667095101,
+      0.9976232249730009
+     ],
+     "ci_method": "t"
+    },
+    "tg": {
+     "n": 5,
+     "geomean": 1.0155789898030558,
+     "ci": [
+      0.9906631382993872,
+      1.041121491912922
+     ],
+     "ci_method": "t"
+    },
+    "t_turn_400": {
+     "n": 5,
+     "geomean": 0.9906618196222357,
+     "ci": [
+      0.9730106187683802,
+      1.0086332275586998
+     ],
+     "ci_method": "t"
+    }
+   },
+   "effects_note": "paired ratios s2b-P6-32K-b4096-mtp2-kvf16 / s2b-P6-32K-b4096-mtp2-kvq8",
+   "swap_sensitivity": {
+    "units_removed": [
+     {
+      "cell": "s2b-P6-32K-b4096-mtp2-kvf16",
+      "session": "s2b-32K",
+      "repetition": 1,
+      "attempt": 1,
+      "swap_activity_mib": 698.84765625,
+      "source": "summary"
+     },
+     {
+      "cell": "s2b-P6-32K-b4096-mtp2-kvq8",
+      "session": "s2b-32K",
+      "repetition": 1,
+      "attempt": 1,
+      "swap_activity_mib": 637.38671875,
+      "source": "summary"
+     }
+    ],
+    "without_heavy_swap_units": {
+     "winner": "s2b-P6-32K-b4096-mtp2-kvf16",
+     "loser": "s2b-P6-32K-b4096-mtp2-kvq8",
+     "step": "ci_excludes_zero",
+     "reason": "the paired T_turn_400 CI excludes zero: the best mean wins",
+     "decision": {
+      "step": "ci_excludes_zero",
+      "text": "the paired T_turn_400 CI excludes zero: the best mean wins",
+      "t_turn_400_difference": {
+       "n": 4,
+       "mean": 0.0830764020467829,
+       "ci": [
+        0.018910451107197246,
+        0.14724235298636856
+       ],
+       "ci_method": "t",
+       "excludes_zero": true,
+       "differences": [
+        0.02670158228905528,
+        0.08769350375939844,
+        0.09590156140350814,
+        0.12200896073516976
+       ]
+      }
+     }
+    },
+    "paired_units_left": 4,
+    "inconclusive": false,
+    "changes_the_verdict": true
+   }
+  },
   "64K": {
    "cells": {
     "s2b-P6-64K-b4096-mtp1-kvf16": {
@@ -57,9 +241,7 @@
     }
    },
    "sanity": "pending",
-   "human_decision_needed": [
-    "the verdict changes when units with more than 64 MiB of swap growth are removed"
-   ],
+   "human_decision_needed": [],
    "verdict": {
     "winner": "s2b-P6-64K-b4096-mtp1-kvf16",
     "loser": "s2b-P6-64K-b4096-mtp1-kvq8",
@@ -191,12 +373,179 @@
       }
      }
     },
-    "changes_the_verdict": true
+    "paired_units_left": 1,
+    "inconclusive": true,
+    "changes_the_verdict": false,
+    "note": "inconclusive: 1 paired unit(s) left, fewer than 2; it cannot overturn the rule's verdict (the recomputed winner would be s2b-P6-64K-b4096-mtp1-kvq8)"
+   }
+  },
+  "128K": {
+   "cells": {
+    "s2b-P6-128K-b4096-mtp0-kvf16": {
+     "setting": "FP16 KV (-ctk f16 -ctv f16)",
+     "eligible": true,
+     "reasons": [],
+     "t_turn_400": {
+      "n": 5,
+      "mean": 7.96708208170426,
+      "min": 7.781456277360067,
+      "max": 8.384091663324979,
+      "ci": [
+       7.6686379393408,
+       8.26552622406772
+      ]
+     },
+     "t_reread": {
+      "n": 5,
+      "mean": 36.001673800000006,
+      "min": 35.921230333333334,
+      "max": 36.059356666666666,
+      "ci": [
+       35.93360198324751,
+       36.0697456167525
+      ]
+     },
+     "n_clean": 5
+    },
+    "s2b-P6-128K-b4096-mtp0-kvq8": {
+     "setting": "8-bit KV (q8_0)",
+     "eligible": true,
+     "reasons": [],
+     "t_turn_400": {
+      "n": 5,
+      "mean": 8.650156939181288,
+      "min": 8.37515605764411,
+      "max": 8.992475209690895,
+      "ci": [
+       8.272890710557322,
+       9.027423167805255
+      ]
+     },
+     "t_reread": {
+      "n": 5,
+      "mean": 35.6671042,
+      "min": 35.64704533333333,
+      "max": 35.69009633333334,
+      "ci": [
+       35.64423020078146,
+       35.68997819921854
+      ]
+     },
+     "n_clean": 5
+    }
+   },
+   "sanity": "pending",
+   "human_decision_needed": [],
+   "verdict": {
+    "winner": "s2b-P6-128K-b4096-mtp0-kvf16",
+    "loser": "s2b-P6-128K-b4096-mtp0-kvq8",
+    "step": "ci_excludes_zero",
+    "reason": "the paired T_turn_400 CI excludes zero: the best mean wins",
+    "decision": {
+     "step": "ci_excludes_zero",
+     "text": "the paired T_turn_400 CI excludes zero: the best mean wins",
+     "t_turn_400_difference": {
+      "n": 5,
+      "mean": 0.6830748574770267,
+      "ci": [
+       0.4345786100283846,
+       0.9315711049256687
+      ],
+      "ci_method": "t",
+      "excludes_zero": true,
+      "differences": [
+       1.0370355981620731,
+       0.608383546365916,
+       0.6133583500417723,
+       0.5423925137844616,
+       0.6142042790309103
+      ]
+     }
+    }
+   },
+   "status": "decided",
+   "effects": {
+    "pp_fresh": {
+     "n": 5,
+     "geomean": 0.9803776360323336,
+     "ci": [
+      0.97696379869391,
+      0.9838034024569616
+     ],
+     "ci_method": "t"
+    },
+    "tg": {
+     "n": 5,
+     "geomean": 1.0991291973404456,
+     "ci": [
+      1.0532872259046386,
+      1.1469663380837665
+     ],
+     "ci_method": "t"
+    },
+    "t_turn_400": {
+     "n": 5,
+     "geomean": 0.9211572038114623,
+     "ci": [
+      0.8950839762617487,
+      0.947989927914447
+     ],
+     "ci_method": "t"
+    }
+   },
+   "effects_note": "paired ratios s2b-P6-128K-b4096-mtp0-kvf16 / s2b-P6-128K-b4096-mtp0-kvq8",
+   "swap_sensitivity": {
+    "units_removed": [
+     {
+      "cell": "s2b-P6-128K-b4096-mtp0-kvq8",
+      "session": "s2b-128K",
+      "repetition": 3,
+      "attempt": 1,
+      "swap_activity_mib": 231.74609375,
+      "source": "summary"
+     },
+     {
+      "cell": "s2b-P6-128K-b4096-mtp0-kvq8",
+      "session": "s2b-128K",
+      "repetition": 4,
+      "attempt": 1,
+      "swap_activity_mib": 178.84765625,
+      "source": "summary"
+     }
+    ],
+    "without_heavy_swap_units": {
+     "winner": "s2b-P6-128K-b4096-mtp0-kvf16",
+     "loser": "s2b-P6-128K-b4096-mtp0-kvq8",
+     "step": "ci_excludes_zero",
+     "reason": "the paired T_turn_400 CI excludes zero: the best mean wins",
+     "decision": {
+      "step": "ci_excludes_zero",
+      "text": "the paired T_turn_400 CI excludes zero: the best mean wins",
+      "t_turn_400_difference": {
+       "n": 3,
+       "mean": 0.7529258315232538,
+       "ci": [
+        0.1416324333679977,
+        1.3642192296785098
+       ],
+       "ci_method": "t",
+       "excludes_zero": true,
+       "differences": [
+        1.0370355981620731,
+        0.608383546365916,
+        0.6133583500417723
+       ]
+      }
+     }
+    },
+    "paired_units_left": 3,
+    "inconclusive": false,
+    "changes_the_verdict": false
    }
   }
  },
  "human_decision_needed": [
-  "64K: the verdict changes when units with more than 64 MiB of swap growth are removed"
+  "32K: the verdict changes when units with more than 64 MiB of swap growth are removed"
  ],
  "sanity": "pending: the check runs on the winners next",
  "label": "results",
@@ -212,12 +561,34 @@
     "session_git_commit": "e7d53122796927efe85792371e4104898da8e030",
     "state": "complete",
     "filters": {}
+   },
+   {
+    "session_id": "s2b-32K",
+    "spec_path": "configs/sweeps/stage2-2b-ext.toml",
+    "spec_sha256": "63f476b9b217051a4908ed2808a27cb9ae67533818fe77a8d78ff497974daf6f",
+    "spec_file_matches": true,
+    "session_git_commit": "47c6186a3a0ca9e293189700c4b9c67d1d9f4e7d",
+    "state": "complete",
+    "filters": {
+     "context": "32K"
+    }
+   },
+   {
+    "session_id": "s2b-128K",
+    "spec_path": "configs/sweeps/stage2-2b-ext.toml",
+    "spec_sha256": "63f476b9b217051a4908ed2808a27cb9ae67533818fe77a8d78ff497974daf6f",
+    "spec_file_matches": true,
+    "session_git_commit": "0d5ecfab6709a52cffc3f8525f9af4f008fde91e",
+    "state": "complete",
+    "filters": {
+     "context": "128K"
+    }
    }
   ],
   "warnings": [],
   "plan_version": "1.6",
   "code": {
-   "commit": "934d5f7518853719356d950599748a2895852b11",
+   "commit": "e81a251a38eef9e0ecc3a8ceae3038b6e9e7ea88",
    "dirty": false
   },
   "llama_cpp_commit": "57d04820dfef7a3519aac276d018a6fd71251895",
