@@ -152,3 +152,6 @@ from the measurement telemetry.
 - Top 5 by CPU, ps lifetime average (names): antigravity-ide 1.4 %, claude 1.3 %, cosmic-comp 1.0 %, antigravity-ide 0.5 %, kswapd0 0.2 %.
 - Desktop apps open (names): antigravity-ide claude cosmic-comp kilo 
 - Unit to re-run: s2b-P6-64K-b4096-mtp1-kvf16 repetition 2 (paging).
+
+### Re-run s2b (--rerun-flagged, once): 2026-11-11 00:55:08Z to about 01:03Z
+- 1 unit re-run (attempt 2): kvf16 repetition 2. Attempt 2 carries no flag (clean). The re-run adds `canary-rerun-start` and `canary-rerun-end`; drift none (PP_fresh 16K difference 0.27 %). **First live use of the fixed re-run summary writer: the kvf16 cell summary kept `coords`, `resolution` and all keys (2 instances now), checked against the pre-re-run version.**

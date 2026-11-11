@@ -2,13 +2,14 @@
   "session_id": "s2b",
   "state": "complete",
   "phase": "done",
-  "cells_total": 2,
-  "cells_done": 1,
+  "cells_total": 1,
+  "cells_done": 0,
   "started_utc": "2026-11-11T00:30:15Z",
-  "updated_utc": "2026-11-11T00:51:44Z",
-  "cell": "canary-end",
-  "repetition": 105,
+  "updated_utc": "2026-11-11T01:03:02Z",
+  "cell": "canary-rerun-end",
+  "repetition": 115,
   "depth": 16384,
   "kind": "B",
-  "probe": "max_fit=9472"
+  "probe": "max_fit=9472",
+  "mode": "rerun"
 }
