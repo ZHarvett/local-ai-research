@@ -1044,3 +1044,19 @@ Made by the step lead after the stop report of part 2d. Recorded before any 2b e
    f16, with the same rules. Reason: FP16 KV won at 64K, and its VRAM cost grows with context (about 1.3 GiB more at 128K, which shrinks the expert cache). The tuned config of each
    context uses the KV type that wins at that context.
 5. **2c is still held**; the step lead decides after this continuation. No 2c or 2d spec is generated.
+
+## Stage 2b 32K decision (2026-11-11)
+
+Made by the step lead after the stop report of part 2e. This is a **human decision, not the rule's output**; `data/analysis/stage2/2b.json` and `2b.md` stay as the tool wrote them, and
+`data/analysis/stage2/2b-human-decision.md` records the decision beside them.
+
+1. **Decision:** the 32K tuned config uses **FP16 KV** (`-ctk f16 -ctv f16`).
+2. **The two readings at 32K** (`s2b-32K`, P6, b4096, mtp2, 5 clean units per cell):
+   - *Rule's verdict:* **kvq8** by step `t_reread`. T_turn_400: kvf16 5.546 s [5.291, 5.800], kvq8 5.596 s [5.437, 5.755]; paired difference +0.050 s [-0.050, +0.151] (includes zero).
+     Paired T_reread difference -0.038 s [-0.052, -0.025] (excludes zero; kvq8 lower, 7.370 against 7.408 s).
+   - *Swap sensitivity:* repetition 1 of both cells removed (699 and 637 MiB of swap growth), 4 paired units left: **kvf16** by `ci_excludes_zero`, paired T_turn_400 +0.083 s [+0.019, +0.147]
+     (means 5.469 against 5.552 s).
+3. **Reason:** the two readings disagree and neither is robust, so 32K is treated as a tie; both put the difference at about 1 % or less. The tie is broken by simplicity: FP16 is
+   llama.cpp's default and lossless, it won by the rule at 64K and 128K, and the tuned configs then need no KV flags.
+4. **64K and 128K:** kvf16 by the rule, unchanged (64K +0.151 s [+0.050, +0.252], the sensitivity inconclusive with 1 paired unit; 128K +0.683 s [+0.435, +0.932], the sensitivity unchanged).
+5. **Consequence:** the provisional tuned configs of all three contexts use FP16 KV: 32K `s2b-P6-32K-b4096-mtp2-kvf16`, 64K `s2b-P6-64K-b4096-mtp1-kvf16`, 128K `s2b-P6-128K-b4096-mtp0-kvf16`. 2c is still held.
