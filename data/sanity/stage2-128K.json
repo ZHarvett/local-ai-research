@@ -1,0 +1,256 @@
+{
+ "schema": 1,
+ "label": "results",
+ "banner": "RESULTS. Only cells with at least 5 clean repetitions are reportable.",
+ "prompts": {
+  "kind": "sanity",
+  "ids": [
+   "sanity-v5-2048-r0",
+   "sanity-v5-2048-r1",
+   "sanity-v5-2048-r2"
+  ],
+  "n_predict": 512,
+  "sampling": "greedy (temperature 0, top_k 1), return_tokens, fixed seed"
+ },
+ "thresholds": {
+  "min_length": 100,
+  "length_fraction": 0.5,
+  "distinct_4gram_fraction": 0.5,
+  "run_limit": 16,
+  "ngram_repeat_limit": 8,
+  "rule": "plan v1.6 section 5.6, smallpc.sanity"
+ },
+ "reference": {
+  "cell": "P1-128K-b2048",
+  "resolved_from": "stage1-128K",
+  "config_sha256": "c9bb43ceed0434cb3e347e0010520609ee4e05fd4a9097c26533ea17fc82a348",
+  "run_id": "sanity-P1-128K-b2048-20261111T101452-1040849-0",
+  "ok": true,
+  "error": null,
+  "warnings": [],
+  "prompts": {
+   "sanity-v5-2048-r0": {
+    "n_tokens": 512,
+    "tokens_sha256": "9a83c1276b9a92ff7448f359b357b7b3dfaebbce79c081220d7e211dc3bcc775",
+    "stop_type": "limit",
+    "metrics": {
+     "length": 512,
+     "distinct_4gram_ratio": 0.9666011787819253,
+     "longest_run": 1,
+     "max_8gram_repeat": 2
+    }
+   },
+   "sanity-v5-2048-r1": {
+    "n_tokens": 512,
+    "tokens_sha256": "b5ed2de9938c50de97f35909c41f59c99519b5ad78f098a9c97dd28b91be5ba2",
+    "stop_type": "limit",
+    "metrics": {
+     "length": 512,
+     "distinct_4gram_ratio": 0.9155206286836935,
+     "longest_run": 1,
+     "max_8gram_repeat": 2
+    }
+   },
+   "sanity-v5-2048-r2": {
+    "n_tokens": 512,
+    "tokens_sha256": "32f69f3b1976d90997811faa94107acca0a459a65d2f4ac27be16c776e7fa29b",
+    "stop_type": "limit",
+    "metrics": {
+     "length": 512,
+     "distinct_4gram_ratio": 0.9430255402750491,
+     "longest_run": 1,
+     "max_8gram_repeat": 2
+    }
+   }
+  }
+ },
+ "cells": {
+  "P1-128K-b2048": {
+   "result": "pass",
+   "reference": true,
+   "note": "the reference itself: its outputs are the baseline, not compared with anything",
+   "config_sha256": "c9bb43ceed0434cb3e347e0010520609ee4e05fd4a9097c26533ea17fc82a348",
+   "run_id": "sanity-P1-128K-b2048-20261111T101452-1040849-0"
+  },
+  "s2b-P6-128K-b4096-mtp0-kvf16": {
+   "reference": false,
+   "resolved_from": "s2b-128K",
+   "config_sha256": "26c2b76fd9a232e594bd900040a533033009a2679b8a6e3a5adefdc68f49c987",
+   "run_id": "sanity-s2b-P6-128K-b4096-mtp0-kvf16-20261111T101517-1040849-1",
+   "load_time_s": 2.28,
+   "result": "pass",
+   "failed_prompts": [],
+   "prompts": {
+    "sanity-v5-2048-r0": {
+     "ok": true,
+     "reasons": [],
+     "candidate": {
+      "length": 512,
+      "distinct_4gram_ratio": 0.925343811394892,
+      "longest_run": 1,
+      "max_8gram_repeat": 2
+     },
+     "reference": {
+      "length": 512,
+      "distinct_4gram_ratio": 0.9666011787819253,
+      "longest_run": 1,
+      "max_8gram_repeat": 2
+     },
+     "first_divergence": 93,
+     "n_tokens": 512,
+     "tokens_sha256": "ccfee40a026f1804d52ac734891701ed3982936f3413de809a1fb2ffdf8f8449",
+     "stop_type": "limit",
+     "metrics": {
+      "length": 512,
+      "distinct_4gram_ratio": 0.925343811394892,
+      "longest_run": 1,
+      "max_8gram_repeat": 2
+     }
+    },
+    "sanity-v5-2048-r1": {
+     "ok": true,
+     "reasons": [],
+     "candidate": {
+      "length": 512,
+      "distinct_4gram_ratio": 0.9155206286836935,
+      "longest_run": 1,
+      "max_8gram_repeat": 3
+     },
+     "reference": {
+      "length": 512,
+      "distinct_4gram_ratio": 0.9155206286836935,
+      "longest_run": 1,
+      "max_8gram_repeat": 2
+     },
+     "first_divergence": 82,
+     "n_tokens": 512,
+     "tokens_sha256": "7b621c882622391c87a8678be90ea1acc61c94ff84515cfd0538215ad599b168",
+     "stop_type": "limit",
+     "metrics": {
+      "length": 512,
+      "distinct_4gram_ratio": 0.9155206286836935,
+      "longest_run": 1,
+      "max_8gram_repeat": 3
+     }
+    },
+    "sanity-v5-2048-r2": {
+     "ok": true,
+     "reasons": [],
+     "candidate": {
+      "length": 512,
+      "distinct_4gram_ratio": 0.9449901768172888,
+      "longest_run": 1,
+      "max_8gram_repeat": 3
+     },
+     "reference": {
+      "length": 512,
+      "distinct_4gram_ratio": 0.9430255402750491,
+      "longest_run": 1,
+      "max_8gram_repeat": 2
+     },
+     "first_divergence": 18,
+     "n_tokens": 512,
+     "tokens_sha256": "f210ddf10afe42a147d3be1f210f2a75686f47a1ee4d9c5aff1ee80522ec2c61",
+     "stop_type": "limit",
+     "metrics": {
+      "length": 512,
+      "distinct_4gram_ratio": 0.9449901768172888,
+      "longest_run": 1,
+      "max_8gram_repeat": 3
+     }
+    }
+   }
+  },
+  "s2a2-P6-128K-b4096-mtp1": {
+   "reference": false,
+   "resolved_from": "s2a2-128K",
+   "config_sha256": "e7371e98780f6b6a7174e2b15aaf7260ca1129619fe5fea6d0a68412eef41a23",
+   "run_id": "sanity-s2a2-P6-128K-b4096-mtp1-20261111T101543-1040849-2",
+   "load_time_s": 2.29,
+   "result": "pass",
+   "failed_prompts": [],
+   "prompts": {
+    "sanity-v5-2048-r0": {
+     "ok": true,
+     "reasons": [],
+     "candidate": {
+      "length": 512,
+      "distinct_4gram_ratio": 0.9430255402750491,
+      "longest_run": 1,
+      "max_8gram_repeat": 2
+     },
+     "reference": {
+      "length": 512,
+      "distinct_4gram_ratio": 0.9666011787819253,
+      "longest_run": 1,
+      "max_8gram_repeat": 2
+     },
+     "first_divergence": 120,
+     "n_tokens": 512,
+     "tokens_sha256": "8c7d03f5d78d255af2b2f92c27dd9aecfc49e556fb05b20583c4645cc52a0084",
+     "stop_type": "limit",
+     "metrics": {
+      "length": 512,
+      "distinct_4gram_ratio": 0.9430255402750491,
+      "longest_run": 1,
+      "max_8gram_repeat": 2
+     }
+    },
+    "sanity-v5-2048-r1": {
+     "ok": true,
+     "reasons": [],
+     "candidate": {
+      "length": 512,
+      "distinct_4gram_ratio": 0.8939096267190569,
+      "longest_run": 1,
+      "max_8gram_repeat": 2
+     },
+     "reference": {
+      "length": 512,
+      "distinct_4gram_ratio": 0.9155206286836935,
+      "longest_run": 1,
+      "max_8gram_repeat": 2
+     },
+     "first_divergence": 165,
+     "n_tokens": 512,
+     "tokens_sha256": "c858e1531bab27fcc36ca3f82d5cdb2266b1300451f4934c9acf6400d9398bb3",
+     "stop_type": "limit",
+     "metrics": {
+      "length": 512,
+      "distinct_4gram_ratio": 0.8939096267190569,
+      "longest_run": 1,
+      "max_8gram_repeat": 2
+     }
+    },
+    "sanity-v5-2048-r2": {
+     "ok": true,
+     "reasons": [],
+     "candidate": {
+      "length": 512,
+      "distinct_4gram_ratio": 0.8683693516699411,
+      "longest_run": 1,
+      "max_8gram_repeat": 2
+     },
+     "reference": {
+      "length": 512,
+      "distinct_4gram_ratio": 0.9430255402750491,
+      "longest_run": 1,
+      "max_8gram_repeat": 2
+     },
+     "first_divergence": 222,
+     "n_tokens": 512,
+     "tokens_sha256": "2d285a384c64ab1c9fa09f96bc9b48bd6eabaa8d6b6db4d853afdd8cc484db3c",
+     "stop_type": "limit",
+     "metrics": {
+      "length": 512,
+      "distinct_4gram_ratio": 0.8683693516699411,
+      "longest_run": 1,
+      "max_8gram_repeat": 2
+     }
+    }
+   }
+  }
+ },
+ "duration_s": 76.4,
+ "utc": "2026-11-11T10:16:08Z"
+}

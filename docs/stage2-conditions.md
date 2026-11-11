@@ -189,3 +189,7 @@ from the measurement telemetry.
 - Top 5 by CPU, ps lifetime average (names): chrome 1.6 %, antigravity-ide 1.2 %, claude 1.2 %, chrome 1.0 %, cosmic-comp 0.9 %.
 - Desktop apps open (names): antigravity-ide chrome claude cosmic-comp kilo 
 - Three runs (32K, 64K, 128K), detached under the GPU lock via scripts/run-detached.sh --gpu; each: P1-<ctx>-b2048 reference, the final winner (FP16 KV cell) and the 2a2 runner-up.
+
+### Sanity check result (2026-11-11 10:12Z to about 10:19Z)
+- Three runs detached under the GPU lock (`sanity-32K`, `sanity-64K`, `sanity-128K`), output `data/sanity/stage2-<context>.json`, each with the `P1-<context>-b2048` reference (resolved config of the Stage 1 session) and two candidates. No server left running.
+- **32K: both candidates FAIL prompt `sanity-v5-2048-r0`** (`s2b-P6-32K-b4096-mtp2-kvf16` and `s2a2-P2-32K-b4096-mtp2`: "an 8-gram repeats 8 times (reference 2)"); r1 and r2 pass. 64K: both candidates pass. 128K: both candidates pass. All three references pass without warnings. Nothing was changed; the 32K failure is reported to the step lead.
