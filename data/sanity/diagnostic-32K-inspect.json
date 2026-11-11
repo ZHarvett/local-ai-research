@@ -1,0 +1,157 @@
+{
+ "note": "counts and token indices only: no generated text and no token ids",
+ "ngram": 8,
+ "min_repeats": 4,
+ "cluster_gap": 64,
+ "reference": "P1-32K-b2048",
+ "cells": {
+  "s2b-P6-32K-b4096-mtp2-kvf16": {
+   "resolved_from": "s2b-32K",
+   "run_id": "sanity-s2b-P6-32K-b4096-mtp2-kvf16-20261111T142949-1095764-1",
+   "prompts": {
+    "sanity-v5-2048-r0": {
+     "length": 512,
+     "distinct_8grams_repeating_4_or_more": 3,
+     "max_8gram_repeat": 8,
+     "first_divergence": 27,
+     "top_8gram": {
+      "count": 8,
+      "start_indices": [
+       359,
+       378,
+       399,
+       418,
+       437,
+       461,
+       476,
+       497
+      ],
+      "gaps": [
+       19,
+       21,
+       19,
+       19,
+       24,
+       15,
+       21
+      ],
+      "pattern": "clustered",
+      "first_occurrence_after_divergence": true
+     }
+    },
+    "sanity-v5-2048-r1": {
+     "length": 512,
+     "distinct_8grams_repeating_4_or_more": 0,
+     "max_8gram_repeat": 3,
+     "first_divergence": 20,
+     "top_8gram": {
+      "count": 3,
+      "start_indices": [
+       274,
+       311,
+       351
+      ],
+      "gaps": [
+       37,
+       40
+      ],
+      "pattern": "clustered",
+      "first_occurrence_after_divergence": true
+     }
+    },
+    "sanity-v5-2048-r2": {
+     "length": 512,
+     "distinct_8grams_repeating_4_or_more": 0,
+     "max_8gram_repeat": 3,
+     "first_divergence": 25,
+     "top_8gram": {
+      "count": 3,
+      "start_indices": [
+       390,
+       407,
+       426
+      ],
+      "gaps": [
+       17,
+       19
+      ],
+      "pattern": "clustered",
+      "first_occurrence_after_divergence": true
+     }
+    }
+   }
+  },
+  "s2a2-P2-32K-b4096-mtp2": {
+   "resolved_from": "s2a2-32K",
+   "run_id": "sanity-s2a2-P2-32K-b4096-mtp2-20261111T143011-1095764-2",
+   "prompts": {
+    "sanity-v5-2048-r0": {
+     "length": 512,
+     "distinct_8grams_repeating_4_or_more": 3,
+     "max_8gram_repeat": 8,
+     "first_divergence": 27,
+     "top_8gram": {
+      "count": 8,
+      "start_indices": [
+       324,
+       343,
+       362,
+       386,
+       405,
+       420,
+       437,
+       450
+      ],
+      "gaps": [
+       19,
+       19,
+       24,
+       19,
+       15,
+       17,
+       13
+      ],
+      "pattern": "clustered",
+      "first_occurrence_after_divergence": true
+     }
+    },
+    "sanity-v5-2048-r1": {
+     "length": 512,
+     "distinct_8grams_repeating_4_or_more": 0,
+     "max_8gram_repeat": 3,
+     "first_divergence": 41,
+     "top_8gram": {
+      "count": 3,
+      "start_indices": [
+       8,
+       63,
+       372
+      ],
+      "gaps": [
+       55,
+       309
+      ],
+      "pattern": "scattered",
+      "first_occurrence_after_divergence": false
+     }
+    },
+    "sanity-v5-2048-r2": {
+     "length": 512,
+     "distinct_8grams_repeating_4_or_more": 0,
+     "max_8gram_repeat": 1,
+     "first_divergence": 20,
+     "top_8gram": {
+      "count": 1,
+      "start_indices": [
+       0
+      ],
+      "gaps": [],
+      "pattern": "scattered",
+      "first_occurrence_after_divergence": false
+     }
+    }
+   }
+  }
+ },
+ "utc": "2026-11-11T14:29:49Z"
+}
