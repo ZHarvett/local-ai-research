@@ -13,7 +13,7 @@ MIN_REPORTABLE_N = 5
 BANNER = {
     "functional-test": "FUNCTIONAL-TEST DATA. Produced to test the tooling. Not a result of this "
     "study; do not quote these numbers.",
-    "screening": "SCREENING DATA (2 repetitions). Used only for shortlisting, never reported as "
+    "screening": "SCREENING DATA, not final results. Used only for shortlisting, never reported as "
     "results.",
     "results": "RESULTS. Only cells with at least 5 clean repetitions are reportable.",
 }

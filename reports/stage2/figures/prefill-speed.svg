@@ -2075,7 +2075,7 @@ L 795.345898 277.974224
    <text style="font-size: 10px; font-family: 'DejaVu Sans', sans-serif; text-anchor: start; fill: #0b0b0b" x="9.936" y="11.198438" transform="rotate(-0 9.936 11.198438)">[screening] Prefill speed (PP_fresh, Request A) vs prompt length; bars: 95% CI</text>
   </g>
   <g id="text_59">
-   <text style="font-size: 7px; font-family: 'DejaVu Sans', sans-serif; text-anchor: start; fill: #52514e" x="9.936" y="25.478906" transform="rotate(-0 9.936 25.478906)">SCREENING DATA (2 repetitions). Used only for shortlisting, never reported as results.</text>
+   <text style="font-size: 7px; font-family: 'DejaVu Sans', sans-serif; text-anchor: start; fill: #52514e" x="9.936" y="25.478906" transform="rotate(-0 9.936 25.478906)">SCREENING DATA, not final results. Used only for shortlisting, never reported as results.</text>
   </g>
  </g>
  <defs>

@@ -400,7 +400,7 @@ L 68.382109 266.56625
    <text style="font-size: 10px; font-family: 'DejaVu Sans', sans-serif; text-anchor: start; fill: #0b0b0b" x="5.472" y="11.198438" transform="rotate(-0 5.472 11.198438)">[screening] Expert-cache hit rate vs cache size (decode-sized batches only)</text>
   </g>
   <g id="text_22">
-   <text style="font-size: 7px; font-family: 'DejaVu Sans', sans-serif; text-anchor: start; fill: #52514e" x="5.472" y="25.478906" transform="rotate(-0 5.472 25.478906)">SCREENING DATA (2 repetitions). Used only for shortlisting, never reported as results.</text>
+   <text style="font-size: 7px; font-family: 'DejaVu Sans', sans-serif; text-anchor: start; fill: #52514e" x="5.472" y="25.478906" transform="rotate(-0 5.472 25.478906)">SCREENING DATA, not final results. Used only for shortlisting, never reported as results.</text>
   </g>
  </g>
  <defs>

@@ -83,7 +83,8 @@ def test_every_table_row_has_as_many_cells_as_its_header(res):
 
 def test_screening_label_banner_and_results_label_hides_small_cells(res):
     s = report.render_report(res, "screening", command=COMMAND, plan="v1.3")
-    assert "SCREENING DATA (2 repetitions)" in s.splitlines()[2]
+    assert "SCREENING DATA, not final results" in s.splitlines()[2]
+    assert "repetitions" not in s.splitlines()[2]  # the banner does not state a repetition count
     r = report.render_report(res, "results", command=COMMAND, plan="v1.3")
     assert r.splitlines()[2].startswith("> **RESULTS")
     results = r.split("## Eligibility and selection")[0].split("## Results")[1]

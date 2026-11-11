@@ -1,6 +1,6 @@
 # Baseline report (screening)
 
-> **SCREENING DATA (2 repetitions). Used only for shortlisting, never reported as results.**
+> **SCREENING DATA, not final results. Used only for shortlisting, never reported as results.**
 
 ## Provenance
 
@@ -8,7 +8,7 @@
 - Regenerate with: `python -m smallpc.report render --sessions data/raw/s2a-32K data/raw/s2a-64K data/raw/s2a-128K data/raw/s2a2-32K data/raw/s2a2-64K data/raw/s2a2-128K data/raw/s2b data/raw/s2b-32K data/raw/s2b-128K --out reports/stage2 --label screening`
 - Statistics: mean, n, min, max and a 95% CI (wider of the percentile-bootstrap interval, 10,000 resamples, fixed seed, and the t interval); CIs shown for n of at least 2. Paired ratios: geometric mean with the wider of the bootstrap CI and a t-interval on the log ratios, back-transformed.
 
-> SCREENING DATA (2 repetitions). Used only for shortlisting, never reported as results.
+> SCREENING DATA, not final results. Used only for shortlisting, never reported as results.
 
 | session | spec / sha-256 | manifest sha-256 | session commit | record commits | snapshot ids | llama.cpp | state |
 |---|---|---|---|---|---|---|---|
@@ -24,7 +24,7 @@
 
 ## Session health
 
-> SCREENING DATA (2 repetitions). Used only for shortlisting, never reported as results.
+> SCREENING DATA, not final results. Used only for shortlisting, never reported as results.
 
 | session | systemd-inhibit | idle precondition | drift flag |
 |---|---|---|---|
@@ -40,7 +40,7 @@
 
 Canaries (never part of cell statistics):
 
-> SCREENING DATA (2 repetitions). Used only for shortlisting, never reported as results.
+> SCREENING DATA, not final results. Used only for shortlisting, never reported as results.
 
 | session | run | phase | reps | PP_fresh 16K (tok/s) | TG 16K (tok/s) | TG short (tok/s) | flags |
 |---|---|---|---|---|---|---|---|
@@ -75,7 +75,7 @@ Canaries (never part of cell statistics):
 
 ### 32K
 
-> SCREENING DATA (2 repetitions). Used only for shortlisting, never reported as results.
+> SCREENING DATA, not final results. Used only for shortlisting, never reported as results.
 
 | cell | n_clean/n_total | PP_fresh 8K (tok/s) | PP_fresh 16K (tok/s) | PP_fresh 24K (tok/s) | TG 8K (tok/s) | TG 16K (tok/s) | TG 24K (tok/s) | T_turn_400 (s) | T_B (s) | T_reread (s) | TTFT (s) | acceptance | flags |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|
@@ -94,7 +94,7 @@ Values are mean [95% CI] over clean repetitions. T_turn_400, T_B, T_reread and T
 
 ### 64K
 
-> SCREENING DATA (2 repetitions). Used only for shortlisting, never reported as results.
+> SCREENING DATA, not final results. Used only for shortlisting, never reported as results.
 
 | cell | n_clean/n_total | PP_fresh 16K (tok/s) | PP_fresh 32K (tok/s) | PP_fresh 48K (tok/s) | TG 16K (tok/s) | TG 32K (tok/s) | TG 48K (tok/s) | T_turn_400 (s) | T_B (s) | T_reread (s) | TTFT (s) | acceptance | flags |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|
@@ -113,7 +113,7 @@ Values are mean [95% CI] over clean repetitions. T_turn_400, T_B, T_reread and T
 
 ### 128K
 
-> SCREENING DATA (2 repetitions). Used only for shortlisting, never reported as results.
+> SCREENING DATA, not final results. Used only for shortlisting, never reported as results.
 
 | cell | n_clean/n_total | PP_fresh 32K (tok/s) | PP_fresh 64K (tok/s) | PP_fresh 96K (tok/s) | TG 32K (tok/s) | TG 64K (tok/s) | TG 96K (tok/s) | T_turn_400 (s) | T_B (s) | T_reread (s) | TTFT (s) | acceptance | flags |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|
@@ -137,15 +137,15 @@ Mode **screening**: a cell needs at least 2 clean repetitions, a complete status
 
 ### 32K
 
-> SCREENING DATA (2 repetitions). Used only for shortlisting, never reported as results.
+> SCREENING DATA, not final results. Used only for shortlisting, never reported as results.
 
 | cell | role | n_clean/n_total | mean T_turn_400 (s) [95% CI] | eligible | reasons it is not | sanity |
 |---|---|---|---|---|---|---|
-| s2a-P2-32K-b4096-mtp0 | candidate | 5/5 | 6.30 [6.28, 6.31] | yes | - | not run |
-| s2a-P6-32K-b4096-mtp0 | candidate | 5/5 | 5.92 [5.61, 6.22] | yes | - | not run |
-| s2a-P6-32K-b4096-mtp1 | candidate | 4/5 | 5.78 [5.43, 6.14] | no | flagged unit(s) s2a-32K:4 (paging) | not run |
-| s2a-P6-32K-b4096-mtp2 | candidate | 5/5 | 5.63 [5.45, 5.81] | yes | - | not run |
-| s2a-P6-32K-b4096-mtp3 | candidate | 5/5 | 5.91 [5.60, 6.23] | yes | - | not run |
+| s2a-P2-32K-b4096-mtp0 | candidate | 5/5 | 6.30 [6.28, 6.31] | yes | - | pass |
+| s2a-P6-32K-b4096-mtp0 | candidate | 5/5 | 5.92 [5.61, 6.22] | yes | - | pass |
+| s2a-P6-32K-b4096-mtp1 | candidate | 4/5 | 5.78 [5.43, 6.14] | no | flagged unit(s) s2a-32K:4 (paging) | pass |
+| s2a-P6-32K-b4096-mtp2 | candidate | 5/5 | 5.63 [5.45, 5.81] | no | failed the output sanity check | fail |
+| s2a-P6-32K-b4096-mtp3 | candidate | 5/5 | 5.91 [5.60, 6.23] | yes | - | pass |
 | s2a2-P2-32K-b4096-mtp0 | candidate | 5/5 | 6.31 [6.30, 6.31] | yes | - | not run |
 | s2a2-P2-32K-b4096-mtp2 | candidate | 5/5 | 6.08 [6.01, 6.16] | no | failed the output sanity check | fail |
 | s2a2-P6-32K-b4096-mtp2 | candidate | 5/5 | 5.62 [5.47, 5.77] | yes | - | not run |
@@ -154,28 +154,28 @@ Mode **screening**: a cell needs at least 2 clean repetitions, a complete status
 
 **Shortlist (32K):** `s2b-P6-32K-b4096-mtp2-kvq8`, `s2a2-P6-32K-b4096-mtp2`.
 
-Ranking by mean T_turn_400: `s2b-P6-32K-b4096-mtp2-kvq8` < `s2a2-P6-32K-b4096-mtp2` < `s2a-P6-32K-b4096-mtp2` < `s2a-P6-32K-b4096-mtp3` < `s2a-P6-32K-b4096-mtp0` < `s2a-P2-32K-b4096-mtp0` < `s2a2-P2-32K-b4096-mtp0`
+Ranking by mean T_turn_400: `s2b-P6-32K-b4096-mtp2-kvq8` < `s2a2-P6-32K-b4096-mtp2` < `s2a-P6-32K-b4096-mtp3` < `s2a-P6-32K-b4096-mtp0` < `s2a-P2-32K-b4096-mtp0` < `s2a2-P2-32K-b4096-mtp0`
 
 - `s2b-P6-32K-b4096-mtp2-kvq8` and `s2a2-P6-32K-b4096-mtp2`: too close to call at n = 2 (means differ by 0.024 s, larger range 0.291 s).
-- `s2b-P6-32K-b4096-mtp2-kvq8` and `s2a-P6-32K-b4096-mtp2`: too close to call at n = 2 (means differ by 0.031 s, larger range 0.346 s).
 - `s2b-P6-32K-b4096-mtp2-kvq8` and `s2a-P6-32K-b4096-mtp3`: too close to call at n = 2 (means differ by 0.318 s, larger range 0.584 s).
-- `s2a2-P6-32K-b4096-mtp2` and `s2a-P6-32K-b4096-mtp2`: too close to call at n = 2 (means differ by 0.008 s, larger range 0.346 s).
+- `s2b-P6-32K-b4096-mtp2-kvq8` and `s2a-P6-32K-b4096-mtp0`: too close to call at n = 2 (means differ by 0.320 s, larger range 0.629 s).
 - `s2a2-P6-32K-b4096-mtp2` and `s2a-P6-32K-b4096-mtp3`: too close to call at n = 2 (means differ by 0.295 s, larger range 0.584 s).
-- `s2a-P6-32K-b4096-mtp2` and `s2a-P6-32K-b4096-mtp3`: too close to call at n = 2 (means differ by 0.287 s, larger range 0.584 s).
+- `s2a2-P6-32K-b4096-mtp2` and `s2a-P6-32K-b4096-mtp0`: too close to call at n = 2 (means differ by 0.296 s, larger range 0.629 s).
+- `s2a-P6-32K-b4096-mtp3` and `s2a-P6-32K-b4096-mtp0`: too close to call at n = 2 (means differ by 0.001 s, larger range 0.629 s).
 
 - `s2b-P6-32K-b4096-mtp2-kvq8`: VRAM model 1326, KV 404, recurrent 188, compute 3973, expert cache 10750, other -1461.2 MiB; minimum free 1131.0 MiB; expert-cache decode-batch hit rate 95.5%.
 - `s2a2-P6-32K-b4096-mtp2`: VRAM model 1326, KV 404, recurrent 188, compute 3973, expert cache 10750, other -1461.2 MiB; minimum free 1131.0 MiB; expert-cache decode-batch hit rate 95.5%.
 
 ### 64K
 
-> SCREENING DATA (2 repetitions). Used only for shortlisting, never reported as results.
+> SCREENING DATA, not final results. Used only for shortlisting, never reported as results.
 
 | cell | role | n_clean/n_total | mean T_turn_400 (s) [95% CI] | eligible | reasons it is not | sanity |
 |---|---|---|---|---|---|---|
 | s2a-P2-64K-b4096-mtp0 | candidate | 5/5 | 7.17 [7.15, 7.18] | yes | - | not run |
 | s2a-P6-64K-b4096-mtp0 | candidate | 5/5 | 6.86 [6.50, 7.21] | yes | - | not run |
 | s2a-P6-64K-b4096-mtp1 | candidate | 5/5 | 6.69 [6.28, 7.09] | yes | - | not run |
-| s2a-P6-64K-b4096-mtp2 | candidate | 5/5 | 6.60 [6.35, 6.85] | yes | - | not run |
+| s2a-P6-64K-b4096-mtp2 | candidate | 5/5 | 6.60 [6.35, 6.85] | no | failed the output sanity check | fail |
 | s2a-P6-64K-b4096-mtp3 | candidate | 5/5 | 6.83 [6.32, 7.35] | yes | - | not run |
 | s2a2-P2-64K-b4096-mtp0 | candidate | 5/5 | 7.11 [7.08, 7.14] | yes | - | pass |
 | s2a2-P2-64K-b4096-mtp1 | candidate | 5/5 | 7.05 [6.95, 7.15] | no | minimum free VRAM 397 MiB is below 512 | not run |
@@ -185,21 +185,21 @@ Ranking by mean T_turn_400: `s2b-P6-32K-b4096-mtp2-kvq8` < `s2a2-P6-32K-b4096-mt
 
 **Shortlist (64K):** `s2b-P6-64K-b4096-mtp1-kvf16`, `s2a2-P6-64K-b4096-mtp1`.
 
-Ranking by mean T_turn_400: `s2b-P6-64K-b4096-mtp1-kvf16` < `s2a2-P6-64K-b4096-mtp1` < `s2a-P6-64K-b4096-mtp2` < `s2b-P6-64K-b4096-mtp1-kvq8` < `s2a-P6-64K-b4096-mtp1` < `s2a-P6-64K-b4096-mtp3` < `s2a-P6-64K-b4096-mtp0` < `s2a2-P2-64K-b4096-mtp0` < `s2a-P2-64K-b4096-mtp0`
+Ranking by mean T_turn_400: `s2b-P6-64K-b4096-mtp1-kvf16` < `s2a2-P6-64K-b4096-mtp1` < `s2b-P6-64K-b4096-mtp1-kvq8` < `s2a-P6-64K-b4096-mtp1` < `s2a-P6-64K-b4096-mtp3` < `s2a-P6-64K-b4096-mtp0` < `s2a2-P2-64K-b4096-mtp0` < `s2a-P2-64K-b4096-mtp0`
 
 - `s2b-P6-64K-b4096-mtp1-kvf16` and `s2a2-P6-64K-b4096-mtp1`: too close to call at n = 2 (means differ by 0.097 s, larger range 0.733 s).
-- `s2b-P6-64K-b4096-mtp1-kvf16` and `s2a-P6-64K-b4096-mtp2`: too close to call at n = 2 (means differ by 0.116 s, larger range 0.733 s).
 - `s2b-P6-64K-b4096-mtp1-kvf16` and `s2b-P6-64K-b4096-mtp1-kvq8`: too close to call at n = 2 (means differ by 0.151 s, larger range 0.733 s).
-- `s2a2-P6-64K-b4096-mtp1` and `s2a-P6-64K-b4096-mtp2`: too close to call at n = 2 (means differ by 0.019 s, larger range 0.671 s).
+- `s2b-P6-64K-b4096-mtp1-kvf16` and `s2a-P6-64K-b4096-mtp1`: too close to call at n = 2 (means differ by 0.200 s, larger range 0.753 s).
 - `s2a2-P6-64K-b4096-mtp1` and `s2b-P6-64K-b4096-mtp1-kvq8`: too close to call at n = 2 (means differ by 0.054 s, larger range 0.671 s).
-- `s2a-P6-64K-b4096-mtp2` and `s2b-P6-64K-b4096-mtp1-kvq8`: too close to call at n = 2 (means differ by 0.035 s, larger range 0.582 s).
+- `s2a2-P6-64K-b4096-mtp1` and `s2a-P6-64K-b4096-mtp1`: too close to call at n = 2 (means differ by 0.103 s, larger range 0.753 s).
+- `s2b-P6-64K-b4096-mtp1-kvq8` and `s2a-P6-64K-b4096-mtp1`: too close to call at n = 2 (means differ by 0.050 s, larger range 0.753 s).
 
 - `s2b-P6-64K-b4096-mtp1-kvf16`: VRAM model 1326, KV 1408, recurrent 126, compute 4872, expert cache 9471, other -1913.0 MiB; minimum free 1019.0 MiB; expert-cache decode-batch hit rate 94.2%.
 - `s2a2-P6-64K-b4096-mtp1`: VRAM model 1326, KV 808, recurrent 126, compute 4872, expert cache 9982, other -1908.3 MiB; minimum free 1105.0 MiB; expert-cache decode-batch hit rate 94.7%.
 
 ### 128K
 
-> SCREENING DATA (2 repetitions). Used only for shortlisting, never reported as results.
+> SCREENING DATA, not final results. Used only for shortlisting, never reported as results.
 
 | cell | role | n_clean/n_total | mean T_turn_400 (s) [95% CI] | eligible | reasons it is not | sanity |
 |---|---|---|---|---|---|---|
@@ -235,7 +235,7 @@ No context has both a stock cell and a candidate with clean repetitions.
 
 Every results table and paired comparison, recomputed without the clean units whose window shows more than 64 MiB of llama-server swap growth (`swap_activity_mib`, plan §5.5 and §5.6). Swap activity is a note, not a flag: the numbers in the other sections keep those units.
 
-> SCREENING DATA (2 repetitions). Used only for shortlisting, never reported as results.
+> SCREENING DATA, not final results. Used only for shortlisting, never reported as results.
 
 | removed unit (cell, session, repetition) | swap growth (MiB) | source |
 |---|---|---|
@@ -275,7 +275,7 @@ Units above the threshold that are already excluded by a flag (not affected here
 
 ### 32K
 
-> SCREENING DATA (2 repetitions). Used only for shortlisting, never reported as results.
+> SCREENING DATA, not final results. Used only for shortlisting, never reported as results.
 
 | cell | n_clean (all) | T_turn_400 (s), all units | n_clean (no swap-heavy) | T_turn_400 (s), without swap-heavy units |
 |---|---|---|---|---|
@@ -292,7 +292,7 @@ Units above the threshold that are already excluded by a flag (not affected here
 
 ### 64K
 
-> SCREENING DATA (2 repetitions). Used only for shortlisting, never reported as results.
+> SCREENING DATA, not final results. Used only for shortlisting, never reported as results.
 
 | cell | n_clean (all) | T_turn_400 (s), all units | n_clean (no swap-heavy) | T_turn_400 (s), without swap-heavy units |
 |---|---|---|---|---|
@@ -309,7 +309,7 @@ Units above the threshold that are already excluded by a flag (not affected here
 
 ### 128K
 
-> SCREENING DATA (2 repetitions). Used only for shortlisting, never reported as results.
+> SCREENING DATA, not final results. Used only for shortlisting, never reported as results.
 
 | cell | n_clean (all) | T_turn_400 (s), all units | n_clean (no swap-heavy) | T_turn_400 (s), without swap-heavy units |
 |---|---|---|---|---|
@@ -334,7 +334,7 @@ Units above the threshold that are already excluded by a flag (not affected here
 
 ### 32K
 
-> SCREENING DATA (2 repetitions). Used only for shortlisting, never reported as results.
+> SCREENING DATA, not final results. Used only for shortlisting, never reported as results.
 
 | cell | model | KV | recurrent state | compute buffers | expert cache | other | peak used | min free (final windows) | expert layers on CPU |
 |---|---|---|---|---|---|---|---|---|---|
@@ -351,7 +351,7 @@ Units above the threshold that are already excluded by a flag (not affected here
 
 ### 64K
 
-> SCREENING DATA (2 repetitions). Used only for shortlisting, never reported as results.
+> SCREENING DATA, not final results. Used only for shortlisting, never reported as results.
 
 | cell | model | KV | recurrent state | compute buffers | expert cache | other | peak used | min free (final windows) | expert layers on CPU |
 |---|---|---|---|---|---|---|---|---|---|
@@ -368,7 +368,7 @@ Units above the threshold that are already excluded by a flag (not affected here
 
 ### 128K
 
-> SCREENING DATA (2 repetitions). Used only for shortlisting, never reported as results.
+> SCREENING DATA, not final results. Used only for shortlisting, never reported as results.
 
 | cell | model | KV | recurrent state | compute buffers | expert cache | other | peak used | min free (final windows) | expert layers on CPU |
 |---|---|---|---|---|---|---|---|---|---|
@@ -388,7 +388,7 @@ MiB, from each cell summary's parsed placement (buffers on the GPU) and its wind
 
 ## Expert cache
 
-> SCREENING DATA (2 repetitions). Used only for shortlisting, never reported as results.
+> SCREENING DATA, not final results. Used only for shortlisting, never reported as results.
 
 | cell | cache MiB | decode-batch hit rate | hits | misses | large-batch experts copied | uploaded MiB |
 |---|---|---|---|---|---|---|
@@ -417,7 +417,7 @@ Limitation: the server's statistics give hit rates for **decode-sized batches on
 
 ## Excluded diagnostic results
 
-> excluded diagnostic result. SCREENING DATA (2 repetitions). Used only for shortlisting, never reported as results.
+> excluded diagnostic result. SCREENING DATA, not final results. Used only for shortlisting, never reported as results.
 
 | cell | session | repetition | attempt | flags | T_turn_400 (s), mean over depths | why |
 |---|---|---|---|---|---|---|
@@ -447,7 +447,7 @@ These units are not in any headline number above. Flagged units stay here with t
 
 Screening results (fewer than 5 clean repetitions) are used only for shortlisting and are never reported as results (§5.5).
 
-> SCREENING DATA (2 repetitions). Used only for shortlisting, never reported as results.
+> SCREENING DATA, not final results. Used only for shortlisting, never reported as results.
 
 | cell | context | n_clean/n_total | T_turn_400 (s) |
 |---|---|---|---|
