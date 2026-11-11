@@ -1,66 +1,287 @@
 {
- "note": "union of data/sanity/stage2-{32K,64K,128K}.json (cells only), written by a one-line script for smallpc.report render --sanity",
+ "note": "union of per-run sanity files (cells only); the first run of a cell is kept, later runs of the same cell are under 'repeats' (tools/merge_sanity.py)",
+ "sources": [
+  "stage2-32K.json",
+  "stage2-64K.json",
+  "stage2-128K.json",
+  "diagnostic-32K.json",
+  "diagnostic-32K-repeat.json",
+  "diagnostic-64K.json"
+ ],
  "cells": {
   "P1-32K-b2048": {
    "result": "pass",
    "reference": true,
-   "config_sha256": "8456046396a155a7b8386337674cdf1e8e568a369bd8188a00e1418e9228f86c"
+   "config_sha256": "8456046396a155a7b8386337674cdf1e8e568a369bd8188a00e1418e9228f86c",
+   "run_id": "sanity-P1-32K-b2048-20261111T101215-1039706-0",
+   "source": "stage2-32K.json"
   },
   "s2b-P6-32K-b4096-mtp2-kvf16": {
+   "result": "fail",
+   "failed_prompts": [
+    "sanity-v5-2048-r0"
+   ],
    "reference": false,
    "resolved_from": "s2b-32K",
    "config_sha256": "43282ff9d2e8b616d1d78b3aabb00fdf9c6b9a1d251cd2685977426fdcf28cae",
+   "run_id": "sanity-s2b-P6-32K-b4096-mtp2-kvf16-20261111T101240-1039706-1",
+   "source": "stage2-32K.json",
+   "tokens_sha256": {
+    "sanity-v5-2048-r0": "8452197959c6cfec33b145c35b85c3e2e1dd7ccf98b4d3b2ec35ad2f5c00f01c",
+    "sanity-v5-2048-r1": "e7ea6ef0fa579049f2942624e3094ac9ba0f79217b5737188a92cac2cfab5645",
+    "sanity-v5-2048-r2": "d2758b9e012e0e45e803727bf82b08b43588a105d53d1899b4538db4ed7675d5"
+   }
+  },
+  "s2a2-P2-32K-b4096-mtp2": {
    "result": "fail",
    "failed_prompts": [
     "sanity-v5-2048-r0"
-   ]
-  },
-  "s2a2-P2-32K-b4096-mtp2": {
+   ],
    "reference": false,
    "resolved_from": "s2a2-32K",
    "config_sha256": "36c5ff55da3f965c0706a9676097814e85128b25c74e1251383949b9ca700ff1",
-   "result": "fail",
-   "failed_prompts": [
-    "sanity-v5-2048-r0"
-   ]
+   "run_id": "sanity-s2a2-P2-32K-b4096-mtp2-20261111T101302-1039706-2",
+   "source": "stage2-32K.json",
+   "tokens_sha256": {
+    "sanity-v5-2048-r0": "53918080508649e89e7b3f149287b1f025b18e74687b9d4de29b8435b8f47b65",
+    "sanity-v5-2048-r1": "38cd6a5e8bef2560e4eeeec5801522ca1a1da44b75a722c82bb5e1c06c72eacc",
+    "sanity-v5-2048-r2": "bdc848ca3362028f723bb96f20896980d4de67fd2fd1b29b50a058394fcc6083"
+   }
   },
   "P1-64K-b2048": {
    "result": "pass",
    "reference": true,
-   "config_sha256": "1f22c15fc898ce191b16542453c74c5046e1efc093e02c7aa1a830384ba96554"
+   "config_sha256": "1f22c15fc898ce191b16542453c74c5046e1efc093e02c7aa1a830384ba96554",
+   "run_id": "sanity-P1-64K-b2048-20261111T101336-1040281-0",
+   "source": "stage2-64K.json"
   },
   "s2b-P6-64K-b4096-mtp1-kvf16": {
+   "result": "pass",
+   "failed_prompts": [],
    "reference": false,
    "resolved_from": "s2b",
    "config_sha256": "6190e26c16d8ad82bfd6c6924f472ae68098b190831b689654d3a6697d2a903f",
-   "result": "pass",
-   "failed_prompts": []
+   "run_id": "sanity-s2b-P6-64K-b4096-mtp1-kvf16-20261111T101400-1040281-1",
+   "source": "stage2-64K.json",
+   "tokens_sha256": {
+    "sanity-v5-2048-r0": "e830861bd6b230acbd5fdac33d18e52d42b164c73fc4f4a8d54686b7db588d6f",
+    "sanity-v5-2048-r1": "7b621c882622391c87a8678be90ea1acc61c94ff84515cfd0538215ad599b168",
+    "sanity-v5-2048-r2": "3f2c7ee182dc9608626ea557eb3d48139beade21c29cb9c22bdacc4e6605ab0e"
+   }
   },
   "s2a2-P2-64K-b4096-mtp0": {
+   "result": "pass",
+   "failed_prompts": [],
    "reference": false,
    "resolved_from": "s2a2-64K",
    "config_sha256": "cc8eb2e6f07fa305ebcc27948298d465121ebe8f2ef65d9076a245f44968e2ce",
-   "result": "pass",
-   "failed_prompts": []
+   "run_id": "sanity-s2a2-P2-64K-b4096-mtp0-20261111T101423-1040281-2",
+   "source": "stage2-64K.json",
+   "tokens_sha256": {
+    "sanity-v5-2048-r0": "02c9ff9ae4895bedfdb9feff3f4fca9539eb63e61c9940123c16e3bbff34cba9",
+    "sanity-v5-2048-r1": "d512edeb11c39859e89fac6ce21ee597f1a3fe1f79953b6abac1fc73732475a7",
+    "sanity-v5-2048-r2": "6fa40277401f63f144ca047144057fd1694fb6e36f16de49b94ec89a5309f2ff"
+   }
   },
   "P1-128K-b2048": {
    "result": "pass",
    "reference": true,
-   "config_sha256": "c9bb43ceed0434cb3e347e0010520609ee4e05fd4a9097c26533ea17fc82a348"
+   "config_sha256": "c9bb43ceed0434cb3e347e0010520609ee4e05fd4a9097c26533ea17fc82a348",
+   "run_id": "sanity-P1-128K-b2048-20261111T101452-1040849-0",
+   "source": "stage2-128K.json"
   },
   "s2b-P6-128K-b4096-mtp0-kvf16": {
+   "result": "pass",
+   "failed_prompts": [],
    "reference": false,
    "resolved_from": "s2b-128K",
    "config_sha256": "26c2b76fd9a232e594bd900040a533033009a2679b8a6e3a5adefdc68f49c987",
-   "result": "pass",
-   "failed_prompts": []
+   "run_id": "sanity-s2b-P6-128K-b4096-mtp0-kvf16-20261111T101517-1040849-1",
+   "source": "stage2-128K.json",
+   "tokens_sha256": {
+    "sanity-v5-2048-r0": "ccfee40a026f1804d52ac734891701ed3982936f3413de809a1fb2ffdf8f8449",
+    "sanity-v5-2048-r1": "7b621c882622391c87a8678be90ea1acc61c94ff84515cfd0538215ad599b168",
+    "sanity-v5-2048-r2": "f210ddf10afe42a147d3be1f210f2a75686f47a1ee4d9c5aff1ee80522ec2c61"
+   }
   },
   "s2a2-P6-128K-b4096-mtp1": {
+   "result": "pass",
+   "failed_prompts": [],
    "reference": false,
    "resolved_from": "s2a2-128K",
    "config_sha256": "e7371e98780f6b6a7174e2b15aaf7260ca1129619fe5fea6d0a68412eef41a23",
+   "run_id": "sanity-s2a2-P6-128K-b4096-mtp1-20261111T101543-1040849-2",
+   "source": "stage2-128K.json",
+   "tokens_sha256": {
+    "sanity-v5-2048-r0": "8c7d03f5d78d255af2b2f92c27dd9aecfc49e556fb05b20583c4645cc52a0084",
+    "sanity-v5-2048-r1": "c858e1531bab27fcc36ca3f82d5cdb2266b1300451f4934c9acf6400d9398bb3",
+    "sanity-v5-2048-r2": "2d285a384c64ab1c9fa09f96bc9b48bd6eabaa8d6b6db4d853afdd8cc484db3c"
+   }
+  },
+  "s2a-P6-32K-b4096-mtp0": {
    "result": "pass",
-   "failed_prompts": []
+   "failed_prompts": [],
+   "reference": false,
+   "resolved_from": "s2a-32K",
+   "config_sha256": "689905afd499e5332c9968fd6748baf8c9a1eda3f7060ceffe3d857688fc3cfd",
+   "run_id": "sanity-s2a-P6-32K-b4096-mtp0-20261111T142420-1092660-1",
+   "source": "diagnostic-32K.json",
+   "tokens_sha256": {
+    "sanity-v5-2048-r0": "8c7d03f5d78d255af2b2f92c27dd9aecfc49e556fb05b20583c4645cc52a0084",
+    "sanity-v5-2048-r1": "c858e1531bab27fcc36ca3f82d5cdb2266b1300451f4934c9acf6400d9398bb3",
+    "sanity-v5-2048-r2": "2d285a384c64ab1c9fa09f96bc9b48bd6eabaa8d6b6db4d853afdd8cc484db3c"
+   }
+  },
+  "s2a-P6-32K-b4096-mtp1": {
+   "result": "pass",
+   "failed_prompts": [],
+   "reference": false,
+   "resolved_from": "s2a-32K",
+   "config_sha256": "1de433ff96cedd3696abefc1219a19ce8532788b628c350e1e205f5200dcc4fe",
+   "run_id": "sanity-s2a-P6-32K-b4096-mtp1-20261111T142443-1092660-2",
+   "source": "diagnostic-32K.json",
+   "tokens_sha256": {
+    "sanity-v5-2048-r0": "8c7d03f5d78d255af2b2f92c27dd9aecfc49e556fb05b20583c4645cc52a0084",
+    "sanity-v5-2048-r1": "c858e1531bab27fcc36ca3f82d5cdb2266b1300451f4934c9acf6400d9398bb3",
+    "sanity-v5-2048-r2": "2d285a384c64ab1c9fa09f96bc9b48bd6eabaa8d6b6db4d853afdd8cc484db3c"
+   }
+  },
+  "s2a-P6-32K-b4096-mtp2": {
+   "result": "fail",
+   "failed_prompts": [
+    "sanity-v5-2048-r0"
+   ],
+   "reference": false,
+   "resolved_from": "s2a-32K",
+   "config_sha256": "05b9ad082d254f847de89b560b19077f699bf1ee2db7ba53085d2e33ef81c415",
+   "run_id": "sanity-s2a-P6-32K-b4096-mtp2-20261111T142505-1092660-3",
+   "source": "diagnostic-32K.json",
+   "tokens_sha256": {
+    "sanity-v5-2048-r0": "c536b6e6a250dcb6661f506234cd91abf8499dda9aed53de4d8be794d6373f16",
+    "sanity-v5-2048-r1": "726b8575527d7315e45b439a8649d1413f8fed0677ccdcabe3402a665461ba59",
+    "sanity-v5-2048-r2": "f7712346f04d30dd7941d22b54e2b35c354a9b6b170816efc799038859590407"
+   }
+  },
+  "s2a-P6-32K-b4096-mtp3": {
+   "result": "pass",
+   "failed_prompts": [],
+   "reference": false,
+   "resolved_from": "s2a-32K",
+   "config_sha256": "03c335c63c2aa62b83d030662b650438a708d54c2c5a0fbe719c6c1989c862cc",
+   "run_id": "sanity-s2a-P6-32K-b4096-mtp3-20261111T142527-1092660-4",
+   "source": "diagnostic-32K.json",
+   "tokens_sha256": {
+    "sanity-v5-2048-r0": "b84efc971c6b3ca6d2c6182546d6f7819af5873d75a5920d8bf3d7316e81a8fc",
+    "sanity-v5-2048-r1": "84166570d66657188eddc07d1326c1ea38f68ffdf1e360f52c05b65743f70d27",
+    "sanity-v5-2048-r2": "b5cd4478ab09afe130493bee70a7f3463f92460a2a61b523a2477e38702b4c35"
+   }
+  },
+  "s2a-P2-32K-b4096-mtp0": {
+   "result": "pass",
+   "failed_prompts": [],
+   "reference": false,
+   "resolved_from": "s2a-32K",
+   "config_sha256": "687366fc83357bee6b465ea5a17e25f6d470a6bc9e24a1380088a6952430c40c",
+   "run_id": "sanity-s2a-P2-32K-b4096-mtp0-20261111T142550-1092660-5",
+   "source": "diagnostic-32K.json",
+   "tokens_sha256": {
+    "sanity-v5-2048-r0": "0207b7f228aa72610fad253bb73800b7b3bf628d8cb329671af55d5228b24df5",
+    "sanity-v5-2048-r1": "11b6ab519d4de3cef5e91f43e6c699e64a42ef5b6ac0fbe810e9407fe4524bdf",
+    "sanity-v5-2048-r2": "80f4b977692765b0579a28ba65c2ffaef74f00d6b732bb40af48607cee50b0f2"
+   }
+  },
+  "P1-32K-b2048-selfcheck": {
+   "result": "pass",
+   "failed_prompts": [],
+   "reference": false,
+   "resolved_from": "/tmp/rep2g/P1-32K-b2048-selfcheck.toml",
+   "config_sha256": "8456046396a155a7b8386337674cdf1e8e568a369bd8188a00e1418e9228f86c",
+   "run_id": "sanity-P1-32K-b2048-selfcheck-20261111T142613-1092660-6",
+   "source": "diagnostic-32K.json",
+   "tokens_sha256": {
+    "sanity-v5-2048-r0": "02f348805da3048733903f95b57307fb4efe75d911e54b61c1e01779dc62686f",
+    "sanity-v5-2048-r1": "73094f3e2a887819d8510e7d4197f088eec98415d1d47e3e1290af2e198ebaa7",
+    "sanity-v5-2048-r2": "accd0619364e47c36b20ce9beee63b3d269d39ace5a392321b16777d0c6f7989"
+   }
+  },
+  "s2a-P6-64K-b4096-mtp2": {
+   "result": "fail",
+   "failed_prompts": [
+    "sanity-v5-2048-r0"
+   ],
+   "reference": false,
+   "resolved_from": "s2a-64K",
+   "config_sha256": "bd831c4f8a3813e234c0bd6b0067d284918ab9d5f28370fe742a04450d694a5d",
+   "run_id": "sanity-s2a-P6-64K-b4096-mtp2-20261111T142850-1095315-1",
+   "source": "diagnostic-64K.json",
+   "tokens_sha256": {
+    "sanity-v5-2048-r0": "c536b6e6a250dcb6661f506234cd91abf8499dda9aed53de4d8be794d6373f16",
+    "sanity-v5-2048-r1": "726b8575527d7315e45b439a8649d1413f8fed0677ccdcabe3402a665461ba59",
+    "sanity-v5-2048-r2": "f7712346f04d30dd7941d22b54e2b35c354a9b6b170816efc799038859590407"
+   }
   }
+ },
+ "repeats": {
+  "P1-32K-b2048": [
+   {
+    "result": "pass",
+    "reference": true,
+    "config_sha256": "8456046396a155a7b8386337674cdf1e8e568a369bd8188a00e1418e9228f86c",
+    "run_id": "sanity-P1-32K-b2048-20261111T142331-1092660-0",
+    "source": "diagnostic-32K.json"
+   },
+   {
+    "result": "pass",
+    "reference": true,
+    "config_sha256": "8456046396a155a7b8386337674cdf1e8e568a369bd8188a00e1418e9228f86c",
+    "run_id": "sanity-P1-32K-b2048-20261111T142708-1094728-0",
+    "source": "diagnostic-32K-repeat.json"
+   }
+  ],
+  "s2b-P6-32K-b4096-mtp2-kvf16": [
+   {
+    "result": "fail",
+    "failed_prompts": [
+     "sanity-v5-2048-r0"
+    ],
+    "reference": false,
+    "resolved_from": "s2b-32K",
+    "config_sha256": "43282ff9d2e8b616d1d78b3aabb00fdf9c6b9a1d251cd2685977426fdcf28cae",
+    "run_id": "sanity-s2b-P6-32K-b4096-mtp2-kvf16-20261111T142731-1094728-1",
+    "source": "diagnostic-32K-repeat.json",
+    "tokens_sha256": {
+     "sanity-v5-2048-r0": "8452197959c6cfec33b145c35b85c3e2e1dd7ccf98b4d3b2ec35ad2f5c00f01c",
+     "sanity-v5-2048-r1": "e7ea6ef0fa579049f2942624e3094ac9ba0f79217b5737188a92cac2cfab5645",
+     "sanity-v5-2048-r2": "d2758b9e012e0e45e803727bf82b08b43588a105d53d1899b4538db4ed7675d5"
+    }
+   }
+  ],
+  "s2a2-P2-32K-b4096-mtp2": [
+   {
+    "result": "fail",
+    "failed_prompts": [
+     "sanity-v5-2048-r0"
+    ],
+    "reference": false,
+    "resolved_from": "s2a2-32K",
+    "config_sha256": "36c5ff55da3f965c0706a9676097814e85128b25c74e1251383949b9ca700ff1",
+    "run_id": "sanity-s2a2-P2-32K-b4096-mtp2-20261111T142754-1094728-2",
+    "source": "diagnostic-32K-repeat.json",
+    "tokens_sha256": {
+     "sanity-v5-2048-r0": "53918080508649e89e7b3f149287b1f025b18e74687b9d4de29b8435b8f47b65",
+     "sanity-v5-2048-r1": "38cd6a5e8bef2560e4eeeec5801522ca1a1da44b75a722c82bb5e1c06c72eacc",
+     "sanity-v5-2048-r2": "bdc848ca3362028f723bb96f20896980d4de67fd2fd1b29b50a058394fcc6083"
+    }
+   }
+  ],
+  "P1-64K-b2048": [
+   {
+    "result": "pass",
+    "reference": true,
+    "config_sha256": "1f22c15fc898ce191b16542453c74c5046e1efc093e02c7aa1a830384ba96554",
+    "run_id": "sanity-P1-64K-b2048-20261111T142824-1095315-0",
+    "source": "diagnostic-64K.json"
+   }
+  ]
  }
 }
