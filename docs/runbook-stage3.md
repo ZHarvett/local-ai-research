@@ -76,7 +76,7 @@ scripts/run-detached.sh --gpu sanity-stage3-128K -- uv run --frozen python -m sm
 uv run python tools/merge_sanity.py data/sanity/stage3-32K.json data/sanity/stage3-64K.json data/sanity/stage3-128K.json --out data/sanity/stage3-all.json
 ```
 Entries are keyed by file stem (`tuned-32k`) and carry the file's sha256, which the headline tool checks against the file as it is. Expect `pass` for all three and the token
-hashes of Stage 2 (`data/sanity/stage2-all.json`, same configs). **A `fail`, or a reference warning, stops everything (section 5).** About 7 minutes in all.
+hashes of Stage 2 (`data/sanity/stage2-all.json`, same configs; WP13 part 1 checked this on the three files: all pass, all nine token hashes equal). **A `fail`, or a reference warning, stops everything (section 5).** About 2.5 minutes in all (measured: 143 s for the three runs, reference plus tuned file each).
 
 ### The headline and the report
 ```
@@ -151,7 +151,8 @@ its **repetition time** is `measure` divided by the repetitions. Stock cells com
 - **Re-run pass** (one per session, only if a unit is flagged): a fresh server per cell with flagged units, `fixed + units x repetition`, plus the re-run canaries (about 190 s each, 6.3 min).
   Worst case with 3 flagged stock units: 32K 35 + 3 x 85 = 290 s + 380 s canaries = 11 min; 64K 38 + 3 x 153 = 497 + 380 = 15 min; 128K 45 + 3 x 327 = 1,026 + 380 = 23 min; 49 min in all.
   **Upper bound for Stage 3: 100 + 49 = 149 min = 2.5 h**, which is the plan's "about 2.5 hours".
-- **Sanity check on the three tuned files:** about 7 min (Stage 2: 70 to 76 s per context run, three servers each, plus the three launches; run once per context).
+- **Sanity check on the three tuned files:** about 2.5 min, **measured in WP13 part 1** (09:05:31Z to 09:07:54Z, 143 s: three runs of two servers each, the reference and the tuned file; Stage 2 needed 70 to 76 s per run with three servers).
+- **Functional run of the Stage 3 path** (WP13 part 1, `ft-stage3-32K`: stock-32K and tuned-32K, 1 repetition, 1-repetition canaries): 6.3 min (08:58:44Z to 09:05:04Z), a check of the path, not a timing basis.
 - **Stage 4** (one session, `stock-64K` + `tuned-64K` + canaries): 804 + 403 + 370 = 1,577 s = **26 min; 29 min with 10%**, upper bound with a worst-case re-run pass (stock-64K, 3 units: 15 min) **44 min**.
   The plan says about 30 minutes.
 - Add the analysis (headline, report, commits): about 10 minutes each time, no GPU. Allow a day for Stage 3 and a different day for Stage 4.

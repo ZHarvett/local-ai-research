@@ -1,0 +1,167 @@
+{
+ "schema": 1,
+ "label": "functional-test",
+ "banner": "FUNCTIONAL-TEST DATA. Produced to test the tooling. Not a result of this study; do not quote these numbers.",
+ "prompts": {
+  "kind": "sanity",
+  "ids": [
+   "sanity-v5-2048-r0",
+   "sanity-v5-2048-r1",
+   "sanity-v5-2048-r2"
+  ],
+  "n_predict": 512,
+  "sampling": "greedy (temperature 0, top_k 1), return_tokens, fixed seed"
+ },
+ "thresholds": {
+  "min_length": 100,
+  "length_fraction": 0.5,
+  "distinct_4gram_fraction": 0.5,
+  "run_limit": 16,
+  "ngram_repeat_limit": 8,
+  "rule": "plan v1.6 section 5.6, smallpc.sanity"
+ },
+ "reference": {
+  "cell": "P1-32K-b2048",
+  "resolved_from": "stage1-32K",
+  "config_sha256": "8456046396a155a7b8386337674cdf1e8e568a369bd8188a00e1418e9228f86c",
+  "run_id": "sanity-P1-32K-b2048-20261112T090531-1232014-0",
+  "ok": true,
+  "error": null,
+  "warnings": [],
+  "prompts": {
+   "sanity-v5-2048-r0": {
+    "n_tokens": 512,
+    "tokens_sha256": "02f348805da3048733903f95b57307fb4efe75d911e54b61c1e01779dc62686f",
+    "stop_type": "limit",
+    "metrics": {
+     "length": 512,
+     "distinct_4gram_ratio": 0.9174852652259332,
+     "longest_run": 1,
+     "max_8gram_repeat": 2
+    }
+   },
+   "sanity-v5-2048-r1": {
+    "n_tokens": 512,
+    "tokens_sha256": "73094f3e2a887819d8510e7d4197f088eec98415d1d47e3e1290af2e198ebaa7",
+    "stop_type": "limit",
+    "metrics": {
+     "length": 512,
+     "distinct_4gram_ratio": 0.9037328094302554,
+     "longest_run": 1,
+     "max_8gram_repeat": 2
+    }
+   },
+   "sanity-v5-2048-r2": {
+    "n_tokens": 512,
+    "tokens_sha256": "accd0619364e47c36b20ce9beee63b3d269d39ace5a392321b16777d0c6f7989",
+    "stop_type": "limit",
+    "metrics": {
+     "length": 512,
+     "distinct_4gram_ratio": 0.9292730844793713,
+     "longest_run": 1,
+     "max_8gram_repeat": 3
+    }
+   }
+  }
+ },
+ "cells": {
+  "P1-32K-b2048": {
+   "result": "pass",
+   "reference": true,
+   "note": "the reference itself: its outputs are the baseline, not compared with anything",
+   "config_sha256": "8456046396a155a7b8386337674cdf1e8e568a369bd8188a00e1418e9228f86c",
+   "run_id": "sanity-P1-32K-b2048-20261112T090531-1232014-0"
+  },
+  "tuned-32k": {
+   "reference": false,
+   "resolved_from": "configs/server/tuned-32k.toml",
+   "config_sha256": "dd1ba72640d80d8653a38a0e34c767c8d037a270c587ec30e266ea6fb037a751",
+   "run_id": "sanity-tuned-32k-20261112T090554-1232014-1",
+   "load_time_s": 1.27,
+   "result": "pass",
+   "failed_prompts": [],
+   "prompts": {
+    "sanity-v5-2048-r0": {
+     "ok": true,
+     "reasons": [],
+     "candidate": {
+      "length": 512,
+      "distinct_4gram_ratio": 0.9430255402750491,
+      "longest_run": 1,
+      "max_8gram_repeat": 2
+     },
+     "reference": {
+      "length": 512,
+      "distinct_4gram_ratio": 0.9174852652259332,
+      "longest_run": 1,
+      "max_8gram_repeat": 2
+     },
+     "first_divergence": 120,
+     "n_tokens": 512,
+     "tokens_sha256": "8c7d03f5d78d255af2b2f92c27dd9aecfc49e556fb05b20583c4645cc52a0084",
+     "stop_type": "limit",
+     "metrics": {
+      "length": 512,
+      "distinct_4gram_ratio": 0.9430255402750491,
+      "longest_run": 1,
+      "max_8gram_repeat": 2
+     }
+    },
+    "sanity-v5-2048-r1": {
+     "ok": true,
+     "reasons": [],
+     "candidate": {
+      "length": 512,
+      "distinct_4gram_ratio": 0.8939096267190569,
+      "longest_run": 1,
+      "max_8gram_repeat": 2
+     },
+     "reference": {
+      "length": 512,
+      "distinct_4gram_ratio": 0.9037328094302554,
+      "longest_run": 1,
+      "max_8gram_repeat": 2
+     },
+     "first_divergence": 41,
+     "n_tokens": 512,
+     "tokens_sha256": "c858e1531bab27fcc36ca3f82d5cdb2266b1300451f4934c9acf6400d9398bb3",
+     "stop_type": "limit",
+     "metrics": {
+      "length": 512,
+      "distinct_4gram_ratio": 0.8939096267190569,
+      "longest_run": 1,
+      "max_8gram_repeat": 2
+     }
+    },
+    "sanity-v5-2048-r2": {
+     "ok": true,
+     "reasons": [],
+     "candidate": {
+      "length": 512,
+      "distinct_4gram_ratio": 0.8683693516699411,
+      "longest_run": 1,
+      "max_8gram_repeat": 2
+     },
+     "reference": {
+      "length": 512,
+      "distinct_4gram_ratio": 0.9292730844793713,
+      "longest_run": 1,
+      "max_8gram_repeat": 3
+     },
+     "first_divergence": 222,
+     "n_tokens": 512,
+     "tokens_sha256": "2d285a384c64ab1c9fa09f96bc9b48bd6eabaa8d6b6db4d853afdd8cc484db3c",
+     "stop_type": "limit",
+     "metrics": {
+      "length": 512,
+      "distinct_4gram_ratio": 0.8683693516699411,
+      "longest_run": 1,
+      "max_8gram_repeat": 2
+     }
+    }
+   }
+  }
+ },
+ "duration_s": 44.6,
+ "utc": "2026-11-12T09:06:16Z"
+}
