@@ -1152,3 +1152,15 @@ No discrepancy changes a tuned config.
    `configs/quiet-check.toml`, warns about other processes above 1.5 GiB resident memory (name and size only), exits 1 if a blocklisted app runs, and prints the CPU idle figure as information.
    The desktop environment, the terminal and claude are allowed.
 7. Not changed: flags, eligibility, selection, statistics, the sanity thresholds, the request protocol, the workload code, the sweep runner's measurement code, the Stage 2 gate and decision code.
+
+## WP13 part 2 decisions (Stage 3 sessions, 2026-11-12)
+
+1. **S4(d) deviation for 128K (recorded by Claude, the step lead confirms).** The 128K headline is the all-units comparison, labelled "includes paging-flagged stock windows",
+   because stock-128K has 4 clean units after the one re-run pass and tuned-128K has 5 (4 paired; 5 needed for the clean-units headline). Unit `stage3-128K:3` of the stock cell is
+   still paging-flagged in attempt 2 (22,810 major faults, 4,200 MiB swap growth; attempt 1 had 2,004 faults). Rule S4(d): no headline number rests on a measurement with an unresolved
+   flag; here the all-units headline does, and says so. The clean-units figures stand beside it (tuned/stock T_turn_400 0.711 [0.673, 0.750], n = 4, against 0.706 [0.679, 0.735], n = 5 for all units):
+   the two versions agree in sign and in whether each interval excludes 1.0. 32K and 64K use the clean-units headline. No tuned cell was ineligible and no sanity failure occurred.
+2. **Plan v1.8 adopted** (`8096461`, line 3 `*Version 1.8 · 12 November 2026*`). Five plan-version literals in `tests/` (`test_stage2_rules`, `test_stage2_decide`, `test_stage3_headline`) read 1.7 and failed against the v1.8 plan file; they now read 1.8 (`422eada`). Nothing in `src/`, `configs/` or `scripts/` changed.
+3. **Reading of the paging flags (not a rule change).** Contrary to plan 5.4's expectation, the 64K session's *tuned* cell was paging-flagged in 4 of 5 attempt-1 windows (up to 47,576 major faults, 586 MiB swap growth), and the stock cell in none; at 32K and 128K stock paged (1 and 2 windows) and tuned did not. The gate's criterion f passed (36.4% of tuned and canary windows, limit 40%). The four tuned units re-ran clean in attempt 2 (0 faults).
+   No explanation was investigated: the machine was quiet (check-quiet QUIET at every poll) and the swap sensitivity shows no change in any verdict.
+4. **Intermittent test.** `tests/test_sweep_probe.py` failed a different test in 2 of 4 full runs (and in most of the file's own repeat runs) on this machine (for example `test_max_fit_is_probed_per_draft_length_for_mtp_cells`: 3,840 against 8,704 MiB) and passed the last full run (994 passed). Not investigated; it does not touch the Stage 3 data or tools.
