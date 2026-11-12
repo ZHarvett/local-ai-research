@@ -1,0 +1,34 @@
+# Quiet-machine check for Stages 3 and 4 (gate G3 applies in full, plan v1.7 sections 5.4 and 7).
+# scripts/check-quiet.sh lists the running processes by NAME ONLY (`ps -eo comm`: never window titles, URLs,
+# command-line arguments or file contents) and compares the names with this blocklist.
+# `ps` shows the first 15 characters of a name; names here are compared at that length.
+# Not blocked: the desktop environment (cosmic-comp and its helpers), the terminal, claude, llama-server and
+# system processes.
+
+[blocklist]
+names = [
+  "chrome",
+  "chromium",
+  "firefox",
+  "antigravity-ide",
+  "kilo",
+  "spotify",
+  "missioncenter",
+  "discord",
+  "slack",
+  "steam",
+  "qemu-system-x86",
+  "virt-manager",
+  "obsidian",
+  "code",
+]
+
+[memory]
+# A process (other than the exempt ones) above this resident size is warned about (name and size only).
+warn_mib = 1536
+exempt = ["llama-server", "claude"]
+
+[cpu]
+# Informational: the runner's idle precondition (plan section 5.3) is busy time below 10% over 10 s.
+window_s = 10
+busy_max_pct = 10.0
