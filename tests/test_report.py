@@ -388,3 +388,50 @@ def test_labels_reject_unknown_values():
     with pytest.raises(ValueError, match="unknown label"):
         labels.banner("final-results")
     assert labels.banner(None) == ""
+
+
+# ------------------------------------------------------------------ Stage 3 data, label results (WP13)
+
+
+def test_results_label_on_stage3_shaped_data_points_small_stock_cells_to_the_headline(tmp_path):
+    reps = [RepSpec(i, flags=("paging",) if i in (1, 2) else ()) for i in range(5)]
+    d = build_session(
+        tmp_path,
+        "stage3-32K",
+        [
+            CellSpec("stock-32K", profile="stock", reps=reps, pp=1000, tg=50),
+            CellSpec("tuned-32K", profile="tuned", pp=1900, tg=90, cache_mib=11520),
+        ],
+    )
+    r = analysis.analyse([d])
+    md = report.render_report(r, "results", command="python -m smallpc.report render", plan="v1.7")
+    assert "> **RESULTS. Only cells with at least 5 clean repetitions are reportable.**" in md
+    assert "## Appendix: cells below 5 clean repetitions" in md
+    assert "python -m smallpc.stage3 headline" in md and "Headline rule" in md
+    assert "Appendix: screening data" not in md
+    assert "| stock-32K | 32K | 3/5 not reportable (n < 5) |" in md
+    # the other labels keep their appendix
+    shortlist = report.render_report(r, "screening", command="x", plan="v1.7")
+    assert "## Appendix: screening data" in shortlist and "stage3 headline" not in shortlist
+
+
+def test_results_report_shows_the_resident_compute_buffers_of_an_mtp_cell(tmp_path):
+    """The VRAM breakdown uses the corrected parser figure: an old stored list of four compute
+    buffers (target, draft, draft, target) is counted as two."""
+    import json
+
+    cell = CellSpec(
+        "tuned-64K", profile="tuned", context=65536, spec_type="draft-mtp", cache_mib=9472
+    )
+    d = build_session(tmp_path, "stage3-64K", [cell])
+    f = next((d / "cells").glob("tuned-64K-*.json"))
+    s = json.loads(f.read_text())
+    blocks = [1604.03, 832.12, 832.12, 1604.03]
+    s["instances"][0]["parsed"]["placement"]["compute_buffers"] = [
+        {"device": dev, "mib": m} for m in blocks for dev in ("CUDA0", "CUDA_Host")
+    ]
+    f.write_text(json.dumps(s))
+    r = analysis.analyse([d])
+    v = r["cells"]["tuned-64K"]["vram"]
+    assert v["compute_mib"] == pytest.approx(832.12 + 1604.03)
+    # the fixture's peak is synthetic, so only the compute figure is asserted

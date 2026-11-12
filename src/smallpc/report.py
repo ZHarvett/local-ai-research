@@ -914,13 +914,24 @@ def render_report(
         A("None: no flagged unit and no re-run unit.")
     A("")
     # ------------------------------------------------------------------ appendix
-    A("## Appendix: screening data")
-    A("")
-    A(
-        "Screening results (fewer than 5 clean repetitions) are used only for shortlisting and are "
-        "never reported as results (§5.5)."
-    )
-    A("")
+    if label == "results":
+        A("## Appendix: cells below 5 clean repetitions")
+        A("")
+        A(
+            "Cells with fewer than 5 clean repetitions are not reportable in the tables above "
+            "(§5.5). Their figures here use clean units only. A Stage 3 stock cell in this list "
+            "has its headline computed on all units and labelled by `python -m smallpc.stage3 "
+            'headline` (plan §5.4, "Headline rule"); read the headline there.'
+        )
+        A("")
+    else:
+        A("## Appendix: screening data")
+        A("")
+        A(
+            "Screening results (fewer than 5 clean repetitions) are used only for shortlisting and "
+            "are never reported as results (§5.5)."
+        )
+        A("")
     small = [
         c for c in res["cells"].values() if c["n_total"] and c["n_clean"] < labels.MIN_REPORTABLE_N
     ]
