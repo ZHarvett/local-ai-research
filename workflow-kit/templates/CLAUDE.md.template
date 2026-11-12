@@ -1,0 +1,31 @@
+<!-- workflow-kit:begin -->
+## Workflow kit (planning-chat plan execution)
+
+This repo runs a planning-chat plan task by task. The full protocol is in
+`docs/WORKFLOW.md`; the short version:
+
+- **Session start:** run `bash scripts/wf-guard.sh` (stop if it fails), then
+  `bash scripts/wf.sh status`. Zack (or you, when he typed `/continue`) picks the
+  next task from `bash scripts/wf.sh ready`. Never read `PLAN.md` whole: the card
+  comes from `bash scripts/wf-card.sh T-xxx` and nothing else.
+- **Session end:** the task's work is committed, `wf.sh done` has run, and one line
+  says `TASK T-xxx DONE | review: … | next ready: …`.
+- **State discipline:** `.workflow/` state, `PROGRESS.md` and `PLAN.md` are never
+  hand-edited. State changes only through `scripts/wf-*.sh`. New cards go into
+  `PLAN-ADDED.md` + `wf.sh add-task`.
+- **Hard rules:** no sudo, nothing destructive, `data/` append-only, one GPU job
+  at a time (machine-wide lock for gpu / exclusive-machine / cpu-heavy tasks),
+  no downloads or publishing without a gate.
+- **Decision rights:** every card says what you may decide and what you must
+  escalate. Judgement calls and anything unexpected: stop, write an escalation
+  brief (`wf-escalate.sh`), wait for the planning chat's decision
+  (`wf-decision.sh` records it). Never work around a failure in the tooling you
+  are using for measurements.
+- **Gates:** tasks with a HUMAN-GATE stop, print exactly what Zack must do
+  (`wf.sh gate-wait`), and wait for "go" (`wf.sh gate-release`).
+- **Context discipline:** finish the current step, `wf.sh step-done T-xxx Sn`,
+  and stop with "Start a fresh session and run /continue" when context grows
+  past about 70%.
+- Commands: `/continue`, `/lane N`, `/review`, `/address-review`, `/escalate`,
+  `/status`, `/calibrate-reviewer`.
+<!-- workflow-kit:end -->

@@ -1,0 +1,38 @@
+{
+  "task": "T-101",
+  "started_utc": "2026-11-12T10:00:00Z",
+  "git_commit": "calibration-fixture",
+  "items": [
+    {
+      "id": "A1",
+      "verdict": "pass",
+      "path": "message_count",
+      "value": 1
+    },
+    {
+      "id": "A2",
+      "verdict": "pass",
+      "path": "message_len",
+      "value": 14
+    },
+    {
+      "id": "A3",
+      "verdict": "pass",
+      "path": "REPORT.md"
+    }
+  ],
+  "evidence_files": {
+    "data/metrics.json": {
+      "exists": true,
+      "sha256": "0ab38708ad410c7b9dc0c0af16bb850ce394ebe3141f14698b640e7d48fef0c1",
+      "bytes": 40
+    },
+    "REPORT.md": {
+      "exists": true,
+      "sha256": "2c673d54e96f6410e6f36a4b910845b2a5d3413087a732bd8e1ed810709858a2",
+      "bytes": 80
+    }
+  },
+  "finished_utc": "2026-11-12T10:01:00Z",
+  "failures": 0
+}

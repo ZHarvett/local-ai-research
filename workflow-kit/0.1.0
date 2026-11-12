@@ -1,0 +1,26 @@
+{
+  "claude_block_sha256": "468e691def154f16266865aaa59e3e209a5070213e7ee29582556452f7e2b95e",
+  "files": {
+    ".claude/commands/address-review.md": "41ebf7507721af53d80327fd652e547a64584485d46368ad3e737dd75fa4e2a2",
+    ".claude/commands/calibrate-reviewer.md": "b4233e4c949109c48bf4bd6fa1221d991d06e954d0c8e0bcf7f17c5e78c11f83",
+    ".claude/commands/continue.md": "477252739a56264513dbda919442a4c12a0803bca5ff2ae27198ddebb70a0a59",
+    ".claude/commands/escalate.md": "1d00f39808b87a643018b0bf1e5811e38a4bd099697450953b4a15fea0147251",
+    ".claude/commands/lane.md": "7ea6ce11ca4117e23a12a99c614a35ae234086b919423d2dba73673c4c89c87c",
+    ".claude/commands/review.md": "0d88ab1dd4a109353e853448cdc2f44d9c094516e8b7c7fbea30542ab3bcb345",
+    ".claude/commands/status.md": "4fa97b11e81d4011daade42135f0249560e20577381ee82296c4981349460624",
+    ".workflow/config.toml": "1eb88acd8310798b7dd1c5e0e11d15e6f8d080bdc905697f60fd4125b300aca3",
+    ".workflow/templates/escalation-brief.md": "63b647aa501f4dcad290ea7d9844e793b20e9b44beaa63dc445254c570a9c75f",
+    ".workflow/templates/review-report.md": "48a21942855822388ad38cac91093afc4c81401e4e50d1061d4daff6b3e94dd0",
+    "docs/WORKFLOW.md": "0b7c7f8b6033d9bdb86ef24fb8ae57e453096c9e9d6acdd9184c3a0a0ba91b00",
+    "scripts/_wf.py": "f48e21a7e96237f945b5546e0484b90f5c6719875dce3ea153326096c4f76b16",
+    "scripts/wf-card.sh": "ddfc532e0b8b137ff928505ae1385477336a6499f33a882b1162cb7faf7a3eec",
+    "scripts/wf-decision.sh": "480a20f08e3f6c6b5fa521b71fd76379453331c356b7e246de952af72c7da0a4",
+    "scripts/wf-escalate.sh": "281365ff80f7122d6056ae10a8e98eb447e0845748dc198b36bd9567f96cef18",
+    "scripts/wf-guard.sh": "64129386aa71b6dd4a854f0b686e67e95c1d926a5fdde69700f52d769dff0b8c",
+    "scripts/wf-merge-lanes.sh": "32f6a871c88a24baa0bb01e5f47153ec225992995d3bc5b6d59903d563fb0469",
+    "scripts/wf-plan-import.sh": "3ca4ef9bb59680b69fb2b27dabe3ae1a8b44da3be7e13062567026fdba8750d0",
+    "scripts/wf-progress.sh": "beb9ca01834066b0d7becac8dd41167fb79c20e8346933eaf4bda9aca83cc328",
+    "scripts/wf.sh": "dc028e67319d08d8e4b89127296f7dc4df47c327efadc91f5dc44707a07f1ec6"
+  },
+  "version": "/tmp/wf-boot/.workflow-kit-manifest.json"
+}
