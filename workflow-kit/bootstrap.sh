@@ -168,7 +168,10 @@ fi
 
 # --- .gitignore -------------------------------------------------------------------
 GI="$TARGET/.gitignore"
-if [ -f "$GI" ] && ! grep -q '^\.workflow/worktrees/' "$GI"; then
+if [ ! -f "$GI" ]; then
+  say "add: .gitignore (workflow-kit lane worktrees)"
+  [ "$DRY_RUN" -eq 0 ] && printf '# workflow-kit lane worktrees\n.workflow/worktrees/\n' > "$GI"
+elif ! grep -q '^\.workflow/worktrees/' "$GI"; then
   say "gitignore: append '.workflow/worktrees/'"
   [ "$DRY_RUN" -eq 0 ] && printf '\n# workflow-kit lane worktrees\n.workflow/worktrees/\n' >> "$GI"
 fi

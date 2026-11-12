@@ -44,7 +44,7 @@ import shutil
 import subprocess
 import sys
 import time
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 KIT_VERSION = "0.1.0"
@@ -174,7 +174,7 @@ def die(msg: str) -> None:
 
 
 def now_utc() -> str:
-    return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    return datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
 def deep_default_config() -> dict:
@@ -195,9 +195,7 @@ def repo_root() -> Path:
     env = os.environ.get("WF_REPO")
     if env:
         return Path(env).resolve()
-    proc = subprocess.run(
-        ["git", "rev-parse", "--show-toplevel"], capture_output=True, text=True
-    )
+    proc = subprocess.run(["git", "rev-parse", "--show-toplevel"], capture_output=True, text=True)
     if proc.returncode != 0:
         die("not inside a git repository (and WF_REPO is unset)")
     return Path(proc.stdout.strip()).resolve()
@@ -369,7 +367,8 @@ def save_json(path: Path, data: dict) -> None:
 
 def save_owner(repo: Path, owner: dict, owner_lane: int | None) -> None:
     """Persist the owning file: main state (renders PROGRESS.md) or the lane file
-    (worktree copy when it exists, plus the shared mirror)."""
+    (worktree copy when it exists, plus the shared mirror). PROGRESS.md merges
+    the mirrors, so lane mutations re-render it on the main checkout too."""
     if owner_lane is None:
         save_json(state_path(repo), owner)
         render_progress(repo)
@@ -381,6 +380,7 @@ def save_owner(repo: Path, owner: dict, owner_lane: int | None) -> None:
         if wt.is_dir():
             save_json(lane_file(wt, owner_lane), owner)
     save_json(lane_mirror(repo, owner_lane), owner)
+    render_progress(repo)
 
 
 def lane_of_worktree(repo: Path) -> int | None:
@@ -535,12 +535,9 @@ def mutate(
     if new_status is not None:
         transition(repo, task_id, new_status)
     owner, owner_lane, task = find_task(repo, task_id)
-    if new_status is not None and owner_lane is not None and not in_main(repo):
-        if lane_of_worktree(repo) != owner_lane:
-            die(
-                "this session runs in a worktree; only tasks owned by this lane "
-                "may be changed here"
-            )
+    foreign_lane = new_status is not None and owner_lane is not None and not in_main(repo)
+    if foreign_lane and lane_of_worktree(repo) != owner_lane:
+        die("this session runs in a worktree; only tasks owned by this lane may be changed here")
     if extra:
         task.update(extra)
     if new_status is not None:
@@ -617,8 +614,9 @@ def guard(repo: Path, quiet: bool = False) -> list[str]:
                         f"task {tid} is in the main state as {base} AND in lane "
                         f"{lane}; run wf.sh merge-lanes {lane}"
                     )
-    active = {tid for tid, t in effective_tasks(repo, state).items()
-              if t["status"] in ACTIVE_STATUSES}
+    active = {
+        tid for tid, t in effective_tasks(repo, state).items() if t["status"] in ACTIVE_STATUSES
+    }
     locks = shared_dir(repo) / "locks"
     if locks.is_dir():
         for entry in sorted(locks.iterdir()):
@@ -635,9 +633,9 @@ def guard(repo: Path, quiet: bool = False) -> list[str]:
                 if not lane_active:
                     entry.unlink()
                     problems.append(
-                        f"removed stale lane-{lane} lock (holder pid "
-                        f"{info.get('pid')} is gone)"
+                        f"removed stale lane-{lane} lock (holder pid {info.get('pid')} is gone)"
                     )
+                    render_progress(repo)
     machine = machine_lock_path(repo)
     if machine.is_file():
         info = _read_lock(machine)
@@ -693,7 +691,7 @@ class _Mutex:
         self.path = shared_dir(repo) / "registry.lock"
         self.fd: int | None = None
 
-    def __enter__(self) -> "_Mutex":
+    def __enter__(self) -> _Mutex:
         self.path.parent.mkdir(parents=True, exist_ok=True)
         self.fd = os.open(self.path, os.O_RDWR | os.O_CREAT, 0o644)
         fcntl.flock(self.fd, fcntl.LOCK_EX)
@@ -768,9 +766,7 @@ def release_lane_lock_if_idle(repo: Path, lane: int | None) -> None:
         return
     for tid, task in eff.items():
         if task.get("claimed_by_lane", task.get("lane")) == lane and (
-            task["status"] in ACTIVE_STATUSES or _claims(repo).get(tid, {}).get(
-                "lane"
-            ) == lane
+            task["status"] in ACTIVE_STATUSES or _claims(repo).get(tid, {}).get("lane") == lane
         ):
             return
     release_lane_lock(repo, lane)
@@ -859,9 +855,7 @@ CARD_HEADING_RE = r"^### (T-\d+)\b"
 
 
 def _card_slice(text: str, tid: str) -> str | None:
-    m = re.search(
-        rf"^### {re.escape(tid)}\b.*?(?=^### T-|^## |\Z)", text, re.M | re.S
-    )
+    m = re.search(rf"^### {re.escape(tid)}\b.*?(?=^### T-|^## |\Z)", text, re.M | re.S)
     return m.group(0) if m else None
 
 
@@ -887,10 +881,7 @@ def parse_plan(path: Path) -> dict:
             heading = line[4:].strip()
             m = re.match(r"^(T-\d+)\s*[-—]\s*(.+)$", heading)
             if not m:
-                die(
-                    f"{path}:{i}: task heading must be '### T-NNN — title', "
-                    f"got {heading!r}"
-                )
+                die(f"{path}:{i}: task heading must be '### T-NNN — title', got {heading!r}")
             current = _new_card(m.group(1), m.group(2))
             if current["id"] in cards:
                 die(f"{path}:{i}: duplicate card id {current['id']}")
@@ -910,13 +901,9 @@ def parse_plan(path: Path) -> dict:
         if section == "shared rules" and line.strip():
             shared_rules.append(line)
         elif section == "assumption register":
-            m = re.match(
-                r"^\s*-\s*(A-?\d+):\s*(.+?)\s*(?:—|--)\s*checked by\s*(T-\d+)\s*$", line
-            )
+            m = re.match(r"^\s*-\s*(A-?\d+):\s*(.+?)\s*(?:—|--)\s*checked by\s*(T-\d+)\s*$", line)
             if m:
-                assumptions.append(
-                    {"id": m.group(1), "text": m.group(2), "task": m.group(3)}
-                )
+                assumptions.append({"id": m.group(1), "text": m.group(2), "task": m.group(3)})
             elif line.strip() and not line.startswith("#"):
                 die(
                     f"{path}:{i}: assumption lines must be "
@@ -1027,9 +1014,7 @@ def _card_line(card: dict, line: str, path: Path, lineno: int) -> None:
         elif key == "id":
             item["id"] = value
         elif key == "expect":
-            em = re.match(
-                r"^(exit_code|stdout_regex|file_exists|json_eq|manual)\b\s*(.*)$", value
-            )
+            em = re.match(r"^(exit_code|stdout_regex|file_exists|json_eq|manual)\b\s*(.*)$", value)
             if em:
                 item["expect"] = em.group(1)
                 rest = em.group(2).strip()
@@ -1049,10 +1034,7 @@ def _card_line(card: dict, line: str, path: Path, lineno: int) -> None:
 def _parse_check_item(item: str, path: Path, lineno: int) -> dict:
     m = re.match(r"^(cmd|expect):\s*(.*)$", item)
     if not m:
-        die(
-            f"{path}:{lineno}: check items must start with 'cmd:' or 'expect:', "
-            f"got {item!r}"
-        )
+        die(f"{path}:{lineno}: check items must start with 'cmd:' or 'expect:', got {item!r}")
     kind, rest = m.group(1), m.group(2).strip()
     entry: dict = {"id": "", "heavy": False}
     if kind == "cmd":
@@ -1060,10 +1042,7 @@ def _parse_check_item(item: str, path: Path, lineno: int) -> dict:
         return entry
     em = re.match(r"^(exit_code|stdout_regex|file_exists|json_eq|manual)\b\s*(.*)$", rest)
     if not em:
-        die(
-            f"{path}:{lineno}: expect type must be one of {', '.join(EXPECT_TYPES)}, "
-            f"got {rest!r}"
-        )
+        die(f"{path}:{lineno}: expect type must be one of {', '.join(EXPECT_TYPES)}, got {rest!r}")
     entry["expect"] = em.group(1)
     args = em.group(2).strip()
     if entry["expect"] == "manual":
@@ -1077,6 +1056,11 @@ def _finish_card(card: dict, path: Path, lineno: int) -> None:
     card.pop("_in_list", None)
     card.pop("_last_item", None)
     missing = [f for f in CARD_FIELDS_REQUIRED if f not in card]
+    missing += [
+        f
+        for f in ("title", "phase", "resources", "review", "estimate")
+        if f in card and not card[f]
+    ]
     if missing:
         die(f"{path}:{lineno}: card {card['id']} is missing fields: {', '.join(missing)}")
     empty = [
@@ -1105,8 +1089,7 @@ def _finish_card(card: dict, path: Path, lineno: int) -> None:
     for item in card["preconditions"] + card["acceptance"]:
         if item.get("cmd") and not item.get("expect"):
             die(
-                f"{path}:{lineno}: card {card['id']}: a cmd item needs an indented "
-                f"'expect: …' line"
+                f"{path}:{lineno}: card {card['id']}: a cmd item needs an indented 'expect: …' line"
             )
         if not item.get("cmd") and not item.get("expect"):
             die(f"{path}:{lineno}: card {card['id']}: check item needs cmd or expect")
@@ -1118,10 +1101,14 @@ def validate_plan(plan: dict, path: Path) -> list[str]:
     cards = plan["cards"]
     for assumption in plan["assumptions"]:
         if assumption["task"] not in cards:
-            die(f"{path}: assumption {assumption['id']} references unknown task "
-                f"{assumption['task']}")
+            die(
+                f"{path}: assumption {assumption['id']} references unknown task "
+                f"{assumption['task']}"
+            )
     if not plan["shared_rules"]:
         die(f"{path}: a '## Shared rules' section with content is required")
+    if not plan["assumptions"]:
+        die(f"{path}: an '## Assumption register' with at least one entry is required")
     if not plan["phases"]:
         die(f"{path}: a '## Phases' section is required")
     for tid, card in cards.items():
@@ -1148,10 +1135,12 @@ def validate_plan(plan: dict, path: Path) -> list[str]:
     for tid in plan["order"]:
         visit(tid)
     for tid, card in cards.items():
+        manual = [i for i in card["acceptance"] if i.get("expect") == "manual"]
         mechanical = [i for i in card["acceptance"] if i.get("expect") != "manual"]
-        if card["review"] != "none" and card["acceptance"] and not mechanical:
+        if card["review"] != "none" and len(manual) > len(mechanical):
             warnings.append(
-                f"card {tid} requires review but ALL acceptance items are manual; "
+                f"card {tid} requires review but its acceptance is mostly manual "
+                f"({len(manual)} manual vs {len(mechanical)} machine-checkable); "
                 f"the same model executes and reviews, so add machine-checkable "
                 f"expectations where possible"
             )
@@ -1188,10 +1177,7 @@ def cmd_plan_import(repo: Path, args: argparse.Namespace) -> None:
         save_json(state_path(repo), state)
         _ensure_gitignore(repo)
         render_progress(repo)
-    print(
-        f"plan imported: {len(plan['cards'])} cards, "
-        f"sha256 {state['plan_sha256'][:12]}…"
-    )
+    print(f"plan imported: {len(plan['cards'])} cards, sha256 {state['plan_sha256'][:12]}…")
     for warning in warnings:
         print(f"WARNING: {warning}", file=sys.stderr)
 
@@ -1262,9 +1248,7 @@ def _amend_state(repo: Path, state: dict, plan: dict, path: Path) -> None:
                 "status": "todo",
                 "plan_changed": True,
             }
-            append_event(
-                state, "plan-changed", tid, "card changed; re-acknowledgement required"
-            )
+            append_event(state, "plan-changed", tid, "card changed; re-acknowledgement required")
     for tid in [t for t in old_tasks if t not in plan["cards"]]:
         if old_tasks[tid]["status"] not in TERMINAL_STATUSES:
             append_event(state, "plan-removed", tid, "card no longer in plan")
@@ -1325,10 +1309,7 @@ def cmd_card(repo: Path, args: argparse.Namespace) -> None:
     print(plan.get("shared_rules", "(none)"))
     print(f"\n---\n\n# Card {tid}\n")
     print(card_text.strip())
-    print(
-        f"\n---\nstatus: {task['status']}  lane: {task['lane']}  "
-        f"review: {task['review']}"
-    )
+    print(f"\n---\nstatus: {task['status']}  lane: {task['lane']}  review: {task['review']}")
 
 
 # ------------------------------------------------------------ status / ready
@@ -1418,14 +1399,20 @@ def cmd_claim(repo: Path, args: argparse.Namespace) -> None:
         if reason:
             die(f"claim refused: {reason}")
     take_lane_lock(repo, lane, tid)
-    update_claim(repo, tid, lambda claims: claims.update(
-        {tid: {
-            "lane": lane,
-            "pid": session_pid(),
-            "ts": now_utc(),
-            "resources": task["resources"],
-        }}
-    ))
+    update_claim(
+        repo,
+        tid,
+        lambda claims: claims.update(
+            {
+                tid: {
+                    "lane": lane,
+                    "pid": session_pid(),
+                    "ts": now_utc(),
+                    "resources": task["resources"],
+                }
+            }
+        ),
+    )
     if lane == 1:
         mutate(
             repo,
@@ -1512,9 +1499,13 @@ def card_steps(repo: Path, tid: str) -> list[dict]:
 
 def card_of_task(repo: Path, tid: str) -> dict | None:
     task = _task_record_anywhere(repo, tid) or {}
-    for name in ("PLAN.md", PLAN_ADDED_NAME) if task.get("source") != "added" else (
-        PLAN_ADDED_NAME,
-        "PLAN.md",
+    for name in (
+        ("PLAN.md", PLAN_ADDED_NAME)
+        if task.get("source") != "added"
+        else (
+            PLAN_ADDED_NAME,
+            "PLAN.md",
+        )
     ):
         path = repo / name
         if not path.is_file():
@@ -1548,10 +1539,7 @@ def cmd_resume(repo: Path, args: argparse.Namespace) -> None:
         die(f"task {tid} is {task['status']}; only active tasks can be resumed")
     claim = _claims(repo).get(tid, {})
     if claim.get("pid") and pid_alive(claim["pid"]) and claim["pid"] != session_pid():
-        die(
-            f"task {tid} is still owned by a live session (pid {claim['pid']}); "
-            f"resume refused"
-        )
+        die(f"task {tid} is still owned by a live session (pid {claim['pid']}); resume refused")
     steps = card_steps(repo, tid)
     done = set(task.get("steps_done") or [])
     pending = [s for s in steps if s["id"] not in done]
@@ -1565,14 +1553,20 @@ def cmd_resume(repo: Path, args: argparse.Namespace) -> None:
         )
     if task["resources"] != "light":
         take_machine_lock(repo, tid)
-    update_claim(repo, tid, lambda claims: claims.update(
-        {tid: {
-            "lane": task.get("claimed_by_lane", task["lane"]),
-            "pid": session_pid(),
-            "ts": now_utc(),
-            "resources": task["resources"],
-        }}
-    ))
+    update_claim(
+        repo,
+        tid,
+        lambda claims: claims.update(
+            {
+                tid: {
+                    "lane": task.get("claimed_by_lane", task["lane"]),
+                    "pid": session_pid(),
+                    "ts": now_utc(),
+                    "resources": task["resources"],
+                }
+            }
+        ),
+    )
     mutate(repo, tid, "in-progress", event="resumed", detail=f"from {first['id']}")
     print(f"resumed {tid} at {first['id']}: {first['text']}")
     print(f"steps done: {', '.join(sorted(done)) if done else 'none'}")
@@ -1738,8 +1732,10 @@ def cmd_precheck(repo: Path, args: argparse.Namespace) -> None:
     for index, item in enumerate(items):
         item_id = item.get("id") or f"P{index + 1}"
         entry = evaluate_item(workdir, item, defer_heavy=True)
-        print(f"{item_id} {entry['verdict'].upper():<10} "
-              f"{entry.get('reason', entry.get('description', ''))}")
+        print(
+            f"{item_id} {entry['verdict'].upper():<10} "
+            f"{entry.get('reason', entry.get('description', ''))}"
+        )
         if entry["verdict"] == "fail":
             failures += 1
     if failures:
@@ -1797,18 +1793,20 @@ def cmd_accept(repo: Path, args: argparse.Namespace) -> None:
         fh.write("\n")
     os.replace(tmp, out)
     for entry in record["items"]:
-        print(f"{entry['id']:>6} {entry['verdict'].upper():<10} "
-              f"{entry.get('reason', entry.get('description', ''))}")
+        print(
+            f"{entry['id']:>6} {entry['verdict'].upper():<10} "
+            f"{entry.get('reason', entry.get('description', ''))}"
+        )
     for ev, entry in record["evidence_files"].items():
-        print(f"      evidence {ev}: {'ok' if entry['exists'] else 'MISSING'} "
-              f"({entry.get('sha256', '')[:12]})")
+        print(
+            f"      evidence {ev}: {'ok' if entry['exists'] else 'MISSING'} "
+            f"({entry.get('sha256', '')[:12]})"
+        )
     print(f"record: {out} (run {len(runs)}), failures: {failures}")
 
 
 def git_head(repo: Path) -> str:
-    proc = subprocess.run(
-        ["git", "rev-parse", "HEAD"], cwd=repo, capture_output=True, text=True
-    )
+    proc = subprocess.run(["git", "rev-parse", "HEAD"], cwd=repo, capture_output=True, text=True)
     return proc.stdout.strip() or "(no commits)"
 
 
@@ -1919,9 +1917,7 @@ def parse_review_report(path: Path) -> tuple[dict, list[dict]]:
     for line in text.splitlines():
         m = re.match(r"^\|\s*(F-\d+)\s*\|\s*([A-Z]+)\s*\|\s*([A-Z-]+)\s*\|", line)
         if m:
-            findings.append(
-                {"id": m.group(1), "severity": m.group(2), "action": m.group(3)}
-            )
+            findings.append({"id": m.group(1), "severity": m.group(2), "action": m.group(3)})
     return {"verdict": verdict}, findings
 
 
@@ -1935,10 +1931,7 @@ def cmd_review_verdict(repo: Path, args: argparse.Namespace) -> None:
         die(f"report file {report} does not exist")
     parsed, findings = parse_review_report(report)
     if parsed["verdict"] != verdict:
-        die(
-            f"the report's 'Task verdict' says {parsed['verdict']!r} but you "
-            f"passed {verdict!r}"
-        )
+        die(f"the report's 'Task verdict' says {parsed['verdict']!r} but you passed {verdict!r}")
     cycle = review_cycles(repo, tid)
     archive = repo / "reviews" / tid / f"r{cycle}-REVIEW_REPORT.md"
     archive.parent.mkdir(parents=True, exist_ok=True)
@@ -2213,16 +2206,11 @@ def cmd_lane_status(repo: Path, args: argparse.Namespace) -> None:
         state = "no file"
         if mirror:
             active = [
-                tid
-                for tid, t in mirror.get("tasks", {}).items()
-                if t["status"] in ACTIVE_STATUSES
+                tid for tid, t in mirror.get("tasks", {}).items() if t["status"] in ACTIVE_STATUSES
             ]
             state = f"{len(mirror['tasks'])} task(s), active: {', '.join(active) or '-'}"
-        print(
-            f"lane {lane}: "
-            f"{'ACTIVE pid ' + str(info['pid']) + ' (' + str(info.get('task')) + ')' if info else 'no lock'}"
-            f" | worktree {'yes' if worktree.is_dir() else '-'} | {state}"
-        )
+        head = f"ACTIVE pid {info['pid']} ({info.get('task')})" if info else "no lock"
+        print(f"lane {lane}: {head} | worktree {'yes' if worktree.is_dir() else '-'} | {state}")
 
 
 def cmd_lane_release(repo: Path, args: argparse.Namespace) -> None:
@@ -2235,15 +2223,21 @@ def cmd_lane_release(repo: Path, args: argparse.Namespace) -> None:
             if task["status"] in ACTIVE_STATUSES:
                 task["status"] = "ready"
                 released.append(tid)
-        append_event(mirror, "lane-released", None,
-                     f"lane {lane}; reverted: {', '.join(released) or 'none'}")
+        append_event(
+            mirror, "lane-released", None, f"lane {lane}; reverted: {', '.join(released) or 'none'}"
+        )
         save_owner(repo, mirror, lane)
-    update_claim(repo, "", lambda claims: claims.update(
-        {t: None for t, c in claims.items() if c.get("lane") == lane}
-    ))
+    update_claim(
+        repo,
+        "",
+        lambda claims: claims.update({t: None for t, c in claims.items() if c.get("lane") == lane}),
+    )
     # remove the None entries just inserted
-    update_claim(repo, "", lambda claims: [claims.pop(t) for t in
-                    [k for k, v in claims.items() if v is None]])
+    update_claim(
+        repo,
+        "",
+        lambda claims: [claims.pop(t) for t in [k for k, v in claims.items() if v is None]],
+    )
     print(
         f"lane {lane} released; "
         f"{'reverted to ready: ' + ', '.join(released) if released else 'no active tasks'}"
@@ -2261,10 +2255,7 @@ def cmd_merge_lanes(repo: Path, args: argparse.Namespace) -> None:
     mirror = load_lane(repo, lane, from_mirror=True)
     if mirror is None:
         die(f"lane {lane} has no lane file; nothing to merge")
-    active = [
-        tid for tid, t in mirror.get("tasks", {}).items()
-        if t["status"] in ACTIVE_STATUSES
-    ]
+    active = [tid for tid, t in mirror.get("tasks", {}).items() if t["status"] in ACTIVE_STATUSES]
     if active and not args.force:
         die(
             f"lane {lane} still has active tasks ({', '.join(active)}); finish them "
@@ -2308,8 +2299,13 @@ def cmd_merge_lanes(repo: Path, args: argparse.Namespace) -> None:
     if args.delete_branch:
         _git(repo, "branch", "-d", branch)
     release_lane_lock(repo, lane)
-    update_claim(repo, "", lambda claims: [claims.pop(t) for t in
-                    [k for k, v in claims.items() if v.get("lane") == lane]])
+    update_claim(
+        repo,
+        "",
+        lambda claims: [
+            claims.pop(t) for t in [k for k, v in claims.items() if v.get("lane") == lane]
+        ],
+    )
     render_progress(repo)
     print(f"lane {lane} merged into main; state and PROGRESS.md updated")
     print("commit the merge (the lane file deletion is part of it)")
@@ -2389,8 +2385,7 @@ def progress_markdown(repo: Path, state: dict) -> str:
         lines.append("_(none)_")
     lines += ["", "## Review queue", ""]
     review_queue = sorted(
-        (tid, t) for tid, t in eff.items()
-        if t["status"] in ("in-review", "changes-requested")
+        (tid, t) for tid, t in eff.items() if t["status"] in ("in-review", "changes-requested")
     )
     if review_queue:
         for tid, task in review_queue:
@@ -2444,6 +2439,7 @@ def cmd_render(repo: Path, args: argparse.Namespace) -> None:
 def cmd_event(repo: Path, args: argparse.Namespace) -> None:
     state = load_state(repo)
     append_event(state, "note", args.task, " ".join(args.text))
+    recompute_ready(state, repo, None)
     save_json(state_path(repo), state)
     render_progress(repo)
     print("event recorded")
@@ -2475,10 +2471,7 @@ def cmd_calibration_record(repo: Path, args: argparse.Namespace) -> None:
         json.dump(runs, fh, indent=2)
         fh.write("\n")
     os.replace(tmp, out)
-    print(
-        f"calibration recorded ({len(args.caught)} caught, {len(args.missed)} "
-        f"missed); {out}"
-    )
+    print(f"calibration recorded ({len(args.caught)} caught, {len(args.missed)} missed); {out}")
 
 
 # ----------------------------------------------------------------------- CLI
@@ -2496,9 +2489,7 @@ def cmd_plan_check(repo: Path, args: argparse.Namespace) -> None:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    p = argparse.ArgumentParser(
-        prog="wf.sh", description="workflow-kit task state machine"
-    )
+    p = argparse.ArgumentParser(prog="wf.sh", description="workflow-kit task state machine")
     p.add_argument("--version", action="version", version=f"workflow-kit {KIT_VERSION}")
     sub = p.add_subparsers(dest="cmd", required=True, metavar="<subcommand>")
 

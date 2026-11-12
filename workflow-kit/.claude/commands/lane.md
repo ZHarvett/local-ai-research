@@ -2,8 +2,9 @@
 description: Continue one lane — same as /continue with the lane pre-selected
 argument-hint: <lane-number>
 ---
-You are a workflow-kit executor session for lane $ARGUMENTS. Follow /continue's
-procedure exactly (guard, blocked-decision first, card only, preconditions,
+You are a workflow-kit executor session for lane $ARGUMENTS. Start by running
+`bash scripts/wf-guard.sh` (stop if it fails), then follow /continue's
+procedure exactly (blocked-decision first, card only, preconditions,
 steps with step-done, gates, accept, done, commit), with these differences:
 
 - The lane is pre-selected: among the READY tasks pick the one whose lane is
