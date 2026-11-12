@@ -2,12 +2,13 @@
   "session_id": "stage3-64K",
   "state": "complete",
   "phase": "done",
-  "cells_total": 2,
-  "cells_done": 1,
+  "cells_total": 1,
+  "cells_done": 0,
   "started_utc": "2026-11-12T12:25:12Z",
-  "updated_utc": "2026-11-12T12:51:33Z",
-  "cell": "canary-end",
-  "repetition": 105,
+  "updated_utc": "2026-11-12T13:06:31Z",
+  "cell": "canary-rerun-end",
+  "repetition": 115,
   "depth": 16384,
-  "kind": "B"
+  "kind": "B",
+  "mode": "rerun"
 }

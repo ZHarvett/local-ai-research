@@ -72,3 +72,7 @@ command-line arguments. Fill one block per session **before** it starts (copy th
 - Lowest min free VRAM: 1,021 MiB (tuned-64K); stock-64K 1,355 MiB; canaries 1,329 MiB.
 - Quiet check at 3 polls (12:32, 12:39, 12:47, 12:54Z): QUIET each time; no quiet condition violated. Highest CPU busy at a poll 6.6% (llama-server); no non-project process above 1%. Lowest MemAvailable at a poll: 19.4 GiB (12:47Z, server loaded); lowest at a cell's preconditions 27.8 GiB.
 - Stock windows paging-flagged (reported only): 0 of 5 (largest swap growth 20 MiB, 60 faults). Tuned and canary windows: 4 of 11, all in tuned-64K (largest swap growth 586 MiB, most major faults 47,576). This is the reverse of what plan 5.4 expected (stock paging, tuned clean).
+
+## Session stage3-64K, re-run pass (once, `--rerun-flagged stage3-64K`)
+- Started 12:54:56Z after `check-quiet.sh` (QUIET), MemAvailable 27.9 GiB, no llama-server, GPU lock free; ended 13:06:31Z (11.6 min), runner exit 0, state complete. Polls 13:02Z and 13:09Z: QUIET, CPU 9.1% (llama-server) and 0.2%, MemAvailable 24.5 and 27.9 GiB.
+- Units re-run: 4 (tuned-64K repetitions 1 to 4, paging). Result: all 4 attempt-2 windows clean (0 major faults, no thermal flag); resolved 4, still flagged 0. Re-run canaries: 6 of 6 windows clean; drift: no flag for main or rerun. min free VRAM of the re-run tuned cell 1,021 MiB. No llama-server left.
