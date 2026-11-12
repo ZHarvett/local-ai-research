@@ -680,7 +680,7 @@ def test_pair_stage_needs_exactly_two_cells(tmp_path):
 def test_2d_skipped_when_the_default_is_8_threads(tmp_path):
     r = decide.decide_2d_skipped(8, root=REPO, git=fake_git)
     assert r["status"] == "skipped" and "not needed" in r["reason"]
-    assert r["provenance"]["plan_version"] == "1.6" and r["provenance"]["code"] == FAKE_GIT
+    assert r["provenance"]["plan_version"] == "1.7" and r["provenance"]["code"] == FAKE_GIT
     assert "Skipped" in render_markdown(r)
     with pytest.raises(ValueError):
         decide.decide_2d_skipped(16)
@@ -778,7 +778,7 @@ def test_every_output_records_its_provenance(tmp_path, stage):
         d = build_session(tmp_path, "s2b", pair_cells("2b", 80.0, 92.0))
     r = run(stage, [d])
     p = r["provenance"]
-    assert p["stage"] == stage and p["plan_version"] == "1.6"
+    assert p["stage"] == stage and p["plan_version"] == "1.7"
     assert p["code"] == FAKE_GIT and p["eligibility_override"] is False
     assert [s["session_id"] for s in p["sessions"]] == [d.name]
     assert p["sessions"][0]["spec_sha256"] == "a" * 64 and p["sessions"][0]["state"] == "complete"
@@ -791,7 +791,7 @@ def test_every_output_records_its_provenance(tmp_path, stage):
     assert r["label"] == "results" and "RESULTS" in r["banner"]
     # the Markdown carries the same facts
     md = render_markdown(r)
-    assert d.name in md and "plan version: 1.6" in md and FAKE_GIT["commit"] in md
+    assert d.name in md and "plan version: 1.7" in md and FAKE_GIT["commit"] in md
     assert ("a" * 16) in md and ("c" * 40) in md
     for text in rules.RULES_BY_STAGE[stage]:
         assert "> " + text.split("\n")[0] in md
