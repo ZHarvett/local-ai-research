@@ -1,0 +1,97 @@
+0.08.380.116 I load_tensors:   CPU_Mapped model buffer size =   272.81 MiB
+0.08.380.117 I load_tensors:   CPU_Mapped model buffer size =   210.82 MiB
+0.08.380.117 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.08.380.118 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.08.380.118 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.08.380.118 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.08.380.119 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.08.380.119 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.08.380.119 I load_tensors:   CPU_Mapped model buffer size =   210.00 MiB
+0.08.380.119 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.08.380.120 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.08.380.120 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.08.380.120 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.08.380.120 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.08.380.120 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.08.380.121 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.08.380.121 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.08.380.121 I load_tensors:   CPU_Mapped model buffer size =   210.00 MiB
+0.08.380.121 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.08.380.121 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.08.380.122 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.08.380.122 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.08.380.122 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.08.380.123 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.08.380.123 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.08.380.124 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.08.380.124 I load_tensors:   CPU_Mapped model buffer size =   210.00 MiB
+0.08.380.124 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.08.380.124 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.08.380.124 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.08.380.125 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.08.380.125 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.08.380.125 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.08.380.125 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.08.380.126 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.08.380.126 I load_tensors:   CPU_Mapped model buffer size =   210.00 MiB
+0.08.380.126 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.08.380.126 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.08.380.127 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.08.380.127 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.08.380.127 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.08.380.127 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.08.380.127 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.08.380.128 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.08.380.128 I load_tensors:   CPU_Mapped model buffer size =   210.00 MiB
+0.08.380.128 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.08.380.128 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.08.380.128 I load_tensors:   CPU_Mapped model buffer size =   210.00 MiB
+0.08.380.129 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.08.380.129 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.08.380.129 I load_tensors:   CPU_Mapped model buffer size =   210.00 MiB
+0.08.380.130 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.08.380.130 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.08.380.130 I load_tensors:   CPU_Mapped model buffer size =   210.00 MiB
+0.08.380.130 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.08.380.131 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.08.380.131 I load_tensors:   CPU_Mapped model buffer size =   210.00 MiB
+0.08.380.131 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.08.380.132 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.08.380.132 I load_tensors:   CPU_Mapped model buffer size =   210.00 MiB
+0.08.380.133 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.08.380.133 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.08.380.133 I load_tensors:   CPU_Mapped model buffer size =   210.00 MiB
+0.08.380.133 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.08.380.133 I load_tensors:   CPU_Mapped model buffer size =   144.00 MiB
+0.08.380.134 I load_tensors:        CUDA0 model buffer size = 10415.46 MiB
+0.09.374.511 I llama_context: constructing llama_context
+0.09.374.514 I llama_context: n_ctx                 = 131072
+0.09.378.945 I llama_kv_cache:      CUDA0 KV buffer size =  1360.00 MiB
+0.09.378.948 I llama_kv_cache: size = 1360.00 MiB (131072 cells,  10 layers,  1/1 seqs), K (q8_0):  680.00 MiB, V (q8_0):  680.00 MiB
+0.09.379.816 I llama_memory_recurrent:      CUDA0 RS buffer size =   125.62 MiB
+0.09.379.825 I sched_reserve: reserving ...
+0.09.559.325 I sched_reserve:      CUDA0 compute buffer size =  2034.16 MiB
+0.09.559.328 I sched_reserve:  CUDA_Host compute buffer size =  1152.19 MiB
+0.09.559.331 I sched_reserve: graph (pp bs=4096, tg bs=1): nodes = 4059 / 4059, splits = 63 / 46, input objects = 4 / 4, input tensors = 10 / 10
+0.09.559.332 I sched_reserve: reserve took 179.51 ms, sched copies = 1
+0.09.636.109 I common_speculative_init_result: creating MTP draft context against the target model '<repo>/models/Ornith-1.5-35B-Q4_K_M.gguf'
+0.09.636.131 I llama_context: constructing llama_context
+0.09.636.133 I llama_context: n_ctx                 = 131072
+0.09.637.822 I llama_kv_cache:      CUDA0 KV buffer size =   256.00 MiB
+0.09.637.826 I llama_kv_cache: size =  256.00 MiB (131072 cells,   1 layers,  1/1 seqs), K (f16):  128.00 MiB, V (f16):  128.00 MiB
+0.09.637.839 I sched_reserve: reserving ...
+0.09.795.109 I sched_reserve:      CUDA0 compute buffer size =  1344.12 MiB
+0.09.795.112 I sched_reserve:  CUDA_Host compute buffer size =  1088.14 MiB
+0.09.795.114 I sched_reserve: graph (pp bs=4096, tg bs=1): nodes = 86 / 86, splits = 5 / 4, input objects = 4 / 4, input tensors = 7 / 7
+0.09.795.115 I sched_reserve: reserve took 157.28 ms, sched copies = 1
+0.09.795.876 I spec common_specu: adding speculative implementation 'draft-mtp'
+0.09.796.917 I sched_reserve: reserving ...
+0.10.014.431 I sched_reserve:      CUDA0 compute buffer size =  1344.12 MiB
+0.10.014.434 I sched_reserve:  CUDA_Host compute buffer size =  1088.14 MiB
+0.10.014.436 I sched_reserve: graph (pp bs=4096, tg bs=1): nodes = 92 / 92, splits = 5 / 4, input objects = 5 / 5, input tensors = 7 / 7
+0.10.014.437 I sched_reserve: reserve took 217.52 ms, sched copies = 1
+0.10.334.890 I sched_reserve: reserving ...
+0.10.590.052 I sched_reserve:      CUDA0 compute buffer size =  1872.16 MiB
+0.10.590.055 I sched_reserve:  CUDA_Host compute buffer size =  1152.19 MiB
+0.10.590.057 I sched_reserve: graph (pp bs=4096, tg bs=1): nodes = 4058 / 4058, splits = 64 / 46, input objects = 4 / 4, input tensors = 10 / 10
+0.10.590.058 I sched_reserve: reserve took 255.15 ms, sched copies = 1

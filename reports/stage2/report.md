@@ -4,7 +4,7 @@
 
 ## Provenance
 
-- Plan version: v1.6
+- Plan version: v1.7
 - Regenerate with: `python -m smallpc.report render --sessions data/raw/s2a-32K data/raw/s2a-64K data/raw/s2a-128K data/raw/s2a2-32K data/raw/s2a2-64K data/raw/s2a2-128K data/raw/s2b data/raw/s2b-32K data/raw/s2b-128K --out reports/stage2 --label screening`
 - Statistics: mean, n, min, max and a 95% CI (wider of the percentile-bootstrap interval, 10,000 resamples, fixed seed, and the t interval); CIs shown for n of at least 2. Paired ratios: geometric mean with the wider of the bootstrap CI and a t-interval on the log ratios, back-transformed.
 
@@ -163,8 +163,8 @@ Ranking by mean T_turn_400: `s2b-P6-32K-b4096-mtp2-kvq8` < `s2a2-P6-32K-b4096-mt
 - `s2a2-P6-32K-b4096-mtp2` and `s2a-P6-32K-b4096-mtp0`: too close to call at n = 2 (means differ by 0.296 s, larger range 0.629 s).
 - `s2a-P6-32K-b4096-mtp3` and `s2a-P6-32K-b4096-mtp0`: too close to call at n = 2 (means differ by 0.001 s, larger range 0.629 s).
 
-- `s2b-P6-32K-b4096-mtp2-kvq8`: VRAM model 1326, KV 404, recurrent 188, compute 3973, expert cache 10750, other -1461.2 MiB; minimum free 1131.0 MiB; expert-cache decode-batch hit rate 95.5%.
-- `s2a2-P6-32K-b4096-mtp2`: VRAM model 1326, KV 404, recurrent 188, compute 3973, expert cache 10750, other -1461.2 MiB; minimum free 1131.0 MiB; expert-cache decode-batch hit rate 95.5%.
+- `s2b-P6-32K-b4096-mtp2-kvq8`: VRAM model 1326, KV 404, recurrent 188, compute 1986, expert cache 10750, other 525.1 MiB; minimum free 1131.0 MiB; expert-cache decode-batch hit rate 95.5%.
+- `s2a2-P6-32K-b4096-mtp2`: VRAM model 1326, KV 404, recurrent 188, compute 1986, expert cache 10750, other 525.1 MiB; minimum free 1131.0 MiB; expert-cache decode-batch hit rate 95.5%.
 
 ### 64K
 
@@ -194,8 +194,8 @@ Ranking by mean T_turn_400: `s2b-P6-64K-b4096-mtp1-kvf16` < `s2a2-P6-64K-b4096-m
 - `s2a2-P6-64K-b4096-mtp1` and `s2a-P6-64K-b4096-mtp1`: too close to call at n = 2 (means differ by 0.103 s, larger range 0.753 s).
 - `s2b-P6-64K-b4096-mtp1-kvq8` and `s2a-P6-64K-b4096-mtp1`: too close to call at n = 2 (means differ by 0.050 s, larger range 0.753 s).
 
-- `s2b-P6-64K-b4096-mtp1-kvf16`: VRAM model 1326, KV 1408, recurrent 126, compute 4872, expert cache 9471, other -1913.0 MiB; minimum free 1019.0 MiB; expert-cache decode-batch hit rate 94.2%.
-- `s2a2-P6-64K-b4096-mtp1`: VRAM model 1326, KV 808, recurrent 126, compute 4872, expert cache 9982, other -1908.3 MiB; minimum free 1105.0 MiB; expert-cache decode-batch hit rate 94.7%.
+- `s2b-P6-64K-b4096-mtp1-kvf16`: VRAM model 1326, KV 1408, recurrent 126, compute 2436, expert cache 9471, other 523.2 MiB; minimum free 1019.0 MiB; expert-cache decode-batch hit rate 94.2%.
+- `s2a2-P6-64K-b4096-mtp1`: VRAM model 1326, KV 808, recurrent 126, compute 2436, expert cache 9982, other 527.9 MiB; minimum free 1105.0 MiB; expert-cache decode-batch hit rate 94.7%.
 
 ### 128K
 
@@ -338,14 +338,14 @@ Units above the threshold that are already excluded by a flag (not affected here
 
 | cell | model | KV | recurrent state | compute buffers | expert cache | other | peak used | min free (final windows) | expert layers on CPU |
 |---|---|---|---|---|---|---|---|---|---|
-| s2b-P6-32K-b4096-mtp2-kvf16 | 1,326 | 704 (f16) | 188 | 3,973 | 10,493 | -1,463 | 15,222 | 1,089 | - |
-| s2b-P6-32K-b4096-mtp2-kvq8 | 1,326 | 404 (q8_0) | 188 | 3,973 | 10,750 | -1,461 | 15,180 | 1,131 | - |
-| s2a2-P6-32K-b4096-mtp2 | 1,326 | 404 (q8_0) | 188 | 3,973 | 10,750 | -1,461 | 15,180 | 1,131 | - |
-| s2a-P6-32K-b4096-mtp2 | 1,326 | 404 (q8_0) | 188 | 3,973 | 10,750 | -1,461 | 15,180 | 1,131 | - |
-| s2a-P6-32K-b4096-mtp1 | 1,326 | 404 (q8_0) | 126 | 3,973 | 10,750 | -1,462 | 15,116 | 1,195 | - |
-| s2a-P6-32K-b4096-mtp3 | 1,326 | 404 (q8_0) | 251 | 3,973 | 10,750 | -1,462 | 15,242 | 1,069 | - |
+| s2b-P6-32K-b4096-mtp2-kvf16 | 1,326 | 704 (f16) | 188 | 1,986 | 10,493 | 524 | 15,222 | 1,089 | - |
+| s2b-P6-32K-b4096-mtp2-kvq8 | 1,326 | 404 (q8_0) | 188 | 1,986 | 10,750 | 525 | 15,180 | 1,131 | - |
+| s2a2-P6-32K-b4096-mtp2 | 1,326 | 404 (q8_0) | 188 | 1,986 | 10,750 | 525 | 15,180 | 1,131 | - |
+| s2a-P6-32K-b4096-mtp2 | 1,326 | 404 (q8_0) | 188 | 1,986 | 10,750 | 525 | 15,180 | 1,131 | - |
+| s2a-P6-32K-b4096-mtp1 | 1,326 | 404 (q8_0) | 126 | 1,986 | 10,750 | 524 | 15,116 | 1,195 | - |
+| s2a-P6-32K-b4096-mtp3 | 1,326 | 404 (q8_0) | 251 | 1,986 | 10,750 | 524 | 15,242 | 1,069 | - |
 | s2a-P6-32K-b4096-mtp0 | 1,303 | 340 (q8_0) | 63 | 1,348 | 11,520 | 359 | 14,932 | 1,379 | - |
-| s2a2-P2-32K-b4096-mtp2 | 12,848 | 404 (q8_0) | 188 | 3,485 | 0 | -1,230 | 15,696 | 615 | 17 |
+| s2a2-P2-32K-b4096-mtp2 | 12,848 | 404 (q8_0) | 188 | 1,742 | 0 | 513 | 15,696 | 615 | 17 |
 | s2a-P2-32K-b4096-mtp0 | 13,900 | 340 (q8_0) | 63 | 1,104 | 0 | 337 | 15,744 | 567 | 14 |
 | s2a2-P2-32K-b4096-mtp0 | 13,900 | 340 (q8_0) | 63 | 1,104 | 0 | 337 | 15,744 | 567 | 14 |
 
@@ -355,14 +355,14 @@ Units above the threshold that are already excluded by a flag (not affected here
 
 | cell | model | KV | recurrent state | compute buffers | expert cache | other | peak used | min free (final windows) | expert layers on CPU |
 |---|---|---|---|---|---|---|---|---|---|
-| s2b-P6-64K-b4096-mtp1-kvf16 | 1,326 | 1,408 (f16) | 126 | 4,872 | 9,471 | -1,913 | 15,290 | 1,019 | - |
-| s2a2-P6-64K-b4096-mtp1 | 1,326 | 808 (q8_0) | 126 | 4,872 | 9,982 | -1,908 | 15,206 | 1,105 | - |
-| s2a-P6-64K-b4096-mtp2 | 1,326 | 808 (q8_0) | 188 | 4,872 | 9,982 | -1,907 | 15,270 | 1,041 | - |
-| s2b-P6-64K-b4096-mtp1-kvq8 | 1,326 | 808 (q8_0) | 126 | 4,872 | 9,982 | -1,906 | 15,208 | 1,103 | - |
-| s2a-P6-64K-b4096-mtp1 | 1,326 | 808 (q8_0) | 126 | 4,872 | 9,982 | -1,908 | 15,206 | 1,105 | - |
-| s2a-P6-64K-b4096-mtp3 | 1,326 | 808 (q8_0) | 251 | 4,872 | 9,726 | -1,909 | 15,074 | 1,237 | - |
+| s2b-P6-64K-b4096-mtp1-kvf16 | 1,326 | 1,408 (f16) | 126 | 2,436 | 9,471 | 523 | 15,290 | 1,019 | - |
+| s2a2-P6-64K-b4096-mtp1 | 1,326 | 808 (q8_0) | 126 | 2,436 | 9,982 | 528 | 15,206 | 1,105 | - |
+| s2a-P6-64K-b4096-mtp2 | 1,326 | 808 (q8_0) | 188 | 2,436 | 9,982 | 529 | 15,270 | 1,041 | - |
+| s2b-P6-64K-b4096-mtp1-kvq8 | 1,326 | 808 (q8_0) | 126 | 2,436 | 9,982 | 530 | 15,208 | 1,103 | - |
+| s2a-P6-64K-b4096-mtp1 | 1,326 | 808 (q8_0) | 126 | 2,436 | 9,982 | 528 | 15,206 | 1,105 | - |
+| s2a-P6-64K-b4096-mtp3 | 1,326 | 808 (q8_0) | 251 | 2,436 | 9,726 | 527 | 15,074 | 1,237 | - |
 | s2a-P6-64K-b4096-mtp0 | 1,303 | 680 (q8_0) | 63 | 1,604 | 11,007 | 361 | 15,018 | 1,293 | - |
-| s2a2-P2-64K-b4096-mtp1 | 12,276 | 808 (q8_0) | 126 | 4,385 | 0 | -1,680 | 15,914 | 397 | 19 |
+| s2a2-P2-64K-b4096-mtp1 | 12,276 | 808 (q8_0) | 126 | 2,192 | 0 | 512 | 15,914 | 397 | 19 |
 | s2a2-P2-64K-b4096-mtp0 | 13,323 | 680 (q8_0) | 63 | 1,360 | 0 | 340 | 15,766 | 545 | 15 |
 | s2a-P2-64K-b4096-mtp0 | 13,323 | 680 (q8_0) | 63 | 1,360 | 0 | 340 | 15,766 | 545 | 15 |
 
@@ -375,12 +375,12 @@ Units above the threshold that are already excluded by a flag (not affected here
 | s2b-P6-128K-b4096-mtp0-kvf16 | 1,303 | 2,560 (f16) | 63 | 2,116 | 8,701 | 358 | 15,100 | 1,211 | - |
 | s2a2-P6-128K-b4096-mtp0 | 1,303 | 1,360 (q8_0) | 63 | 2,116 | 9,725 | 363 | 14,930 | 1,381 | - |
 | s2b-P6-128K-b4096-mtp0-kvq8 | 1,303 | 1,360 (q8_0) | 63 | 2,116 | 9,725 | 361 | 14,928 | 1,383 | - |
-| s2a2-P6-128K-b4096-mtp1 | 1,326 | 1,616 (q8_0) | 126 | 6,920 | 8,192 | -2,928 | 15,252 | 1,059 | - |
+| s2a2-P6-128K-b4096-mtp1 | 1,326 | 1,616 (q8_0) | 126 | 3,460 | 8,192 | 532 | 15,252 | 1,059 | - |
 | s2a-P6-128K-b4096-mtp0 | 1,303 | 1,360 (q8_0) | 63 | 2,116 | 9,725 | 363 | 14,930 | 1,381 | - |
-| s2a-P2-128K-b4096-mtp1 | 10,415 | 1,616 (q8_0) | 126 | 6,595 | 0 | -2,862 | 15,890 | 421 | 23 |
-| s2a2-P6-128K-b4096-mtp2 | 1,326 | 1,616 (q8_0) | 188 | 6,920 | 7,933 | -2,928 | 15,056 | 1,255 | - |
-| s2a-P2-128K-b4096-mtp3 | 10,269 | 1,616 (q8_0) | 251 | 6,595 | 0 | -2,863 | 15,868 | 443 | 23 |
-| s2a-P2-128K-b4096-mtp2 | 10,269 | 1,616 (q8_0) | 188 | 6,595 | 0 | -2,862 | 15,806 | 503 | 23 |
+| s2a-P2-128K-b4096-mtp1 | 10,415 | 1,616 (q8_0) | 126 | 3,216 | 0 | 517 | 15,890 | 421 | 23 |
+| s2a2-P6-128K-b4096-mtp2 | 1,326 | 1,616 (q8_0) | 188 | 3,460 | 7,933 | 532 | 15,056 | 1,255 | - |
+| s2a-P2-128K-b4096-mtp3 | 10,269 | 1,616 (q8_0) | 251 | 3,216 | 0 | 516 | 15,868 | 443 | 23 |
+| s2a-P2-128K-b4096-mtp2 | 10,269 | 1,616 (q8_0) | 188 | 3,216 | 0 | 516 | 15,806 | 503 | 23 |
 | s2a2-P2-128K-b4096-mtp0 | 11,961 | 1,360 (q8_0) | 63 | 2,034 | 0 | 344 | 15,762 | 549 | 18 |
 | s2a-P2-128K-b4096-mtp0 | 11,961 | 1,360 (q8_0) | 63 | 2,034 | 0 | 344 | 15,762 | 549 | 18 |
 

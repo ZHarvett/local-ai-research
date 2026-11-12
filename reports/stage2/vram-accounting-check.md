@@ -1,13 +1,14 @@
 # VRAM accounting check (Stage 2 cells)
 
-Parsed load-log buffers against the measured peak used VRAM (MiB). `other` is what the
-breakdown figure plots as the remainder (peak minus the parsed parts); it is negative where
-the parsed parts exceed the peak, and the bar then extends past the card's total. `resident`
-counts the compute buffers as resident if each reservation replaces the earlier one of its
-context (an MTP log lists target, draft, draft, target: the last two). This is an estimate
-checked only by consistency (below), not by inspecting the allocator.
+Load-log buffers against the measured peak used VRAM (MiB). `compute parsed` sums every
+`CUDA0 compute buffer` line of the log, which is what the parser did before WP13 and what the
+breakdown figure plotted; `other before` is the remainder (peak minus the parts) with it, negative
+where the parts exceeded the peak (the bar then extended past the card's total). `compute resident`
+is the figure now used (the last reservation of each llama_context; the scheduler of a
+re-reserving context frees its old compute buffers first, llama.cpp `llama-context.cpp`
+`sched_new`), and `other now` the remainder with it.
 
-| cell | MTP | CUDA0 compute lines | compute parsed | compute resident | peak | other as plotted | other if resident |
+| cell | MTP | CUDA0 compute lines | compute parsed (before) | compute resident (now) | peak | other before | other now |
 |---|---|---|---|---|---|---|---|
 | s2a-P2-128K-b4096-mtp0 | no | [2034.16] | 2,034 | 2,034 | 15,762 | 344 | 344 |
 | s2a-P2-128K-b4096-mtp1 | yes | [2034.16, 1344.12, 1344.12, 1872.16] | 6,595 | 3,216 | 15,890 | -2,862 | 517 |
@@ -43,5 +44,6 @@ checked only by consistency (below), not by inspecting the allocator.
 
 - cells with parsed parts above the peak: 19 of 31; MTP cells among them: 19; non-MTP cells among them: 0.
 - `other` of the non-MTP cells: 337 to 363 MiB (the CUDA context and similar).
-- `other` of the MTP cells with the compute buffers counted as resident: 512 to 532 MiB.
-- In every cell peak + minimum free = the card's total, so the measured side is consistent; the overshoot is in the parsed side.
+- `other` of the MTP cells with the resident compute buffers: 512 to 532 MiB (about 170 MiB above the non-MTP cells, the same at every context size; not a compute buffer of the log).
+- cells with parsed parts above the peak after the fix: 0.
+- In every cell peak + minimum free = the card's total, so the measured side is consistent; the overshoot was in the parsed side.

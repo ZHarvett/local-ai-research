@@ -28,7 +28,7 @@ from collections import defaultdict
 from dataclasses import dataclass, field
 from pathlib import Path
 
-from . import flags, stats, telemetry
+from . import flags, parsers, stats, telemetry
 from .sweep.records import Store
 
 # Repetition indices of the canaries (step plan 5.1 / WP9: smallpc.sweep.session.CANARY_BASE).
@@ -325,7 +325,7 @@ def _vram_parts(instance: dict) -> dict:
         "model_mib": model,
         "kv_mib": cuda(pl.get("kv_buffers")),
         "recurrent_mib": cuda(pl.get("recurrent_state_buffers")),
-        "compute_mib": cuda(pl.get("compute_buffers")),
+        "compute_mib": cuda(parsers.resident_compute_buffers(pl)),  # last reservation per context
         "total_mib": vram.get("total_mib"),
         "loaded_mib": vram.get("loaded_mib"),
         "peak_used_mib": vram.get("peak_used_mib"),

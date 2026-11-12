@@ -1,13 +1,16 @@
-"""VRAM accounting check of the Stage 2 cells (WP12 part 2g, step D.2). Read-only.
+"""VRAM accounting check of the Stage 2 cells (WP12 part 2g, step D.2; updated in WP13). Read-only.
 
 The VRAM-breakdown figure stacks the buffer sizes parsed from the server's load log (model, KV,
 recurrent state, compute buffers, expert cache) plus ``other`` = measured peak used VRAM minus those
 parts, plus the minimum free VRAM, so a bar ends at the card's total only if the parsed parts do
-not exceed the measured peak. This tool lists, per cell, the parsed parts against the measured peak,
-and shows that the cells whose parts exceed the peak are exactly the MTP cells, whose log lists the
-compute buffers of the target context and of the draft context TWICE (the scheduler reserves each
-graph again), which the parser adds up as if all were resident. ``resident`` counts the last two of
-the four lines only.
+not exceed the measured peak. An MTP cell's log lists the compute buffers of the target context and
+of the draft context TWICE (each context reserves its graph again and the new reservation replaces
+the old one), which the parser used to add up as if all four were resident. Since WP13 the parser
+(``smallpc.parsers.resident_compute_buffers``) counts the last reservation of each context.
+
+This tool lists, per cell, the compute buffers as listed in the log (``compute parsed``, the figure
+the parser gave before WP13, summed over every line), the resident figure now used by
+``smallpc.analysis`` (``compute resident``), and ``other`` with each.
 
     uv run python tools/stage2_vram_check.py --out reports/stage2/vram-accounting-check \\
         data/raw/s2a-32K data/raw/s2a-64K ...
@@ -21,7 +24,7 @@ import json
 import sys
 from pathlib import Path
 
-from smallpc import analysis
+from smallpc import analysis, parsers
 
 
 def cuda_sum(items) -> float:
@@ -29,11 +32,10 @@ def cuda_sum(items) -> float:
 
 
 def resident_cuda_sum(items) -> float:
-    """The compute buffers that are resident if each reservation replaces the earlier one of its
-    context. An MTP load log has four CUDA0 lines: target, draft, draft again, target again (at the
-    first prompt), so the last two are resident; any other count is summed as parsed."""
-    lines = [i["mib"] for i in items or [] if i["device"] == "CUDA0"]
-    return sum(lines[-2:]) if len(lines) == 4 else sum(lines)
+    """The resident CUDA0 compute buffers of a stored list (``parsers.resident_compute_buffers``).
+    An MTP load log has four CUDA0 lines: target, draft, draft again, target again (at the first
+    prompt), so the last two are resident; any other count is summed as parsed."""
+    return cuda_sum(parsers.resident_compute_buffers({"compute_buffers": items or []}))
 
 
 def rows_of(res: dict, sessions: list[analysis.LoadedSession]) -> list[dict]:
@@ -50,7 +52,8 @@ def rows_of(res: dict, sessions: list[analysis.LoadedSession]) -> list[dict]:
         if not v or not v.get("peak_used_mib") or name not in raw:
             continue
         buf = raw[name]
-        compute_res = resident_cuda_sum(buf)
+        compute_all = cuda_sum(buf)  # every line, as the parser summed before WP13
+        compute_res = v["compute_mib"]  # resident figure of smallpc.analysis (WP13)
         fixed = v["model_mib"] + v["kv_mib"] + v["recurrent_mib"] + v["expert_cache_mib"]
         peak = v["peak_used_mib"]
         out.append({
@@ -59,12 +62,12 @@ def rows_of(res: dict, sessions: list[analysis.LoadedSession]) -> list[dict]:
             "model": v["model_mib"], "kv": v["kv_mib"], "recurrent": v["recurrent_mib"],
             "expert_cache": v["expert_cache_mib"],
             "compute_lines_mib": [round(i["mib"], 2) for i in buf if i["device"] == "CUDA0"],
-            "compute_parsed": round(v["compute_mib"], 1),
+            "compute_parsed": round(compute_all, 1),
             "compute_resident": round(compute_res, 1),
             "peak_used": peak, "min_free": v["min_free_mib"], "total": v["total_mib"],
-            "parts_minus_peak": round(fixed + v["compute_mib"] - peak, 1),
-            "other_as_plotted": v["other_mib"],
-            "other_resident": round(peak - (fixed + compute_res), 1),
+            "parts_minus_peak": round(fixed + compute_all - peak, 1),
+            "other_as_plotted": round(peak - (fixed + compute_all), 1),
+            "other_resident": v["other_mib"],
         })  # fmt: skip
     return out
 
@@ -73,14 +76,15 @@ def markdown(rows: list[dict]) -> str:
     L = [
         "# VRAM accounting check (Stage 2 cells)",
         "",
-        "Parsed load-log buffers against the measured peak used VRAM (MiB). `other` is what the",
-        "breakdown figure plots as the remainder (peak minus the parsed parts); it is negative where",
-        "the parsed parts exceed the peak, and the bar then extends past the card's total. `resident`",
-        "counts the compute buffers as resident if each reservation replaces the earlier one of its",
-        "context (an MTP log lists target, draft, draft, target: the last two). This is an estimate",
-        "checked only by consistency (below), not by inspecting the allocator.",
+        "Load-log buffers against the measured peak used VRAM (MiB). `compute parsed` sums every",
+        "`CUDA0 compute buffer` line of the log, which is what the parser did before WP13 and what the",
+        "breakdown figure plotted; `other before` is the remainder (peak minus the parts) with it, negative",
+        "where the parts exceeded the peak (the bar then extended past the card's total). `compute resident`",
+        "is the figure now used (the last reservation of each llama_context; the scheduler of a",
+        "re-reserving context frees its old compute buffers first, llama.cpp `llama-context.cpp`",
+        "`sched_new`), and `other now` the remainder with it.",
         "",
-        "| cell | MTP | CUDA0 compute lines | compute parsed | compute resident | peak | other as plotted | other if resident |",
+        "| cell | MTP | CUDA0 compute lines | compute parsed (before) | compute resident (now) | peak | other before | other now |",
         "|---|---|---|---|---|---|---|---|",
     ]
     for r in rows:
@@ -99,10 +103,12 @@ def markdown(rows: list[dict]) -> str:
         f"{sum(not r['mtp'] for r in over)}.",
         f"- `other` of the non-MTP cells: {min(no_mtp):,.0f} to {max(no_mtp):,.0f} MiB "
         "(the CUDA context and similar).",
-        f"- `other` of the MTP cells with the compute buffers counted as resident: "
-        f"{min(mtp_dd):,.0f} to {max(mtp_dd):,.0f} MiB.",
+        f"- `other` of the MTP cells with the resident compute buffers: "
+        f"{min(mtp_dd):,.0f} to {max(mtp_dd):,.0f} MiB (about 170 MiB above the non-MTP cells, the "
+        "same at every context size; not a compute buffer of the log).",
+        f"- cells with parsed parts above the peak after the fix: {sum(r['other_resident'] < 0 for r in rows)}.",
         "- In every cell peak + minimum free = the card's total, so the measured side is "
-        "consistent; the overshoot is in the parsed side.",
+        "consistent; the overshoot was in the parsed side.",
     ]
     return "\n".join(L) + "\n"
 

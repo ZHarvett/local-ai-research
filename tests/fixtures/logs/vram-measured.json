@@ -1,0 +1,41 @@
+{
+ "note": "measured values of the cell summaries in data/raw (Stage 2) for the log excerpts next to this file; the logs are untracked",
+ "cells": {
+  "vram-mtp-p6-32k-mtp1.txt": {
+   "cell": "s2a-P6-32K-b4096-mtp1",
+   "session": "s2a-32K",
+   "mtp": true,
+   "peak_used_mib": 15116.0,
+   "min_free_mib": 1195.0,
+   "total_mib": 16311.0,
+   "expert_cache_mib": 10749.89
+  },
+  "vram-nomtp-p6-32k-mtp0.txt": {
+   "cell": "s2a-P6-32K-b4096-mtp0",
+   "session": "s2a-32K",
+   "mtp": false,
+   "peak_used_mib": 14932.0,
+   "min_free_mib": 1379.0,
+   "total_mib": 16311.0,
+   "expert_cache_mib": 11519.65
+  },
+  "vram-mtp-p6-64k-mtp1.txt": {
+   "cell": "s2a-P6-64K-b4096-mtp1",
+   "session": "s2a-64K",
+   "mtp": true,
+   "peak_used_mib": 15206.0,
+   "min_free_mib": 1105.0,
+   "total_mib": 16311.0,
+   "expert_cache_mib": 9982.08
+  },
+  "vram-mtp-p2-128k-mtp1-fit.txt": {
+   "cell": "s2a-P2-128K-b4096-mtp1",
+   "session": "s2a-128K",
+   "mtp": true,
+   "peak_used_mib": 15890.0,
+   "min_free_mib": 421.0,
+   "total_mib": 16311.0,
+   "expert_cache_mib": 0.0
+  }
+ }
+}

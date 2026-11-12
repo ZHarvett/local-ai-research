@@ -107,12 +107,9 @@ def parse_fit_placement(log: str) -> dict:
             r"llama_memory_recurrent:\s+(\S+) RS buffer size =\s+" + _F + " MiB", log
         )
     ]
-    out["compute_buffers"] = [
-        {"device": d, "mib": float(m)}
-        for d, m in re.findall(
-            r"sched_reserve:\s+(\S+) compute buffer size =\s+" + _F + " MiB", log
-        )
-    ]
+    reservations = parse_compute_reservations(log)
+    out["compute_buffer_reservations"] = reservations
+    out["compute_buffers"] = resident_from_reservations(reservations)
 
     # one entry per llama_context (the MTP draft context is a second one)
     contexts = []
@@ -149,6 +146,118 @@ def parse_fit_placement(log: str) -> dict:
         if " W " in line and "unused tensor" not in line
     ]
     return out
+
+
+# --------------------------------------------------------------------------- compute buffers
+
+_RESERVE_BUFFER = re.compile(r"sched_reserve:\s+(\S+) compute buffer size =\s+" + _F + " MiB")
+_RESERVE_GRAPH = re.compile(r"sched_reserve: graph \(.*?\): nodes = (\d+)")
+_CONSTRUCT = "llama_context: constructing llama_context"
+
+
+def parse_compute_reservations(log: str) -> list[dict]:
+    """Every ``sched_reserve`` block of the log, in order, with the llama_context it belongs to.
+
+    A block is the run of ``<device> compute buffer size`` lines of one reservation (plus the graph
+    node count printed after it). A llama_context reserves when it is built and again whenever its
+    graph changes (an MTP log has four blocks for two contexts: target, draft, draft again after
+    "adding speculative implementation", target again at the first request). The line does not
+    name its context, so the owner is the context constructed just before the block if that
+    context has no block yet, and otherwise the context whose first graph has the closest node
+    count (a target graph has thousands of nodes, the MTP draft graph under a hundred).
+    Returns ``[{"index", "context", "nodes", "buffers": [{"device", "mib"}...]}...]``;
+    ``context`` is None if the log has no ``constructing llama_context`` line.
+    """
+    blocks: list[dict] = []
+    constructed = 0
+    cur: dict | None = None
+    for line in log.splitlines():
+        if _CONSTRUCT in line:
+            constructed += 1
+            cur = None
+        elif m := _RESERVE_BUFFER.search(line):
+            if cur is None:
+                cur = {"index": len(blocks), "constructed_before": constructed,
+                       "nodes": None, "buffers": []}  # fmt: skip
+                blocks.append(cur)
+            cur["buffers"].append({"device": m[1], "mib": float(m[2])})
+        elif cur is not None and (m := _RESERVE_GRAPH.search(line)):
+            cur["nodes"] = int(m[1])
+            cur = None
+        elif "sched_reserve: reserving" in line:
+            cur = None
+    first: dict[int, dict] = {}  # context index (0-based) -> its first block
+    for b in blocks:
+        k = b["constructed_before"] - 1
+        if k >= 0 and k not in first:
+            first[k] = b
+            b["context"] = k
+        else:
+            b["context"] = _nearest_context(b, first)
+    for b in blocks:
+        b.pop("constructed_before")
+    return blocks
+
+
+def _nearest_context(block: dict, first: dict[int, dict]) -> int | None:
+    import math
+
+    if not first:
+        return None
+    if block.get("nodes") is None or any(f.get("nodes") is None for f in first.values()):
+        return max(first)  # no graph sizes to go by: the most recently built context
+    return min(
+        first, key=lambda k: abs(math.log(max(block["nodes"], 1) / max(first[k]["nodes"], 1)))
+    )
+
+
+def resident_from_reservations(blocks: list[dict]) -> list[dict]:
+    """The compute buffers that exist at the same time: the LAST reservation of each context.
+
+    ``llama_context::sched_reserve`` creates a new ``ggml_backend_sched`` (``sched_new``) and the
+    assignment destroys the previous one together with its compute buffers before the new reserve
+    allocates (llama.cpp ``src/llama-context.cpp``; pinned build 57d04820), so an earlier
+    reservation of the same context is not resident any more. Contexts are different objects with
+    their own scheduler, so their buffers add up. Without context information (a log with no
+    ``constructing llama_context`` line) every block is kept, as the plain list of all lines.
+    """
+    if not blocks or blocks[0].get("context") is None:
+        return [dict(b) for blk in blocks for b in blk["buffers"]]
+    last: dict[int, dict] = {}
+    for blk in blocks:
+        last[blk["context"]] = blk
+    return [dict(b) for k in sorted(last) for b in last[k]["buffers"]]
+
+
+def resident_compute_buffers(placement: dict) -> list[dict]:
+    """The resident compute buffers of a stored ``parsed.placement``.
+
+    New records carry ``compute_buffer_reservations`` and an already resident ``compute_buffers``.
+    Cell summaries written before WP13 hold the plain list of every reservation, where an MTP cell
+    lists its two contexts' blocks target, draft, draft, target: the last two blocks are resident
+    (the same reading ``resident_compute_buffers`` gives the log it came from, checked on the
+    Stage 2 logs in ``tests/test_parsers_compute.py``). Any other number of blocks is returned as
+    it is, not guessed.
+    """
+    items = placement.get("compute_buffers") or []
+    if "compute_buffer_reservations" in placement:
+        return [dict(b) for b in items]
+    blocks: list[list[dict]] = []
+    for b in items:
+        if (
+            not blocks
+            or not str(b.get("device", "")).startswith("CUDA")
+            or "Host" in str(b.get("device", ""))
+        ):
+            if not blocks:
+                blocks.append([])
+            blocks[-1].append(b)
+        else:
+            blocks.append([b])
+    if len(blocks) == 4:
+        keep = blocks[2:]
+        return [dict(b) for blk in keep for b in blk]
+    return [dict(b) for b in items]
 
 
 # --------------------------------------------------------------------------- expert cache
