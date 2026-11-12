@@ -8,6 +8,9 @@ A spec (``smallpc.config.SweepSpec``) holds cell blocks. ``expand`` turns them i
   inherits either (tests/test_sweep_spec.py checks the rendered argv of every cell).
 * Merge order: defaults, then the axes of a product in the order listed, then ``set``. Two axes
   setting the same field is an error.
+* A reference cell (``config``) is the file's fields as they are. With ``apply_defaults`` the
+  spec's defaults for its profile are merged under the file (a conflicting value is an error); with
+  ``coords`` it can be selected by ``--only`` (WP13: the released stock and tuned config files).
 * Placement tokens (``@max_fit``, ``@max_fit-2048``, ``@n_fit(P1)``, ``@n_fit(P1)-2``) are allowed
   only in ``moe_cache_mib`` and ``n_cpu_moe``. They are resolved at run time
   (``smallpc.sweep.session``, with ``smallpc.sweep.probe``).
@@ -118,7 +121,20 @@ def expand(spec: SweepSpec, root: Path | None = None) -> list[CellDef]:
     for block in spec.cells:
         if block.config is not None:
             profile, fields = _load_ref(root, block.config)
-            cells.append(CellDef(block.name, profile, fields, config_path=block.config))
+            if block.apply_defaults:
+                base = spec.stock_defaults if profile == "stock" else spec.defaults
+                clash = sorted(k for k in base if k in fields and fields[k] != base[k])
+                if clash:
+                    raise SpecError(
+                        f"cell {block.name!r}: {block.config} sets {clash}, which the spec "
+                        "defaults set to a different value"
+                    )
+                fields = {**base, **fields}
+            cells.append(
+                CellDef(
+                    block.name, profile, fields, coords=dict(block.coords), config_path=block.config
+                )
+            )
             continue
         base = spec.stock_defaults if block.profile == "stock" else spec.defaults
         for combo in _product_combos(block.product):

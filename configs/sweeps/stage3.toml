@@ -1,0 +1,57 @@
+# Stage 3 final comparison, stock against tuned for each context (plan v1.7, WP13, section 5.4).
+# The six cells are the released config files configs/server/{stock,tuned}-{32k,64k,128k}.toml, exactly as
+# they are; the only additions are --metrics and -lv 4 (logging only), from [defaults] / [stock_defaults]
+# through `apply_defaults`. Stock and tuned of a context run in one session so their repetitions are paired:
+#   scripts/run-sweep.sh configs/sweeps/stage3.toml --only context=32K  --session-id stage3-32K
+#   scripts/run-sweep.sh configs/sweeps/stage3.toml --only context=64K  --session-id stage3-64K
+#   scripts/run-sweep.sh configs/sweeps/stage3.toml --only context=128K --session-id stage3-128K
+# Hand-written; the rules are in docs/decisions.md ("WP13 decisions") and docs/runbook-stage3.md.
+name = "stage3"
+repetitions = 5
+shuffle_seed = 20261109
+max_restarts = 2
+expect_cells = 6
+
+[defaults]
+metrics = true
+log_verbosity = 4
+[stock_defaults]
+metrics = true
+log_verbosity = 4
+
+[[cells]]
+name = "stock-32K"
+config = "configs/server/stock-32k.toml"
+coords = { context = "32K" }
+apply_defaults = true
+[[cells]]
+name = "tuned-32K"
+config = "configs/server/tuned-32k.toml"
+coords = { context = "32K" }
+apply_defaults = true
+[[cells]]
+name = "stock-64K"
+config = "configs/server/stock-64k.toml"
+coords = { context = "64K" }
+apply_defaults = true
+[[cells]]
+name = "tuned-64K"
+config = "configs/server/tuned-64k.toml"
+coords = { context = "64K" }
+apply_defaults = true
+[[cells]]
+name = "stock-128K"
+config = "configs/server/stock-128k.toml"
+coords = { context = "128K" }
+apply_defaults = true
+[[cells]]
+name = "tuned-128K"
+config = "configs/server/tuned-128k.toml"
+coords = { context = "128K" }
+apply_defaults = true
+
+# The canary as in Stage 2 (and Stage 1): a fixed candidate config measured at the start and end of every session.
+[canary]
+cell = { profile = "candidate", context = 65536, fit = "on", metrics = true, log_verbosity = 4 }
+repetitions = 3
+points = ["short", "16K"]

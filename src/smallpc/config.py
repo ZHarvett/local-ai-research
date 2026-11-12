@@ -275,7 +275,10 @@ _NAME = r"^[A-Za-z0-9{][A-Za-z0-9._{}-]*$"  # braces: name templates of product 
 class SweepCell(_Strict):
     """One ``[[cells]]`` block. Three forms:
 
-    * reference: ``config`` names a server TOML (the WP2 form);
+    * reference: ``config`` names a server TOML (the WP2 form). WP13 adds two optional fields for
+      it: ``coords`` (axis -> value, so ``--only context=...`` can select the cell) and
+      ``apply_defaults`` (merge ``[defaults]`` / ``[stock_defaults]`` under the file's own fields,
+      which is how the released config files get ``--metrics -lv 4`` without carrying them);
     * inline: ``profile`` plus ``set`` (field overrides);
     * product: ``profile`` plus ``product`` (axis -> list of axis values), with a name template.
     """
@@ -285,6 +288,8 @@ class SweepCell(_Strict):
     profile: Profile | None = None
     set: dict[str, Any] = {}
     product: dict[str, list[str]] = {}
+    coords: dict[str, str] = {}  # reference cells only: the axis values `--only` matches
+    apply_defaults: bool = False  # reference cells only: merge the spec defaults under the file
 
     @model_validator(mode="after")
     def _form(self) -> Self:
@@ -292,6 +297,8 @@ class SweepCell(_Strict):
             raise ValueError("a cell needs exactly one of `config` (reference) or `profile`")
         if self.config is not None and (self.set or self.product):
             raise ValueError("a reference cell (`config`) takes no `set` or `product`")
+        if self.config is None and (self.coords or self.apply_defaults):
+            raise ValueError("`coords` and `apply_defaults` belong to reference cells (`config`)")
         if self.product and not all(self.product.values()):
             raise ValueError("every product axis needs at least one value")
         return self

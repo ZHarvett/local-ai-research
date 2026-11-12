@@ -1,0 +1,32 @@
+# Functional test of the Stage 3 path at 32K (WP13 part 1): the same two config files as stage3.toml, one
+# repetition, a one-repetition canary. Session id ft-stage3-32K.
+# FUNCTIONAL-TEST SPEC: a check of the tooling, never a result.
+#   scripts/run-sweep.sh configs/sweeps/ft-stage3.toml --only context=32K --session-id ft-stage3-32K
+name = "ft-stage3"
+repetitions = 1
+shuffle_seed = 20261109
+max_restarts = 2
+expect_cells = 2
+
+[defaults]
+metrics = true
+log_verbosity = 4
+[stock_defaults]
+metrics = true
+log_verbosity = 4
+
+[[cells]]
+name = "stock-32K"
+config = "configs/server/stock-32k.toml"
+coords = { context = "32K" }
+apply_defaults = true
+[[cells]]
+name = "tuned-32K"
+config = "configs/server/tuned-32k.toml"
+coords = { context = "32K" }
+apply_defaults = true
+
+[canary]
+cell = { profile = "candidate", context = 65536, fit = "on", metrics = true, log_verbosity = 4 }
+repetitions = 1
+points = ["short", "16K"]

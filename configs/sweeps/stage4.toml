@@ -1,0 +1,33 @@
+# Stage 4 reproducibility (plan v1.7, WP13, section 5.4), on a different day than Stage 3: stock-64K and
+# tuned-64K from the released config files, 5 repetitions each, in one session with canaries.
+#   scripts/run-sweep.sh configs/sweeps/stage4.toml --session-id stage4
+# --metrics and -lv 4 come from the defaults; nothing else is added to the config files. S2 is checked with
+# `python -m smallpc.stage3 repro` (docs/runbook-stage3.md).
+name = "stage4"
+repetitions = 5
+shuffle_seed = 20261109
+max_restarts = 2
+expect_cells = 2
+
+[defaults]
+metrics = true
+log_verbosity = 4
+[stock_defaults]
+metrics = true
+log_verbosity = 4
+
+[[cells]]
+name = "stock-64K"
+config = "configs/server/stock-64k.toml"
+coords = { context = "64K" }
+apply_defaults = true
+[[cells]]
+name = "tuned-64K"
+config = "configs/server/tuned-64k.toml"
+coords = { context = "64K" }
+apply_defaults = true
+
+[canary]
+cell = { profile = "candidate", context = 65536, fit = "on", metrics = true, log_verbosity = 4 }
+repetitions = 3
+points = ["short", "16K"]
