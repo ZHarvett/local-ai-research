@@ -57,3 +57,18 @@ command-line arguments. Fill one block per session **before** it starts (copy th
 ## Session stage3-32K, re-run pass (once, `--rerun-flagged stage3-32K`)
 - Started 12:16:21Z after `check-quiet.sh` (QUIET), MemAvailable 27.9 GiB, no llama-server, GPU lock free; ended 12:24:35Z (8.2 min), runner exit 0, state complete. Poll at 12:23Z: QUIET, MemAvailable 25.5 GiB, CPU 6.4%.
 - Units re-run: 1 (stock-32K repetition 3, paging). Result: attempt 2 clean (0 major faults, no flag); resolved 1, still flagged 0. Re-run canaries: start clean (3 windows, 0 faults), end 1 of 3 windows paging-flagged (repetition 115, 1,090 major faults), drift: no flag for main or rerun. No llama-server left.
+
+## Session stage3-64K (stock-64K and tuned-64K), 2026-11-12, before the start
+- `scripts/check-quiet.sh` (exit 0): `quiet-machine check: 427 processes (names only)`; `no blocklisted app is running`; `CPU idle check (informational): busy 0.2% over 10 s`; `RESULT: QUIET`.
+- `pgrep -a llama-server`: empty. GPU lock: free.
+- `nvidia-smi`: memory.used 3 MiB of 16,311 MiB; compute processes: none.
+- MemAvailable: 27.9 GiB. Swap in use: 1.02 GiB. CPU busy (10 s): 0.2%. Load (1 min): 1.73 (lagging the 32K re-run). Mains power: yes (desktop). `git status --short`: empty. Code commit: `a80b2dd`.
+- Top 5 by memory: claude, cosmic-comp, ghostty, cosmic-bg, keyd. Top 5 by CPU: claude, ghostty, cosmic-comp, kswapd0, Xwayland.
+- Anything else running (names): none besides the terminal with Claude Code.
+
+## Session stage3-64K, end
+- Duration 26.4 min, 12:25:12Z to 12:51:33Z (estimate 26 min); runner exit 0; state complete; inhibit active (listed by `systemd-inhibit --list`, not refused); gate (`stage3 gate`): PASS (a to f; f at 36.4% of tuned and canary windows, limit 40%).
+- Cells: 4 of 4 complete. Flags: tuned-64K 28 request flags, all `paging` (repetitions 1 to 4, every request of those repetitions); stock-64K none; canaries none. Drift: no flag. Idle waits 0 s, 1 attempt per cell, no retries.
+- Lowest min free VRAM: 1,021 MiB (tuned-64K); stock-64K 1,355 MiB; canaries 1,329 MiB.
+- Quiet check at 3 polls (12:32, 12:39, 12:47, 12:54Z): QUIET each time; no quiet condition violated. Highest CPU busy at a poll 6.6% (llama-server); no non-project process above 1%. Lowest MemAvailable at a poll: 19.4 GiB (12:47Z, server loaded); lowest at a cell's preconditions 27.8 GiB.
+- Stock windows paging-flagged (reported only): 0 of 5 (largest swap growth 20 MiB, 60 faults). Tuned and canary windows: 4 of 11, all in tuned-64K (largest swap growth 586 MiB, most major faults 47,576). This is the reverse of what plan 5.4 expected (stock paging, tuned clean).

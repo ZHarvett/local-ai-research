@@ -1,0 +1,122 @@
+{
+  "schema": 1,
+  "session_id": "stage3-64K",
+  "created_utc": "2026-11-12T12:25:12Z",
+  "spec": {
+    "name": "stage3",
+    "path": "configs/sweeps/stage3.toml"
+  },
+  "spec_sha256": "41a0e384d622fcb2d41aca2e1a2f9b7a919af8143c2b4e460aad1be8fe005bdd",
+  "manifest_sha256": "ed750c1c73355d08d3f76742eb164721ebdfe7206ce2a7fcad89fd3bd5e9f27e",
+  "sampling_sha256": "09b6a27e5b086b3891ff66e0dd64f25deb12530e505cc69e4153c95716ee6743",
+  "git": {
+    "commit": "a80b2dd31a34e61491b61d3d7967606c7b2c2334",
+    "short": "a80b2dd31a",
+    "dirty": false,
+    "dirty_paths": []
+  },
+  "filters": {
+    "context": "64K"
+  },
+  "model_sha256": "42739874cc2ccfdb8523b23fbe52e29b2a7555c8176737ca9ca0b5d59859d41f",
+  "llama_cpp_commit": "57d04820dfef7a3519aac276d018a6fd71251895",
+  "allow_dirty": false,
+  "model": {
+    "sha256": "42739874cc2ccfdb8523b23fbe52e29b2a7555c8176737ca9ca0b5d59859d41f",
+    "verified": true,
+    "declared": "42739874cc2ccfdb8523b23fbe52e29b2a7555c8176737ca9ca0b5d59859d41f",
+    "size_bytes": 21713463040
+  },
+  "shuffle_seed": 20261109,
+  "cell_order": [
+    "tuned-64K",
+    "stock-64K"
+  ],
+  "cell_order_rule": "seeded shuffle respecting @n_fit dependencies (smallpc.sweep.spec.order_cells), not spec order",
+  "repetitions": 5,
+  "state": "complete",
+  "runs": [
+    {
+      "start_utc": "2026-11-12T12:25:12Z",
+      "pid": 1279703,
+      "mode": "run",
+      "code_commit": "a80b2dd31a",
+      "inhibit": {
+        "checked": true,
+        "active": true,
+        "tag": "smallpc-sweep-stage3-64K-1794486312",
+        "line": "local-ai-research sweep 1000 <user> 1279690 systemd-inhibit sleep:idle smallpc-sweep-stage3-64K-1794486312 block"
+      }
+    }
+  ],
+  "inhibit": {
+    "checked": true,
+    "active": true,
+    "tag": "smallpc-sweep-stage3-64K-1794486312",
+    "line": "local-ai-research sweep 1000 <user> 1279690 systemd-inhibit sleep:idle smallpc-sweep-stage3-64K-1794486312 block"
+  },
+  "drift": {
+    "main": {
+      "metrics": {
+        "pp_fresh_16k": {
+          "flag": null,
+          "relative_difference": 0.009473891048657543,
+          "threshold": 0.05,
+          "start_mean": 945.2557047845554,
+          "end_mean": 954.2109543448063,
+          "start_values": [
+            953.5743060148225,
+            937.8204009823303,
+            944.3724073565135
+          ],
+          "end_values": [
+            957.3831837957755,
+            950.5158567440795,
+            954.7338224945638
+          ]
+        },
+        "tg_16k": {
+          "flag": null,
+          "relative_difference": 0.002264965557426874,
+          "threshold": 0.05,
+          "start_mean": 78.82538792040789,
+          "end_mean": 79.00392470909843,
+          "start_values": [
+            78.93337469257528,
+            78.70179515047033,
+            78.84099391817806
+          ],
+          "end_values": [
+            79.02005624089117,
+            79.2810421542666,
+            78.7106757321375
+          ]
+        },
+        "tg_short": {
+          "flag": null,
+          "relative_difference": 0.0024941717111770473,
+          "threshold": 0.05,
+          "start_mean": 89.703526288222,
+          "end_mean": 89.47979029056108,
+          "start_values": [
+            89.5874665562578,
+            89.63103686935636,
+            89.89207543905182
+          ],
+          "end_values": [
+            89.50587373884204,
+            89.45909533312751,
+            89.47440179971368
+          ]
+        }
+      },
+      "flag": null,
+      "decided_on": [
+        "pp_fresh_16k",
+        "tg_16k"
+      ],
+      "complete": true
+    }
+  },
+  "finished_utc": "2026-11-12T12:51:33Z"
+}
