@@ -7,8 +7,8 @@ import shlex
 import subprocess
 
 import pytest
-from conftest import FIXTURES, REPO
 
+from conftest import FIXTURES, REPO
 from smallpc.config import ServerConfig, load_machine, load_model, load_server
 from smallpc.render import render_argv
 
@@ -18,19 +18,27 @@ BIN = "/opt/smallpc/llama.cpp/build/bin/llama-server"  # tests/fixtures/machine.
 MODEL = "/opt/smallpc/models/test-model-Q4_K_M.gguf"  # tests/fixtures/model.toml
 HEAD = [BIN, "-m", MODEL, "--host", "127.0.0.1", "--port", "8080"]
 
+
+def args(text: str) -> list[str]:
+    return shlex.split(text)
+
+
 GOLDEN = {
     "stock-32k": HEAD + ["-c", "32768"],
     "stock-64k": HEAD + ["-c", "65536"],
     "stock-128k": HEAD + ["-c", "131072"],
     "tuned-32k": HEAD
-    + "-c 32768 -cmoe --moe-cache-mib 11520 -b 4096 -ub 4096 -ctk q8_0 -ctv q8_0 -fa on -np 1"
-    " --cache-ram 2048".split(),
+    + args(
+        "-c 32768 -cmoe --moe-cache-mib 11520 -b 4096 -ub 4096 -ctk q8_0 -ctv q8_0 -fa on -np 1 --cache-ram 2048"
+    ),
     "tuned-64k": HEAD
-    + "-c 65536 -cmoe --moe-cache-mib 9472 -b 4096 -ub 4096 -ctk f16 -ctv f16 -fa on -np 1"
-    " --spec-type draft-mtp --spec-draft-n-max 1 --cache-ram 2048".split(),
+    + args(
+        "-c 65536 -cmoe --moe-cache-mib 9472 -b 4096 -ub 4096 -ctk f16 -ctv f16 -fa on -np 1 --spec-type draft-mtp --spec-draft-n-max 1 --cache-ram 2048"
+    ),
     "tuned-128k": HEAD
-    + "-c 131072 -cmoe --moe-cache-mib 8704 -b 4096 -ub 4096 -ctk f16 -ctv f16 -fa on -np 1"
-    " --cache-ram 2048".split(),
+    + args(
+        "-c 131072 -cmoe --moe-cache-mib 8704 -b 4096 -ub 4096 -ctk f16 -ctv f16 -fa on -np 1 --cache-ram 2048"
+    ),
 }
 
 # tuned file -> (session, winning cell) of the Stage 2 outcome (docs/stage2-summary.md)

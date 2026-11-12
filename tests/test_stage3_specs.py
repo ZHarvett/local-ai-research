@@ -5,8 +5,8 @@ Also the spec-format additions this needs (reference cells with `coords` and `ap
 from __future__ import annotations
 
 import pytest
-from conftest import FIXTURES, REPO
 
+from conftest import FIXTURES, REPO
 from smallpc.config import ServerConfig, load_machine, load_model, load_server, load_sweep
 from smallpc.render import render_argv
 from smallpc.stage2 import eligibility
