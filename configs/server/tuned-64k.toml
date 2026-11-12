@@ -1,0 +1,20 @@
+# Tuned configuration for 64K context (step plan v1.7, Stage 2 outcome in section 5.4).
+# Provenance: the Stage 2 winner for 64K is s2b-P6-64K-b4096-mtp1-kvf16, measured in session s2b (5 repetitions,
+# --cache-ram 2048 and the other Stage 2 values as listed below); 2a2 then 2b by the rule (data/analysis/stage2/2a2.md and 2b.md): MTP draft length 1, FP16 KV.
+# Output sanity check (section 5.6): pass, data/sanity/stage2-all.json (cell s2b-P6-64K-b4096-mtp1-kvf16).
+# The expert cache (9472 MiB) is the probed max-fit value of that cell, fixed here as a number.
+# The rendered argument list equals the winning cell's resolved config apart from --metrics and -lv 4,
+# which the sweep specs add at run time (tests/test_stage3_configs.py checks this).
+profile = "tuned"
+context = 65536
+cpu_moe = true
+moe_cache_mib = 9472
+batch = 4096
+ubatch = 4096
+cache_type_k = "f16"
+cache_type_v = "f16"
+flash_attn = "on"
+parallel = 1
+spec_type = "draft-mtp"
+spec_draft_n_max = 1
+cache_ram = 2048

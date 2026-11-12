@@ -1,0 +1,8 @@
+# Stock configuration for 128K context (step plan v1.7, section 3.1): what a typical user would run.
+# Only the profile and the context are set. Model, host and port come from configs/model.toml and
+# configs/machine.toml, so the launch is: llama-server -m <model> --host <host> --port <port> -c 131072
+# --fit stays at llama.cpp's default (on), batch sizes, FP16 KV, flash attention auto, slot count,
+# the host prompt cache (--cache-ram 8192) and speculative decoding are all llama.cpp defaults.
+# Sweep specs add --metrics -lv 4 (logging only) at run time; this file does not carry them.
+profile = "stock"
+context = 131072
