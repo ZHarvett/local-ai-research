@@ -1080,3 +1080,75 @@ Made by the step lead after the report of part 2f. Recorded before any diagnosti
    - If MTP-off and draft lengths 1 and 3 at 32K pass, and draft length 2 fails at 64K as well: draft length 2 is excluded from all tuned configs (a finding for the executive chat).
    - If draft length 2 passes at 64K: the failure is specific to the 32K family with draft length 2; it is reported as such.
    In every case the rule's result stands.
+
+
+## WP13 decisions (2026-11-12)
+
+WP13 part 1 prepares Stages 3 and 4 (tooling, config files, specs, runbook, short GPU checks). Plan v1.7 is adopted (commit `392f80f`, line 3 reads
+`*Version 1.7 · 11 November 2026*`). These decisions are recorded before any code of this work package and before any Stage 3 data. No real Stage 3 or Stage 4
+session is started in this work package.
+
+### Stage 3 and Stage 4 rules of plan v1.7, section 5.4 (verbatim, copied from `docs/plans/step-0-baseline.md` lines 230 to 243)
+
+> **Stage 3: Final** (5 repetitions, paired; WP13; about 2.5 hours on a quiet machine)
+>
+> Stock-C against tuned-C for each C. These are the headline results, so gate G3 applies in full: the desktop apps are closed. Rules, declared before any Stage 3 measurement:
+> - **Configurations.** The six cells are the released config files, `configs/server/{stock,tuned}-{32k,64k,128k}.toml`. The tuned files are the Stage 2 winners above. Stock is §3.1 unchanged, including its default host prompt cache. The measured argument lists are exactly what those files render, plus `--metrics -lv 4`.
+> - **Sessions.** One session per context, each with its own start and end canaries, from a clean committed tree. Stock and tuned of a context share a session, so their repetitions are paired.
+> - **Re-runs.** One `--rerun-flagged` pass per session, as before.
+> - **Stock paging.** Stock keeps `--cache-ram 8192`, so its later repetitions may be paging-flagged at 64K and 128K. That is how stock behaves on this machine, so it is reported, not hidden. Every stock-against-tuned comparison is computed twice: on clean units only, and on all units with the flags shown.
+> - **Headline rule.** The headline for a context is the clean-units comparison if both cells have at least 5 clean, paired units after the re-run pass. Otherwise the headline is the all-units comparison, labelled "includes paging-flagged stock windows", with the clean-units figures beside it, and S4(d) is recorded as a deviation for that context. If the two versions disagree in sign, or one interval excludes 1.0 and the other does not, the report says so in its first paragraph.
+> - **Tuned cells.** A tuned cell must be eligible in final mode (§3.3): 5 clean units, at least 512 MiB of VRAM free, and a sanity pass. The sanity check is run again on the three tuned config files. If a tuned cell is not eligible, the step lead decides; nothing is substituted automatically.
+> - **Reported figures.** Per context: T_turn_400, T_B with `predicted_n`, T_reread, PP_fresh and PP_inc per depth, TG per depth, TTFT, the VRAM breakdown, and the paired ratios tuned/stock with 95% CIs (§5.5), plus the swap sensitivity.
+>
+> **Stage 4: Reproducibility** (a different day; WP13; about 30 minutes on a quiet machine)
+>
+> Stock-64K and tuned-64K, 5 repetitions each, in one session with canaries. S2 is checked with `report repro` on T_turn_400, fresh prefill at 32K and decode at 32K depth. If stock-64K has too few clean units on either day, S2 is evaluated for it on all units, and the report says so.
+
+### Gate G3 applies in full to Stages 3 and 4
+Stages 1 and 2 ran with desktop apps open and idle, as a recorded deviation. Stages 3 and 4 produce the headline results, so G3 (plan section 7) applies in full:
+browser, IDE, music and chat apps, system monitors, games and VMs are closed, the PC is on mains power, nothing else uses the GPU, and Zack does not use the PC during a session.
+This is enforced by `scripts/check-quiet.sh` (process names only, blocklist in `configs/quiet-check.toml`), run before every session and recorded in `docs/stage3-conditions.md`;
+it is not run as a gate in the preparation checks of this work package, where the desktop apps are open.
+
+### Known limitation: the 32K tuned config uses 8-bit KV as measured
+The 32K tuned config is the Stage 2 final-selection winner `s2a-P6-32K-b4096-mtp0` with 8-bit KV (the sweep default, `-ctk q8_0 -ctv q8_0`). FP16 against 8-bit KV at 32K was
+measured only on draft-length-2 cells (2b extension), which the sanity check excluded, so the 32K KV type of the tuned config is the default and not a 2b result. FP16 won at 64K and 128K
+by the rule. Stage 3 reports the 32K tuned cell as it is; it does not test FP16 at 32K.
+
+### Corrections to plan v1.7 (for the step lead to fold into the next plan version; the plan file is not edited)
+Checked against `docs/stage2-summary.md`, `data/analysis/stage2/*.json` and the sessions under `data/raw/` (`smallpc.analysis` over the sessions; paired ratios by `smallpc.stats`).
+The Stage 2 outcome table (tuned configs, T_turn_400 means and intervals, Stage 1 stock values) agrees with `docs/stage2-summary.md`. Statement by statement:
+
+1. **"1 flagged window of 100 in the later sessions" (plan 5.4, Stage 2 outcome, "Not run") is wrong: it is 1 of 80.** The later sessions have 15 + 15 + 20 (`s2a2-32K|64K|128K`) + 10 (`s2b`)
+   + 10 + 10 (`s2b-32K`, `s2b-128K`) = 80 attempt-1 windows; the one flagged window is `s2b-P6-64K-b4096-mtp1-kvf16` repetition 2. The same figure (and the same wrong total) appears in
+   this file, "Stage 2 sanity result and closing decisions", item 3 ("1 flagged window of 100 in 2a2, 2b and the 2b extension"): the old entry is not rewritten, this is its correction.
+   For context, 2a (the first sessions with `--cache-ram 2048`) had 15 of 75 windows flagged (14 of 45 in MTP cells), so "removed the paging" holds for 2a2 and later, not for 2a.
+2. **"MTP helped by about 3 to 5% per turn at 32K and 64K" should read about 2 to 5%:** 4.6% at 32K (draft length 2, an excluded configuration) and 2.4% at 64K (draft length 1).
+   (2a effects: off minus MTP +0.288 s [+0.121, +0.455] at 32K and +0.168 s [+0.052, +0.285] at 64K; the percentages are those differences over the MTP-off mean T_turn_400.)
+3. **"it costs 9 to 15% of prefill speed and about 1 GiB of VRAM" (checked, roughly right):** paired PP_fresh ratio MTP / off is 0.910 at 32K (draft length 2), 0.893 at 64K (draft length 1),
+   0.849 / 0.838 / 0.844 at 128K for P2 draft lengths 1 / 2 / 3 (the draft-length-2 cell has n = 3) and 0.866 for P6 draft length 1 against off at 128K (unpaired means): 9 to 16%, so "9 to 15%"
+   is about one point short at the top. VRAM: the P6 max-fit expert cache with MTP is smaller than without by 768 MiB (32K), 1,024 MiB (64K) and 1,536 MiB (128K), and peak VRAM at equal or smaller cache is
+   higher by 184 to 322 MiB; "about 1 GiB" fits 32K and 64K and understates 128K (probe caches in `data/probes`, cells in the sessions above).
+4. **"Only 0 was entirely free of faults and swap" (2f, checked, correct):** at 128K, `--cache-ram 0` has 0 faults and 0.0 MiB swap activity in all 5 windows; 2048 has repetition 1 at 889 faults and
+   450.6 MiB, 4096 and 8192 more. At 64K the tested 2048 has 547.6 MiB of swap growth in repetition 1 (0 was not tested at 64K).
+No discrepancy changes a tuned config.
+
+### Decisions on the work of this package
+1. **`analysis.py` exception (approved by Zack).** `parse_fit_placement` counted every CUDA0 `sched_reserve ... compute buffer` line, so an MTP cell's compute buffers were counted twice.
+   The parser change needs one line in `analysis._vram_parts` (stored cell summaries hold the old list; `data/raw` is not edited). Nothing else in `analysis.py` changes. Regression check before
+   and after: `smallpc.select` (screening over the three Stage 1 sessions; final over `s2a-32K` with `data/sanity/stage2-all.json`) and `smallpc.stage2 decide --stage 2a|2a2|2b` are saved before
+   the change and diffed after; the outputs must be byte-identical except VRAM-breakdown fields, otherwise the `analysis.py` change is reverted.
+2. **Spec format.** A reference cell (`config = "..."`) had no coordinates (so `--only context=...` dropped it) and received no `[defaults]` (so it could not get `--metrics -lv 4` without
+   those flags being written into the released config files). Smallest change, in `config.py` and `sweep/spec.py` only: reference cells take an optional `coords` and an opt-in `apply_defaults`
+   (a key set by both the file and the defaults with different values is an error). No existing spec changes meaning; the runner, session and measurement code are untouched.
+3. **Config files** set only `profile` and `context` (and the tuned fields); model, host and port come from `configs/model.toml` and `configs/machine.toml`, exactly as in every Stage 1 and 2 cell.
+4. **Headline tool.** The two views of the headline rule use the same analysis code: the clean view is `smallpc.analysis` as it is; the all-units view is the same `_cell_entry` run on the final
+   (non-superseded) units with every unit counted. `python -m smallpc.stage3 repro` exists because `report repro` evaluates clean units only.
+5. **Gate.** `python -m smallpc.stage3 gate` reuses the Stage 2 gate functions (not modified). Criteria a to e as in Stage 2; criterion f (more than 40% of windows paging-flagged, or any flagged window
+   above 1,024 MiB of swap growth) is computed over the TUNED cells' windows and the canary windows only. The STOCK cells' paging and swap figures are reported and never fail the gate (plan 5.4,
+   "Stock paging").
+6. **Quiet check.** `scripts/check-quiet.sh` reads process names only (`ps -eo comm`; never window titles, URLs, command lines or file contents), compares them with the blocklist in
+   `configs/quiet-check.toml`, warns about other processes above 1.5 GiB resident memory (name and size only), exits 1 if a blocklisted app runs, and prints the CPU idle figure as information.
+   The desktop environment, the terminal and claude are allowed.
+7. Not changed: flags, eligibility, selection, statistics, the sanity thresholds, the request protocol, the workload code, the sweep runner's measurement code, the Stage 2 gate and decision code.
