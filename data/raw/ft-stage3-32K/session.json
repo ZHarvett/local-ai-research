@@ -1,0 +1,110 @@
+{
+  "schema": 1,
+  "session_id": "ft-stage3-32K",
+  "created_utc": "2026-11-12T08:58:44Z",
+  "spec": {
+    "name": "ft-stage3",
+    "path": "configs/sweeps/ft-stage3.toml"
+  },
+  "spec_sha256": "69eb1e1f4d4817ef5576710ba2b3d247e8012adc1c9bb49978755eca22cdc380",
+  "manifest_sha256": "ed750c1c73355d08d3f76742eb164721ebdfe7206ce2a7fcad89fd3bd5e9f27e",
+  "sampling_sha256": "09b6a27e5b086b3891ff66e0dd64f25deb12530e505cc69e4153c95716ee6743",
+  "git": {
+    "commit": "8fd7c3b4c05a7da6457a2f40e614ae9bbeb558cd",
+    "short": "8fd7c3b4c0",
+    "dirty": false,
+    "dirty_paths": []
+  },
+  "filters": {
+    "context": "32K"
+  },
+  "model_sha256": "42739874cc2ccfdb8523b23fbe52e29b2a7555c8176737ca9ca0b5d59859d41f",
+  "llama_cpp_commit": "57d04820dfef7a3519aac276d018a6fd71251895",
+  "allow_dirty": false,
+  "model": {
+    "sha256": "42739874cc2ccfdb8523b23fbe52e29b2a7555c8176737ca9ca0b5d59859d41f",
+    "verified": true,
+    "declared": "42739874cc2ccfdb8523b23fbe52e29b2a7555c8176737ca9ca0b5d59859d41f",
+    "size_bytes": 21713463040
+  },
+  "shuffle_seed": 20261109,
+  "cell_order": [
+    "tuned-32K",
+    "stock-32K"
+  ],
+  "cell_order_rule": "seeded shuffle respecting @n_fit dependencies (smallpc.sweep.spec.order_cells), not spec order",
+  "repetitions": 1,
+  "state": "complete",
+  "runs": [
+    {
+      "start_utc": "2026-11-12T08:58:44Z",
+      "pid": 1227641,
+      "mode": "run",
+      "code_commit": "8fd7c3b4c0",
+      "inhibit": {
+        "checked": true,
+        "active": true,
+        "tag": "smallpc-sweep-ft-stage3-32K-1794473924",
+        "line": "local-ai-research sweep 1000 <user> 1227628 systemd-inhibit sleep:idle smallpc-sweep-ft-stage3-32K-1794473924 block"
+      }
+    }
+  ],
+  "inhibit": {
+    "checked": true,
+    "active": true,
+    "tag": "smallpc-sweep-ft-stage3-32K-1794473924",
+    "line": "local-ai-research sweep 1000 <user> 1227628 systemd-inhibit sleep:idle smallpc-sweep-ft-stage3-32K-1794473924 block"
+  },
+  "drift": {
+    "main": {
+      "metrics": {
+        "pp_fresh_16k": {
+          "flag": null,
+          "relative_difference": 0.0006009713516577615,
+          "threshold": 0.05,
+          "start_mean": 956.0636134758053,
+          "end_mean": 955.4890466337439,
+          "start_values": [
+            956.0636134758053
+          ],
+          "end_values": [
+            955.4890466337439
+          ]
+        },
+        "tg_16k": {
+          "flag": null,
+          "relative_difference": 0.010806157884832971,
+          "threshold": 0.05,
+          "start_mean": 78.41185917465918,
+          "end_mean": 77.56452824437453,
+          "start_values": [
+            78.41185917465918
+          ],
+          "end_values": [
+            77.56452824437453
+          ]
+        },
+        "tg_short": {
+          "flag": null,
+          "relative_difference": 0.001884761786685428,
+          "threshold": 0.05,
+          "start_mean": 87.87497175447335,
+          "end_mean": 87.70934836570446,
+          "start_values": [
+            87.87497175447335
+          ],
+          "end_values": [
+            87.70934836570446
+          ]
+        }
+      },
+      "flag": null,
+      "decided_on": [
+        "pp_fresh_16k",
+        "tg_16k"
+      ],
+      "complete": true
+    }
+  },
+  "finished_utc": "2026-11-12T09:05:04Z"
+}
