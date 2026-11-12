@@ -221,7 +221,7 @@ def test_swap_sensitivity_without_heavy_units_has_nothing_to_remove(tmp_path):
 def test_provenance_names_sessions_commit_plan_rules_and_config_files(tmp_path):
     res, d = run(tmp_path, [stock(), tuned()])
     p = res["provenance"]
-    assert p["plan_version"] == "1.7" and p["sessions"][0]["session_id"] == "stage3-32K"
+    assert p["plan_version"] == "1.8" and p["sessions"][0]["session_id"] == "stage3-32K"
     assert p["code"]["commit"] and set(p["rule_text"]) == set(rules.RULE_NAMES) | {"Stage 4"}
     assert p["rule_text"]["Headline rule"].startswith(
         "- **Headline rule.** The headline for a context is"

@@ -30,4 +30,4 @@ def test_the_rules_say_what_the_decision_tool_implements():
 
 
 def test_the_plan_version_is_read_from_line_3():
-    assert rules.plan_version(REPO) == "1.7"
+    assert rules.plan_version(REPO) == "1.8"
