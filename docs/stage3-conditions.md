@@ -91,3 +91,7 @@ command-line arguments. Fill one block per session **before** it starts (copy th
 - Lowest min free VRAM: 1,211 MiB (tuned-128K); stock-128K 1,367 MiB; canaries 1,329 MiB.
 - Quiet check at 7 polls (13:17 to 13:53Z): QUIET each time; no quiet condition violated. Highest CPU busy at a poll 20.2% (13:46Z, llama-server decoding); busiest other processes then: ghostty 2.4%, cosmic-comp 0.9%, kswapd0 0.1%. Lowest MemAvailable at a poll: 19.0 GiB (13:39Z, server loaded); lowest at a cell's preconditions 27.75 GiB.
 - Stock windows paging-flagged (reported only): 2 of 5 (repetitions 1 and 3; largest swap growth 3,420 MiB, most major faults 2,657); tuned and canary windows: 0 of 11 (largest swap growth 0 MiB, 0 faults).
+
+## Session stage3-128K, re-run pass (once, `--rerun-flagged stage3-128K`)
+- Started 13:56:28Z after `check-quiet.sh` (QUIET), no llama-server, GPU lock free; ended 14:14:15Z (17.8 min), runner exit 0, state complete. Polls 14:03Z, 14:11Z, 14:18Z: QUIET, CPU 6.6% (llama-server) and 0.2%, lowest MemAvailable 19.7 GiB (server loaded).
+- Units re-run: 2 (stock-128K repetitions 1 and 3, paging). Result: repetition 1 attempt 2 clean (0 major faults); repetition 3 attempt 2 still paging-flagged (22,810 major faults). Resolved 1, still flagged 1 (no attempt 3, by rule). Re-run canaries: 6 windows, none flagged (one with 864 faults, below the 1,000 threshold); drift: no flag for main or rerun. No llama-server left.
