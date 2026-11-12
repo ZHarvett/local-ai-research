@@ -1,0 +1,338 @@
+{
+  "checksum": "d1cca6fb226b309e826099edc3d6dc257bebf771833c695bd4646d04b636bc57",
+  "created_utc": "2026-11-12T22:25:04Z",
+  "escalations": {},
+  "events": [
+    {
+      "detail": "16 cards",
+      "event": "plan-imported",
+      "seq": 0,
+      "task": null,
+      "ts": "2026-11-12T22:25:04Z"
+    },
+    {
+      "detail": "dependencies satisfied",
+      "event": "ready",
+      "seq": 1,
+      "task": "T-001",
+      "ts": "2026-11-12T22:25:04Z"
+    }
+  ],
+  "kit_version": "0.1.0",
+  "phases": [
+    "P0",
+    "P1",
+    "P2",
+    "P3",
+    "P4"
+  ],
+  "plan_file": "PLAN.md",
+  "plan_sha256": "88ac5a14c5639ec4ab2215bfdf9febda6424646b4c5c251fad3a7a5aeba30fc2",
+  "review_cycles": {},
+  "review_dispositions": {},
+  "tasks": {
+    "T-001": {
+      "card_sha256": "032d9f3120190a4b3287abc3fe1b212ad478a8e8705e0f9bec46e9c739c6fe05",
+      "depends_on": [],
+      "files_write": [
+        "docs/recon/T-001.md",
+        "docs/recon/stage3-commit.txt",
+        "docs/recon/commands.env"
+      ],
+      "lane": 1,
+      "phase": "P0",
+      "resources": "cpu-heavy",
+      "review": "none",
+      "source": "plan",
+      "status": "ready",
+      "title": "Smoke test and recon (read-only)"
+    },
+    "T-002": {
+      "card_sha256": "9b11c0c1a3ab9fa598db6ded75b36c4e603fcb08d8c96a79d523d033e94b83e9",
+      "depends_on": [
+        "T-001"
+      ],
+      "files_write": [
+        "docs/decisions.md",
+        "CLAUDE.md",
+        "docs/recon/claude-md-merge.diff",
+        "docs/progress-log.md"
+      ],
+      "lane": 1,
+      "phase": "P0",
+      "resources": "light",
+      "review": "none",
+      "source": "plan",
+      "status": "todo",
+      "title": "Record Stage 3 decisions and merge CLAUDE.md"
+    },
+    "T-003": {
+      "card_sha256": "2d7a4fdf2e68802ae35aaf201da863934dc2598f961a9eec5f9afde0fbfdb885",
+      "depends_on": [
+        "T-002"
+      ],
+      "files_write": [
+        "docs/recon/calibration-summary.md",
+        "docs/progress-log.md"
+      ],
+      "lane": 1,
+      "phase": "P0",
+      "resources": "light",
+      "review": "none",
+      "source": "plan",
+      "status": "todo",
+      "title": "Reviewer calibration"
+    },
+    "T-004": {
+      "card_sha256": "4fa36e93467135a354c4a995d6f3ade27308de60189d083c2f9201aee37b370c",
+      "depends_on": [
+        "T-002",
+        "T-003"
+      ],
+      "files_write": [
+        "README.md"
+      ],
+      "lane": 1,
+      "phase": "P1",
+      "resources": "light",
+      "review": "none",
+      "source": "plan",
+      "status": "todo",
+      "title": "README draft"
+    },
+    "T-005": {
+      "card_sha256": "fbe6b1afe9506933fd1f686494ce582009ddc50b13838a6238c2c85c0769d8b1",
+      "depends_on": [
+        "T-002",
+        "T-003"
+      ],
+      "files_write": [
+        "reports/baseline-report.md",
+        "tools/check_doc_numbers.py",
+        "tests/test_check_doc_numbers.py"
+      ],
+      "lane": 2,
+      "phase": "P1",
+      "resources": "light",
+      "review": "post",
+      "source": "plan",
+      "status": "todo",
+      "title": "Baseline report draft and number checker"
+    },
+    "T-006": {
+      "card_sha256": "e52d8c8acfd4f668c7dcd94fc5284bd95be49f4cadd2f464c8076abd1493b89a",
+      "depends_on": [
+        "T-004",
+        "T-005"
+      ],
+      "files_write": [
+        "reports/writeup.md",
+        "docs/progress-log.md"
+      ],
+      "lane": 1,
+      "phase": "P1",
+      "resources": "light",
+      "review": "none",
+      "source": "plan",
+      "status": "todo",
+      "title": "Write-up draft"
+    },
+    "T-007": {
+      "card_sha256": "1e1224f1a44317dceb5de8b625d0ef22b6dd9e7aac01497e0272ce1393b2d08f",
+      "depends_on": [
+        "T-002",
+        "T-003"
+      ],
+      "files_write": [
+        "data/raw/",
+        "docs/stage3-conditions.md",
+        "docs/stage4-conditions.md",
+        "docs/recon/stage4-session.txt",
+        "docs/decisions.md",
+        "docs/progress-log.md"
+      ],
+      "lane": 1,
+      "phase": "P2",
+      "resources": "exclusive-machine",
+      "review": "pre+post",
+      "source": "plan",
+      "status": "todo",
+      "title": "Stage 4 session"
+    },
+    "T-008": {
+      "card_sha256": "70a7b0a3eb459f8ebb596da46992443ede07b0908e47729d828365337eac0f44",
+      "depends_on": [
+        "T-007"
+      ],
+      "files_write": [
+        "data/analysis/stage4/",
+        "reports/stage4/",
+        "docs/decisions.md",
+        "docs/progress-log.md"
+      ],
+      "lane": 1,
+      "phase": "P2",
+      "resources": "light",
+      "review": "post",
+      "source": "plan",
+      "status": "todo",
+      "title": "S2 check and Stage 4 analysis"
+    },
+    "T-009": {
+      "card_sha256": "ca9adfa7e6e005925c4c7f7fcd906244af4de9b5b7683e5e4c9ddd8a451cd0c9",
+      "depends_on": [
+        "T-008"
+      ],
+      "files_write": [
+        "tests/",
+        "src/smallpc/",
+        "reports/stage3/",
+        "reports/stage4/",
+        "docs/recon/T-009-start.txt",
+        "docs/progress-log.md"
+      ],
+      "lane": 1,
+      "phase": "P3",
+      "resources": "cpu-heavy",
+      "review": "none",
+      "source": "plan",
+      "status": "todo",
+      "title": "Post-Stage-4 code fixes"
+    },
+    "T-010": {
+      "card_sha256": "2c44695f110d784ac1fa8661441da00a6fc5f62eb9bfaba3c85c10989dc0a8db",
+      "depends_on": [
+        "T-004",
+        "T-005",
+        "T-006",
+        "T-009"
+      ],
+      "files_write": [
+        "README.md",
+        "reports/baseline-report.md",
+        "reports/writeup.md",
+        "CHANGELOG.md"
+      ],
+      "lane": 1,
+      "phase": "P4",
+      "resources": "light",
+      "review": "post",
+      "source": "plan",
+      "status": "todo",
+      "title": "Final README, report, write-up and changelog"
+    },
+    "T-011": {
+      "card_sha256": "4454048de0535e56b8cdd3d725d6f0969a0e1c413c5ede31a3e75a66eba94f71",
+      "depends_on": [
+        "T-008",
+        "T-009"
+      ],
+      "files_write": [
+        "docs/plans/step-0-baseline.md",
+        "docs/upstream/",
+        "docs/methodology.md",
+        "docs/environment.md"
+      ],
+      "lane": 2,
+      "phase": "P4",
+      "resources": "light",
+      "review": "none",
+      "source": "plan",
+      "status": "todo",
+      "title": "Plan v1.9, upstream drafts, methodology"
+    },
+    "T-012": {
+      "card_sha256": "19745e39a4f871fb6f1d97b9f68ccc60c4ca4a9c5fee80879e49caa0f678d0bd",
+      "depends_on": [
+        "T-010",
+        "T-011"
+      ],
+      "files_write": [
+        "data/health/readme-walkthrough.log",
+        "docs/progress-log.md"
+      ],
+      "lane": 1,
+      "phase": "P4",
+      "resources": "gpu",
+      "review": "none",
+      "source": "plan",
+      "status": "todo",
+      "title": "README walkthrough from a clean shell"
+    },
+    "T-013": {
+      "card_sha256": "bbad6ddeb117b6972e0d1bb3ce18f813e5168013c881a3ad5581705b4513b501",
+      "depends_on": [
+        "T-010",
+        "T-011",
+        "T-012"
+      ],
+      "files_write": [
+        "scripts/release-check.sh",
+        "docs/recon/scrub-report.md",
+        "docs/progress-log.md"
+      ],
+      "lane": 1,
+      "phase": "P4",
+      "resources": "light",
+      "review": "post",
+      "source": "plan",
+      "status": "todo",
+      "title": "Scrub and release checks"
+    },
+    "T-014": {
+      "card_sha256": "dfa079547a2067e2f7e61ac054561af8d0edb17660b1c8d9265df91a75c3600b",
+      "depends_on": [
+        "T-012",
+        "T-013"
+      ],
+      "files_write": [
+        "docs/step-0-completion-report.md",
+        "reports/writeup.md",
+        "docs/progress-log.md"
+      ],
+      "lane": 1,
+      "phase": "P4",
+      "resources": "light",
+      "review": "none",
+      "source": "plan",
+      "status": "todo",
+      "title": "Completion report and planning-chat review"
+    },
+    "T-015": {
+      "card_sha256": "31059113fc56b81055bbe16def0a1f4fc07d92ee1e18278f66a2c9805163a249",
+      "depends_on": [
+        "T-014"
+      ],
+      "files_write": [
+        "reports/release-notes-v0.1.0.md",
+        "docs/progress-log.md"
+      ],
+      "lane": 1,
+      "phase": "P4",
+      "resources": "light",
+      "review": "none",
+      "source": "plan",
+      "status": "todo",
+      "title": "Private repo, CI and tag v0.1.0"
+    },
+    "T-016": {
+      "card_sha256": "166a9fd37d2c6f5c9c8280493befba5e5fa1b3f186548db536cf5cef42a8de13",
+      "depends_on": [
+        "T-015"
+      ],
+      "files_write": [
+        "docs/progress-log.md",
+        "docs/step-0-completion-report.md"
+      ],
+      "lane": 1,
+      "phase": "P4",
+      "resources": "light",
+      "review": "none",
+      "source": "plan",
+      "status": "todo",
+      "title": "Publish v0.1.0"
+    }
+  },
+  "title": "Step 0, remaining work: Stage 4, release v0.1.0, completion report",
+  "version": 1
+}

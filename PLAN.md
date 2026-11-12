@@ -1,5 +1,5 @@
 # Step 0, remaining work: Stage 4, release v0.1.0, completion report
-*Version 1.0 · 12 November 2026*
+*Version 1.0 · 13 November 2026*
 
 ## Shared rules
 
@@ -22,7 +22,7 @@ Context: Step 0 (baseline setup) of "Local AI on a Small PC". Reference plan: do
    - MTP helped about 2 to 5% per turn (not 3 to 5%), and costs 9 to 16% of prefill speed and 0.75 to 1.5 GiB of VRAM;
    - Stage 3 took about 2.1 hours (90 minutes of sessions plus 38 minutes of re-runs).
 
-### Stage 3 decisions (planning chat, 12 November 2026)
+**Stage 3 decisions (planning chat, 12 November 2026)**
 
 - D1 The 128K headline uses all units, with the label "includes paging-flagged stock windows" and the clean-units figures beside it; S4(d) is a recorded deviation for 128K. This is the declared §5.4 rule, not a judgement call. Until T-009 fixes the rendered report (which calls stock-128K "not reportable"), data/analysis/stage3/headline.md is authoritative.
 - D2 The tuned-64K paging is the known file-page faulting of the MTP cell seen in Stage 2a; it is not investigated. Gate denominator per A7: [filled in by T-002 from docs/recon/T-001.md]. If stock windows were counted and the gate truly failed, it is accepted as a recorded deviation without re-measurement, because all four flagged units re-ran clean on fresh servers and the cause matches Stage 2a.
@@ -34,7 +34,7 @@ Context: Step 0 (baseline setup) of "Local AI on a Small PC". Reference plan: do
 - D8 Git history is not rewritten. The Linux account name in the early WP0 commit matches the author name already public on every commit, and a rewrite would break the commit hashes that data and logs refer to. The current tree is scrubbed, and the history scan escalates only for findings beyond that known occurrence. No committed file may contain the account name; refer to it as <account-name>.
 - D9 Expert-cache hit rates are reported with the caveat that they include warm-up and the attempt-1 units of re-run windows. The figure axes (prefill and decode from 0, predicted_n labels clear of the whiskers) are fixed in T-009.
 
-### Stage 4 rules (declared 12 November 2026, before any Stage 4 data)
+**Stage 4 rules (declared 12 November 2026, before any Stage 4 data)**
 
 - R1 Tuned-64K gets stock's fallback. If it has fewer than 5 clean units after its re-run, S2 is evaluated for it on all units, labelled as such, and recorded as an S4(d) deviation.
 - R2 If the Stage 4 gate fails only because of tuned-64K paging, and every flagged unit re-runs clean, the session is accepted with a recorded deviation: a docs/decisions.md line starting "- R2 applied: Stage 4". Any other gate failure is escalated.
@@ -43,7 +43,7 @@ Context: Step 0 (baseline setup) of "Local AI on a Small PC". Reference plan: do
 
 ## Assumption register
 
-- A1: HEAD is the kit-install and plan-import commits on top of f2f37df; src/, configs/, scripts/, data/, tests/ have no uncommitted changes; no llama-server is running; .locks/gpu.lock is free; /dev/shm/local-ai-research-* is empty — checked by T-001
+- A1: HEAD descends from f2f37df only through the kit-install commit and PLAN.md/workflow-state commits; src/, configs/, scripts/, data/, tests/ have no uncommitted changes; no llama-server is running; .locks/gpu.lock is free; /dev/shm/local-ai-research-* is empty — checked by T-001
 - A2: the kit install changed exactly two existing files, CLAUDE.md and .gitignore, and added only files listed in .workflow-kit-manifest.json; nothing under src/ or configs/, and under scripts/ only wf-*.sh and _wf.py — checked by T-001
 - A3: the Stage 4 sweep spec exists and renders stock-64K and tuned-64K with argument lists identical to Stage 3's; docs/runbook-stage3.md contains the Stage 4 commands — checked by T-001
 - A4: `python -m smallpc.stage3 repro` evaluates T_turn_400, fresh prefill at 32K and decode at 32K depth, and has an all-units mode for stock; whether that mode also works for tuned (R1) is recorded — checked by T-001
@@ -62,11 +62,11 @@ Context: Step 0 (baseline setup) of "Local AI on a Small PC". Reference plan: do
 
 ## Phases
 
-- P0 Pilot setup (12 Nov): T-001, T-002, T-003
-- P1 Drafts, the first parallel pair (12–13 Nov): T-004 and T-005 in parallel, then T-006
-- P2 Stage 4 (13 Nov or later, quiet machine): T-007, T-008
-- P3 Post-Stage-4 code fixes: T-009
-- P4 Release: T-010 and T-011 in parallel, then T-012 to T-016
+- P0: Pilot setup (13 Nov): T-001, T-002, T-003
+- P1: Drafts, the first parallel pair: T-004 and T-005 in parallel, then T-006
+- P2: Stage 4 (13 Nov or later, quiet machine): T-007, T-008
+- P3: Post-Stage-4 code fixes: T-009
+- P4: Release: T-010 and T-011 in parallel, then T-012 to T-016
 
 ## Task cards
 
@@ -194,15 +194,7 @@ review: none
 preconditions:
   - expect: file_exists data/analysis/stage3/headline.md
 steps:
-  - S1: Write README.md to plan §9:
-    - what this is and the hardware it was measured on;
-    - quick start (prerequisites, build with scripts/build-llama.sh, download and verify, launch stock or tuned with scripts/launch-server.sh), with commands copied from the scripts' real usage;
-    - how to rerun the sweep on your own 12–16 GB machine via machine.toml;
-    - a results summary with CIs from headline.md, applying D1 and D3;
-    - limitations: the standardised 3,000 + 400 turn is not real agent use, Stages 1–2 ran with desktop apps open, the draft-length-2 repetition, host-memory paging;
-    - licences.
-
-    Put a sources line at the top. Mark every Stage 4 or S2 spot with `<!-- TODO-T010 -->`. (redo-safe)
+  - S1: Write README.md to plan §9: what this is and the hardware it was measured on; quick start (prerequisites, build with scripts/build-llama.sh, download and verify, launch stock or tuned with scripts/launch-server.sh), with commands copied from the scripts' real usage; how to rerun the sweep on your own 12–16 GB machine via machine.toml; a results summary with CIs from headline.md, applying D1 and D3; limitations (the standardised 3,000 + 400 turn is not real agent use, Stages 1–2 ran with desktop apps open, the draft-length-2 repetition, host-memory paging); licences. Put a sources line at the top. Mark every Stage 4 or S2 spot with `<!-- TODO-T010 -->`. (redo-safe)
   - S2: Commit. No progress-log entry; T-006 appends it. (redo-safe)
 acceptance:
   - cmd: for h in 'Quick start' 'Results' 'Limitations' 'Licen'; do grep -qiE "^#+ .*$h" README.md || exit 1; done
@@ -231,14 +223,7 @@ preconditions:
   - expect: file_exists data/analysis/stage3/headline.md
 steps:
   - S1: Write tools/check_doc_numbers.py using only the standard library. It reads a doc's `<!-- sources: ... -->` line(s) and extracts every decimal number (digits with a decimal point, thousands separators allowed) outside fenced code. A number passes if it appears in a source file (with separators removed on both sides) or its line carries `<!-- derived: ... -->`. It prints each failing number with its line number and exits 1 if any fail. Add tests in tests/test_check_doc_numbers.py. (redo-safe)
-  - S2: Write reports/baseline-report.md. It covers:
-    - a summary;
-    - setup and provenance (build tag and commit, model revision and SHA-256, harness versions);
-    - the method (pointer to plan §5);
-    - Stages 1 and 2, labelled as selection data measured with apps open;
-    - the Stage 3 headline per context, with the full per-depth table from headline.md, D1's label and clean figures at 128K, D3's sensitivity wording, the VRAM breakdown, hit rates with D9's caveat, the paging picture and the sanity results (D7's file name);
-    - flags and deviations from docs/decisions.md;
-    - an S1–S5 status table with S2 and S5 as `<!-- TODO-T010 -->`. (redo-safe)
+  - S2: Write reports/baseline-report.md covering: a summary; setup and provenance (build tag and commit, model revision and SHA-256, harness versions); the method (pointer to plan §5); Stages 1 and 2, labelled as selection data measured with apps open; the Stage 3 headline per context, with the full per-depth table from headline.md, D1's label and clean figures at 128K, D3's sensitivity wording, the VRAM breakdown, hit rates with D9's caveat, the paging picture and the sanity results (D7's file name); flags and deviations from docs/decisions.md; an S1–S5 status table with S2 and S5 as `<!-- TODO-T010 -->`. (redo-safe)
   - S3: Run the number check, the new test and ruff on the new files, then commit. No progress-log entry; T-006 appends it. (redo-safe)
 acceptance:
   - cmd: uv run python tools/check_doc_numbers.py reports/baseline-report.md
@@ -270,13 +255,7 @@ review: none
 preconditions:
   - expect: file_exists reports/baseline-report.md
 steps:
-  - S1: Draft reports/writeup.md, "What a 16 GB GPU actually does with a 35B MoE model" (GitHub only). It covers:
-    - the problem and the approach;
-    - the results, taken from baseline-report.md;
-    - what didn't work: draft length 2, --fit against P6, host prompt cache paging, and why 2c was skipped;
-    - limitations.
-
-    Keep it to at most about 1,500 words, with a sources line and a `<!-- TODO-T010 -->` placeholder for Stage 4. (redo-safe)
+  - S1: Draft reports/writeup.md, "What a 16 GB GPU actually does with a 35B MoE model" (GitHub only), covering: the problem and the approach; the results, taken from baseline-report.md; what didn't work (draft length 2, --fit against P6, host prompt cache paging, and why 2c was skipped); limitations. Keep it to at most about 1,500 words, with a sources line and a `<!-- TODO-T010 -->` placeholder for Stage 4. (redo-safe)
   - S2: Run the number check, append progress-log entries for T-004, T-005 and T-006, and commit. (redo-safe)
 acceptance:
   - cmd: uv run python tools/check_doc_numbers.py reports/writeup.md
@@ -447,16 +426,15 @@ preconditions:
   - cmd: grep -q '^\*Version 1\.8 · 12 November 2026\*' docs/plans/step-0-baseline.md
     expect: exit_code 0
 steps:
-  - S1: Apply exactly these edits to docs/plans/step-0-baseline.md, and nothing else. (redo-safe)
-    - (a) Replace the line `*Version 1.8 · 12 November 2026*` with `*Version 1.9 · <today's date, e.g. 20 November 2026>*`.
-    - (b) Directly above the line starting `**Stage 4: Reproducibility**`, insert: `**Stage 3 outcome (12 November, quiet machine).** The three sessions took about 2.1 hours (90 minutes of sessions plus 38 minutes of re-run passes). No stop condition applied. The headline results are in reports/baseline-report.md, and the step-lead decisions on them (D1–D9) are in docs/decisions.md.`
-    - (c) Directly after the Stage 4 paragraph, insert `Rules declared on 12 November 2026, before any Stage 4 data:` followed by R1 to R4 copied verbatim from PLAN.md's Shared rules.
-    - (d) Directly after the heading `## 12. Working protocol with Claude Code`, insert: `*§12.1–12.3 are superseded from 12 November 2026: execution follows PLAN.md through the workflow kit (docs/WORKFLOW.md), and the merged CLAUDE.md is the session guide. The standard report (§12.4) and the progress-log format (§12.5) still apply.*`
-    - (e) At the end of §13, append two bullets. First: `**Stock pages at 32K too.** In Stage 3, one stock-32K repetition had 12,456 major faults and 6,321 MiB of swap growth with the default --cache-ram of 8192, so host-memory pressure is not limited to 64K and 128K.` Second: `**Idle desktop apps cost about 1%.** Stage 3 means on a quiet machine were 0.7 to 1.3% faster than the Stage 1 and 2 selection figures for the same configurations.`
-    - (f) Directly above the §14 row starting `| 1.8 |`, insert: `| 1.9 | <same date as (a)> | After Stages 3 and 4 and the workflow-kit pilot: Stage 3 outcome and measured time, and the Stage 4 rules R1–R4 declared before its data (§5.4); §12.1–12.3 superseded by the workflow kit (§12); two notes for the executive chat (§13) |`
-  - S2: In docs/upstream/, write issue drafts with evidence paths and reproduction commands, not to be filed: (1) llama.cpp: MTP draft length 2 gives a deterministic repeated phrase on one of three sanity prompts on four configurations, possibly a threshold artifact; (2) a comment draft for llama.cpp #28619: the MTP draft state survived slot save/restore and the host prompt cache on b12208 up to 8,192 tokens, with no negative control. (redo-safe)
-  - S3: Create docs/methodology.md (plan §5 in prose for readers) and update docs/environment.md, if A12 found them missing or outdated. Write no username, hostname or home path. (redo-safe)
-  - S4: Commit. No progress-log entry; T-012 appends it. (redo-safe)
+  - S1: Plan edit (a) to docs/plans/step-0-baseline.md: Replace the line `*Version 1.8 · 12 November 2026*` with `*Version 1.9 · <today's date, e.g. 20 November 2026>*`. (redo-safe)
+  - S2: Plan edit (b) to docs/plans/step-0-baseline.md: Directly above the line starting `**Stage 4: Reproducibility**`, insert: `**Stage 3 outcome (12 November, quiet machine).** The three sessions took about 2.1 hours (90 minutes of sessions plus 38 minutes of re-run passes). No stop condition applied. The headline results are in reports/baseline-report.md, and the step-lead decisions on them (D1–D9) are in docs/decisions.md.` (redo-safe)
+  - S3: Plan edit (c) to docs/plans/step-0-baseline.md: Directly after the Stage 4 paragraph, insert `Rules declared on 12 November 2026, before any Stage 4 data:` followed by R1 to R4 copied verbatim from PLAN.md's Shared rules (redo-safe)
+  - S4: Plan edit (d) to docs/plans/step-0-baseline.md: Directly after the heading `## 12. Working protocol with Claude Code`, insert: `*§12.1–12.3 are superseded from 12 November 2026: execution follows PLAN.md through the workflow kit (docs/WORKFLOW.md), and the merged CLAUDE.md is the session guide. The standard report (§12.4) and the progress-log format (§12.5) still apply.*` (redo-safe)
+  - S5: Plan edit (e) to docs/plans/step-0-baseline.md: At the end of §13, append two bullets. First: `**Stock pages at 32K too.** In Stage 3, one stock-32K repetition had 12,456 major faults and 6,321 MiB of swap growth with the default --cache-ram of 8192, so host-memory pressure is not limited to 64K and 128K.` Second: `**Idle desktop apps cost about 1%.** Stage 3 means on a quiet machine were 0.7 to 1.3% faster than the Stage 1 and 2 selection figures for the same configurations.` (redo-safe)
+  - S6: Plan edit (f) to docs/plans/step-0-baseline.md: Directly above the §14 row starting `| 1.8 |`, insert: `| 1.9 | <same date as (a)> | After Stages 3 and 4 and the workflow-kit pilot: Stage 3 outcome and measured time, and the Stage 4 rules R1–R4 declared before its data (§5.4); §12.1–12.3 superseded by the workflow kit (§12); two notes for the executive chat (§13) |` (redo-safe)
+  - S7: In docs/upstream/, write issue drafts with evidence paths and reproduction commands, not to be filed: (1) llama.cpp: MTP draft length 2 gives a deterministic repeated phrase on one of three sanity prompts on four configurations, possibly a threshold artifact; (2) a comment draft for llama.cpp #28619: the MTP draft state survived slot save/restore and the host prompt cache on b12208 up to 8,192 tokens, with no negative control. (redo-safe)
+  - S8: Create docs/methodology.md (plan §5 in prose for readers) and update docs/environment.md, if A12 found them missing or outdated. Write no username, hostname or home path. (redo-safe)
+  - S9: Check that steps S1–S6 made no other change to the plan (`git diff` of the plan shows only edits (a)–(f)), then commit. No progress-log entry; T-012 appends it. (redo-safe)
 acceptance:
   - cmd: grep -q '^\*Version 1\.9 · ' docs/plans/step-0-baseline.md && grep -qE '^\| 1\.9 \|' docs/plans/step-0-baseline.md
     expect: exit_code 0
@@ -472,7 +450,7 @@ evidence: docs/plans/step-0-baseline.md, docs/upstream/
 estimate: 60m
 decision_rights:
   - may: wording of the issue drafts and methodology.md
-  - must_escalate: any plan edit beyond (a)–(f); a test failure after the version bump; any version check found outside tests/
+  - must_escalate: any plan edit beyond (a)–(f) of steps S1–S6; a test failure after the version bump; any version check found outside tests/
 
 ### T-012 — README walkthrough from a clean shell
 id: T-012
@@ -552,15 +530,7 @@ preconditions:
     expect: exit_code 0
 steps:
   - S1: Upstream re-check, read-only: compare the newest llama.cpp release with the pinned b12208; record the status of #28619, #30594, #30664, #23262, #26448, #20697 and #22384; compare the newest dsh and OpenCode versions with the pinned ones. Give each a date. (redo-safe)
-  - S2: Draft docs/step-0-completion-report.md for the executive chat, at most about 4 pages, with a sources line. It covers:
-    - what was built;
-    - results with numbers;
-    - deviations (from docs/decisions.md);
-    - open issues;
-    - notes for the executive chat (plan §13);
-    - suggested project-plan changes;
-    - the §9 checklist with evidence, with T-015 and T-016 items marked pending;
-    - the upstream re-check. (redo-safe)
+  - S2: Draft docs/step-0-completion-report.md for the executive chat, at most about 4 pages, with a sources line, covering: what was built; results with numbers; deviations (from docs/decisions.md); open issues; notes for the executive chat (plan §13); suggested project-plan changes; the §9 checklist with evidence, with T-015 and T-016 items marked pending; the upstream re-check. (redo-safe)
   - S3: Run the number check and commit. Escalate (judgement: "planning-chat review of the completion report and write-up") with a brief that lists the two files for Zack to upload, the checks that were run and anything uncertain. Stop. (not redo-safe)
   - S4: After the DECISION, apply exactly the edits it lists, run release-check.sh again, append a progress-log entry naming the decision (E-NNN), and commit. (not redo-safe)
 acceptance:
