@@ -1,0 +1,122 @@
+{
+  "schema": 1,
+  "session_id": "stage3-128K",
+  "created_utc": "2026-11-12T13:10:03Z",
+  "spec": {
+    "name": "stage3",
+    "path": "configs/sweeps/stage3.toml"
+  },
+  "spec_sha256": "41a0e384d622fcb2d41aca2e1a2f9b7a919af8143c2b4e460aad1be8fe005bdd",
+  "manifest_sha256": "ed750c1c73355d08d3f76742eb164721ebdfe7206ce2a7fcad89fd3bd5e9f27e",
+  "sampling_sha256": "09b6a27e5b086b3891ff66e0dd64f25deb12530e505cc69e4153c95716ee6743",
+  "git": {
+    "commit": "b5b73962310d2b0c79786f36aacbfca97a4747c4",
+    "short": "b5b7396231",
+    "dirty": false,
+    "dirty_paths": []
+  },
+  "filters": {
+    "context": "128K"
+  },
+  "model_sha256": "42739874cc2ccfdb8523b23fbe52e29b2a7555c8176737ca9ca0b5d59859d41f",
+  "llama_cpp_commit": "57d04820dfef7a3519aac276d018a6fd71251895",
+  "allow_dirty": false,
+  "model": {
+    "sha256": "42739874cc2ccfdb8523b23fbe52e29b2a7555c8176737ca9ca0b5d59859d41f",
+    "verified": true,
+    "declared": "42739874cc2ccfdb8523b23fbe52e29b2a7555c8176737ca9ca0b5d59859d41f",
+    "size_bytes": 21713463040
+  },
+  "shuffle_seed": 20261109,
+  "cell_order": [
+    "tuned-128K",
+    "stock-128K"
+  ],
+  "cell_order_rule": "seeded shuffle respecting @n_fit dependencies (smallpc.sweep.spec.order_cells), not spec order",
+  "repetitions": 5,
+  "state": "complete",
+  "runs": [
+    {
+      "start_utc": "2026-11-12T13:10:03Z",
+      "pid": 1281921,
+      "mode": "run",
+      "code_commit": "b5b7396231",
+      "inhibit": {
+        "checked": true,
+        "active": true,
+        "tag": "smallpc-sweep-stage3-128K-1794489003",
+        "line": "local-ai-research sweep 1000 <user> 1281908 systemd-inhibit sleep:idle smallpc-sweep-stage3-128K-1794489003 block"
+      }
+    }
+  ],
+  "inhibit": {
+    "checked": true,
+    "active": true,
+    "tag": "smallpc-sweep-stage3-128K-1794489003",
+    "line": "local-ai-research sweep 1000 <user> 1281908 systemd-inhibit sleep:idle smallpc-sweep-stage3-128K-1794489003 block"
+  },
+  "drift": {
+    "main": {
+      "metrics": {
+        "pp_fresh_16k": {
+          "flag": null,
+          "relative_difference": 0.002860497319056776,
+          "threshold": 0.05,
+          "start_mean": 955.0091723173514,
+          "end_mean": 952.277371140263,
+          "start_values": [
+            961.4133715441944,
+            944.0038184216952,
+            959.6103269861645
+          ],
+          "end_values": [
+            957.4365571179803,
+            950.8619565957981,
+            948.5335997070106
+          ]
+        },
+        "tg_16k": {
+          "flag": null,
+          "relative_difference": 0.003182459085732043,
+          "threshold": 0.05,
+          "start_mean": 78.99360094102376,
+          "end_mean": 78.7422070379943,
+          "start_values": [
+            79.05738238431121,
+            79.01676997267684,
+            78.90665046608319
+          ],
+          "end_values": [
+            78.87442440449809,
+            78.5648660281975,
+            78.78733068128729
+          ]
+        },
+        "tg_short": {
+          "flag": null,
+          "relative_difference": 0.0007623628490701567,
+          "threshold": 0.05,
+          "start_mean": 89.2020680294922,
+          "end_mean": 89.13406368676628,
+          "start_values": [
+            89.42070176649587,
+            89.07540400383895,
+            89.11009831814181
+          ],
+          "end_values": [
+            88.99696406597018,
+            89.42332711703004,
+            88.98189987729864
+          ]
+        }
+      },
+      "flag": null,
+      "decided_on": [
+        "pp_fresh_16k",
+        "tg_16k"
+      ],
+      "complete": true
+    }
+  },
+  "finished_utc": "2026-11-12T13:55:58Z"
+}

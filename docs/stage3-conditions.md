@@ -76,3 +76,18 @@ command-line arguments. Fill one block per session **before** it starts (copy th
 ## Session stage3-64K, re-run pass (once, `--rerun-flagged stage3-64K`)
 - Started 12:54:56Z after `check-quiet.sh` (QUIET), MemAvailable 27.9 GiB, no llama-server, GPU lock free; ended 13:06:31Z (11.6 min), runner exit 0, state complete. Polls 13:02Z and 13:09Z: QUIET, CPU 9.1% (llama-server) and 0.2%, MemAvailable 24.5 and 27.9 GiB.
 - Units re-run: 4 (tuned-64K repetitions 1 to 4, paging). Result: all 4 attempt-2 windows clean (0 major faults, no thermal flag); resolved 4, still flagged 0. Re-run canaries: 6 of 6 windows clean; drift: no flag for main or rerun. min free VRAM of the re-run tuned cell 1,021 MiB. No llama-server left.
+
+## Session stage3-128K (stock-128K and tuned-128K), 2026-11-12, before the start
+- `scripts/check-quiet.sh` (exit 0): `quiet-machine check: 426 processes (names only)`; `no blocklisted app is running`; `CPU idle check (informational): busy 0.2% over 10 s`; `RESULT: QUIET`.
+- `pgrep -a llama-server`: empty. GPU lock: free.
+- `nvidia-smi`: memory.used 3 MiB of 16,311 MiB; compute processes: none.
+- MemAvailable: 27.9 GiB. Swap in use: 1.03 GiB. CPU busy (10 s): 0.2%. Load (1 min): 0.48. Mains power: yes (desktop). `git status --short`: empty. Code commit: `b5b7396`.
+- Top 5 by memory: claude, cosmic-comp, ghostty, cosmic-bg, keyd. Top 5 by CPU: claude, ghostty, cosmic-comp, kswapd0, Xwayland.
+- Anything else running (names): none besides the terminal with Claude Code.
+
+## Session stage3-128K, end
+- Duration 45.9 min, 13:10:03Z to 13:55:58Z (estimate 46 min); runner exit 0; state complete; inhibit active (listed by `systemd-inhibit --list`, not refused); gate (`stage3 gate`): PASS (a to f; f 0 of 11 tuned and canary windows).
+- Cells: 4 of 4 complete. Flags: stock-128K 14 request flags, all `paging` (repetitions 1 and 3); tuned-128K none; canaries none. Drift: no flag. Idle waits 0 s, 1 attempt per cell, no retries.
+- Lowest min free VRAM: 1,211 MiB (tuned-128K); stock-128K 1,367 MiB; canaries 1,329 MiB.
+- Quiet check at 7 polls (13:17 to 13:53Z): QUIET each time; no quiet condition violated. Highest CPU busy at a poll 20.2% (13:46Z, llama-server decoding); busiest other processes then: ghostty 2.4%, cosmic-comp 0.9%, kswapd0 0.1%. Lowest MemAvailable at a poll: 19.0 GiB (13:39Z, server loaded); lowest at a cell's preconditions 27.75 GiB.
+- Stock windows paging-flagged (reported only): 2 of 5 (repetitions 1 and 3; largest swap growth 3,420 MiB, most major faults 2,657); tuned and canary windows: 0 of 11 (largest swap growth 0 MiB, 0 faults).
