@@ -1,6 +1,6 @@
 # Step 0 Plan: Baseline Setup
 
-*Version 1.6 · 10 November 2026*
+*Version 1.7 · 11 November 2026*
 *Part of "Local AI on a Small PC" (project plan dated 5 November 2026). This file is the reference for Step 0. Any change produces a new version, recorded in §14.*
 
 ---
@@ -210,13 +210,37 @@ Stage 2 starts from the Stage 1 shortlist: for each context, the two eligible pl
 
 Order: 2f, 2a, 2b, 2c, 2d, then the sanity check and 2e. The 2a spec is generated from the Stage 1 shortlist and the 2f result by a tool, and the second placement's cell from the 2a main result.
 
-**Stage 3: Final** (at least 5 repetitions, paired; WP13; about 1.5 hours)
+**Stage 2 outcome (WP12, 10–11 November; desktop apps open, so these are selection data, not headline results).**
 
-Stock-C vs tuned-C for each C, in one session bracketed by canaries.
+| Context | Tuned configuration | T_turn_400 (s), 95% CI | Stage 1 stock (n = 2) |
+|---|---|---|---|
+| 32K | P6 (`-cmoe`, expert cache 11,520 MiB), `-b 4096 -ub 4096`, 8-bit KV, no MTP | 5.92 [5.61, 6.22] | 8.45 |
+| 64K | P6 (cache 9,472 MiB), `-b 4096 -ub 4096`, FP16 KV, MTP draft length 1 | 6.49 [6.13, 6.85] | 9.36 |
+| 128K | P6 (cache 8,704 MiB), `-b 4096 -ub 4096`, FP16 KV, no MTP | 7.97 [7.67, 8.27] | 11.29 |
 
-**Stage 4: Reproducibility** (on a different day; WP13; about 30 minutes)
+All three use `--cache-ram 2048`, pass the output sanity check and leave more than 1,000 MiB of VRAM free. How the rules played out, and where a human decided:
+- **2f:** `--cache-ram 2048` by the rule. Flagged windows fell from 2 of 5 (8192) to 0 of 5 (2048 and 0) at 128K, and the server's memory growth followed the cache size. Only 0 was entirely free of faults and swap.
+- **2a and 2a2:** MTP won at 32K (draft length 2) and 64K (draft length 1). At 128K every MTP cell of the top placement (P2) fell below the 512 MiB VRAM line, so the second placement was tested at the draft lengths that won elsewhere (a rule added before its data existed), and MTP off won there. P6 beat P2 in every context.
+- **2b:** FP16 KV won at 64K and at 128K (about 8% faster per turn at 128K, despite a 1 GiB smaller expert cache). 2b was extended to 32K and 128K after the 64K result.
+- **Output sanity check:** draft length 2 fails on one of three prompts, deterministically, on four configurations (two placements, both KV types, 32K and 64K): an 8-token phrase recurs 8 times, against 1 to 2 for the reference. Draft length 1 is bit-identical to MTP off, and draft length 3 passes. Draft length 2 is therefore excluded from every tuned configuration. Whether this is a real fault or a threshold artifact is unresolved. The 32K tuned configuration is the rule's winner among the 32K cells that pass (MTP off, 8-bit KV as measured).
+- **Not run:** 2c (`--load-mode dio`), because `--cache-ram 2048` removed the paging it was meant to remedy (1 flagged window of 100 in the later sessions) and `dio` pins 18.9 GiB of unswappable memory on a 32 GB desktop; and 2d, because the default thread count is already 8.
+- **Operational:** the step lead's stop rule for paging-flagged windows was relaxed from 20% to 40% after the 2a 64K session, where the flags came from file pages of the mapped model in MTP cells, not from swap. A bug in the re-run path that blanked two keys in cell summaries was fixed, and 21 summaries were repaired from their committed versions with an audit log.
+- **Human decisions** (all in `docs/decisions.md` and `docs/stage2-summary.md`): the 2a 64K gate, the 128K draft-length rule, FP16 at 64K when the swap sensitivity lost its data, and the reading that a sensitivity check with fewer than 2 paired units is inconclusive.
 
-Stock-64K and tuned-64K, 5 repetitions each.
+**Stage 3: Final** (5 repetitions, paired; WP13; about 2.5 hours on a quiet machine)
+
+Stock-C against tuned-C for each C. These are the headline results, so gate G3 applies in full: the desktop apps are closed. Rules, declared before any Stage 3 measurement:
+- **Configurations.** The six cells are the released config files, `configs/server/{stock,tuned}-{32k,64k,128k}.toml`. The tuned files are the Stage 2 winners above. Stock is §3.1 unchanged, including its default host prompt cache. The measured argument lists are exactly what those files render, plus `--metrics -lv 4`.
+- **Sessions.** One session per context, each with its own start and end canaries, from a clean committed tree. Stock and tuned of a context share a session, so their repetitions are paired.
+- **Re-runs.** One `--rerun-flagged` pass per session, as before.
+- **Stock paging.** Stock keeps `--cache-ram 8192`, so its later repetitions may be paging-flagged at 64K and 128K. That is how stock behaves on this machine, so it is reported, not hidden. Every stock-against-tuned comparison is computed twice: on clean units only, and on all units with the flags shown.
+- **Headline rule.** The headline for a context is the clean-units comparison if both cells have at least 5 clean, paired units after the re-run pass. Otherwise the headline is the all-units comparison, labelled "includes paging-flagged stock windows", with the clean-units figures beside it, and S4(d) is recorded as a deviation for that context. If the two versions disagree in sign, or one interval excludes 1.0 and the other does not, the report says so in its first paragraph.
+- **Tuned cells.** A tuned cell must be eligible in final mode (§3.3): 5 clean units, at least 512 MiB of VRAM free, and a sanity pass. The sanity check is run again on the three tuned config files. If a tuned cell is not eligible, the step lead decides; nothing is substituted automatically.
+- **Reported figures.** Per context: T_turn_400, T_B with `predicted_n`, T_reread, PP_fresh and PP_inc per depth, TG per depth, TTFT, the VRAM breakdown, and the paired ratios tuned/stock with 95% CIs (§5.5), plus the swap sensitivity.
+
+**Stage 4: Reproducibility** (a different day; WP13; about 30 minutes on a quiet machine)
+
+Stock-64K and tuned-64K, 5 repetitions each, in one session with canaries. S2 is checked with `report repro` on T_turn_400, fresh prefill at 32K and decode at 32K depth. If stock-64K has too few clean units on either day, S2 is evaluated for it on all units, and the report says so.
 
 ### 5.5 Statistics
 
@@ -600,13 +624,15 @@ WP12 runs in several sessions: preparation and pre-flight (tools, specs, runbook
 
 ### WP13: Final run and reproducibility
 
+WP13 runs in several sessions: preparation (no quiet machine needed), the three Stage 3 sessions and their analysis (quiet machine), and Stage 4 on another day (quiet machine).
+
 **Tasks:**
-- Run Stage 3.
-- Write `configs/server/{stock,tuned}-{32k,64k,128k}.toml`.
-- Run Stage 4 on another day.
+- Preparation: write `configs/server/{stock,tuned}-{32k,64k,128k}.toml` from the Stage 2 outcome; write the Stage 3 and Stage 4 specs from those files; fix the VRAM-breakdown parser, which counts an MTP cell's compute buffers twice; write the tool that produces the Stage 3 headline tables under the rules of §5.4; write the runbook; a short functional check of the new paths.
+- Stage 3: three sessions, one re-run pass each, the sanity check on the tuned config files, then the analysis with the label "results".
+- Stage 4 on another day, then the S2 check.
 - Walk through the README launch steps from a clean shell.
 
-**Acceptance:** S1–S4 are met, with evidence.
+**Acceptance:** S1–S4 are met, with evidence, or each deviation is recorded with its reason.
 
 ### WP14: Release
 
@@ -628,7 +654,7 @@ WP12 runs in several sessions: preparation and pre-flight (tools, specs, runbook
 | **G0** | Before WP0 | Save the project plan and this plan as `~/Downloads/local-ai-research/project-plan.md` and `~/Downloads/local-ai-research/step-0-baseline-v1.2.md`. Open a fresh terminal and start Claude Code from your home directory. If WP0 reports that the SSD needs `sudo` for the repo directory, run the command it gives you. |
 | **G1** | After WP1 | Run the proposed sudo commands for any missing prerequisites. In the BIOS, enable the integrated graphics and note the EXPO and PBO/Eco-mode settings. Move both monitors to the motherboard outputs and reboot. Then tell me; WP1's script is re-run to confirm there are no display clients on the RTX 5060 Ti. |
 | **G2** | Before WP14 | Run `gh auth login` if that isn't done yet, and confirm that Claude Code may create and push to the private repo. |
-| **G3** | Before each long run | Close the browser, games and VMs, keep the PC on mains power, and OK the start. |
+| **G3** | Before each long run | Close the browser, games and VMs, keep the PC on mains power, and OK the start. Stages 1 and 2 ran with desktop apps open and idle, as a recorded deviation. Stages 3 and 4 produce the headline results, so G3 applies in full there. |
 | **G4** | After WP14 | Make the repo public and publish the release. File any upstream issue drafts. |
 | — | Only if WP4 fails | Approve the fallback model download. |
 
@@ -792,6 +818,8 @@ Each entry records the date, WP, status, commit, key results (with numbers) and 
 - **Release.** Step 0's release follows the lighter standard agreed earlier: a tagged baseline release in the umbrella repo.
 - **MTP state across save and restore.** On the pinned build, neither `/slots` save/restore nor the host-RAM prompt cache lost the MTP draft state (identical draft counts at 181 and 3,191 tokens of history, and the log shows the draft state saved and restored). There was no negative control and no history above 8,192 tokens. llama.cpp #28619 (a Step 3b starter PR that Step 5 depends on) may already be fixed, and Step 3b and Step 5 should confirm it.
 - **Memory behaviour on this machine.** The system uses zram swap with `vm.swappiness` 150, and the kernel swaps cold pages of llama-server's memory even with about 20 GiB available. Step 1 benchmark runs on this PC will see the same behaviour. Step 0 flags only major page faults, and reports swap activity separately.
+- **MTP draft length 2.** On the pinned build, draft length 2 gives a deterministic repeated phrase on one of three sanity prompts, on four configurations. Draft length 1 is bit-identical to MTP off, and draft length 3 passes. It is unresolved whether this is a fault in the speculative path or a threshold artifact. Step 3b and Step 7 should look at it before relying on draft lengths above 1.
+- **What moved the numbers in Stage 2.** The larger batch (`-b 4096 -ub 4096`) more than doubles prefill speed over the default. Keeping all experts on the CPU side with a large VRAM expert cache (P6) beat `--fit` in every context. FP16 KV beat 8-bit KV at 64K and 128K. MTP helped by about 3 to 5% per turn at 32K and 64K and not at all at 128K, because it costs 9 to 15% of prefill speed and about 1 GiB of VRAM.
 - **Host prompt cache on a 32 GB machine.** With the default `--cache-ram` of 8,192 MiB, a long-running server's host prompt cache plus a 20 GiB memory-mapped model pushed the machine into paging at 128K and 64K in Stage 1. Stage 2f measures smaller values. Step 1 and Step 5 should expect the same effect, and Step 5's plan to park states in host RAM competes for the same memory.
 - **Real agent turns.** Step 0's 3,000 + 400 turn is a standardised workload. Step 1 should report per-turn new tokens and generated tokens from real tasks, to show how far real use is from it.
 
@@ -802,6 +830,7 @@ Each entry records the date, WP, status, commit, key results (with numbers) and 
 | Version | Date | Change |
 |---|---|---|
 | 1.0 | 6 Nov 2026 | Initial plan |
+| 1.7 | 11 Nov 2026 | After Stage 2: the Stage 2 outcome, its human decisions and its deviations are recorded, including 2c and 2d not run and draft length 2 excluded by the sanity check (§5.4); Stage 3 and Stage 4 are written out with their rules declared before measurement, including how stock's paging is reported and when the headline may use all units (§5.4); WP13 is split into preparation, sessions and Stage 4 (WP13); G3 applies in full to Stages 3 and 4 (§7); two notes for the executive chat (§13) |
 | 1.6 | 10 Nov 2026 | After Stage 1: Stage 2 is written out with its decision rules declared before measurement (§5.4); a new first sub-stage, 2f, tests the host prompt cache size, because the paging seen in the 64K and 128K sessions tracked its growth; the Stage 2 estimate rises to 6 to 7 hours; WP12 is split into preparation, sessions and analysis (§5.4, WP12); a note on host-memory pressure for the executive chat (§13) |
 | 1.5 | 9 Nov 2026 | After the WP11 pre-flight: the max-fit definition for P6 and P7 states that `--fit` keeps its default margin, which is the binding limit on this card (§5.4); the Stage 1 time estimate drops to about 4 to 5 hours, because the larger batch settings prefill 2.3 to 2.9 times faster than the default (§5.4); the pre-flight is recorded as done, and its probe cache retired (§5.4) |
 | 1.4 | 9 Nov 2026 | Lessons from WP9–WP10: the paging flag counts only llama-server major faults, with swap growth recorded as `swap_activity` and a swap sensitivity added to every report (§5.5, §5.6); paired-ratio intervals become the wider of bootstrap and t on log ratios, and the measured coverage of the intervals is stated (§5.5); eligibility and the tie-break are written as WP10 implemented them, with the literal step 2 that could never apply removed, and screening applies no tie-break (§3.3); the output sanity check gets declared thresholds and a stage (§5.6, WP12); transient precondition failures are retried (§5.3); Stage 1 runs as three sessions with shuffled cell order, a recomputed time estimate of about 8 h, a clean-tree rule and a pre-flight (§5.4, WP11); a note on memory behaviour for the executive chat (§13) |
