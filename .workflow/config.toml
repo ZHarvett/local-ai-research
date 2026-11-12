@@ -1,0 +1,18 @@
+# workflow-kit configuration.
+# Copied by bootstrap.sh to <target-repo>/.workflow/config.toml; a repo may edit its copy.
+# Precedence: $WF_CONFIG (a TOML file path) > <repo>/.workflow/config.toml > built-in defaults.
+
+model_note = "single model for executor, subagent and reviewer"
+
+[workflow]
+max_parallel_sessions = 3
+max_review_cycles = 2
+# A lane hint is only honoured when the card's parallel reason saves more than this.
+parallel_value_threshold_min = 30
+
+[locks]
+# Untracked runtime state shared by every worktree of a repo lives at
+# <git-common-dir>/workflow/  (locks/, claims.json, lane mirrors).
+# Machine-wide lock taken by gpu / exclusive-machine / cpu-heavy tasks, so sessions in
+# OTHER repos cannot start conflicting heavy work. flock -n; the holder pid is recorded.
+machine_lock = "/dev/shm/local-ai-research-machine.lock"

@@ -1,0 +1,39 @@
+{
+  "$comment": "workflow-kit permissions template. Deny rules match the command text Claude writes — they are a guardrail, not a security boundary; working-directory confinement does the rest. NOTE: blockWritesOutsideWorkingDirectories is deliberately NOT set (it disables the lane worktree tools).",
+  "permissions": {
+    "allow": [
+      "Bash(bash scripts/wf*.sh *)",
+      "Bash(python3 scripts/_wf.py *)",
+      "Bash(git status*)",
+      "Bash(git diff*)",
+      "Bash(git log*)",
+      "Bash(git show*)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git worktree list*)",
+      "Bash(git branch*)",
+      "Bash(uv run pytest*)",
+      "Bash(uv run ruff *)",
+      "Bash(shellcheck *)",
+      "Bash(sha256sum *)",
+      "Bash(cat *)",
+      "Bash(ls *)",
+      "Bash(test *)",
+      "Read(./**)"
+    ],
+    "deny": [
+      "Bash(sudo *)",
+      "Bash(rm -rf *)",
+      "Bash(rm -fr *)",
+      "Bash(git push --force*)",
+      "Bash(git push -f *)",
+      "Bash(git reset --hard*)",
+      "Bash(git clean *)",
+      "Edit(/tmp/**)",
+      "Edit(//home/**)",
+      "Edit(/dev/shm/**)",
+      "Read(//home/**/.ssh/**)",
+      "Read(//home/**/.config/**)"
+    ]
+  }
+}

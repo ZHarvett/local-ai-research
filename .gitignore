@@ -31,3 +31,6 @@ dist/
 
 # GPU lock (scripts/with-gpu-lock.sh)
 .locks/
+
+# workflow-kit lane worktrees
+.workflow/worktrees/
