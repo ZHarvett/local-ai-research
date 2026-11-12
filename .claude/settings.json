@@ -1,5 +1,5 @@
 {
-  "$comment": "workflow-kit permissions template. Deny rules match the command text Claude writes — they are a guardrail, not a security boundary; working-directory confinement does the rest. NOTE: blockWritesOutsideWorkingDirectories is deliberately NOT set (it disables the lane worktree tools).",
+  "$comment": "workflow-kit permissions template. Deny rules match the command text Claude writes \u2014 they are a guardrail, not a security boundary; working-directory confinement does the rest. NOTE: blockWritesOutsideWorkingDirectories is deliberately NOT set (it disables the lane worktree tools).",
   "permissions": {
     "allow": [
       "Bash(bash scripts/wf*.sh *)",
@@ -19,7 +19,27 @@
       "Bash(cat *)",
       "Bash(ls *)",
       "Bash(test *)",
-      "Read(./**)"
+      "Read(./**)",
+      "Bash(uv run *)",
+      "Bash(uv sync *)",
+      "Bash(bash scripts/*)",
+      "Bash(./scripts/*)",
+      "Bash(nvidia-smi *)",
+      "Bash(pgrep *)",
+      "Bash(ps *)",
+      "Bash(systemd-inhibit *)",
+      "Bash(flock *)",
+      "Bash(setsid *)",
+      "Bash(nohup *)",
+      "Bash(sleep *)",
+      "Bash(date *)",
+      "Bash(git rev-parse *)",
+      "Bash(git cat-file *)",
+      "Bash(git log *)",
+      "Bash(git diff *)",
+      "Bash(git status *)",
+      "Bash(git rev-list *)",
+      "Bash(git apply *)"
     ],
     "deny": [
       "Bash(sudo *)",
