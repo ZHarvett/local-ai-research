@@ -1,0 +1,13 @@
+{
+  "session_id": "stage3-32K",
+  "state": "complete",
+  "phase": "done",
+  "cells_total": 2,
+  "cells_done": 1,
+  "started_utc": "2026-11-12T11:53:01Z",
+  "updated_utc": "2026-11-12T12:11:25Z",
+  "cell": "canary-end",
+  "repetition": 105,
+  "depth": 16384,
+  "kind": "B"
+}
