@@ -12,7 +12,7 @@ files; change them through the scripts only.
 |---|---|---|---|---|
 | T-001 | Smoke test and recon (read-only) | done ⚠ re-acknowledge | 1 | none |
 | T-002 | Record Stage 3 decisions and merge CLAUDE.md | done | 1 | none |
-| T-003 | Reviewer calibration | ready | 1 | none |
+| T-003 | Reviewer calibration | in-progress | 1 | none |
 | T-004 | README draft | todo | 1 | none |
 | T-005 | Baseline report draft and number checker | todo | 2 | post |
 | T-006 | Write-up draft | todo | 1 | none |
@@ -30,7 +30,7 @@ files; change them through the scripts only.
 
 ## READY (grouped by lane)
 
-- lane 1: **T-003** Reviewer calibration
+_(none)_
 
 ## Escalation queue
 
@@ -44,12 +44,12 @@ _(none)_
 
 | lane | lock | worktree | tasks |
 |---|---|---|---|
-| 1 | - | - | - |
+| 1 | pid 1574040 | - | - |
 
 ## Last events
 
-- 2026-11-13T10:09:30Z note T-002 — decision E-003 recorded
-- 2026-11-13T10:12:02Z step-done T-002 — S3
-- 2026-11-13T10:15:23Z step-done T-002 — S4
-- 2026-11-13T10:15:23Z done T-002 — accept run at 2026-11-13T10:14:28Z
-- 2026-11-13T10:15:23Z ready T-003 — dependencies satisfied
+- 2026-11-13T11:03:18Z started T-003 — lane 1
+- 2026-11-13T11:03:40Z gate-wait T-003 — Open a second terminal in the repo, start a fresh Claude Code session and run /calibrate-reviewer. When it has written .workflow/calibration.json, close that session and reply go here.
+- 2026-11-13T11:08:55Z gate-release T-003 — Zack said go
+- 2026-11-13T11:12:24Z step-done T-003 — S1
+- 2026-11-13T11:12:24Z step-done T-003 — S2

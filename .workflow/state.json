@@ -1,5 +1,5 @@
 {
-  "checksum": "7c8a75c7828fd12215fa7b93e8626dc174d446a448f18583a8fafe462426fd26",
+  "checksum": "42191c10b83519164ab96f0a24885c241eb9d6c7282bf76b3fb559a7db56dbde",
   "created_utc": "2026-11-12T22:25:04Z",
   "escalations": {
     "E-001": {
@@ -360,6 +360,48 @@
       "seq": 47,
       "task": "T-003",
       "ts": "2026-11-13T10:15:23Z"
+    },
+    {
+      "detail": "lane 1, pid 1574040",
+      "event": "claimed",
+      "seq": 48,
+      "task": "T-003",
+      "ts": "2026-11-13T11:03:18Z"
+    },
+    {
+      "detail": "lane 1",
+      "event": "started",
+      "seq": 49,
+      "task": "T-003",
+      "ts": "2026-11-13T11:03:18Z"
+    },
+    {
+      "detail": "Open a second terminal in the repo, start a fresh Claude Code session and run /calibrate-reviewer. When it has written .workflow/calibration.json, close that session and reply go here.",
+      "event": "gate-wait",
+      "seq": 50,
+      "task": "T-003",
+      "ts": "2026-11-13T11:03:40Z"
+    },
+    {
+      "detail": "Zack said go",
+      "event": "gate-release",
+      "seq": 51,
+      "task": "T-003",
+      "ts": "2026-11-13T11:08:55Z"
+    },
+    {
+      "detail": "S1",
+      "event": "step-done",
+      "seq": 52,
+      "task": "T-003",
+      "ts": "2026-11-13T11:12:24Z"
+    },
+    {
+      "detail": "S2",
+      "event": "step-done",
+      "seq": 53,
+      "task": "T-003",
+      "ts": "2026-11-13T11:12:24Z"
     }
   ],
   "kit_version": "0.1.0",
@@ -431,6 +473,7 @@
     },
     "T-003": {
       "card_sha256": "2d7a4fdf2e68802ae35aaf201da863934dc2598f961a9eec5f9afde0fbfdb885",
+      "claimed_by_lane": 1,
       "depends_on": [
         "T-002"
       ],
@@ -438,12 +481,17 @@
         "docs/recon/calibration-summary.md",
         "docs/progress-log.md"
       ],
+      "gate_message": "Open a second terminal in the repo, start a fresh Claude Code session and run /calibrate-reviewer. When it has written .workflow/calibration.json, close that session and reply go here.",
       "lane": 1,
       "phase": "P0",
       "resources": "light",
       "review": "none",
       "source": "plan",
-      "status": "ready",
+      "status": "in-progress",
+      "steps_done": [
+        "S1",
+        "S2"
+      ],
       "title": "Reviewer calibration"
     },
     "T-004": {
