@@ -13,7 +13,7 @@ files; change them through the scripts only.
 | T-001 | Smoke test and recon (read-only) | done ⚠ re-acknowledge | 1 | none |
 | T-002 | Record Stage 3 decisions and merge CLAUDE.md | done | 1 | none |
 | T-003 | Reviewer calibration | done | 1 | none |
-| T-004 | README draft | in-progress | 1 | none |
+| T-004 | README draft | done | 1 | none |
 | T-005 | Baseline report draft and number checker | in-progress | 2 | post |
 | T-006 | Write-up draft | todo | 1 | none |
 | T-007 | Stage 4 session | ready ⚠ re-acknowledge | 1 | pre+post |
@@ -44,14 +44,14 @@ _(none)_
 
 | lane | lock | worktree | tasks |
 |---|---|---|---|
-| 1 | pid 1807463 | - | - |
+| 1 | - | - | - |
 | 2 | pid 1807601 | yes | T-005 |
 | 3 | pid 1807883 | yes | T-017 |
 
 ## Last events
 
-- 2026-11-13T11:52:10Z step-done T-017 — S1
-- 2026-11-13T11:52:10Z step-done T-017 — S2
 - 2026-11-13T11:54:13Z step-done T-004 — S1
 - 2026-11-13T11:54:13Z ready T-005 — dependencies satisfied
 - 2026-11-13T11:54:13Z ready T-017 — dependencies satisfied
+- 2026-11-13T11:54:25Z step-done T-004 — S2
+- 2026-11-13T11:54:31Z done T-004 — accept run at 2026-11-13T11:54:25Z

@@ -1,5 +1,5 @@
 {
-  "checksum": "482960e42af02fb765c4a2bad9ec7f9dfe05bc576c66f9e85b4860ef565aff4c",
+  "checksum": "f41087df5c3ad2d6967d229320c47355f370f88b9343c7c7b24f70e9d40cf478",
   "created_utc": "2026-11-12T22:25:04Z",
   "escalations": {
     "E-001": {
@@ -493,6 +493,20 @@
       "seq": 66,
       "task": "T-017",
       "ts": "2026-11-13T11:54:13Z"
+    },
+    {
+      "detail": "S2",
+      "event": "step-done",
+      "seq": 67,
+      "task": "T-004",
+      "ts": "2026-11-13T11:54:25Z"
+    },
+    {
+      "detail": "accept run at 2026-11-13T11:54:25Z",
+      "event": "done",
+      "seq": 68,
+      "task": "T-004",
+      "ts": "2026-11-13T11:54:31Z"
     }
   ],
   "kit_version": "0.1.0",
@@ -601,9 +615,10 @@
       "resources": "light",
       "review": "none",
       "source": "plan",
-      "status": "in-progress",
+      "status": "done",
       "steps_done": [
-        "S1"
+        "S1",
+        "S2"
       ],
       "title": "README draft"
     },

@@ -1,0 +1,36 @@
+[
+  {
+    "task": "T-004",
+    "started_utc": "2026-11-13T11:54:25Z",
+    "git_commit": "3f638c17f8b65682995ec073572892ea4637e170",
+    "items": [
+      {
+        "id": "A1",
+        "cmd": "for h in 'Quick start' 'Results' 'Limitations' 'Licen'; do grep -qiE \"^#+ .*$h\" README.md || exit 1; done",
+        "exit_code": 0,
+        "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "output_bytes": 0,
+        "elapsed_s": 0.0,
+        "verdict": "pass"
+      },
+      {
+        "id": "A2",
+        "cmd": "grep -q 'TODO-T010' README.md && grep -q 'includes paging-flagged stock windows' README.md && grep -q '<!-- sources:' README.md",
+        "exit_code": 0,
+        "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "output_bytes": 0,
+        "elapsed_s": 0.0,
+        "verdict": "pass"
+      }
+    ],
+    "evidence_files": {
+      "README.md": {
+        "exists": true,
+        "sha256": "1375c92fb3e69f182c0fa2d8eb06c165de2060c0565476ef5e9dd1e77e8f0eb1",
+        "bytes": 21357
+      }
+    },
+    "finished_utc": "2026-11-13T11:54:25Z",
+    "failures": 0
+  }
+]
