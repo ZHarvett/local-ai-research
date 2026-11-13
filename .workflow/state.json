@@ -1,5 +1,5 @@
 {
-  "checksum": "c1ebdda80f5b29894122dd5c6caf688fadaa9ca91a7a4f9ad17e5bed82ef33fc",
+  "checksum": "afe822b372271a4c66dc5415cd84bb0e39230707dc894eeec51e7ec94efa48de",
   "created_utc": "2026-11-12T22:25:04Z",
   "escalations": {
     "E-001": {
@@ -570,6 +570,27 @@
       "seq": 75,
       "task": null,
       "ts": "2026-11-13T12:49:23Z"
+    },
+    {
+      "detail": "cycle 1",
+      "event": "review-opened",
+      "seq": 76,
+      "task": "T-005",
+      "ts": "2026-11-13T15:30:38Z"
+    },
+    {
+      "detail": "accepted (cycle 1, 0 findings)",
+      "event": "review-verdict",
+      "seq": 77,
+      "task": "T-005",
+      "ts": "2026-11-13T15:30:38Z"
+    },
+    {
+      "detail": "dependencies satisfied",
+      "event": "ready",
+      "seq": 78,
+      "task": "T-006",
+      "ts": "2026-11-13T15:30:38Z"
     }
   ],
   "kit_version": "0.1.0",
@@ -582,7 +603,9 @@
   ],
   "plan_file": "PLAN.md",
   "plan_sha256": "c6d7539068538f1b0b82714cbe1369159b0549403f7b91986ee8789a9bb09e46",
-  "review_cycles": {},
+  "review_cycles": {
+    "T-005": 1
+  },
   "review_dispositions": {},
   "tasks": {
     "T-001": {
@@ -701,7 +724,7 @@
       "resources": "light",
       "review": "post",
       "source": "plan",
-      "status": "done",
+      "status": "accepted",
       "title": "Baseline report draft and number checker"
     },
     "T-006": {
@@ -719,7 +742,7 @@
       "resources": "light",
       "review": "none",
       "source": "plan",
-      "status": "todo",
+      "status": "ready",
       "title": "Write-up draft"
     },
     "T-007": {

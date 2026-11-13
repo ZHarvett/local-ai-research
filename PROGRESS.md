@@ -14,8 +14,8 @@ files; change them through the scripts only.
 | T-002 | Record Stage 3 decisions and merge CLAUDE.md | done | 1 | none |
 | T-003 | Reviewer calibration | done | 1 | none |
 | T-004 | README draft | done | 1 | none |
-| T-005 | Baseline report draft and number checker | done (judgement) | 2 | post |
-| T-006 | Write-up draft | todo | 1 | none |
+| T-005 | Baseline report draft and number checker | accepted (judgement) | 2 | post |
+| T-006 | Write-up draft | ready | 1 | none |
 | T-007 | Stage 4 session | ready ⚠ re-acknowledge | 1 | pre+post |
 | T-008 | S2 check and Stage 4 analysis | todo | 1 | post |
 | T-009 | Post-Stage-4 code fixes | todo | 1 | none |
@@ -30,6 +30,7 @@ files; change them through the scripts only.
 
 ## READY (grouped by lane)
 
+- lane 1: **T-006** Write-up draft
 - lane 1: **T-007** Stage 4 session
 
 ## Escalation queue
@@ -49,8 +50,8 @@ _(none)_
 
 ## Last events
 
-- 2026-11-13T12:02:11Z step-done T-005 — S3
-- 2026-11-13T12:02:41Z done T-005 — accept run at 2026-11-13T12:02:32Z
-- 2026-11-13T12:49:23Z lane-merged — lane 2
-- 2026-11-13T12:52:02Z unblocked T-017 — restored to in-progress
-- 2026-11-13T12:52:02Z note T-017 — decision E-004 recorded
+- 2026-11-13T15:24:51Z step-done T-017 — S3: design approved as E-004 option B; escalation decided 2026-11-13T12:52Z
+- 2026-11-13T15:25:01Z resumed T-017 — from S4
+- 2026-11-13T15:30:38Z review-opened T-005 — cycle 1
+- 2026-11-13T15:30:38Z review-verdict T-005 — accepted (cycle 1, 0 findings)
+- 2026-11-13T15:30:38Z ready T-006 — dependencies satisfied
