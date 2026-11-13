@@ -31,3 +31,7 @@ Card T-007 names this file as the Stage 4 conditions log; the runbook's generic 
   before the start.
 - Human gate (card T-007): released on Zack's "go" (2026-11-14 ~00:40 local). Date condition met: 14 November local,
   13 November 22:40 UTC (≥ 13 November 2026).
+- Launch: `scripts/run-sweep.sh configs/sweeps/stage4.toml --session-id stage4` at 2026-11-13T22:42:12Z from HEAD
+  `1307244` (whole tree clean; R3 re-verified at that HEAD: PASS). Quiet re-check immediately before launch: QUIET,
+  exit 0 (`448 processes`, `busy 0.2% over 10 s`). Job dir: `data/logs/jobs/sweep-stage4-20261113T224212Z`;
+  runner pid 1926396, `state=running`, first cell canary-start. Session id written to `docs/recon/stage4-session.txt`.
