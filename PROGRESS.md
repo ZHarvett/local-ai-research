@@ -48,8 +48,8 @@ _(none)_
 
 ## Last events
 
-- 2026-11-13T10:05:22Z step-done T-002 — S2
 - 2026-11-13T10:06:56Z escalated T-002 — E-003 (decision)
 - 2026-11-13T10:09:30Z unblocked T-002 — restored to in-progress
 - 2026-11-13T10:09:30Z note T-002 — decision E-003 recorded
 - 2026-11-13T10:12:02Z step-done T-002 — S3
+- 2026-11-13T10:15:23Z step-done T-002 — S4

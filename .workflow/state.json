@@ -1,5 +1,5 @@
 {
-  "checksum": "f371c9177c5f1b1caf14c18a2ed9efc1744b14142e4546423ca4723d8d5e178e",
+  "checksum": "7436b1420e475e32c160b77ae1ba7882cd5627d46bf3998ef56ce5a49db249b2",
   "created_utc": "2026-11-12T22:25:04Z",
   "escalations": {
     "E-001": {
@@ -339,6 +339,13 @@
       "seq": 44,
       "task": "T-002",
       "ts": "2026-11-13T10:12:02Z"
+    },
+    {
+      "detail": "S4",
+      "event": "step-done",
+      "seq": 45,
+      "task": "T-002",
+      "ts": "2026-11-13T10:15:23Z"
     }
   ],
   "kit_version": "0.1.0",
@@ -403,7 +410,8 @@
       "steps_done": [
         "S1",
         "S2",
-        "S3"
+        "S3",
+        "S4"
       ],
       "title": "Record Stage 3 decisions and merge CLAUDE.md"
     },
