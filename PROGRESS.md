@@ -10,7 +10,7 @@ files; change them through the scripts only.
 
 | id | title | status | lane | review |
 |---|---|---|---|---|
-| T-001 | Smoke test and recon (read-only) | ready | 1 | none |
+| T-001 | Smoke test and recon (read-only) | in-progress | 1 | none |
 | T-002 | Record Stage 3 decisions and merge CLAUDE.md | todo | 1 | none |
 | T-003 | Reviewer calibration | todo | 1 | none |
 | T-004 | README draft | todo | 1 | none |
@@ -29,7 +29,7 @@ files; change them through the scripts only.
 
 ## READY (grouped by lane)
 
-- lane 1: **T-001** Smoke test and recon (read-only)
+_(none)_
 
 ## Escalation queue
 
@@ -43,9 +43,12 @@ _(none)_
 
 | lane | lock | worktree | tasks |
 |---|---|---|---|
-| 1 | - | - | - |
+| 1 | pid 1574040 | - | - |
 
 ## Last events
 
-- 2026-11-12T22:25:04Z plan-imported — 16 cards
-- 2026-11-12T22:25:04Z ready T-001 — dependencies satisfied
+- 2026-11-12T23:19:07Z escalated T-001 — E-002 (assumption-mismatch)
+- 2026-11-13T09:07:05Z unblocked T-001 — restored to in-progress
+- 2026-11-13T09:07:05Z note T-001 — decision E-002 recorded
+- 2026-11-13T09:13:29Z machine-lock-released — /dev/shm/local-ai-research-machine.lock
+- 2026-11-13T09:13:29Z resumed T-001 — from S5

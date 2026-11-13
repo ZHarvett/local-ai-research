@@ -1,7 +1,22 @@
 {
-  "checksum": "d1cca6fb226b309e826099edc3d6dc257bebf771833c695bd4646d04b636bc57",
+  "checksum": "961644f5f310197e7eecf67559d6c1d354c198a32690d3502c7d0d6ddef2a61e",
   "created_utc": "2026-11-12T22:25:04Z",
-  "escalations": {},
+  "escalations": {
+    "E-001": {
+      "created_utc": "2026-11-12T22:55:39Z",
+      "decided_utc": "2026-11-12T23:03:27Z",
+      "status": "decided",
+      "task": "T-001",
+      "type": "assumption-mismatch"
+    },
+    "E-002": {
+      "created_utc": "2026-11-12T23:19:07Z",
+      "decided_utc": "2026-11-13T09:07:05Z",
+      "status": "decided",
+      "task": "T-001",
+      "type": "assumption-mismatch"
+    }
+  },
   "events": [
     {
       "detail": "16 cards",
@@ -16,6 +31,118 @@
       "seq": 1,
       "task": "T-001",
       "ts": "2026-11-12T22:25:04Z"
+    },
+    {
+      "detail": "lane 1, pid 1574040",
+      "event": "claimed",
+      "seq": 2,
+      "task": "T-001",
+      "ts": "2026-11-12T22:25:51Z"
+    },
+    {
+      "detail": "lane 1",
+      "event": "started",
+      "seq": 3,
+      "task": "T-001",
+      "ts": "2026-11-12T22:25:59Z"
+    },
+    {
+      "detail": "S1",
+      "event": "step-done",
+      "seq": 4,
+      "task": "T-001",
+      "ts": "2026-11-12T22:28:46Z"
+    },
+    {
+      "detail": "S2",
+      "event": "step-done",
+      "seq": 5,
+      "task": "T-001",
+      "ts": "2026-11-12T22:54:07Z"
+    },
+    {
+      "detail": "E-001 (assumption-mismatch)",
+      "event": "escalated",
+      "seq": 6,
+      "task": "T-001",
+      "ts": "2026-11-12T22:55:39Z"
+    },
+    {
+      "detail": "restored to in-progress",
+      "event": "unblocked",
+      "seq": 7,
+      "task": "T-001",
+      "ts": "2026-11-12T23:03:27Z"
+    },
+    {
+      "detail": "decision E-001 recorded",
+      "event": "note",
+      "seq": 8,
+      "task": "T-001",
+      "ts": "2026-11-12T23:03:27Z"
+    },
+    {
+      "detail": "/dev/shm/local-ai-research-machine.lock",
+      "event": "machine-lock-released",
+      "seq": 9,
+      "task": null,
+      "ts": "2026-11-12T23:08:50Z"
+    },
+    {
+      "detail": "from S3",
+      "event": "resumed",
+      "seq": 10,
+      "task": "T-001",
+      "ts": "2026-11-12T23:08:50Z"
+    },
+    {
+      "detail": "S3",
+      "event": "step-done",
+      "seq": 11,
+      "task": "T-001",
+      "ts": "2026-11-12T23:09:55Z"
+    },
+    {
+      "detail": "S4",
+      "event": "step-done",
+      "seq": 12,
+      "task": "T-001",
+      "ts": "2026-11-12T23:15:21Z"
+    },
+    {
+      "detail": "E-002 (assumption-mismatch)",
+      "event": "escalated",
+      "seq": 13,
+      "task": "T-001",
+      "ts": "2026-11-12T23:19:07Z"
+    },
+    {
+      "detail": "restored to in-progress",
+      "event": "unblocked",
+      "seq": 14,
+      "task": "T-001",
+      "ts": "2026-11-13T09:07:05Z"
+    },
+    {
+      "detail": "decision E-002 recorded",
+      "event": "note",
+      "seq": 15,
+      "task": "T-001",
+      "ts": "2026-11-13T09:07:05Z"
+    },
+    {
+      "detail": "/dev/shm/local-ai-research-machine.lock",
+      "event": "machine-lock-released",
+      "seq": 16,
+      "task": null,
+      "ts": "2026-11-13T09:13:29Z"
+    },
+    {
+      "detail": "from S5",
+      "event": "resumed",
+      "seq": 17,
+      "task": "T-001",
+      "ts": "2026-11-13T09:13:29Z"
     }
   ],
   "kit_version": "0.1.0",
@@ -32,7 +159,10 @@
   "review_dispositions": {},
   "tasks": {
     "T-001": {
+      "blocked_from": null,
+      "blocked_reason": null,
       "card_sha256": "032d9f3120190a4b3287abc3fe1b212ad478a8e8705e0f9bec46e9c739c6fe05",
+      "claimed_by_lane": 1,
       "depends_on": [],
       "files_write": [
         "docs/recon/T-001.md",
@@ -44,7 +174,13 @@
       "resources": "cpu-heavy",
       "review": "none",
       "source": "plan",
-      "status": "ready",
+      "status": "in-progress",
+      "steps_done": [
+        "S1",
+        "S2",
+        "S3",
+        "S4"
+      ],
       "title": "Smoke test and recon (read-only)"
     },
     "T-002": {

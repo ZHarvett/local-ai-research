@@ -1164,3 +1164,23 @@ No discrepancy changes a tuned config.
 3. **Reading of the paging flags (not a rule change).** Contrary to plan 5.4's expectation, the 64K session's *tuned* cell was paging-flagged in 4 of 5 attempt-1 windows (up to 47,576 major faults, 586 MiB swap growth), and the stock cell in none; at 32K and 128K stock paged (1 and 2 windows) and tuned did not. The gate's criterion f passed (36.4% of tuned and canary windows, limit 40%). The four tuned units re-ran clean in attempt 2 (0 faults).
    No explanation was investigated: the machine was quiet (check-quiet QUIET at every poll) and the swap sensitivity shows no change in any verdict.
 4. **Intermittent test.** `tests/test_sweep_probe.py` failed a different test in 2 of 4 full runs (and in most of the file's own repeat runs) on this machine (for example `test_max_fit_is_probed_per_draft_length_for_mtp_cells`: 3,840 against 8,704 MiB) and passed the last full run (994 passed). Not investigated; it does not touch the Stage 3 data or tools.
+
+---
+
+## DECISION E-001 (2026-11-12T23:03:27Z)
+
+DECISION E-001
+Chosen option: A
+Reason: The three Stage 3 session commits (8096461, a80b2dd, b5b7396) differ only by data and re-run commits, and git diff over src, configs, scripts, pyproject.toml and uv.lock between them is empty, so one code state exists; the earliest commit gives R3 the strictest span. The allow list lacked the measurement commands, and Zack widened it himself in a separate commit because the executor must not widen its own permissions.
+Scope: this plan
+Rule: (1) A5: record 8096461 in docs/recon/stage3-commit.txt; "the Stage 3 session commit" in R3 and the Stage 4 record means 8096461. Mark A5 PASS with a note that the three commits share one code state; state this once in docs/recon/T-001.md. (2) A14: Zack has updated .claude/settings.json (see the latest commit touching it). T-001 re-checks A14 by matching the commands against the updated file, and records any command still unmatched as an INFO line, not a FAIL, and does not edit settings.json. git push, git tag, gh and curl are deliberately not allowed; they prompt at T-015. (3) A7: D2's bracket is "17 attempt-1 windows (tuned-64K 5, four canary cells x 3; stock excluded): 4 flagged = 23.5%; the gate tool reported 36.4% (4 of 11, re-run canary cells excluded); true pass under both". Docs quote the tool's 36.4% together with this sentence.
+
+---
+
+## DECISION E-002 (2026-11-13T09:07:05Z)
+
+DECISION E-002
+Chosen option: A
+Reason: scripts/wf.sh is the kit dispatcher added by install commit f149338 and listed in .workflow-kit-manifest.json, with the same provenance as the wf-*.sh scripts; the pattern in PLAN.md was written too narrowly (a planning-chat error), and no code change or re-measurement is involved.
+Scope: standing rule
+Rule: Wherever PLAN.md (R3, A2, the T-001 acceptance, the T-007 precondition) uses the pattern scripts/wf-[A-Za-z0-9_.-]+\.sh for the allowed kit files, read it as scripts/wf(-[A-Za-z0-9_.-]+)?\.sh. For T-001 acceptance criterion 5, run the command with that corrected pattern, record its output in docs/recon/T-001.md under the heading "E-002 corrected check", and treat the criterion as passed by decision E-002. Do not edit PLAN.md or any card; the planning chat re-issues PLAN.md with the corrected pattern via --amend after T-001 is done. If the kit cannot record the criterion as passed by decision, stop and say so in one line instead of escalating again.
