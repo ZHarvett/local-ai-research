@@ -1,5 +1,5 @@
 {
-  "checksum": "63d3a0d5bca31cc8380cb934644a0d4bb94c9bc2468ef71f1097ce6b77e61175",
+  "checksum": "4097debe1d9254eb32a96e3b709865e3131a5c8f91eb541b4a7ec2d88a5a2177",
   "created_utc": "2026-11-12T22:25:04Z",
   "escalations": {
     "E-001": {
@@ -703,6 +703,20 @@
       "seq": 94,
       "task": "T-006",
       "ts": "2026-11-13T15:56:18Z"
+    },
+    {
+      "detail": "S2",
+      "event": "step-done",
+      "seq": 95,
+      "task": "T-006",
+      "ts": "2026-11-13T15:58:46Z"
+    },
+    {
+      "detail": "accept run at 2026-11-13T15:58:33Z",
+      "event": "done",
+      "seq": 96,
+      "task": "T-006",
+      "ts": "2026-11-13T15:58:46Z"
     }
   ],
   "kit_version": "0.1.0",
@@ -855,9 +869,10 @@
       "resources": "light",
       "review": "none",
       "source": "plan",
-      "status": "in-progress",
+      "status": "done",
       "steps_done": [
-        "S1"
+        "S1",
+        "S2"
       ],
       "title": "Write-up draft"
     },

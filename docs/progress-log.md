@@ -477,3 +477,40 @@ Newest entry last. Each entry: date, WP, status, commit, key results, open issue
 - **Acceptance:** 7 PASS + A8 JUDGEMENT, run 1, 0 failures (`.workflow/acceptance/T-017.json`): shellcheck; pytest; `--help` exit 0; ruff check + format; no existing file under src/configs/scripts/pyproject.toml/uv.lock modified since start HEAD `49f92c2` (`--diff-filter=MD` empty); the permission-skipping literal absent; `keep-continuing.md` exists. A8 judged PASS clause-by-clause against the tests: no gate path exists (gate → stop), open escalation/blocked-decision stop new work and blocked tasks are never reviewed, the deadline is checked before every launch, lanes run lowest-first, reviews are status- and cycle-bounded, and every human-needed state stops. Evidence hashes recorded for loop-states.md, loop-design.md, wf-loop.sh.
 - **Commits:** `316df19` (start HEAD), `3f41e18` (S1–S2), `e23a7de` (S3 design), `4e52a2e` (E-004 brief), `8794b6a` (E-005 brief), `cdb9bc0` (S4 build + 32 tests), `2c57647` (S5 dry-run + 5 tests), then the log/state commit carrying this entry and the task-done commit.
 - **Open issues for the step lead:** (1) The lane-answer and review mechanisms are verified against fake claude only; real headless behaviour of `/continue`, `/lane N`, `/review` is unverified (S2 forbids it here) — E-004 change 4's supervised first run is the verification. (2) E-005's engine fix is scheduled as T-018 after T-008 (the planning chat adds the card; not this session). (3) Lane 3 still needs `wf.sh merge-lanes 3` in the main checkout once Zack closes the lane. (4) A pre+post ready task with nothing blocked costs two no-op `/continue` attempts before the no-progress stop — safe, per the approved design's step ordering.
+
+---
+
+## 2026-11-13 — T-004 (workflow kit): README draft
+
+<!-- sources: README.md, .workflow/acceptance/T-004.json -->
+
+- **Status:** complete (lane 1). `README.md` drafted per plan §9: what this is, hardware and provenance, quick start (uv environment, llama.cpp build, model download and verification, server launch through `scripts/launch-server.sh`), a rerun guide for other 12–16 GB machines, Stage 3 results with 95% CIs, limitations, licences and repository layout. Stage 4 and release spots are marked `<!-- TODO-T010 -->` for T-010. Entry appended by T-006 (shared rule 6: the parallel-group tasks do not touch the progress log themselves).
+- **Commits:** `3f638c1` (README draft), `ff5cc80` (task done, acceptance 2/2, evidence verified).
+- **Key results:** stock and tuned described per plan §3.1/§3.3; tuned table (expert cache 11,520 / 9,472 / 8,704 MiB probed max-fit, KV q8_0 / f16 / f16, MTP off / draft length 1 / off); Results table carries the Stage 3 headline ratios 0.705 [0.672, 0.739] (32K), 0.690 [0.649, 0.734] (64K), 0.706 [0.679, 0.735] (128K, labelled "includes paging-flagged stock windows" per D1) with the per-depth ratio ranges marked derived; the rerun guide warns the probed cache sizes are for this 16 GB card. Evidence: `README.md` 21,357 bytes, sha256 `1375c92f…`.
+- **Acceptance:** 2/2 PASS, run 1, 0 failures (`.workflow/acceptance/T-004.json`, 2026-11-13T11:54:25Z): A1 required headings (Quick start, Results, Limitations, Licences); A2 `TODO-T010`, the D1 label and a `sources:` marker all present.
+- **Open issues for the step lead:** none for T-004. The final README pass is T-010; the clean-shell walkthrough is T-012.
+
+---
+
+## 2026-11-13 — T-005 (workflow kit): baseline report draft and number checker
+
+<!-- sources: reports/baseline-report.md, tools/check_doc_numbers.py, .workflow/acceptance/T-005.json, .workflow/state.json -->
+
+- **Status:** complete and accepted (lane 2). `reports/baseline-report.md` drafted: Stage 3 is the headline result, Stages 1 and 2 are labelled selection data (apps-open deviation); decisions D1, D3, D7 and D9 applied; provenance hashes, flags, deviations and the S1–S5 status table included, with S2 (Stage 4) and S5 (release) marked `<!-- TODO-T010 -->` for T-010. `tools/check_doc_numbers.py` built (standard library only): every decimal number outside fenced code blocks must appear in a declared `sources:` file or sit on a `derived:` line; exit 0/1/2. Entry appended by T-006 (shared rule 6).
+- **Commits:** `6ffe27c` (S1–S3 report + checker + tests), `4bc967c` (task done), lane-2 merge `5bd5070` / `61f40e6`, review `b8631e5`.
+- **Key results:** the report verifies clean — 745 numbers, 37 sources <!-- derived: uv run python tools/check_doc_numbers.py reports/baseline-report.md, re-run by T-006 -->; the checker's own tests pass (22 passed <!-- derived: uv run pytest -q tests/test_check_doc_numbers.py, re-run by T-006 -->). The 128K headline uses all units with the D1 label and the clean-units figures beside it; the rendered report's "not reportable" wording does not appear. Evidence: `reports/baseline-report.md` 34,927 bytes sha256 `78c8d07d…`; `tools/check_doc_numbers.py` 5,003 bytes sha256 `fdb85c29…`.
+- **Acceptance:** 4/4 mechanical PASS + A5 judgement, 0 failures, two runs (2026-11-13T12:02:32Z at `6ffe27c`; 2026-11-13T15:23:03Z at `6761913`): A1 checker exit 0; A2 checker tests pass; A3 ruff check + format clean; A4 D1 label present, `stage3-tuned.json` cited, no "not reportable"; A5 judged: every table traces to a named file, selection data and headline results labelled correctly, nothing claimed beyond the data.
+- **Review:** cycle 1 accepted, 0 findings (2026-11-13T15:30:38Z, `.workflow/state.json` review-verdict; commit `b8631e5`).
+- **Open issues for the step lead:** none for T-005. T-010 finalises the report (Stage 4 and release placeholders); T-009 fixes the rendered report's stock-128K wording and the figure axes (D1, D9).
+
+---
+
+## 2026-11-13 — T-006 (workflow kit): write-up draft
+
+<!-- sources: reports/writeup.md, reports/baseline-report.md, data/analysis/stage3/headline.md, docs/decisions.md, .workflow/acceptance/T-006.json -->
+
+- **Status:** complete (lane 1). S1 drafted `reports/writeup.md`, "What a 16 GB GPU actually does with a 35B MoE model" (GitHub only): the problem and the approach; the results taken from `reports/baseline-report.md` (headline ratios 0.705 / 0.690 / 0.706 with 95% CIs, absolute turn times, prefill 2.3–2.9× and decode 1.1–1.2×, expert-cache hit rates with the D9 caveats, the 128K all-units label and clean-units figure per D1); what didn't work (MTP draft length 2 excluded by the sanity rule; `--fit` against P6; host prompt cache paging and the `--cache-ram 2048` choice; why 2c was skipped and 2d skipped); limitations (D3 32K decode robustness, the 128K S4(d) deviation, apps-open selection stages, the synthetic turn, n = 5). The shared-rule-8 corrections are carried (1 flagged window of 80; MTP about 2 to 5% per turn, 9 to 16% of prefill, 0.75 to 1.5 GiB; Stage 3 about 2.1 hours). A `sources:` line names the four source files and `<!-- TODO-T010 -->` marks the Stage 4 / release spots. S2 ran the number check and appended the T-004, T-005 and T-006 entries.
+- **Commits:** `d4badce` (S1 draft + kit state), then the log/state commit carrying this entry and the task-done commit.
+- **Key results:** 1,451 words <!-- derived: wc -w < reports/writeup.md --> (card limit about 1,500; acceptance limit 1,800); the number check passes — 56 numbers verified, 4 sources <!-- derived: uv run python tools/check_doc_numbers.py reports/writeup.md -->; two TODO-T010 placeholders.
+- **Acceptance:** 3/3 PASS, run 1, 0 failures (`.workflow/acceptance/T-006.json`): A1 number checker exit 0; A2 word count ≤ 1,800 and `TODO-T010` present; A3 T-004, T-005 and T-006 all appear in `docs/progress-log.md`. Evidence `reports/writeup.md` sha256 `ea1e36a4a268…`.
+- **Open issues for the step lead:** none for T-006. T-010 finalises the write-up with Stage 4 and the release; the draft makes no claim beyond `reports/baseline-report.md`, `data/analysis/stage3/headline.md`, `docs/decisions.md` and the plan.
