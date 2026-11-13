@@ -1,5 +1,5 @@
 {
-  "checksum": "09585f826f162e23e9a324225ed2dbcca84bd5de16fe3086a9f2e2e8617bf9ea",
+  "checksum": "94035367abdadec4d32ed905d91343bdf37291293832ef123fd9ffcd93340c4a",
   "created_utc": "2026-11-12T22:25:04Z",
   "escalations": {
     "E-001": {
@@ -976,6 +976,34 @@
       "seq": 131,
       "task": "T-017",
       "ts": "2026-11-13T22:28:01Z"
+    },
+    {
+      "detail": "lane 1, pid 1925611",
+      "event": "claimed",
+      "seq": 132,
+      "task": "T-007",
+      "ts": "2026-11-13T22:37:15Z"
+    },
+    {
+      "detail": "lane 1",
+      "event": "started",
+      "seq": 133,
+      "task": "T-007",
+      "ts": "2026-11-13T22:37:15Z"
+    },
+    {
+      "detail": "Stage 4, the headline reproducibility run (about 45 minutes). It must be 13 November or later. Close every app except one terminal running Claude Code (scripts/check-quiet.sh must exit 0), keep the PC on mains power, and don't use it until this session says it has finished; following along on your phone is fine. Reply go.",
+      "event": "gate-wait",
+      "seq": 134,
+      "task": "T-007",
+      "ts": "2026-11-13T22:39:28Z"
+    },
+    {
+      "detail": "Zack said go",
+      "event": "gate-release",
+      "seq": 135,
+      "task": "T-007",
+      "ts": "2026-11-13T22:40:34Z"
     }
   ],
   "kit_version": "0.1.0",
@@ -1193,6 +1221,7 @@
     },
     "T-007": {
       "card_sha256": "abff6d1cc8ccaf5c65e484ea5468cd8a289490fe21ef242a8bc4f9d1d929db51",
+      "claimed_by_lane": 1,
       "depends_on": [
         "T-002",
         "T-003",
@@ -1206,13 +1235,15 @@
         "docs/decisions.md",
         "docs/progress-log.md"
       ],
+      "gate_message": "Stage 4, the headline reproducibility run (about 45 minutes). It must be 13 November or later. Close every app except one terminal running Claude Code (scripts/check-quiet.sh must exit 0), keep the PC on mains power, and don't use it until this session says it has finished; following along on your phone is fine. Reply go.",
       "lane": 1,
       "phase": "P2",
       "plan_changed": true,
       "resources": "exclusive-machine",
       "review": "post",
       "source": "plan",
-      "status": "ready",
+      "status": "in-progress",
+      "steps_done": [],
       "title": "Stage 4 session"
     },
     "T-008": {

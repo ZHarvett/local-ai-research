@@ -95,3 +95,9 @@ command-line arguments. Fill one block per session **before** it starts (copy th
 ## Session stage3-128K, re-run pass (once, `--rerun-flagged stage3-128K`)
 - Started 13:56:28Z after `check-quiet.sh` (QUIET), no llama-server, GPU lock free; ended 14:14:15Z (17.8 min), runner exit 0, state complete. Polls 14:03Z, 14:11Z, 14:18Z: QUIET, CPU 6.6% (llama-server) and 0.2%, lowest MemAvailable 19.7 GiB (server loaded).
 - Units re-run: 2 (stock-128K repetitions 1 and 3, paging). Result: repetition 1 attempt 2 clean (0 major faults); repetition 3 attempt 2 still paging-flagged (22,810 major faults). Resolved 1, still flagged 1 (no attempt 3, by rule). Re-run canaries: 6 windows, none flagged (one with 864 faults, below the 1,000 threshold); drift: no flag for main or rerun. No llama-server left.
+
+---
+
+## Stage 4 (2026-11-14)
+The Stage 4 session's conditions are recorded in `docs/stage4-conditions.md` (card T-007's conditions log for Stage 4, same
+template as above). The runbook's Stage 4 section references this file generically; the card names the dedicated file.
