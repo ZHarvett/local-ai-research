@@ -1,5 +1,5 @@
 {
-  "checksum": "83267648509ed478245d3d85bdeb48f47c527a2b88c1d49c87de06b752471e61",
+  "checksum": "482960e42af02fb765c4a2bad9ec7f9dfe05bc576c66f9e85b4860ef565aff4c",
   "created_utc": "2026-11-12T22:25:04Z",
   "escalations": {
     "E-001": {
@@ -444,6 +444,55 @@
       "seq": 59,
       "task": "T-017",
       "ts": "2026-11-13T11:13:14Z"
+    },
+    {
+      "detail": "lane 1, pid 1807463",
+      "event": "claimed",
+      "seq": 60,
+      "task": "T-004",
+      "ts": "2026-11-13T11:44:00Z"
+    },
+    {
+      "detail": "lane 1",
+      "event": "started",
+      "seq": 61,
+      "task": "T-004",
+      "ts": "2026-11-13T11:44:00Z"
+    },
+    {
+      "detail": "lane 2",
+      "event": "migrated-to-lane",
+      "seq": 62,
+      "task": "T-005",
+      "ts": "2026-11-13T11:44:41Z"
+    },
+    {
+      "detail": "lane 3",
+      "event": "migrated-to-lane",
+      "seq": 63,
+      "task": "T-017",
+      "ts": "2026-11-13T11:44:43Z"
+    },
+    {
+      "detail": "S1",
+      "event": "step-done",
+      "seq": 64,
+      "task": "T-004",
+      "ts": "2026-11-13T11:54:13Z"
+    },
+    {
+      "detail": "dependencies satisfied",
+      "event": "ready",
+      "seq": 65,
+      "task": "T-005",
+      "ts": "2026-11-13T11:54:13Z"
+    },
+    {
+      "detail": "dependencies satisfied",
+      "event": "ready",
+      "seq": 66,
+      "task": "T-017",
+      "ts": "2026-11-13T11:54:13Z"
     }
   ],
   "kit_version": "0.1.0",
@@ -539,6 +588,7 @@
     },
     "T-004": {
       "card_sha256": "4fa36e93467135a354c4a995d6f3ade27308de60189d083c2f9201aee37b370c",
+      "claimed_by_lane": 1,
       "depends_on": [
         "T-002",
         "T-003"
@@ -551,7 +601,10 @@
       "resources": "light",
       "review": "none",
       "source": "plan",
-      "status": "ready",
+      "status": "in-progress",
+      "steps_done": [
+        "S1"
+      ],
       "title": "README draft"
     },
     "T-005": {
