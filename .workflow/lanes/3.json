@@ -1,0 +1,73 @@
+{
+  "checksum": "35e20021edaaa9c55e9a879961c86fa0ddb441a885644a512e9875a98d0bb186",
+  "events": [
+    {
+      "detail": "lane 3, pid 1807883",
+      "event": "claimed",
+      "seq": 0,
+      "task": "T-017",
+      "ts": "2026-11-13T11:44:43Z"
+    },
+    {
+      "detail": "lane 3",
+      "event": "started",
+      "seq": 1,
+      "task": "T-017",
+      "ts": "2026-11-13T11:44:46Z"
+    },
+    {
+      "detail": "S1",
+      "event": "step-done",
+      "seq": 2,
+      "task": "T-017",
+      "ts": "2026-11-13T11:52:10Z"
+    },
+    {
+      "detail": "S2",
+      "event": "step-done",
+      "seq": 3,
+      "task": "T-017",
+      "ts": "2026-11-13T11:52:10Z"
+    },
+    {
+      "detail": "E-004 (decision)",
+      "event": "escalated",
+      "seq": 4,
+      "task": "T-017",
+      "ts": "2026-11-13T11:55:29Z"
+    }
+  ],
+  "lane": 3,
+  "tasks": {
+    "T-017": {
+      "blocked_from": "in-progress",
+      "blocked_reason": "escalation E-004",
+      "card_sha256": "9fd6ea8fce0fc308a3845667e930297a53db302322b68517902816999645a2a0",
+      "claimed_by_lane": 3,
+      "depends_on": [
+        "T-003"
+      ],
+      "files_write": [
+        "scripts/wf-loop.sh",
+        ".claude/commands/keep-continuing.md",
+        "tests/test_wf_loop.py",
+        "docs/recon/loop-states.md",
+        "docs/recon/loop-design.md",
+        "docs/recon/T-017-start.txt",
+        "docs/progress-log.md"
+      ],
+      "lane": 3,
+      "phase": "P0",
+      "resources": "light",
+      "review": "post",
+      "source": "plan",
+      "status": "blocked-decision",
+      "steps_done": [
+        "S1",
+        "S2"
+      ],
+      "title": "Unattended loop (wf-loop.sh)"
+    }
+  },
+  "version": 1
+}
