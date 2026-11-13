@@ -1,5 +1,5 @@
 # Step 0, remaining work: Stage 4, release v0.1.0, completion report
-*Version 1.0 · 13 November 2026*
+*Version 1.1 · 13 November 2026*
 
 ## Shared rules
 
@@ -38,13 +38,13 @@ Context: Step 0 (baseline setup) of "Local AI on a Small PC". Reference plan: do
 
 - R1 Tuned-64K gets stock's fallback. If it has fewer than 5 clean units after its re-run, S2 is evaluated for it on all units, labelled as such, and recorded as an S4(d) deviation.
 - R2 If the Stage 4 gate fails only because of tuned-64K paging, and every flagged unit re-runs clean, the session is accepted with a recorded deviation: a docs/decisions.md line starting "- R2 applied: Stage 4". Any other gate failure is escalated.
-- R3 Stage 4 runs on 13 November 2026 or later. Since the Stage 3 session commit, the only changes under src/, configs/, scripts/, pyproject.toml and uv.lock are the kit's new scripts/wf-*.sh and scripts/_wf.py, and the only existing files changed by the kit install are CLAUDE.md and .gitignore. Check: `S3=$(cat docs/recon/stage3-commit.txt) && git cat-file -e "$S3^{commit}" && ! git diff --name-only "$S3" HEAD -- src configs scripts pyproject.toml uv.lock CLAUDE.md .gitignore | grep -vxE 'CLAUDE\.md|\.gitignore|scripts/wf-[A-Za-z0-9_.-]+\.sh|scripts/_wf\.py'`
+- R3 Stage 4 runs on 13 November 2026 or later. Since the Stage 3 session commit, the only changes under src/, configs/, scripts/, pyproject.toml and uv.lock are the kit's new scripts/wf.sh, scripts/wf-*.sh and scripts/_wf.py, and the only existing files changed by the kit install are CLAUDE.md and .gitignore. Check: `S3=$(cat docs/recon/stage3-commit.txt) && git cat-file -e "$S3^{commit}" && ! git diff --name-only "$S3" HEAD -- src configs scripts pyproject.toml uv.lock CLAUDE.md .gitignore | grep -vxE 'CLAUDE\.md|\.gitignore|scripts/wf(-[A-Za-z0-9_.-]+)?\.sh|scripts/_wf\.py'`
 - R4 An S2 failure is reported and escalated, never re-measured automatically.
 
 ## Assumption register
 
 - A1: HEAD descends from f2f37df only through the kit-install commit and PLAN.md/workflow-state commits; src/, configs/, scripts/, data/, tests/ have no uncommitted changes; no llama-server is running; .locks/gpu.lock is free; /dev/shm/local-ai-research-* is empty — checked by T-001
-- A2: the kit install changed exactly two existing files, CLAUDE.md and .gitignore, and added only files listed in .workflow-kit-manifest.json; nothing under src/ or configs/, and under scripts/ only wf-*.sh and _wf.py — checked by T-001
+- A2: the kit install changed exactly two existing files, CLAUDE.md and .gitignore, and added only files listed in .workflow-kit-manifest.json; nothing under src/ or configs/, and under scripts/ only wf.sh, wf-*.sh and _wf.py — checked by T-001
 - A3: the Stage 4 sweep spec exists and renders stock-64K and tuned-64K with argument lists identical to Stage 3's; docs/runbook-stage3.md contains the Stage 4 commands — checked by T-001
 - A4: `python -m smallpc.stage3 repro` evaluates T_turn_400, fresh prefill at 32K and decode at 32K depth, and has an all-units mode for stock; whether that mode also works for tuned (R1) is recorded — checked by T-001
 - A5: the three Stage 3 sessions ran from one recorded commit — checked by T-001
@@ -62,7 +62,7 @@ Context: Step 0 (baseline setup) of "Local AI on a Small PC". Reference plan: do
 
 ## Phases
 
-- P0: Pilot setup (13 Nov): T-001, T-002, T-003
+- P0: Pilot setup (13 Nov): T-001, T-002, T-003, and T-017 (unattended loop, can run beside the drafts)
 - P1: Drafts, the first parallel pair: T-004 and T-005 in parallel, then T-006
 - P2: Stage 4 (13 Nov or later, quiet machine): T-007, T-008
 - P3: Post-Stage-4 code fixes: T-009
@@ -103,7 +103,7 @@ acceptance:
     expect: stdout_regex ^ok$
   - cmd: bash -n docs/recon/commands.env && source docs/recon/commands.env && for v in GATE_CMD COVERAGE_CMD REPRO_CMD REPORT_CMD SCRUB_CMD CI_CMD; do [ -n "${!v}" ] || exit 1; done
     expect: exit_code 0
-  - cmd: S3=$(cat docs/recon/stage3-commit.txt) && git cat-file -e "$S3^{commit}" && ! git diff --name-only "$S3" HEAD -- src configs scripts pyproject.toml uv.lock CLAUDE.md .gitignore | grep -vxE 'CLAUDE\.md|\.gitignore|scripts/wf-[A-Za-z0-9_.-]+\.sh|scripts/_wf\.py'
+  - cmd: S3=$(cat docs/recon/stage3-commit.txt) && git cat-file -e "$S3^{commit}" && ! git diff --name-only "$S3" HEAD -- src configs scripts pyproject.toml uv.lock CLAUDE.md .gitignore | grep -vxE 'CLAUDE\.md|\.gitignore|scripts/wf(-[A-Za-z0-9_.-]+)?\.sh|scripts/_wf\.py'
     expect: exit_code 0
   - cmd: grep -qE '^Result: all assumptions PASS|^Resolved by decision E-[0-9]+' docs/recon/T-001.md
     expect: exit_code 0
@@ -284,7 +284,7 @@ review: pre+post
 preconditions:
   - cmd: [ "$(date +%Y%m%d)" -ge 20261113 ]
     expect: exit_code 0
-  - cmd: S3=$(cat docs/recon/stage3-commit.txt) && git cat-file -e "$S3^{commit}" && ! git diff --name-only "$S3" HEAD -- src configs scripts pyproject.toml uv.lock CLAUDE.md .gitignore | grep -vxE 'CLAUDE\.md|\.gitignore|scripts/wf-[A-Za-z0-9_.-]+\.sh|scripts/_wf\.py'
+  - cmd: S3=$(cat docs/recon/stage3-commit.txt) && git cat-file -e "$S3^{commit}" && ! git diff --name-only "$S3" HEAD -- src configs scripts pyproject.toml uv.lock CLAUDE.md .gitignore | grep -vxE 'CLAUDE\.md|\.gitignore|scripts/wf(-[A-Za-z0-9_.-]+)?\.sh|scripts/_wf\.py'
     expect: exit_code 0
   - cmd: test -z "$(git status --porcelain -- src configs scripts data tests pyproject.toml uv.lock)"
     expect: exit_code 0
@@ -614,3 +614,46 @@ estimate: 15m
 decision_rights:
   - may: commit messages
   - must_escalate: a release or visibility that doesn't match the gate
+
+### T-017 — Unattended loop (wf-loop.sh)
+id: T-017
+title: Unattended loop (wf-loop.sh)
+phase: P0
+depends_on: T-003
+lane: 3
+lane_reason: It writes only new files (scripts/wf-loop.sh, one command file, one test file, two recon notes), none of which T-004, T-005 or T-007 touch, and it needs no GPU, so building it while the drafts run saves about an hour of waiting.
+resources: light
+files_read: scripts/_wf.py, scripts/wf.sh, .claude/commands/, .claude/settings.json, docs/WORKFLOW.md, .workflow/config.toml, PLAN.md
+files_write: scripts/wf-loop.sh, .claude/commands/keep-continuing.md, tests/test_wf_loop.py, docs/recon/loop-states.md, docs/recon/loop-design.md, docs/recon/T-017-start.txt, docs/progress-log.md
+gates: none
+review: post
+preconditions:
+  - cmd: test -f scripts/_wf.py && ! pgrep -x llama-server
+    expect: exit_code 0
+steps:
+  - S1: Write `git rev-parse HEAD` to docs/recon/T-017-start.txt and commit. Then read scripts/_wf.py and write docs/recon/loop-states.md, with file:line evidence, covering: every task status and the command that moves a task between statuses; the exit code and output of each wf.sh subcommand the loop would call; how a gate, an escalation, a pending review and a blocked-decision look in .workflow/state.json; how a ready task is chosen and where /continue asks the lane question; how session ids and locks work (WF_SESSION_PID); which exit signal means "task done, next ready: X" and which means "stop, human needed". (redo-safe)
+  - S2: Test headless slash commands read-only: run `claude -p "/status"` from the repo and record in docs/recon/loop-states.md whether the slash command was expanded and what exit code it returned. Never run /continue, /lane or /review headlessly in this task. If the claude CLI cannot be run from inside a session, record that and continue. (redo-safe)
+  - S3: Write docs/recon/loop-design.md from the design in this step, adding anything S1 and S2 show it must handle, then escalate (judgement: "loop design approval") with a brief that contains the design and the states found. Stop. Design to put in the file and the brief. Usage `scripts/wf-loop.sh <hours>`. Each task runs in a fresh headless session, `claude -p "/continue"`, with extra arguments taken only from the environment variable WF_LOOP_CLAUDE_ARGS (the script never adds a permission-skipping flag itself); it logs to /tmp/wf-loop-<timestamp>.log, never into the repo, and holds a lock so two loops cannot run. After each session it reads .workflow/state.json and the exit code, and continues only if the last task finished cleanly and nothing needs a human. It stops and prints the reason on: the deadline (no new task starts after it; a running session has a per-session timeout); any open gate, escalation or blocked-decision; a failed acceptance; the same task attempted twice with no progress; a non-zero exit code or a usage-limit message; an unexpected dirty tree; a second loop running. Lanes, version 1: when several tasks are ready it answers yes to lane 1, finishes it, then takes the next ready task in order, with no parallel sessions. Reviews: after a task whose card asks for review it runs /review and then /address-review in fresh sessions, up to the kit's two cycles; when nothing can proceed because everything ready waits for a human, it may run a review that is already due (a pre-review of a ready task waiting at a gate, or a post-review of a finished task), never one for a task blocked mid-escalation, and never more than two cycles per task. (not redo-safe)
+  - S4: After the DECISION, build scripts/wf-loop.sh (bash, shellcheck-clean), .claude/commands/keep-continuing.md (a thin command that starts the script detached with the hours argument and prints how to follow its log) and tests/test_wf_loop.py. The tests use a fake claude executable and fixture state files in a temporary directory, one test per stop condition. (redo-safe)
+  - S5: Add a --dry-run mode that reads a state file and prints what the loop would do next without starting any session; run it against the fixtures. Never run the loop against this repo's real state in this task. (redo-safe)
+  - S6: Run shellcheck, the new tests and ruff on the new files, check that no existing file under src/, configs/ or scripts/ changed, commit, and append the progress-log entry. (redo-safe)
+acceptance:
+  - cmd: shellcheck scripts/wf-loop.sh
+    expect: exit_code 0
+  - cmd: uv run pytest -q tests/test_wf_loop.py
+    expect: exit_code 0
+  - cmd: bash scripts/wf-loop.sh --help
+    expect: exit_code 0
+  - cmd: uv run ruff check tests/test_wf_loop.py && uv run ruff format --check tests/test_wf_loop.py
+    expect: exit_code 0
+  - cmd: test -z "$(git diff --name-only --diff-filter=MD "$(cat docs/recon/T-017-start.txt)" HEAD -- src configs scripts pyproject.toml uv.lock)"
+    expect: exit_code 0
+  - cmd: ! grep -q 'dangerously-skip-permissions' scripts/wf-loop.sh
+    expect: exit_code 0
+  - expect: file_exists .claude/commands/keep-continuing.md
+  - expect: manual "The loop never passes a gate, never works on a task with an open escalation, never starts a second task after the deadline, runs lanes in order, runs only reviews that are due, and stops on the first state that needs a human; the tests cover each of these."
+evidence: docs/recon/loop-states.md, docs/recon/loop-design.md, scripts/wf-loop.sh
+estimate: 120m
+decision_rights:
+  - may: the script's internal structure; log format; the default per-session timeout within 60–120 minutes
+  - must_escalate: the design itself (always); any need to change an existing file; any stop condition that cannot be detected from state.json or exit codes; any need to run a real session against this repo to test

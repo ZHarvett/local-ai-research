@@ -1,5 +1,5 @@
 {
-  "checksum": "dfb96c23da6dea9b57d0606f7479a963683b14b164ee712dbb38ceff9346216c",
+  "checksum": "d722fdfa856afa3ac926a27266d1054ec9e2d807b19621c2f8bd661a74af8eff",
   "created_utc": "2026-11-12T22:25:04Z",
   "escalations": {
     "E-001": {
@@ -157,6 +157,48 @@
       "seq": 19,
       "task": "T-001",
       "ts": "2026-11-13T09:18:32Z"
+    },
+    {
+      "detail": "Planning chat re-issues PLAN.md v1.1 (wf.sh pattern fix, new T-017); amend refuses while T-001 is in-progress",
+      "event": "blocked",
+      "seq": 20,
+      "task": "T-001",
+      "ts": "2026-11-13T09:45:31Z"
+    },
+    {
+      "detail": "card changed; re-acknowledgement required",
+      "event": "plan-changed",
+      "seq": 21,
+      "task": "T-001",
+      "ts": "2026-11-13T09:45:32Z"
+    },
+    {
+      "detail": "card changed; re-acknowledgement required",
+      "event": "plan-changed",
+      "seq": 22,
+      "task": "T-007",
+      "ts": "2026-11-13T09:45:32Z"
+    },
+    {
+      "detail": "new card in amended plan",
+      "event": "plan-added",
+      "seq": 23,
+      "task": "T-017",
+      "ts": "2026-11-13T09:45:32Z"
+    },
+    {
+      "detail": "sha256 c6d753906853\u2026",
+      "event": "plan-amended",
+      "seq": 24,
+      "task": null,
+      "ts": "2026-11-13T09:45:32Z"
+    },
+    {
+      "detail": "dependencies satisfied",
+      "event": "ready",
+      "seq": 25,
+      "task": "T-001",
+      "ts": "2026-11-13T09:45:32Z"
     }
   ],
   "kit_version": "0.1.0",
@@ -168,15 +210,12 @@
     "P4"
   ],
   "plan_file": "PLAN.md",
-  "plan_sha256": "88ac5a14c5639ec4ab2215bfdf9febda6424646b4c5c251fad3a7a5aeba30fc2",
+  "plan_sha256": "c6d7539068538f1b0b82714cbe1369159b0549403f7b91986ee8789a9bb09e46",
   "review_cycles": {},
   "review_dispositions": {},
   "tasks": {
     "T-001": {
-      "blocked_from": null,
-      "blocked_reason": null,
-      "card_sha256": "032d9f3120190a4b3287abc3fe1b212ad478a8e8705e0f9bec46e9c739c6fe05",
-      "claimed_by_lane": 1,
+      "card_sha256": "809b9affd5d3b48476523ab4ae1be70a45cb8deebc10f4be46623e79e79aae3a",
       "depends_on": [],
       "files_write": [
         "docs/recon/T-001.md",
@@ -185,18 +224,11 @@
       ],
       "lane": 1,
       "phase": "P0",
+      "plan_changed": true,
       "resources": "cpu-heavy",
       "review": "none",
       "source": "plan",
-      "status": "in-progress",
-      "steps_done": [
-        "S1",
-        "S2",
-        "S3",
-        "S4",
-        "S5",
-        "S6"
-      ],
+      "status": "ready",
       "title": "Smoke test and recon (read-only)"
     },
     "T-002": {
@@ -290,7 +322,7 @@
       "title": "Write-up draft"
     },
     "T-007": {
-      "card_sha256": "1e1224f1a44317dceb5de8b625d0ef22b6dd9e7aac01497e0272ce1393b2d08f",
+      "card_sha256": "b123a6d62fdefc85dd999ffdb49805e980f3e4f21f5bac9b38d5f6e21aa4abc0",
       "depends_on": [
         "T-002",
         "T-003"
@@ -305,6 +337,7 @@
       ],
       "lane": 1,
       "phase": "P2",
+      "plan_changed": true,
       "resources": "exclusive-machine",
       "review": "pre+post",
       "source": "plan",
@@ -483,6 +516,28 @@
       "source": "plan",
       "status": "todo",
       "title": "Publish v0.1.0"
+    },
+    "T-017": {
+      "card_sha256": "9fd6ea8fce0fc308a3845667e930297a53db302322b68517902816999645a2a0",
+      "depends_on": [
+        "T-003"
+      ],
+      "files_write": [
+        "scripts/wf-loop.sh",
+        ".claude/commands/keep-continuing.md",
+        "tests/test_wf_loop.py",
+        "docs/recon/loop-states.md",
+        "docs/recon/loop-design.md",
+        "docs/recon/T-017-start.txt",
+        "docs/progress-log.md"
+      ],
+      "lane": 3,
+      "phase": "P0",
+      "resources": "light",
+      "review": "post",
+      "source": "plan",
+      "status": "todo",
+      "title": "Unattended loop (wf-loop.sh)"
     }
   },
   "title": "Step 0, remaining work: Stage 4, release v0.1.0, completion report",
