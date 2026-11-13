@@ -180,5 +180,96 @@
     },
     "finished_utc": "2026-11-13T15:51:29Z",
     "failures": 0
+  },
+  {
+    "task": "T-017",
+    "started_utc": "2026-11-13T17:50:15Z",
+    "git_commit": "bc8e0c343a08ace4f180ca966cddd08def59d134",
+    "items": [
+      {
+        "id": "A1",
+        "cmd": "shellcheck scripts/wf-loop.sh",
+        "exit_code": 0,
+        "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "output_bytes": 0,
+        "elapsed_s": 0.1,
+        "verdict": "pass"
+      },
+      {
+        "id": "A2",
+        "cmd": "uv run pytest -q tests/test_wf_loop.py",
+        "exit_code": 0,
+        "output_sha256": "6eae1fabdede2c5f422e7c4e8a6a116c0b026e51f1640b8a2734d627edb90ae9",
+        "output_bytes": 99,
+        "elapsed_s": 4.1,
+        "verdict": "pass"
+      },
+      {
+        "id": "A3",
+        "cmd": "bash scripts/wf-loop.sh --help",
+        "exit_code": 0,
+        "output_sha256": "4995be8ae65139dfd8840edd648351f3ddcbabf22348b39491c66a200eac4f90",
+        "output_bytes": 1572,
+        "elapsed_s": 0.0,
+        "verdict": "pass"
+      },
+      {
+        "id": "A4",
+        "cmd": "uv run ruff check tests/test_wf_loop.py && uv run ruff format --check tests/test_wf_loop.py",
+        "exit_code": 0,
+        "output_sha256": "ce04ce92b16073000b77c97a42c00b98b96305692d9d5ed4dcfa5a9ca9ea62d6",
+        "output_bytes": 44,
+        "elapsed_s": 0.0,
+        "verdict": "pass"
+      },
+      {
+        "id": "A5",
+        "cmd": "test -z \"$(git diff --name-only --diff-filter=MD \"$(cat docs/recon/T-017-start.txt)\" HEAD -- src configs scripts pyproject.toml uv.lock)\"",
+        "exit_code": 0,
+        "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "output_bytes": 0,
+        "elapsed_s": 0.0,
+        "verdict": "pass"
+      },
+      {
+        "id": "A6",
+        "cmd": "! grep -q 'dangerously-skip-permissions' scripts/wf-loop.sh",
+        "exit_code": 0,
+        "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "output_bytes": 0,
+        "elapsed_s": 0.0,
+        "verdict": "pass"
+      },
+      {
+        "id": "A7",
+        "verdict": "pass",
+        "path": "/mnt/data/local-ai-research/.claude/commands/keep-continuing.md",
+        "sha256": "be0f29d3ef0d7fc9cfbc01e24a9d059f4986b05c94d83bfe4981df81762f6495"
+      },
+      {
+        "id": "A8",
+        "verdict": "judgement",
+        "description": "The loop never passes a gate, never works on a task with an open escalation, never starts a second task after the deadline, runs lanes in order, runs only reviews that are due, and stops on the first state that needs a human; the tests cover each of these."
+      }
+    ],
+    "evidence_files": {
+      "docs/recon/loop-states.md": {
+        "exists": true,
+        "sha256": "09e5a378bb7332c7e3429f89ba71267c663e73a7ed8f94da4df07f32a2a1710d",
+        "bytes": 22029
+      },
+      "docs/recon/loop-design.md": {
+        "exists": true,
+        "sha256": "99a4ad87b3d5244ac52a315c20153bd49b076c88cd13f84046aa41a3e8eafddb",
+        "bytes": 20465
+      },
+      "scripts/wf-loop.sh": {
+        "exists": true,
+        "sha256": "a16ed003deee4675a9bedf5ee6ea1434f1a5b61b51842e61be5d67b0a09dfc09",
+        "bytes": 21807
+      }
+    },
+    "finished_utc": "2026-11-13T17:50:20Z",
+    "failures": 0
   }
 ]

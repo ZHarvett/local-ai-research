@@ -1,5 +1,5 @@
 {
-  "checksum": "2b4177ebeec825f8fddad593b8377e867261a7cd266d5d0d6e20da777ee78fe0",
+  "checksum": "64d98bc491ae1fcd8eaf1c5a4dd748429603396dc6ccf3ab148b1196c68a54cc",
   "created_utc": "2026-11-12T22:25:04Z",
   "escalations": {
     "E-001": {
@@ -36,6 +36,12 @@
       "status": "decided",
       "task": "",
       "type": "problem"
+    },
+    "E-006": {
+      "created_utc": "2026-11-13T17:52:12Z",
+      "status": "open",
+      "task": "T-017",
+      "type": "decision"
     }
   },
   "events": [
@@ -766,6 +772,62 @@
       "seq": 103,
       "task": "T-019",
       "ts": "2026-11-13T16:16:35Z"
+    },
+    {
+      "detail": "lane 1, pid 1876313",
+      "event": "claimed",
+      "seq": 104,
+      "task": "T-019",
+      "ts": "2026-11-13T17:44:12Z"
+    },
+    {
+      "detail": "lane 1",
+      "event": "started",
+      "seq": 105,
+      "task": "T-019",
+      "ts": "2026-11-13T17:44:12Z"
+    },
+    {
+      "detail": "disposition F-1: escalate",
+      "event": "note",
+      "seq": 106,
+      "task": "T-017",
+      "ts": "2026-11-13T17:45:54Z"
+    },
+    {
+      "detail": "disposition F-2: accept",
+      "event": "note",
+      "seq": 107,
+      "task": "T-017",
+      "ts": "2026-11-13T17:45:55Z"
+    },
+    {
+      "detail": "disposition F-3: accept",
+      "event": "note",
+      "seq": 108,
+      "task": "T-017",
+      "ts": "2026-11-13T17:45:56Z"
+    },
+    {
+      "detail": "disposition F-4: accept",
+      "event": "note",
+      "seq": 109,
+      "task": "T-017",
+      "ts": "2026-11-13T17:45:58Z"
+    },
+    {
+      "detail": "disposition F-5: accept",
+      "event": "note",
+      "seq": 110,
+      "task": "T-017",
+      "ts": "2026-11-13T17:45:59Z"
+    },
+    {
+      "detail": "E-006 (decision)",
+      "event": "escalated",
+      "seq": 111,
+      "task": "T-017",
+      "ts": "2026-11-13T17:52:12Z"
     }
   ],
   "kit_version": "0.1.0",
@@ -782,7 +844,45 @@
     "T-005": 1,
     "T-017": 1
   },
-  "review_dispositions": {},
+  "review_dispositions": {
+    "T-017": [
+      {
+        "action_taken": "escalate",
+        "cycle": 1,
+        "finding": "F-1",
+        "reason": "MAJOR DECIDE: verified against scripts/_wf.py:1891-1892 (review-open accepts only done/changes-requested) and TRANSITIONS['ready'] (_wf.py:105, no review state). The pre-review of a ready pre+post task promised by card S3 / design \u00a73 step 4 / \u00a76 cannot complete under the frozen kit; T-007 (ready, pre+post) is next. Per shared rule 7 and the review protocol, DECIDE findings are never resolved inline: escalating to the planning chat with options (a) interim protocol, (b) post-T-008 kit change, (c) explicit-stop pre branch.",
+        "severity": "MAJOR"
+      },
+      {
+        "action_taken": "accept",
+        "cycle": 1,
+        "finding": "F-2",
+        "reason": "MINOR FIX-DOC, verified: docs/recon/loop-states.md:372 is the only committed file containing the account home path (git grep). D8 violation; fixing at source by replacing the home path with ~ and re-running wf.sh accept T-017 to refresh the evidence hash. No history rewrite (D8).",
+        "severity": "MINOR"
+      },
+      {
+        "action_taken": "accept",
+        "cycle": 1,
+        "finding": "F-3",
+        "reason": "MINOR FIX-DOC, verified: loop-design.md \u00a74 (lines 132-146) still presents the stdin-yes lane answer (option A) and \u00a78 question 1 still recommends A, while E-004 chose option B. Adding a decision addendum covering E-004 option B, the E-005 guard exception and the F-1 gap, with superseded-markers on \u00a74/\u00a78 so the named evidence matches the shipped code.",
+        "severity": "MINOR"
+      },
+      {
+        "action_taken": "accept",
+        "cycle": 1,
+        "finding": "F-4",
+        "reason": "NOTE FIX-DOC, verified at .claude/commands/keep-continuing.md:23. Taking the documentation option (no code change; scripts frozen until T-008): kill <pid> stops only the loop; an in-flight claude session (child of timeout) runs to completion and still obeys the kit protocol. Process-group kill not adopted: would change wf-loop.sh and the setsid/$! pid semantics were never tested live.",
+        "severity": "NOTE"
+      },
+      {
+        "action_taken": "accept",
+        "cycle": 1,
+        "finding": "F-5",
+        "reason": "NOTE FIX-DOC, verified at scripts/wf-loop.sh:254-265: the exhausted-review stop sits after address/inflight/post/ready/pre in the decision priority, so unrelated ready work or due reviews proceed first. Documenting this ordering in loop-design.md \u00a75 (consistent with the card's stop list; no behaviour change).",
+        "severity": "NOTE"
+      }
+    ]
+  },
   "tasks": {
     "T-001": {
       "card_sha256": "809b9affd5d3b48476523ab4ae1be70a45cb8deebc10f4be46623e79e79aae3a",
@@ -1125,8 +1225,8 @@
       "title": "Publish v0.1.0"
     },
     "T-017": {
-      "blocked_from": null,
-      "blocked_reason": null,
+      "blocked_from": "changes-requested",
+      "blocked_reason": "escalation E-006",
       "card_sha256": "9fd6ea8fce0fc308a3845667e930297a53db302322b68517902816999645a2a0",
       "depends_on": [
         "T-003"
@@ -1145,11 +1245,12 @@
       "resources": "light",
       "review": "post",
       "source": "plan",
-      "status": "changes-requested",
+      "status": "blocked-decision",
       "title": "Unattended loop (wf-loop.sh)"
     },
     "T-019": {
       "card_sha256": "9c7f0afd8fa7cfd28b26c8634d4b5d2d27d938e360d69e6ee8e80b0c31b7305c",
+      "claimed_by_lane": 1,
       "depends_on": [
         "T-002",
         "T-003"
@@ -1163,7 +1264,8 @@
       "resources": "light",
       "review": "post",
       "source": "plan",
-      "status": "ready",
+      "status": "in-progress",
+      "steps_done": [],
       "title": "Stage 4 pre-flight (no GPU)"
     }
   },

@@ -26,31 +26,31 @@ files; change them through the scripts only.
 | T-014 | Completion report and planning-chat review | todo | 1 | none |
 | T-015 | Private repo, CI and tag v0.1.0 | todo | 1 | none |
 | T-016 | Publish v0.1.0 | todo | 1 | none |
-| T-017 | Unattended loop (wf-loop.sh) | changes-requested (judgement) | 3 | post |
-| T-019 | Stage 4 pre-flight (no GPU) | ready | 1 | post |
+| T-017 | Unattended loop (wf-loop.sh) | blocked-decision (judgement) | 3 | post |
+| T-019 | Stage 4 pre-flight (no GPU) | in-progress | 1 | post |
 
 ## READY (grouped by lane)
 
-- lane 1: **T-019** Stage 4 pre-flight (no GPU)
+_(none)_
 
 ## Escalation queue
 
-_(none)_
+- **E-006** (decision, task T-017) — open
 
 ## Review queue
 
-- **T-017** Unattended loop (wf-loop.sh) — changes-requested (cycle 1, max 2)
+_(none)_
 
 ## Lanes
 
 | lane | lock | worktree | tasks |
 |---|---|---|---|
-| 1 | - | - | - |
+| 1 | pid 1876313 | - | - |
 
 ## Last events
 
-- 2026-11-13T16:16:35Z plan-changed T-007 — card changed; re-acknowledgement required
-- 2026-11-13T16:16:35Z plan-changed T-013 — card changed; re-acknowledgement required
-- 2026-11-13T16:16:35Z plan-added T-019 — new card in amended plan
-- 2026-11-13T16:16:35Z plan-amended — sha256 6445a4e78029…
-- 2026-11-13T16:16:35Z ready T-019 — dependencies satisfied
+- 2026-11-13T17:45:55Z note T-017 — disposition F-2: accept
+- 2026-11-13T17:45:56Z note T-017 — disposition F-3: accept
+- 2026-11-13T17:45:58Z note T-017 — disposition F-4: accept
+- 2026-11-13T17:45:59Z note T-017 — disposition F-5: accept
+- 2026-11-13T17:52:12Z escalated T-017 — E-006 (decision)
