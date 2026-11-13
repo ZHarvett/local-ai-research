@@ -1,5 +1,5 @@
 {
-  "checksum": "f41087df5c3ad2d6967d229320c47355f370f88b9343c7c7b24f70e9d40cf478",
+  "checksum": "f48061f3bd405e9ab356baf2993540dadd1b3f942bd79d6b3c76c06f57764eee",
   "created_utc": "2026-11-12T22:25:04Z",
   "escalations": {
     "E-001": {
@@ -22,6 +22,18 @@
       "status": "decided",
       "task": "T-002",
       "type": "decision"
+    },
+    "E-004": {
+      "created_utc": "2026-11-13T11:55:29Z",
+      "status": "open",
+      "task": "T-017",
+      "type": "decision"
+    },
+    "E-005": {
+      "created_utc": "2026-11-13T11:58:50Z",
+      "status": "open",
+      "task": "",
+      "type": "problem"
     }
   },
   "events": [
