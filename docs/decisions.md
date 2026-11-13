@@ -1230,3 +1230,23 @@ Replace item 3 (the two lines beginning "3. Picking the next task") with:
 3. Picking the next task from `bash scripts/wf.sh ready` (if several lanes are ready, ask which
    lane to start, as `/continue` does), claiming and starting it, and reading ONLY its card
    (`bash scripts/wf-card.sh T-xxx`) — never `PLAN.md` whole.
+
+---
+
+## DECISION E-005 (2026-11-13T12:52:02Z)
+
+DECISION E-005
+Chosen option: B
+Reason: The diagnosis is sound: recompute_ready re-promotes lane-owned placeholders to ready, so the guard fails whenever lanes run concurrently. The fix is small but touches the engine, so it waits until after Stage 4; until then an exact, narrow exception avoids deadlocking the sessions that must run to clear it.
+Scope: standing rule
+Rule: (1) Interim exception: when the ONLY failing guard lines are of the exact form "GUARD: task T-NNN is in the main state as ready AND in lane N; run wf.sh merge-lanes N", AND bash scripts/wf.sh status shows that task as in-progress, awaiting-gate or blocked-decision, treat the guard as non-fatal and continue; never run merge-lanes N for an active lane. Any other guard line, or such a line where status shows the task as ready, todo or done, stops the session as before. State is still never edited by hand. (2) The fix (recompute_ready leaves tasks owned by a lane mirror alone, with a regression test for concurrent lanes) is scheduled as a new task T-018 after T-008. The planning chat adds it in the next PLAN.md amend; sessions do not add it. scripts/_wf.py is a kit file, so R3 allows the change; it must not happen before Stage 4.
+
+---
+
+## DECISION E-004 (2026-11-13T12:52:02Z)
+
+DECISION E-004
+Chosen option: B
+Reason: The design is well grounded in the recon. /lane N asks no question, so it is deterministic headlessly, whereas piping yes to /continue is untested and an unattended loop should not rest on an unverified mechanism.
+Scope: this plan
+Rule: Design in docs/recon/loop-design.md approved with these changes. (1) Lane answer: when tasks in several lanes are ready, the loop starts the lowest-numbered such lane with claude -p "/lane N"; when only one lane has ready tasks it runs claude -p "/continue". The card's literal /continue prompt is relaxed accordingly for this task. (2) T-017 never runs /continue, /lane or /review headlessly in its own tests; fake claude only. (3) The loop stops on any guard failure except the placeholder line defined in the E-005 decision. (4) keep-continuing.md and the loop's start message tell the user to make the first real run a supervised one of about 1 hour while awake. (5) The loop's final message names the stop reason and the task id.

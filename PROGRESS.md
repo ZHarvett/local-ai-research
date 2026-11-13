@@ -26,7 +26,7 @@ files; change them through the scripts only.
 | T-014 | Completion report and planning-chat review | todo | 1 | none |
 | T-015 | Private repo, CI and tag v0.1.0 | todo | 1 | none |
 | T-016 | Publish v0.1.0 | todo | 1 | none |
-| T-017 | Unattended loop (wf-loop.sh) | blocked-decision | 3 | post |
+| T-017 | Unattended loop (wf-loop.sh) | in-progress | 3 | post |
 
 ## READY (grouped by lane)
 
@@ -34,8 +34,7 @@ files; change them through the scripts only.
 
 ## Escalation queue
 
-- **E-004** (decision, task T-017) — open
-- **E-005** (problem, task -) — open
+_(none)_
 
 ## Review queue
 
@@ -50,8 +49,8 @@ _(none)_
 
 ## Last events
 
-- 2026-11-13T11:55:29Z escalated T-017 — E-004 (decision)
-- 2026-11-13T12:02:11Z step-done T-005 — S2
 - 2026-11-13T12:02:11Z step-done T-005 — S3
 - 2026-11-13T12:02:41Z done T-005 — accept run at 2026-11-13T12:02:32Z
 - 2026-11-13T12:49:23Z lane-merged — lane 2
+- 2026-11-13T12:52:02Z unblocked T-017 — restored to in-progress
+- 2026-11-13T12:52:02Z note T-017 — decision E-004 recorded
