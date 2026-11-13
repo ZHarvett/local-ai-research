@@ -26,7 +26,7 @@ files; change them through the scripts only.
 | T-014 | Completion report and planning-chat review | todo | 1 | none |
 | T-015 | Private repo, CI and tag v0.1.0 | todo | 1 | none |
 | T-016 | Publish v0.1.0 | todo | 1 | none |
-| T-017 | Unattended loop (wf-loop.sh) | in-progress | 3 | post |
+| T-017 | Unattended loop (wf-loop.sh) | done (judgement) | 3 | post |
 
 ## READY (grouped by lane)
 
@@ -46,12 +46,11 @@ _(none)_
 | lane | lock | worktree | tasks |
 |---|---|---|---|
 | 1 | - | - | - |
-| 3 | pid 1807883 | yes | T-017 |
 
 ## Last events
 
-- 2026-11-13T15:24:51Z step-done T-017 — S3: design approved as E-004 option B; escalation decided 2026-11-13T12:52Z
-- 2026-11-13T15:25:01Z resumed T-017 — from S4
-- 2026-11-13T15:30:38Z review-opened T-005 — cycle 1
-- 2026-11-13T15:30:38Z review-verdict T-005 — accepted (cycle 1, 0 findings)
 - 2026-11-13T15:30:38Z ready T-006 — dependencies satisfied
+- 2026-11-13T15:40:46Z step-done T-017 — S4: wf-loop.sh + keep-continuing.md + 32 fake-claude tests; shellcheck/ruff/pytest clean; commit cdb9bc0
+- 2026-11-13T15:41:59Z step-done T-017 — S5: --dry-run added; 37 tests pass; fixtures only
+- 2026-11-13T15:43:40Z done T-017 — accept run at 2026-11-13T15:42:35Z
+- 2026-11-13T15:49:48Z lane-merged — lane 3

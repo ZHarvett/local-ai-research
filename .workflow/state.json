@@ -1,5 +1,5 @@
 {
-  "checksum": "afe822b372271a4c66dc5415cd84bb0e39230707dc894eeec51e7ec94efa48de",
+  "checksum": "931038105164d9ea929b54eab5a044e796adbebcdcf3cce82e4c7d50e238f1b9",
   "created_utc": "2026-11-12T22:25:04Z",
   "escalations": {
     "E-001": {
@@ -488,6 +488,13 @@
       "ts": "2026-11-13T11:44:41Z"
     },
     {
+      "detail": "lane 3, pid 1807883",
+      "event": "claimed",
+      "seq": 0,
+      "task": "T-017",
+      "ts": "2026-11-13T11:44:43Z"
+    },
+    {
       "detail": "lane 3",
       "event": "migrated-to-lane",
       "seq": 63,
@@ -502,11 +509,32 @@
       "ts": "2026-11-13T11:44:46Z"
     },
     {
+      "detail": "lane 3",
+      "event": "started",
+      "seq": 1,
+      "task": "T-017",
+      "ts": "2026-11-13T11:44:46Z"
+    },
+    {
       "detail": "S1",
       "event": "step-done",
       "seq": 2,
       "task": "T-005",
       "ts": "2026-11-13T11:51:21Z"
+    },
+    {
+      "detail": "S1",
+      "event": "step-done",
+      "seq": 2,
+      "task": "T-017",
+      "ts": "2026-11-13T11:52:10Z"
+    },
+    {
+      "detail": "S2",
+      "event": "step-done",
+      "seq": 3,
+      "task": "T-017",
+      "ts": "2026-11-13T11:52:10Z"
     },
     {
       "detail": "S1",
@@ -544,6 +572,13 @@
       "ts": "2026-11-13T11:54:31Z"
     },
     {
+      "detail": "E-004 (decision)",
+      "event": "escalated",
+      "seq": 4,
+      "task": "T-017",
+      "ts": "2026-11-13T11:55:29Z"
+    },
+    {
       "detail": "S2",
       "event": "step-done",
       "seq": 3,
@@ -572,6 +607,34 @@
       "ts": "2026-11-13T12:49:23Z"
     },
     {
+      "detail": "restored to in-progress",
+      "event": "unblocked",
+      "seq": 5,
+      "task": "T-017",
+      "ts": "2026-11-13T12:52:02Z"
+    },
+    {
+      "detail": "decision E-004 recorded",
+      "event": "note",
+      "seq": 6,
+      "task": "T-017",
+      "ts": "2026-11-13T12:52:02Z"
+    },
+    {
+      "detail": "S3: design approved as E-004 option B; escalation decided 2026-11-13T12:52Z",
+      "event": "step-done",
+      "seq": 7,
+      "task": "T-017",
+      "ts": "2026-11-13T15:24:51Z"
+    },
+    {
+      "detail": "from S4",
+      "event": "resumed",
+      "seq": 8,
+      "task": "T-017",
+      "ts": "2026-11-13T15:25:01Z"
+    },
+    {
       "detail": "cycle 1",
       "event": "review-opened",
       "seq": 76,
@@ -591,6 +654,34 @@
       "seq": 78,
       "task": "T-006",
       "ts": "2026-11-13T15:30:38Z"
+    },
+    {
+      "detail": "S4: wf-loop.sh + keep-continuing.md + 32 fake-claude tests; shellcheck/ruff/pytest clean; commit cdb9bc0",
+      "event": "step-done",
+      "seq": 9,
+      "task": "T-017",
+      "ts": "2026-11-13T15:40:46Z"
+    },
+    {
+      "detail": "S5: --dry-run added; 37 tests pass; fixtures only",
+      "event": "step-done",
+      "seq": 10,
+      "task": "T-017",
+      "ts": "2026-11-13T15:41:59Z"
+    },
+    {
+      "detail": "accept run at 2026-11-13T15:42:35Z",
+      "event": "done",
+      "seq": 11,
+      "task": "T-017",
+      "ts": "2026-11-13T15:43:40Z"
+    },
+    {
+      "detail": "lane 3",
+      "event": "lane-merged",
+      "seq": 91,
+      "task": null,
+      "ts": "2026-11-13T15:49:48Z"
     }
   ],
   "kit_version": "0.1.0",
@@ -942,6 +1033,8 @@
       "title": "Publish v0.1.0"
     },
     "T-017": {
+      "blocked_from": null,
+      "blocked_reason": null,
       "card_sha256": "9fd6ea8fce0fc308a3845667e930297a53db302322b68517902816999645a2a0",
       "depends_on": [
         "T-003"
@@ -960,7 +1053,7 @@
       "resources": "light",
       "review": "post",
       "source": "plan",
-      "status": "ready",
+      "status": "done",
       "title": "Unattended loop (wf-loop.sh)"
     }
   },
