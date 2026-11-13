@@ -1,5 +1,5 @@
 {
-  "checksum": "931038105164d9ea929b54eab5a044e796adbebcdcf3cce82e4c7d50e238f1b9",
+  "checksum": "63d3a0d5bca31cc8380cb934644a0d4bb94c9bc2468ef71f1097ce6b77e61175",
   "created_utc": "2026-11-12T22:25:04Z",
   "escalations": {
     "E-001": {
@@ -682,6 +682,27 @@
       "seq": 91,
       "task": null,
       "ts": "2026-11-13T15:49:48Z"
+    },
+    {
+      "detail": "lane 1, pid 1574040",
+      "event": "claimed",
+      "seq": 92,
+      "task": "T-006",
+      "ts": "2026-11-13T15:50:53Z"
+    },
+    {
+      "detail": "lane 1",
+      "event": "started",
+      "seq": 93,
+      "task": "T-006",
+      "ts": "2026-11-13T15:50:53Z"
+    },
+    {
+      "detail": "S1",
+      "event": "step-done",
+      "seq": 94,
+      "task": "T-006",
+      "ts": "2026-11-13T15:56:18Z"
     }
   ],
   "kit_version": "0.1.0",
@@ -820,6 +841,7 @@
     },
     "T-006": {
       "card_sha256": "e52d8c8acfd4f668c7dcd94fc5284bd95be49f4cadd2f464c8076abd1493b89a",
+      "claimed_by_lane": 1,
       "depends_on": [
         "T-004",
         "T-005"
@@ -833,7 +855,10 @@
       "resources": "light",
       "review": "none",
       "source": "plan",
-      "status": "ready",
+      "status": "in-progress",
+      "steps_done": [
+        "S1"
+      ],
       "title": "Write-up draft"
     },
     "T-007": {

@@ -15,7 +15,7 @@ files; change them through the scripts only.
 | T-003 | Reviewer calibration | done | 1 | none |
 | T-004 | README draft | done | 1 | none |
 | T-005 | Baseline report draft and number checker | accepted (judgement) | 2 | post |
-| T-006 | Write-up draft | ready | 1 | none |
+| T-006 | Write-up draft | in-progress | 1 | none |
 | T-007 | Stage 4 session | ready ⚠ re-acknowledge | 1 | pre+post |
 | T-008 | S2 check and Stage 4 analysis | todo | 1 | post |
 | T-009 | Post-Stage-4 code fixes | todo | 1 | none |
@@ -30,7 +30,6 @@ files; change them through the scripts only.
 
 ## READY (grouped by lane)
 
-- lane 1: **T-006** Write-up draft
 - lane 1: **T-007** Stage 4 session
 
 ## Escalation queue
@@ -45,12 +44,12 @@ _(none)_
 
 | lane | lock | worktree | tasks |
 |---|---|---|---|
-| 1 | - | - | - |
+| 1 | pid 1574040 | - | - |
 
 ## Last events
 
-- 2026-11-13T15:30:38Z ready T-006 — dependencies satisfied
-- 2026-11-13T15:40:46Z step-done T-017 — S4: wf-loop.sh + keep-continuing.md + 32 fake-claude tests; shellcheck/ruff/pytest clean; commit cdb9bc0
-- 2026-11-13T15:41:59Z step-done T-017 — S5: --dry-run added; 37 tests pass; fixtures only
 - 2026-11-13T15:43:40Z done T-017 — accept run at 2026-11-13T15:42:35Z
 - 2026-11-13T15:49:48Z lane-merged — lane 3
+- 2026-11-13T15:50:53Z claimed T-006 — lane 1, pid 1574040
+- 2026-11-13T15:50:53Z started T-006 — lane 1
+- 2026-11-13T15:56:18Z step-done T-006 — S1
