@@ -1,5 +1,5 @@
 {
-  "checksum": "4cfb1633772251e49dbb969b57e7f7d968ae75619e63aa460c9d9baa577a5a3d",
+  "checksum": "1599dfdc2a14fc51ef930fb4cf4d64396df2dccf59e40d1731027f3885e31f73",
   "events": [
     {
       "detail": "lane 3, pid 1807883",
@@ -70,6 +70,13 @@
       "seq": 9,
       "task": "T-017",
       "ts": "2026-11-13T15:40:46Z"
+    },
+    {
+      "detail": "S5: --dry-run added; 37 tests pass; fixtures only",
+      "event": "step-done",
+      "seq": 10,
+      "task": "T-017",
+      "ts": "2026-11-13T15:41:59Z"
     }
   ],
   "lane": 3,
@@ -101,7 +108,8 @@
         "S1",
         "S2",
         "S3",
-        "S4"
+        "S4",
+        "S5"
       ],
       "title": "Unattended loop (wf-loop.sh)"
     }
