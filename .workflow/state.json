@@ -1,5 +1,5 @@
 {
-  "checksum": "49c2cd5cabdc89b584794c9c0c9dac14b45a36deba8322ab7053e653015e85b9",
+  "checksum": "f371c9177c5f1b1caf14c18a2ed9efc1744b14142e4546423ca4723d8d5e178e",
   "created_utc": "2026-11-12T22:25:04Z",
   "escalations": {
     "E-001": {
@@ -18,7 +18,8 @@
     },
     "E-003": {
       "created_utc": "2026-11-13T10:06:56Z",
-      "status": "open",
+      "decided_utc": "2026-11-13T10:09:30Z",
+      "status": "decided",
       "task": "T-002",
       "type": "decision"
     }
@@ -317,6 +318,27 @@
       "seq": 41,
       "task": "T-002",
       "ts": "2026-11-13T10:06:56Z"
+    },
+    {
+      "detail": "restored to in-progress",
+      "event": "unblocked",
+      "seq": 42,
+      "task": "T-002",
+      "ts": "2026-11-13T10:09:30Z"
+    },
+    {
+      "detail": "decision E-003 recorded",
+      "event": "note",
+      "seq": 43,
+      "task": "T-002",
+      "ts": "2026-11-13T10:09:30Z"
+    },
+    {
+      "detail": "S3",
+      "event": "step-done",
+      "seq": 44,
+      "task": "T-002",
+      "ts": "2026-11-13T10:12:02Z"
     }
   ],
   "kit_version": "0.1.0",
@@ -359,8 +381,8 @@
       "title": "Smoke test and recon (read-only)"
     },
     "T-002": {
-      "blocked_from": "in-progress",
-      "blocked_reason": "escalation E-003",
+      "blocked_from": null,
+      "blocked_reason": null,
       "card_sha256": "9b11c0c1a3ab9fa598db6ded75b36c4e603fcb08d8c96a79d523d033e94b83e9",
       "claimed_by_lane": 1,
       "depends_on": [
@@ -377,10 +399,11 @@
       "resources": "light",
       "review": "none",
       "source": "plan",
-      "status": "blocked-decision",
+      "status": "in-progress",
       "steps_done": [
         "S1",
-        "S2"
+        "S2",
+        "S3"
       ],
       "title": "Record Stage 3 decisions and merge CLAUDE.md"
     },

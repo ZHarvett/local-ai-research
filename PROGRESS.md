@@ -11,7 +11,7 @@ files; change them through the scripts only.
 | id | title | status | lane | review |
 |---|---|---|---|---|
 | T-001 | Smoke test and recon (read-only) | done ⚠ re-acknowledge | 1 | none |
-| T-002 | Record Stage 3 decisions and merge CLAUDE.md | blocked-decision | 1 | none |
+| T-002 | Record Stage 3 decisions and merge CLAUDE.md | in-progress | 1 | none |
 | T-003 | Reviewer calibration | todo | 1 | none |
 | T-004 | README draft | todo | 1 | none |
 | T-005 | Baseline report draft and number checker | todo | 2 | post |
@@ -34,7 +34,7 @@ _(none)_
 
 ## Escalation queue
 
-- **E-003** (decision, task T-002) — open
+_(none)_
 
 ## Review queue
 
@@ -48,8 +48,8 @@ _(none)_
 
 ## Last events
 
-- 2026-11-13T09:58:02Z claimed T-002 — lane 1, pid 1574040
-- 2026-11-13T09:58:02Z started T-002 — lane 1
-- 2026-11-13T10:03:55Z step-done T-002 — S1
 - 2026-11-13T10:05:22Z step-done T-002 — S2
 - 2026-11-13T10:06:56Z escalated T-002 — E-003 (decision)
+- 2026-11-13T10:09:30Z unblocked T-002 — restored to in-progress
+- 2026-11-13T10:09:30Z note T-002 — decision E-003 recorded
+- 2026-11-13T10:12:02Z step-done T-002 — S3

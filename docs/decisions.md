@@ -1211,3 +1211,22 @@ docs/recon/T-001.md, verbatim per decision E-001 rule (3).
 - R3 Stage 4 runs on 13 November 2026 or later. Since the Stage 3 session commit, the only changes under src/, configs/, scripts/, pyproject.toml and uv.lock are the kit's new scripts/wf.sh, scripts/wf-*.sh and scripts/_wf.py, and the only existing files changed by the kit install are CLAUDE.md and .gitignore. Check: `S3=$(cat docs/recon/stage3-commit.txt) && git cat-file -e "$S3^{commit}" && ! git diff --name-only "$S3" HEAD -- src configs scripts pyproject.toml uv.lock CLAUDE.md .gitignore | grep -vxE 'CLAUDE\.md|\.gitignore|scripts/wf(-[A-Za-z0-9_.-]+)?\.sh|scripts/_wf\.py'`
 - R4 An S2 failure is reported and escalated, never re-measured automatically.
 
+
+---
+
+## DECISION E-003 (2026-11-13T10:09:30Z)
+
+DECISION E-003
+Chosen option: B
+Reason: The diff implements the precedence rules correctly (kit wins session flow, umbrella wins safety and the section 12.4 report, kit block byte-identical, --allow-dirty added); two lines need changing because a session-wide stop on any blocked task would freeze other lanes while one task waits for a decision, and because lane choice must be asked, not made by the session.
+Scope: this plan
+Rule: Apply the drafted diff with exactly two replacements in the new "Every session starts by" section; everything else is approved unchanged. Regenerate docs/recon/claude-md-merge.diff so it contains the replacement lines and passes git apply --check, apply it, and save the final applied diff over docs/recon/claude-md-merge.diff.
+Replace item 2 (the two lines beginning "2. Running `bash scripts/wf.sh status`") with:
+2. Running `bash scripts/wf.sh status`. A task in blocked-decision waits for the planning
+   chat's decision (`wf-decision.sh`): never work on it by hand, but it does not stop other
+   ready tasks. If the task you were asked to resume is blocked, show its open escalation
+   and stop.
+Replace item 3 (the two lines beginning "3. Picking the next task") with:
+3. Picking the next task from `bash scripts/wf.sh ready` (if several lanes are ready, ask which
+   lane to start, as `/continue` does), claiming and starting it, and reading ONLY its card
+   (`bash scripts/wf-card.sh T-xxx`) — never `PLAN.md` whole.
