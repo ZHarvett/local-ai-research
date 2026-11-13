@@ -1,5 +1,5 @@
 {
-  "checksum": "6561191f0d892a4bf18761ae1eaf6fe47926d656cf2fb067163c9eb5282c3ed2",
+  "checksum": "4cfb1633772251e49dbb969b57e7f7d968ae75619e63aa460c9d9baa577a5a3d",
   "events": [
     {
       "detail": "lane 3, pid 1807883",
@@ -63,6 +63,13 @@
       "seq": 8,
       "task": "T-017",
       "ts": "2026-11-13T15:25:01Z"
+    },
+    {
+      "detail": "S4: wf-loop.sh + keep-continuing.md + 32 fake-claude tests; shellcheck/ruff/pytest clean; commit cdb9bc0",
+      "event": "step-done",
+      "seq": 9,
+      "task": "T-017",
+      "ts": "2026-11-13T15:40:46Z"
     }
   ],
   "lane": 3,
@@ -93,7 +100,8 @@
       "steps_done": [
         "S1",
         "S2",
-        "S3"
+        "S3",
+        "S4"
       ],
       "title": "Unattended loop (wf-loop.sh)"
     }

@@ -43,6 +43,7 @@ wf-loop.sh — run the workflow-kit plan unattended, serially, for a bounded tim
 
 Usage:
   scripts/wf-loop.sh <hours>     run for up to <hours> hours (positive number)
+  scripts/wf-loop.sh --dry-run   print the next action from state; start nothing
   scripts/wf-loop.sh --help      this help
 
 Each task runs in a fresh headless claude session. The loop stops and prints the
@@ -423,11 +424,44 @@ dirty_tree() {
   return 1
 }
 
+# ------------------------------------------------------------------- dry-run
+# Read-only preview (design §1, card S5): reads the state file + lane mirrors,
+# prints the decision the loop would make next, exits 0. Takes no lock, starts
+# no session, writes no log, and does not run the guard (the kit guard may clean
+# stale lane locks, so even it is not purely read-only).
+
+dry_run() {
+  resolve_defaults
+  WORK=$(mktemp -d /tmp/wf-loop-dry-XXXXXX)
+  trap 'rm -rf "$WORK"' EXIT
+  : >"$WORK/guard.out"
+  if ! run_helper 0 "$WORK/guard.out"; then
+    echo "wf-loop: dry-run: cannot read state: $STATE_FILE" >&2
+    exit 1
+  fi
+  if ! extract_decision; then
+    echo "wf-loop: dry-run: cannot parse decision summary" >&2
+    exit 1
+  fi
+  if [[ $D_ACTION == stop ]]; then
+    printf 'wf-loop: dry-run: would STOP — %s (task: %s)\n' "$D_REASON" "$D_TASK"
+  else
+    printf 'wf-loop: dry-run: next action: %s task=%s lane=%s prompt=%s\n' \
+      "$D_ACTION" "$D_TASK" "${D_LANE:-1}" "$D_PROMPT"
+  fi
+  printf 'wf-loop: dry-run: state=%s lanes=%s (no session started, no lock taken, no log written)\n' \
+    "$STATE_FILE" "$LANES_DIR"
+  exit 0
+}
+
 # --------------------------------------------------------------------- main
 
 if [[ ${1:-} == --help || ${1:-} == -h ]]; then
   usage
   exit 0
+fi
+if [[ ${1:-} == --dry-run ]]; then
+  dry_run
 fi
 if [[ $# -lt 1 || -z ${1:-} ]]; then
   usage >&2

@@ -583,3 +583,63 @@ def test_final_message_names_reason_and_task(tmp_path):
     assert last.startswith("wf-loop: STOP — ")
     assert "open gate T-001" in last
     assert "(task: T-001)" in last
+
+
+# ------------------------------------------------------------- S5: --dry-run
+
+
+def dry_run(env, timeout=30):
+    return subprocess.run(
+        ["bash", str(LOOP), "--dry-run"], capture_output=True, text=True, env=env, timeout=timeout
+    )
+
+
+def test_dry_run_prints_next_action_without_session(tmp_path):
+    _, env = make_fixture(tmp_path, {"T-001": task()})
+    r = dry_run(env)
+    assert r.returncode == 0, r.stdout + r.stderr
+    assert "next action: continue" in r.stdout
+    assert "task=T-001" in r.stdout
+    assert "prompt=/continue" in r.stdout
+    assert calls(env) == []
+    assert not Path(env["WF_LOOP_LOG"]).exists()
+    assert not Path(env["WF_LOOP_LOCK"]).exists()
+
+
+def test_dry_run_multi_lane_prints_lane_prompt(tmp_path):
+    tasks = {"T-001": task(lane=1), "T-002": task(lane=2)}
+    _, env = make_fixture(tmp_path, tasks)
+    r = dry_run(env)
+    assert r.returncode == 0
+    assert "next action: lane" in r.stdout
+    assert "prompt=/lane 1" in r.stdout
+    assert calls(env) == []
+
+
+def test_dry_run_reads_lane_mirrors(tmp_path):
+    tasks = {"T-001": task(lane=1), "T-002": task(lane=2)}
+    mirrors = {2: {"tasks": {"T-002": task("in-progress", lane=2)}}}
+    _, env = make_fixture(tmp_path, tasks, mirrors=mirrors)
+    r = dry_run(env)
+    assert r.returncode == 0
+    # T-002 is effectively in-progress: one ready lane -> /continue, not /lane 1
+    assert "prompt=/continue" in r.stdout
+
+
+def test_dry_run_would_stop_names_reason_and_task(tmp_path):
+    _, env = make_fixture(tmp_path, {"T-001": task("awaiting-gate", gate_message="go")})
+    r = dry_run(env)
+    assert r.returncode == 0
+    assert "would STOP" in r.stdout
+    assert "open gate T-001" in r.stdout
+    assert "(task: T-001)" in r.stdout
+    assert calls(env) == []
+
+
+def test_dry_run_review_due(tmp_path):
+    _, env = make_fixture(tmp_path, {"T-001": task("done", review="post")})
+    r = dry_run(env)
+    assert r.returncode == 0
+    assert "next action: review" in r.stdout
+    assert "prompt=/review T-001" in r.stdout
+    assert calls(env) == []
