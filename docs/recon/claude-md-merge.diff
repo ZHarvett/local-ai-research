@@ -1,6 +1,8 @@
+diff --git a/CLAUDE.md b/CLAUDE.md
+index e2c1841..8c4cff9 100644
 --- a/CLAUDE.md
 +++ b/CLAUDE.md
-@@ -9,26 +9,36 @@
+@@ -9,26 +9,39 @@ dsh harnesses. Step 0 = baseline setup, ending in a tagged v0.1.0.
  Plans: `docs/plans/project-plan.md` (whole project), `docs/plans/step-0-baseline.md` (Step 0 reference).
  
  ## Every session starts by
@@ -8,10 +10,13 @@
 -   sections it points to: §4 fixed decisions, §5 measurement design, §8 layout, §11, §12).
 -2. Reading the latest entry in `docs/progress-log.md`.
 +1. Running `bash scripts/wf-guard.sh` — stop if it fails; never repair state by hand.
-+2. Running `bash scripts/wf.sh status` — if any task is blocked-decision, show its open
-+   escalation and stop.
-+3. Picking the next task from `bash scripts/wf.sh ready`, claiming and starting it, and
-+   reading ONLY its card (`bash scripts/wf-card.sh T-xxx`) — never `PLAN.md` whole.
++2. Running `bash scripts/wf.sh status`. A task in blocked-decision waits for the planning
++   chat's decision (`wf-decision.sh`): never work on it by hand, but it does not stop other
++   ready tasks. If the task you were asked to resume is blocked, show its open escalation
++   and stop.
++3. Picking the next task from `bash scripts/wf.sh ready` (if several lanes are ready, ask which
++   lane to start, as `/continue` does), claiming and starting it, and reading ONLY its card
++   (`bash scripts/wf-card.sh T-xxx`) — never `PLAN.md` whole.
 +`/continue` runs this flow; the full protocol is `docs/WORKFLOW.md`. Reference docs
 +(`docs/plans/step-0-baseline.md`, runbooks, `docs/decisions.md`) are read as the card directs.
 +`docs/progress-log.md` is an append-only history that tasks append to; kit state lives in
@@ -44,7 +49,7 @@
  - Stock configs keep exactly the §3.1 settings in every stage.
  
  ## Measurement rules
-@@ -41,9 +51,11 @@
+@@ -41,9 +54,11 @@ Plans: `docs/plans/project-plan.md` (whole project), `docs/plans/step-0-baseline
  Public data only. Scrub username, hostname and home paths before anything is published.
  
  ## Workflow
@@ -59,7 +64,7 @@
  - Finish with the standard report (§12.4):
    1. Summary of what was done
    2. Each acceptance criterion PASS/FAIL with evidence
-@@ -52,9 +64,11 @@
+@@ -52,9 +67,11 @@ Public data only. Scrub username, hostname and home paths before anything is pub
    5. Anything not done, uncertain, or deviating from the plan
    6. Suggested next steps
    7. Commit hash, and confirmation the progress-log entry was added

@@ -9,26 +9,39 @@ dsh harnesses. Step 0 = baseline setup, ending in a tagged v0.1.0.
 Plans: `docs/plans/project-plan.md` (whole project), `docs/plans/step-0-baseline.md` (Step 0 reference).
 
 ## Every session starts by
-1. Reading the current work package's section of `docs/plans/step-0-baseline.md` (§6, plus the
-   sections it points to: §4 fixed decisions, §5 measurement design, §8 layout, §11, §12).
-2. Reading the latest entry in `docs/progress-log.md`.
+1. Running `bash scripts/wf-guard.sh` — stop if it fails; never repair state by hand.
+2. Running `bash scripts/wf.sh status`. A task in blocked-decision waits for the planning
+   chat's decision (`wf-decision.sh`): never work on it by hand, but it does not stop other
+   ready tasks. If the task you were asked to resume is blocked, show its open escalation
+   and stop.
+3. Picking the next task from `bash scripts/wf.sh ready` (if several lanes are ready, ask which
+   lane to start, as `/continue` does), claiming and starting it, and reading ONLY its card
+   (`bash scripts/wf-card.sh T-xxx`) — never `PLAN.md` whole.
+`/continue` runs this flow; the full protocol is `docs/WORKFLOW.md`. Reference docs
+(`docs/plans/step-0-baseline.md`, runbooks, `docs/decisions.md`) are read as the card directs.
+`docs/progress-log.md` is an append-only history that tasks append to; kit state lives in
+`.workflow/` and `PROGRESS.md` and is never hand-edited.
 
 ## Hard rules
 - Never use sudo or change system configuration. Propose the exact commands; Zack runs them.
+- Never use `--allow-dirty`: measurement runs start from a clean committed tree.
 - Never delete or modify anything outside this repo, except scratch dirs in `/tmp` and
   `/dev/shm/<repo>-*`.
 - Never modify existing installs, services, `~/.config/opencode` or `~/.dsh`.
-- No downloads over 1 GB beyond those in the step plan without approval.
-- Only one GPU job at a time, enforced by the GPU lock.
+- No downloads over 1 GB beyond those in the step plan without approval; the kit's
+  download/publish gates apply in addition.
+- Only one GPU job at a time, enforced by the GPU lock. The kit's machine-wide lock
+  (gpu / exclusive-machine / cpu-heavy tasks) is additional, not a replacement.
+- `data/raw/` is append-only and never edited by hand; a superseded run is marked
+  superseded, never deleted.
 - Anything that may take longer than ~8 minutes runs via `scripts/run-detached.sh`.
-- Do not change global git configuration. No GitHub remote/push unless the WP says so.
+- Do not change global git configuration. No GitHub remote/push unless the task card says so.
 
 ## Conventions
 - Bash for launch/long-job scripts; Python via uv; TOML configs.
 - uv, ruff, pytest (`-m "not gpu"` in CI) and shellcheck.
 - llama-server is started only through `scripts/launch-server.sh`, with absolute paths and an
   explicit port (default 9931 is never relied on).
-- `data/raw/` is never edited by hand.
 - Stock configs keep exactly the §3.1 settings in every stage.
 
 ## Measurement rules
@@ -41,9 +54,11 @@ Plans: `docs/plans/project-plan.md` (whole project), `docs/plans/step-0-baseline
 Public data only. Scrub username, hostname and home paths before anything is published.
 
 ## Workflow
-- Start as above; at the end of each WP, commit and append a progress-log entry
-  (format: `docs/plans/step-0-baseline.md` §12.5).
-- One WP per session. Commit message style: `WPn: <summary>`.
+- One task per session, run through the workflow kit (short protocol below; full protocol in
+  `docs/WORKFLOW.md`).
+- At the end of each task: commit the work, run `wf.sh done`, and append a
+  `docs/progress-log.md` entry (format: `docs/plans/step-0-baseline.md` §12.5) unless the
+  card says otherwise. Commit message style: `T-xxx: <summary>` (earlier history uses `WPn:`).
 - Finish with the standard report (§12.4):
   1. Summary of what was done
   2. Each acceptance criterion PASS/FAIL with evidence
@@ -52,9 +67,11 @@ Public data only. Scrub username, hostname and home paths before anything is pub
   5. Anything not done, uncertain, or deviating from the plan
   6. Suggested next steps
   7. Commit hash, and confirmation the progress-log entry was added
+  then the kit's one-line close: `TASK T-xxx DONE | review: … | next ready: …`.
 
 ## Compaction
-When compacting, keep the WP id, the acceptance criteria, the modified files and the commands run.
+When compacting, keep the task id (T-xxx), the acceptance criteria, the modified files and the
+commands run.
 
 <!-- workflow-kit:begin -->
 ## Workflow kit (planning-chat plan execution)
