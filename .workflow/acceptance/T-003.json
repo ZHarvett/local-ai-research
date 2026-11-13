@@ -1,0 +1,39 @@
+[
+  {
+    "task": "T-003",
+    "started_utc": "2026-11-13T11:12:32Z",
+    "git_commit": "410ca18cb4ee990522ff137909ecf3e85734e1cc",
+    "items": [
+      {
+        "id": "A1",
+        "verdict": "pass",
+        "path": "/mnt/data/local-ai-research/.workflow/calibration.json",
+        "sha256": "5801ee5c94cc3037762ad05bf8a158b0a8575bccce05d58327439d1d04eccdce"
+      },
+      {
+        "id": "A2",
+        "cmd": "python3 -c \"import json; json.load(open('.workflow/calibration.json'))\"",
+        "exit_code": 0,
+        "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "output_bytes": 0,
+        "elapsed_s": 0.0,
+        "verdict": "pass"
+      },
+      {
+        "id": "A3",
+        "verdict": "pass",
+        "path": "/mnt/data/local-ai-research/docs/recon/calibration-summary.md",
+        "sha256": "b66fce70ee14764f49c7f65d12e663d7e467112627407d4fa1640b8843d658c6"
+      }
+    ],
+    "evidence_files": {
+      "docs/recon/calibration-summary.md": {
+        "exists": true,
+        "sha256": "b66fce70ee14764f49c7f65d12e663d7e467112627407d4fa1640b8843d658c6",
+        "bytes": 5337
+      }
+    },
+    "finished_utc": "2026-11-13T11:12:32Z",
+    "failures": 0
+  }
+]

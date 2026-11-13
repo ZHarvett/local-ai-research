@@ -1,5 +1,5 @@
 {
-  "checksum": "6db8876ecb4648d3550108875a2c614269cd49a1a33d2e7794c25f2f6640dfbe",
+  "checksum": "83267648509ed478245d3d85bdeb48f47c527a2b88c1d49c87de06b752471e61",
   "created_utc": "2026-11-12T22:25:04Z",
   "escalations": {
     "E-001": {
@@ -409,6 +409,41 @@
       "seq": 54,
       "task": "T-003",
       "ts": "2026-11-13T11:13:09Z"
+    },
+    {
+      "detail": "accept run at 2026-11-13T11:12:32Z",
+      "event": "done",
+      "seq": 55,
+      "task": "T-003",
+      "ts": "2026-11-13T11:13:14Z"
+    },
+    {
+      "detail": "dependencies satisfied",
+      "event": "ready",
+      "seq": 56,
+      "task": "T-004",
+      "ts": "2026-11-13T11:13:14Z"
+    },
+    {
+      "detail": "dependencies satisfied",
+      "event": "ready",
+      "seq": 57,
+      "task": "T-005",
+      "ts": "2026-11-13T11:13:14Z"
+    },
+    {
+      "detail": "dependencies satisfied",
+      "event": "ready",
+      "seq": 58,
+      "task": "T-007",
+      "ts": "2026-11-13T11:13:14Z"
+    },
+    {
+      "detail": "dependencies satisfied",
+      "event": "ready",
+      "seq": 59,
+      "task": "T-017",
+      "ts": "2026-11-13T11:13:14Z"
     }
   ],
   "kit_version": "0.1.0",
@@ -494,7 +529,7 @@
       "resources": "light",
       "review": "none",
       "source": "plan",
-      "status": "in-progress",
+      "status": "done",
       "steps_done": [
         "S1",
         "S2",
@@ -516,7 +551,7 @@
       "resources": "light",
       "review": "none",
       "source": "plan",
-      "status": "todo",
+      "status": "ready",
       "title": "README draft"
     },
     "T-005": {
@@ -535,7 +570,7 @@
       "resources": "light",
       "review": "post",
       "source": "plan",
-      "status": "todo",
+      "status": "ready",
       "title": "Baseline report draft and number checker"
     },
     "T-006": {
@@ -576,7 +611,7 @@
       "resources": "exclusive-machine",
       "review": "pre+post",
       "source": "plan",
-      "status": "todo",
+      "status": "ready",
       "title": "Stage 4 session"
     },
     "T-008": {
@@ -771,7 +806,7 @@
       "resources": "light",
       "review": "post",
       "source": "plan",
-      "status": "todo",
+      "status": "ready",
       "title": "Unattended loop (wf-loop.sh)"
     }
   },
