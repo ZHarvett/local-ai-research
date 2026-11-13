@@ -46,13 +46,12 @@ _(none)_
 | lane | lock | worktree | tasks |
 |---|---|---|---|
 | 1 | - | - | - |
-| 2 | - | yes | T-005 |
 | 3 | pid 1807883 | yes | T-017 |
 
 ## Last events
 
-- 2026-11-13T11:54:31Z done T-004 — accept run at 2026-11-13T11:54:25Z
 - 2026-11-13T11:55:29Z escalated T-017 — E-004 (decision)
 - 2026-11-13T12:02:11Z step-done T-005 — S2
 - 2026-11-13T12:02:11Z step-done T-005 — S3
 - 2026-11-13T12:02:41Z done T-005 — accept run at 2026-11-13T12:02:32Z
+- 2026-11-13T12:49:23Z lane-merged — lane 2

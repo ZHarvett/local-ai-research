@@ -1,5 +1,5 @@
 {
-  "checksum": "f48061f3bd405e9ab356baf2993540dadd1b3f942bd79d6b3c76c06f57764eee",
+  "checksum": "bff61efc6876b64fcc7cc6bd08e400ad786662ca508cb14ab744c745ae59822e",
   "created_utc": "2026-11-12T22:25:04Z",
   "escalations": {
     "E-001": {
@@ -472,6 +472,13 @@
       "ts": "2026-11-13T11:44:00Z"
     },
     {
+      "detail": "lane 2, pid 1807601",
+      "event": "claimed",
+      "seq": 0,
+      "task": "T-005",
+      "ts": "2026-11-13T11:44:41Z"
+    },
+    {
       "detail": "lane 2",
       "event": "migrated-to-lane",
       "seq": 62,
@@ -484,6 +491,20 @@
       "seq": 63,
       "task": "T-017",
       "ts": "2026-11-13T11:44:43Z"
+    },
+    {
+      "detail": "lane 2",
+      "event": "started",
+      "seq": 1,
+      "task": "T-005",
+      "ts": "2026-11-13T11:44:46Z"
+    },
+    {
+      "detail": "S1",
+      "event": "step-done",
+      "seq": 2,
+      "task": "T-005",
+      "ts": "2026-11-13T11:51:21Z"
     },
     {
       "detail": "S1",
@@ -519,6 +540,34 @@
       "seq": 68,
       "task": "T-004",
       "ts": "2026-11-13T11:54:31Z"
+    },
+    {
+      "detail": "S2",
+      "event": "step-done",
+      "seq": 3,
+      "task": "T-005",
+      "ts": "2026-11-13T12:02:11Z"
+    },
+    {
+      "detail": "S3",
+      "event": "step-done",
+      "seq": 4,
+      "task": "T-005",
+      "ts": "2026-11-13T12:02:11Z"
+    },
+    {
+      "detail": "accept run at 2026-11-13T12:02:32Z",
+      "event": "done",
+      "seq": 5,
+      "task": "T-005",
+      "ts": "2026-11-13T12:02:41Z"
+    },
+    {
+      "detail": "lane 2",
+      "event": "lane-merged",
+      "seq": 75,
+      "task": null,
+      "ts": "2026-11-13T12:49:23Z"
     }
   ],
   "kit_version": "0.1.0",
@@ -650,7 +699,7 @@
       "resources": "light",
       "review": "post",
       "source": "plan",
-      "status": "ready",
+      "status": "done",
       "title": "Baseline report draft and number checker"
     },
     "T-006": {
