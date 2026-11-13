@@ -1,5 +1,5 @@
 {
-  "checksum": "380781f5918b1f999c5dea3aff42ebb3d4f8d6ce5601b4f0f38d4f4b68b87c85",
+  "checksum": "49c2cd5cabdc89b584794c9c0c9dac14b45a36deba8322ab7053e653015e85b9",
   "created_utc": "2026-11-12T22:25:04Z",
   "escalations": {
     "E-001": {
@@ -15,6 +15,12 @@
       "status": "decided",
       "task": "T-001",
       "type": "assumption-mismatch"
+    },
+    "E-003": {
+      "created_utc": "2026-11-13T10:06:56Z",
+      "status": "open",
+      "task": "T-002",
+      "type": "decision"
     }
   },
   "events": [
@@ -304,6 +310,13 @@
       "seq": 40,
       "task": "T-002",
       "ts": "2026-11-13T10:05:22Z"
+    },
+    {
+      "detail": "E-003 (decision)",
+      "event": "escalated",
+      "seq": 41,
+      "task": "T-002",
+      "ts": "2026-11-13T10:06:56Z"
     }
   ],
   "kit_version": "0.1.0",
@@ -346,6 +359,8 @@
       "title": "Smoke test and recon (read-only)"
     },
     "T-002": {
+      "blocked_from": "in-progress",
+      "blocked_reason": "escalation E-003",
       "card_sha256": "9b11c0c1a3ab9fa598db6ded75b36c4e603fcb08d8c96a79d523d033e94b83e9",
       "claimed_by_lane": 1,
       "depends_on": [
@@ -362,7 +377,7 @@
       "resources": "light",
       "review": "none",
       "source": "plan",
-      "status": "in-progress",
+      "status": "blocked-decision",
       "steps_done": [
         "S1",
         "S2"
