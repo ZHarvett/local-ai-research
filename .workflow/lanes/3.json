@@ -1,5 +1,5 @@
 {
-  "checksum": "1599dfdc2a14fc51ef930fb4cf4d64396df2dccf59e40d1731027f3885e31f73",
+  "checksum": "ec9f1384fedd93d9780e5974e5366ce3012ff1221e733a02b2dfbcbad3559e1b",
   "events": [
     {
       "detail": "lane 3, pid 1807883",
@@ -77,6 +77,13 @@
       "seq": 10,
       "task": "T-017",
       "ts": "2026-11-13T15:41:59Z"
+    },
+    {
+      "detail": "accept run at 2026-11-13T15:42:35Z",
+      "event": "done",
+      "seq": 11,
+      "task": "T-017",
+      "ts": "2026-11-13T15:43:40Z"
     }
   ],
   "lane": 3,
@@ -103,7 +110,7 @@
       "resources": "light",
       "review": "post",
       "source": "plan",
-      "status": "in-progress",
+      "status": "done",
       "steps_done": [
         "S1",
         "S2",
