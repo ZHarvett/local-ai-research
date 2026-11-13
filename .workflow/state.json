@@ -1,5 +1,5 @@
 {
-  "checksum": "d34b5469f55a22a89ddcbc36bb3bed82663156f36c3643e5e20c0a685dba76be",
+  "checksum": "94f74f85f6b92d4530876210a2babf5580b09f4349edaba13854f64225dce192",
   "created_utc": "2026-11-12T22:25:04Z",
   "escalations": {
     "E-001": {
@@ -248,6 +248,34 @@
       "seq": 32,
       "task": "T-001",
       "ts": "2026-11-13T09:56:00Z"
+    },
+    {
+      "detail": "S5",
+      "event": "step-done",
+      "seq": 33,
+      "task": "T-001",
+      "ts": "2026-11-13T09:56:39Z"
+    },
+    {
+      "detail": "S6",
+      "event": "step-done",
+      "seq": 34,
+      "task": "T-001",
+      "ts": "2026-11-13T09:56:39Z"
+    },
+    {
+      "detail": "accept run at 2026-11-13T09:56:44Z",
+      "event": "done",
+      "seq": 35,
+      "task": "T-001",
+      "ts": "2026-11-13T09:56:50Z"
+    },
+    {
+      "detail": "dependencies satisfied",
+      "event": "ready",
+      "seq": 36,
+      "task": "T-002",
+      "ts": "2026-11-13T09:56:50Z"
     }
   ],
   "kit_version": "0.1.0",
@@ -278,12 +306,14 @@
       "resources": "cpu-heavy",
       "review": "none",
       "source": "plan",
-      "status": "in-progress",
+      "status": "done",
       "steps_done": [
         "S1",
         "S2",
         "S3",
-        "S4"
+        "S4",
+        "S5",
+        "S6"
       ],
       "title": "Smoke test and recon (read-only)"
     },
@@ -303,7 +333,7 @@
       "resources": "light",
       "review": "none",
       "source": "plan",
-      "status": "todo",
+      "status": "ready",
       "title": "Record Stage 3 decisions and merge CLAUDE.md"
     },
     "T-003": {
