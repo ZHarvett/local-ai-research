@@ -1,6 +1,6 @@
 # T-017 design — unattended loop (`scripts/wf-loop.sh`)
 
-<!-- sources: docs/recon/loop-states.md, scripts/_wf.py, .claude/commands/continue.md, .claude/commands/review.md, .claude/commands/address-review.md, .workflow/config.toml -->
+<!-- sources: docs/recon/loop-states.md, scripts/_wf.py, .claude/commands/continue.md, .claude/commands/review.md, .claude/commands/address-review.md, .workflow/config.toml, docs/decisions.md, reviews/T-017/r1-REVIEW_REPORT.md -->
 
 Design for the card's S3, grounded in `docs/recon/loop-states.md` (the S1/S2 recon,
 cited below as `states §N`). This is the document escalated for **loop design
@@ -108,6 +108,8 @@ picks the next action in this priority order:
    post-review of a `done` task, or a **pre-review** of a `ready` `pre+post` task that
    is waiting at a gate — run `/review T-xxx`. **Never** for a task blocked
    mid-escalation (`blocked-decision`), and never past `max_review_cycles` (card S3).
+   **Known gap (F-1, §11.3):** the pre-review branch cannot complete under the frozen
+   kit — escalated, pending the planning chat's decision.
 5. **Otherwise STOP.** Print the reason: `idle` (no ready, no due review), or the
    blocking state (`gate T-xxx`, `escalation E-NNN`, `blocked-decision T-xxx`).
 
@@ -129,6 +131,11 @@ timeout <session-timeout> "$WF_LOOP_CLAUDE_BIN" -p "<prompt>" $WF_LOOP_CLAUDE_AR
   for reviews. Extra args come **only** from `WF_LOOP_CLAUDE_ARGS`; the script adds no
   permission-skipping flag (card; the acceptance grep forbids the literal string in the
   file, so even comments avoid it).
+**Decision note (E-004 option B, §11.1):** the next three bullets are the S3 proposal
+(option A: pipe `yes` on stdin, prefer lane 1). They are **superseded** by the approved
+and shipped mechanism — no stdin answer is piped (every session gets `< /dev/null`);
+several ready lanes → `/lane <lowest-numbered>`, exactly one ready lane → `/continue`.
+
 - **stdin:** S2 showed headless claude waits ~3 s for stdin (states §7). For
   `/continue` the loop pipes the lane answer `yes` (so "Start lane 1?" is pre-answered);
   for reviews it uses `< /dev/null`. This avoids the 3 s wait and supplies the answer.
@@ -166,6 +173,15 @@ timeout <session-timeout> "$WF_LOOP_CLAUDE_BIN" -p "<prompt>" $WF_LOOP_CLAUDE_AR
 | 9 | second loop running | bash | `flock -n` on `WF_LOOP_LOCK` fails at startup |
 | 10 | per-session timeout | bash | `timeout` returns 124 |
 
+**Review-exhausted ordering (F-5).** A task whose review cycles are exhausted
+(`review_cycles >= max`, still `in-review`/`changes-requested`) is a stop, but it sits
+*after* new task work and due reviews in the decision priority (§3): the helper checks
+address → in-flight review → post-review → ready task work → pre-review → **exhausted**
+→ gate/escalation/blocked-decision → idle (`scripts/wf-loop.sh:254-265`). So the loop
+stops for an exhausted review only when no other ready work or due review exists;
+unrelated ready work proceeds first. This matches the card's stop list, which does not
+name exhausted reviews as an unconditional stop.
+
 On any stop the loop prints `wf-loop: STOP — <reason>` (to stdout and the log), releases
 its lock, and exits non-zero for human-needed stops (0 for a clean `idle`/deadline exit).
 The lock is held for the whole run via `flock` on a kept-open fd; a crashed loop's lock
@@ -187,7 +203,9 @@ state and never opens a cycle past the max — `review-open` itself refuses past
 A `blocked-decision` review verdict stops the loop (human). The loop never reviews a
 task that is `blocked-decision` mid-escalation (card). Pre-review (`pre+post` cards)
 runs before the task's heavy work; the loop offers it as a due review when the task is
-ready but gated (§3 step 4).
+ready but gated (§3 step 4). **Known gap (F-1, §11.3):** under the frozen kit a review
+cannot be opened on a `ready` task, so this pre-review offer ends in a kit refusal and a
+safe stop; escalated, pending the planning chat's decision.
 
 ## 7. The keep-continuing command (S4)
 
@@ -202,13 +220,14 @@ umbrella's ">8 minutes runs detached" rule.)
 
 ## 8. Open questions for the planning chat (escalated)
 
-1. **Lane-answer mechanism (§4).** Approve A (pipe `yes` to `/continue` stdin), or
-   choose B (`/lane 1` when several lanes ready) or C (append a no-ask instruction to
-   the prompt)? A is most faithful to the card's `claude -p "/continue"` but is
-   unverified headlessly (S2 forbids testing `/continue` here). Recommendation: A,
-   with the mechanism verified live in a later task that may run `/continue` headlessly
-   (or a small approved follow-up), since S4's fake-claude tests cannot validate real
-   claude. Confidence: medium.
+1. **Lane-answer mechanism (§4).** *(Resolved — E-004 chose option B; see §11.1. The
+   text below is the original S3 question, kept for the record.)* Approve A (pipe `yes`
+   to `/continue` stdin), or choose B (`/lane 1` when several lanes ready) or C (append a
+   no-ask instruction to the prompt)? A is most faithful to the card's
+   `claude -p "/continue"` but is unverified headlessly (S2 forbids testing `/continue`
+   here). Recommendation: A, with the mechanism verified live in a later task that may
+   run `/continue` headlessly (or a small approved follow-up), since S4's fake-claude
+   tests cannot validate real claude. Confidence: medium.
 2. **Serial lane-1 preference (§4).** v1 runs lane 1 first and lane 2/3 only when sole
    ready lane — so T-005/T-011/T-017 may wait while lane 1 has work. Acceptable for v1?
    (The card prescribes this; confirming.) Confidence: high.
@@ -248,3 +267,57 @@ never against this repo's real state.
 - manual: the loop never passes a gate, never works a blocked task, never starts a task
   after the deadline, runs lanes in order, runs only due reviews, stops on the first
   human-needed state — each covered by a test (§9).
+
+## 11. Decision addendum (post-approval; added in the cycle-1 address review)
+
+Records what the planning chat decided after S3, so this named evidence matches the
+shipped code. Sources: `docs/decisions.md` (E-004, E-005) and
+`reviews/T-017/r1-REVIEW_REPORT.md` (findings F-1, F-3, F-5).
+
+### 11.1 E-004 — option B approved (supersedes §4's stdin mechanism and §8 question 1)
+
+E-004 (13 November 2026) approved this design with option **B**, not the stdin-`yes`
+mechanism (option A) that §4 and §8 present as the S3 proposal:
+
+- Several ready lanes → `claude -p "/lane <lowest-numbered>"`; exactly one ready lane →
+  `claude -p "/continue"`. No stdin answer is piped; every session gets `< /dev/null`
+  (avoids the 3 s stdin wait, states §7). The card's literal `/continue` prompt is
+  relaxed accordingly for this task.
+- T-017's tests use a fake claude only; no headless `/continue`, `/lane` or `/review`
+  against this repo's real state (change 2).
+- The loop stops on any guard failure except the exact E-005 placeholder line
+  (change 3; §11.2).
+- The startup message and `keep-continuing.md` ask for a supervised first real run of
+  about 1 hour while awake (change 4).
+- The final message names the stop reason and the task id (change 5).
+
+§8 questions 2 and 3 were confirmed by the same approval (serial, lowest-numbered ready
+lane first; a due, unblocked review may run while task work is gated).
+
+### 11.2 E-005 — the guard exception (standing rule)
+
+The only non-fatal guard failure is the exact line
+`GUARD: task T-NNN is in the main state as ready AND in lane N; run wf.sh merge-lanes N`
+with both lane numbers equal, for a task whose effective status is `in-progress`,
+`awaiting-gate` or `blocked-decision`. Any other GUARD line, no GUARD line, or such a
+line for a `ready`/`todo`/`done` task stops the loop. The engine fix (`recompute_ready`
+leaves lane-owned placeholders alone, with a concurrent-lane regression test) is
+scheduled as T-018 after T-008; until then this narrow exception avoids deadlocking the
+sessions that must run to clear it. State is still never edited by hand.
+
+### 11.3 F-1 — pre-reviews of ready tasks are unachievable under the frozen kit (open)
+
+The pre-review promised by card S3, §3 step 4 and §6 cannot complete: `review-open`
+accepts only `done`/`changes-requested` (`_wf.py:1891-1892`, "review-open needs done")
+and `TRANSITIONS["ready"]` (`_wf.py:105`) contains no review state, so even skipping
+review-open a verdict could not be recorded. Every `/review T-xxx` the loop launches for
+a `ready` `pre+post` task ends in a kit refusal → non-zero exit or no progress → safe
+stop. The loop's `pre` branch is therefore dead on arrival under the frozen kit, and the
+same refusal hits a human-run `/review T-007` (the next ready `pre+post` task,
+exclusive-machine). Both paths are safe; the gap is a plan/kit contradiction the loop
+inherited, not a loop coding error. Escalated as **E-006** (type decision) in the cycle-1
+address review; the interim protocol for T-007 and any kit change await the planning
+chat's ruling. The progress-log open issue (4) ("two no-op `/continue` attempts") is
+incomplete: if the session claims and starts the task before honouring continue.md's
+lane question (continue.md:52-53), the task lands in-progress and the loop stops after
+**one** attempt ("not finished cleanly — resume manually") — also safe.

@@ -20,9 +20,13 @@ this, nothing more:
    loop in the foreground, and do not start a second one (its lock refuses).
 3. Tell Zack, with the actual pid and log path from step 2:
    - follow it: `tail -f /tmp/wf-loop-<stamp>.log`
-   - stop it early: `kill <pid>` (it also stops by itself at the deadline, or
-     on the first gate, escalation, blocked decision or other human-needed
-     state — the final log line names the reason and the task id)
+   - stop it early: `kill <pid>` stops **only the loop**, not a session it has
+     already launched: an in-flight claude session (a child of `timeout`) keeps
+     running to completion and still obeys the kit protocol, so let it finish (or
+     kill that child pid separately) before starting another loop. The loop also
+     stops by itself at the deadline, or on the first gate, escalation, blocked
+     decision or other human-needed state — the final log line names the reason
+     and the task id.
    - **Make the first real run a supervised one of about 1 hour while awake**
      (decision E-004): watch the log and be ready to answer gates and
      escalations in a normal session.

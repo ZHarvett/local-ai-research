@@ -369,7 +369,8 @@ Observations that the loop design must handle:
    showed T-005/T-017 as `in-progress` (lane mirrors) and the live lane pids, even
    though it ran from a worktree. A headless session reads the main state + shared
    runtime correctly, so the loop's per-session state reads are trustworthy.
-4. **claude CLI:** `/home/zack/.local/bin/claude`, version `2.1.323 (Claude Code)`.
+4. **claude CLI:** `~/.local/bin/claude` (home path scrubbed per D8), version
+   `2.1.323 (Claude Code)`.
    `python3` 3.14.9 and `jq` are both on PATH (the loop may use either for JSON;
    `python3` is guaranteed by the kit, `wf.sh:8`).
 
