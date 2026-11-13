@@ -1,5 +1,5 @@
 {
-  "checksum": "05f4acd27c2ea1e7c9a9f4e68208c45f17df713858f6fa19a639fdac2afaf121",
+  "checksum": "47601006491f2883597a2549b1fd0b79eefd61af08487840f9c73d8628c49014",
   "created_utc": "2026-11-12T22:25:04Z",
   "escalations": {
     "E-001": {
@@ -42,6 +42,12 @@
       "decided_utc": "2026-11-13T18:21:00Z",
       "status": "decided",
       "task": "T-017",
+      "type": "decision"
+    },
+    "E-007": {
+      "created_utc": "2026-11-13T18:34:58Z",
+      "status": "open",
+      "task": "T-019",
       "type": "decision"
     }
   },
@@ -906,6 +912,13 @@
       "seq": 122,
       "task": "T-019",
       "ts": "2026-11-13T18:31:43Z"
+    },
+    {
+      "detail": "E-007 (decision)",
+      "event": "escalated",
+      "seq": 123,
+      "task": "T-019",
+      "ts": "2026-11-13T18:34:58Z"
     }
   ],
   "kit_version": "0.1.0",
@@ -1344,6 +1357,8 @@
       "title": "Unattended loop (wf-loop.sh)"
     },
     "T-019": {
+      "blocked_from": "changes-requested",
+      "blocked_reason": "escalation E-007",
       "card_sha256": "9c7f0afd8fa7cfd28b26c8634d4b5d2d27d938e360d69e6ee8e80b0c31b7305c",
       "claimed_by_lane": 1,
       "depends_on": [
@@ -1359,7 +1374,7 @@
       "resources": "light",
       "review": "post",
       "source": "plan",
-      "status": "changes-requested",
+      "status": "blocked-decision",
       "steps_done": [
         "S1",
         "S2",

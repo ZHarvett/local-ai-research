@@ -27,7 +27,7 @@ files; change them through the scripts only.
 | T-015 | Private repo, CI and tag v0.1.0 | todo | 1 | none |
 | T-016 | Publish v0.1.0 | todo | 1 | none |
 | T-017 | Unattended loop (wf-loop.sh) | in-review (judgement) | 3 | post |
-| T-019 | Stage 4 pre-flight (no GPU) | changes-requested (judgement) | 1 | post |
+| T-019 | Stage 4 pre-flight (no GPU) | blocked-decision (judgement) | 1 | post |
 
 ## READY (grouped by lane)
 
@@ -35,12 +35,11 @@ _(none)_
 
 ## Escalation queue
 
-_(none)_
+- **E-007** (decision, task T-019) — open
 
 ## Review queue
 
 - **T-017** Unattended loop (wf-loop.sh) — in-review (cycle 2, max 2)
-- **T-019** Stage 4 pre-flight (no GPU) — changes-requested (cycle 1, max 2)
 
 ## Lanes
 
@@ -50,8 +49,8 @@ _(none)_
 
 ## Last events
 
-- 2026-11-13T18:21:00Z unblocked T-017 — restored to changes-requested
 - 2026-11-13T18:21:00Z note T-017 — decision E-006 recorded
 - 2026-11-13T18:28:49Z review-opened T-017 — cycle 2
 - 2026-11-13T18:31:18Z note T-019 — disposition F-1: accept
 - 2026-11-13T18:31:43Z note T-019 — disposition F-2: escalate
+- 2026-11-13T18:34:58Z escalated T-019 — E-007 (decision)
