@@ -49,8 +49,8 @@ _(none)_
 
 ## Last events
 
-- 2026-11-13T17:45:55Z note T-017 — disposition F-2: accept
-- 2026-11-13T17:45:56Z note T-017 — disposition F-3: accept
 - 2026-11-13T17:45:58Z note T-017 — disposition F-4: accept
 - 2026-11-13T17:45:59Z note T-017 — disposition F-5: accept
 - 2026-11-13T17:52:12Z escalated T-017 — E-006 (decision)
+- 2026-11-13T17:56:54Z step-done T-019 — S1: Stage 4 command list with pass signatures and stop rules (runbook sections 1-7, R1-R4)
+- 2026-11-13T17:56:54Z step-done T-019 — S2: P1-P7 PASS, P8 FAIL: T-017 uncommitted loop-design/loop-states edits dirty in main checkout

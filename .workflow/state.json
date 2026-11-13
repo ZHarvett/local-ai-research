@@ -1,5 +1,5 @@
 {
-  "checksum": "64d98bc491ae1fcd8eaf1c5a4dd748429603396dc6ccf3ab148b1196c68a54cc",
+  "checksum": "277a5ea6edc8e3581d2ee583930b09c3236fbff8baeb96c02ed2f89f0340315d",
   "created_utc": "2026-11-12T22:25:04Z",
   "escalations": {
     "E-001": {
@@ -828,6 +828,20 @@
       "seq": 111,
       "task": "T-017",
       "ts": "2026-11-13T17:52:12Z"
+    },
+    {
+      "detail": "S1: Stage 4 command list with pass signatures and stop rules (runbook sections 1-7, R1-R4)",
+      "event": "step-done",
+      "seq": 112,
+      "task": "T-019",
+      "ts": "2026-11-13T17:56:54Z"
+    },
+    {
+      "detail": "S2: P1-P7 PASS, P8 FAIL: T-017 uncommitted loop-design/loop-states edits dirty in main checkout",
+      "event": "step-done",
+      "seq": 113,
+      "task": "T-019",
+      "ts": "2026-11-13T17:56:54Z"
     }
   ],
   "kit_version": "0.1.0",
@@ -1265,7 +1279,10 @@
       "review": "post",
       "source": "plan",
       "status": "in-progress",
-      "steps_done": [],
+      "steps_done": [
+        "S1",
+        "S2"
+      ],
       "title": "Stage 4 pre-flight (no GPU)"
     }
   },
