@@ -1,5 +1,5 @@
 {
-  "checksum": "d722fdfa856afa3ac926a27266d1054ec9e2d807b19621c2f8bd661a74af8eff",
+  "checksum": "d34b5469f55a22a89ddcbc36bb3bed82663156f36c3643e5e20c0a685dba76be",
   "created_utc": "2026-11-12T22:25:04Z",
   "escalations": {
     "E-001": {
@@ -199,6 +199,55 @@
       "seq": 25,
       "task": "T-001",
       "ts": "2026-11-13T09:45:32Z"
+    },
+    {
+      "detail": "/dev/shm/local-ai-research-machine.lock",
+      "event": "machine-lock-released",
+      "seq": 26,
+      "task": null,
+      "ts": "2026-11-13T09:50:46Z"
+    },
+    {
+      "detail": "lane 1, pid 1574040",
+      "event": "claimed",
+      "seq": 27,
+      "task": "T-001",
+      "ts": "2026-11-13T09:51:04Z"
+    },
+    {
+      "detail": "lane 1",
+      "event": "started",
+      "seq": 28,
+      "task": "T-001",
+      "ts": "2026-11-13T09:51:04Z"
+    },
+    {
+      "detail": "S1",
+      "event": "step-done",
+      "seq": 29,
+      "task": "T-001",
+      "ts": "2026-11-13T09:53:36Z"
+    },
+    {
+      "detail": "S2",
+      "event": "step-done",
+      "seq": 30,
+      "task": "T-001",
+      "ts": "2026-11-13T09:55:27Z"
+    },
+    {
+      "detail": "S3",
+      "event": "step-done",
+      "seq": 31,
+      "task": "T-001",
+      "ts": "2026-11-13T09:55:27Z"
+    },
+    {
+      "detail": "S4",
+      "event": "step-done",
+      "seq": 32,
+      "task": "T-001",
+      "ts": "2026-11-13T09:56:00Z"
     }
   ],
   "kit_version": "0.1.0",
@@ -216,6 +265,7 @@
   "tasks": {
     "T-001": {
       "card_sha256": "809b9affd5d3b48476523ab4ae1be70a45cb8deebc10f4be46623e79e79aae3a",
+      "claimed_by_lane": 1,
       "depends_on": [],
       "files_write": [
         "docs/recon/T-001.md",
@@ -228,7 +278,13 @@
       "resources": "cpu-heavy",
       "review": "none",
       "source": "plan",
-      "status": "ready",
+      "status": "in-progress",
+      "steps_done": [
+        "S1",
+        "S2",
+        "S3",
+        "S4"
+      ],
       "title": "Smoke test and recon (read-only)"
     },
     "T-002": {

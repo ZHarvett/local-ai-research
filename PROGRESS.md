@@ -10,7 +10,7 @@ files; change them through the scripts only.
 
 | id | title | status | lane | review |
 |---|---|---|---|---|
-| T-001 | Smoke test and recon (read-only) | ready ⚠ re-acknowledge | 1 | none |
+| T-001 | Smoke test and recon (read-only) | in-progress ⚠ re-acknowledge | 1 | none |
 | T-002 | Record Stage 3 decisions and merge CLAUDE.md | todo | 1 | none |
 | T-003 | Reviewer calibration | todo | 1 | none |
 | T-004 | README draft | todo | 1 | none |
@@ -30,7 +30,7 @@ files; change them through the scripts only.
 
 ## READY (grouped by lane)
 
-- lane 1: **T-001** Smoke test and recon (read-only)
+_(none)_
 
 ## Escalation queue
 
@@ -48,8 +48,8 @@ _(none)_
 
 ## Last events
 
-- 2026-11-13T09:45:32Z plan-changed T-001 — card changed; re-acknowledgement required
-- 2026-11-13T09:45:32Z plan-changed T-007 — card changed; re-acknowledgement required
-- 2026-11-13T09:45:32Z plan-added T-017 — new card in amended plan
-- 2026-11-13T09:45:32Z plan-amended — sha256 c6d753906853…
-- 2026-11-13T09:45:32Z ready T-001 — dependencies satisfied
+- 2026-11-13T09:51:04Z started T-001 — lane 1
+- 2026-11-13T09:53:36Z step-done T-001 — S1
+- 2026-11-13T09:55:27Z step-done T-001 — S2
+- 2026-11-13T09:55:27Z step-done T-001 — S3
+- 2026-11-13T09:56:00Z step-done T-001 — S4
