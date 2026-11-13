@@ -1,0 +1,73 @@
+[
+  {
+    "task": "T-002",
+    "started_utc": "2026-11-13T10:14:28Z",
+    "git_commit": "b8b6cdfe748b11d345cc05e17197ed76fd2731ec",
+    "items": [
+      {
+        "id": "A1",
+        "cmd": "for i in D1 D2 D3 D4 D5 D6 D7 D8 D9 R1 R2 R3 R4; do grep -q \"^- $i \" docs/decisions.md || exit 1; done",
+        "exit_code": 0,
+        "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "output_bytes": 0,
+        "elapsed_s": 0.0,
+        "verdict": "pass"
+      },
+      {
+        "id": "A2",
+        "cmd": "! grep -qF '[filled in by T-002' docs/decisions.md",
+        "exit_code": 0,
+        "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "output_bytes": 0,
+        "elapsed_s": 0.0,
+        "verdict": "pass"
+      },
+      {
+        "id": "A3",
+        "cmd": "git apply --check -R docs/recon/claude-md-merge.diff",
+        "exit_code": 0,
+        "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "output_bytes": 0,
+        "elapsed_s": 0.0,
+        "verdict": "pass"
+      },
+      {
+        "id": "A4",
+        "cmd": "grep -q 'workflow-kit:begin' CLAUDE.md && grep -q 'workflow-kit:end' CLAUDE.md && grep -qi 'sudo' CLAUDE.md && grep -qF -- '--allow-dirty' CLAUDE.md",
+        "exit_code": 0,
+        "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "output_bytes": 0,
+        "elapsed_s": 0.0,
+        "verdict": "pass"
+      },
+      {
+        "id": "A5",
+        "cmd": "git diff --quiet HEAD -- CLAUDE.md docs/decisions.md",
+        "exit_code": 0,
+        "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "output_bytes": 0,
+        "elapsed_s": 0.0,
+        "verdict": "pass"
+      }
+    ],
+    "evidence_files": {
+      "docs/decisions.md": {
+        "exists": true,
+        "sha256": "7435193d30d2bac81ca90578e04c69c270478382b4d2178b3f21df6ac7acf32e",
+        "bytes": 116725
+      },
+      "docs/recon/claude-md-merge.diff": {
+        "exists": true,
+        "sha256": "31d2b8fd69721038317fc6fcfc7761d346d81ebabc4f98a620470b6124a44458",
+        "bytes": 4707
+      },
+      "CLAUDE.md": {
+        "exists": true,
+        "sha256": "9db5e46c68e695a5cb87406f9b373f92b091de5a3575e362fa1fc28af34e3579",
+        "bytes": 6097
+      }
+    },
+    "finished_utc": "2026-11-13T10:14:28Z",
+    "failures": 0
+  }
+]
