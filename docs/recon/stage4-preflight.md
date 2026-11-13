@@ -6,7 +6,9 @@ Session date: 2026-11-13 (UTC). Lane 1, main checkout. This file is the pre-revi
 (Stage 4 session): S1 lists every command Stage 4 will run with its pass signature and stop
 rules; S2 records the eight pre-flight checks. **No server was started and the GPU was not
 used**: every check below is a file read, a `--help`/`check` invocation, a git query, or a
-lock probe. The one FAIL (P8) is escalated; see §2.9 and `Result:` at the end.
+lock probe. P8 initially FAILed (T-017's uncommitted edits in the main checkout); the owning
+lane committed them mid-session and the redo-safe re-check passes — the full sequence is
+recorded in §2.8. <!-- derived: internal section cross-reference --> All eight checks PASS in the final record.
 
 ## 1. S1 — the Stage 4 command list (runbook §6, with §1–§5)
 
@@ -22,7 +24,7 @@ with 10%**, upper bound with a worst-case re-run pass **44 min**.
 | # | command | expected pass signature | stop rule |
 |---|---|---|---|
 | 0 | `cd /mnt/data/local-ai-research` | repo root | — |
-| 1 | `git status --short` | prints nothing. Kit bookkeeping (`.workflow/state.json`, `PROGRESS.md`) is exempt from the sweep's own dirty check, which looks only at `src configs scripts` (`scripts/run-sweep.sh:55-61`; T-001 A15). Any OTHER dirty path stops the start (P8, E-006). | §5.4: anything needing `--allow-dirty` stops |
+| 1 | `git status --short` | prints nothing. Kit bookkeeping (`.workflow/state.json`, `PROGRESS.md`) is exempt from the sweep's own dirty check, which looks only at `src configs scripts` (`scripts/run-sweep.sh:55-61`; T-001 A15). Any OTHER dirty path stops the start (P8). | §5.4: anything needing `--allow-dirty` stops |
 | 2 | `scripts/check-quiet.sh` | exit 0 = quiet (blocklist `configs/quiet-check.toml`, process names only). Prints the CPU idle figure as information; warns above 1.5 GiB resident. Paste its output into `docs/stage3-conditions.md`. | exit 1 = a blocklisted app runs: close it; if it cannot be closed, stop (§5.2). exit 2 = usage error |
 | 3 | `grep MemAvailable /proc/meminfo` | 24 GiB or more expected; record it in `docs/stage3-conditions.md` | the runner aborts below 20 GiB (§2); below 20 GiB stops (§5.2) |
 | 4 | `nvidia-smi` (memory line) | only a few MiB used; record the line in `docs/stage3-conditions.md` | a foreign GPU process stops (§5.2) |
@@ -79,7 +81,7 @@ frozen code state (checked in P7); **R4** S2 failures escalate, never auto-re-me
 | P5 | PASS | free 152,697,622,528 B ≥ 2 × 775,006 B (largest Stage 3 session) (§2.5) |
 | P6 | PASS | `bash -n docs/recon/commands.env` exit 0; every named tool and subcommand exists (§2.6) |
 | P7 | PASS | R3 check exits 0 at HEAD; date 2026-11-13 satisfies "13 November 2026 or later" (§2.7) <!-- derived: internal section cross-reference --> |
-| P8 | FAIL | tree dirty beyond bookkeeping: T-017's uncommitted `docs/recon/loop-design.md` and `docs/recon/loop-states.md` (§2.8, §2.9) <!-- derived: internal section cross-reference --> |
+| P8 | PASS | re-check at HEAD `ca1d5ad`: `git status --porcelain` empty, sweep dirty check empty; the initial FAIL (T-017's uncommitted loop edits) was resolved by lane 3's own commit `bc8e0c3` (§2.8, §2.9) <!-- derived: internal section cross-reference --> |
 
 ### 2.1 P1 — scripts and the GPU lock
 
@@ -279,9 +281,10 @@ three sessions ran from one verified code state, T-001 A5). The full filtered di
 `scripts/wf-{card,decision,escalate,guard,loop,merge-lanes,plan-import,progress}.sh`,
 `scripts/wf.sh`. Date: `date -u +%F` → `2026-11-13`, satisfying "13 November 2026 or later".
 
-### 2.8 P8 — tree state: FAIL <!-- derived: internal section number -->
+### 2.8 P8 — tree state: initial FAIL, resolved by lane 3 mid-session; re-check PASS <!-- derived: internal section number -->
 
-Re-run: `git status --porcelain` (at HEAD `de6d586`, before this file was written):
+**Initial observation (FAIL).** `git status --porcelain` at HEAD `de6d586`, before this
+file was written:
 
 ```
  M .workflow/state.json
@@ -293,26 +296,50 @@ Re-run: `git status --porcelain` (at HEAD `de6d586`, before this file was writte
 - `.workflow/state.json` and `PROGRESS.md` are tracked kit bookkeeping (this task's
   claim/start) — the exempt kind (T-001 A15).
 - `docs/recon/loop-design.md` (+18/−1 lines) and `docs/recon/loop-states.md` (+2/−1) are
-  **T-017's files** (card T-017 `files_write`, PLAN.md), lane 3, status `changes-requested`.
-  The uncommitted edits are review-address work: an E-004 option B decision note, the F-1
+  **T-017's files** (card T-017 `files_write`, PLAN.md), lane 3, then `changes-requested`.
+  The uncommitted edits were review-address work: an E-004 option B decision note, the F-1
   pre-review gap note, the F-5 review-exhausted ordering note, and a D8 home-path scrub.
   `bash scripts/wf.sh lane-status 3` → `lane 3: no lock | worktree - | no file`: the edits
-  sit uncommitted in the MAIN checkout, with no lane-3 worktree or lock.
-- The sweep's own dirty check IS empty: `git status --porcelain -- src configs scripts`
-  prints nothing, so `run-sweep.sh` would start. But P8 requires "clean apart from workflow
-  bookkeeping", and the runbook's G3 row 1 (`git status --short` prints nothing) is not met
-  by two task-work files that are not bookkeeping. No decision on record covers them
-  (`docs/decisions.md` checked).
-- The second P8 clause also fails as things stand: reaching a bookkeeping-only tree needs
-  lane 3 to commit (or the planning chat to exempt) these files — a state change outside
-  this task's rights between the clean check and the session start.
+  sat uncommitted in the MAIN checkout, with no lane-3 worktree or lock.
+- The sweep's own dirty check was already empty (`git status --porcelain -- src configs
+  scripts` prints nothing, so `run-sweep.sh` would start), but P8 requires "clean apart
+  from workflow bookkeeping", and two task-work files that are not bookkeeping broke that.
+  No decision on record covered them (`docs/decisions.md` checked). This session could not
+  fix it: lane discipline forbids touching another lane's files, and T-019's `files_write`
+  is only this file and the progress log.
 
-### 2.9 Why this session cannot fix P8, and what happens next
+**Resolution (by the owning lane, not by this session).** While this pre-flight was being
+written, the concurrent lane-3 session committed exactly those edits and finished its work:
 
-Lane discipline: T-019 may write only `docs/recon/stage4-preflight.md` and
-`docs/progress-log.md`; committing, reverting or stashing another lane's task files is
-forbidden ("Never touch another lane's tasks or files"). The card's `must_escalate` covers
-any FAIL. Escalated once as **E-006** with every failure listed (P8 only) and options for
-the planning chat. Everything else is green: Stage 4 is otherwise ready to run.
+```
+bc8e0c3  T-017: address review cycle 1 — F-2/F-3/F-4/F-5 doc fixes   (17:50:11Z)
+1ba3bf9  T-017: escalate F-1 as E-006 (decision); acceptance run 3, dispositions  (17:52:46Z)
+```
 
-Result: FAIL P8
+`git show --stat bc8e0c3` carries the loop-design/loop-states edits (F-2 D8 scrub, F-3
+decision addendum, F-5 ordering note); T-017 is now `blocked-decision` on its own E-006
+(the loop's inert pre-review branch — unrelated to Stage 4; T-007 is post-review per
+PLAN.md v1.2, and a blocked-decision task does not stop other ready tasks). This session's
+commit `ca1d5ad` (17:57:03Z) contains only its own three files (this doc, `.workflow/state.json`,
+`PROGRESS.md`); it did not touch T-017's files.
+
+**Re-check (PASS).** At HEAD `ca1d5ad`, 17:58:14Z: `git status --porcelain` → EMPTY (not
+even bookkeeping dirty); `git status --porcelain -- src configs scripts` → empty;
+`.workflow/state.json` and `PROGRESS.md` are tracked (`git ls-files`). No state-changing wf
+command is needed between this clean check and T-007's session start: claim/start and
+accept/done mutate only the exempt bookkeeping, and lane 3 has no worktree to merge. The
+R3 check re-run at the new HEAD still exits 0 (§2.7); <!-- derived: internal section cross-reference --> `pgrep -x llama-server` empty; GPU
+lock probe free.
+
+### 2.9 Escalation decision
+
+The card says to escalate once if any check FAILs. P8's FAIL was real when observed, and it
+is recorded above with its cause; before any escalation was filed, the owning lane removed
+the cause through its own legitimate commits, and the redo-safe re-check passes. The final
+record has **no failing check**, so there is nothing to escalate: filing an escalation for a
+resolved transient state would block T-019 (and T-007 behind it) for a decision no longer
+needed. No workaround was applied by this session — no other lane's file was committed,
+reverted or stashed here. T-017's own E-006 remains open for the planning chat on its own
+merits.
+
+Result: all checks PASS
