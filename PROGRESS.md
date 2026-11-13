@@ -47,8 +47,8 @@ _(none)_
 
 ## Last events
 
-- 2026-11-12T23:19:07Z escalated T-001 — E-002 (assumption-mismatch)
-- 2026-11-13T09:07:05Z unblocked T-001 — restored to in-progress
 - 2026-11-13T09:07:05Z note T-001 — decision E-002 recorded
 - 2026-11-13T09:13:29Z machine-lock-released — /dev/shm/local-ai-research-machine.lock
 - 2026-11-13T09:13:29Z resumed T-001 — from S5
+- 2026-11-13T09:18:32Z step-done T-001 — S5
+- 2026-11-13T09:18:32Z step-done T-001 — S6

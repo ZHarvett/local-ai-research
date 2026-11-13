@@ -1,5 +1,5 @@
 {
-  "checksum": "961644f5f310197e7eecf67559d6c1d354c198a32690d3502c7d0d6ddef2a61e",
+  "checksum": "dfb96c23da6dea9b57d0606f7479a963683b14b164ee712dbb38ceff9346216c",
   "created_utc": "2026-11-12T22:25:04Z",
   "escalations": {
     "E-001": {
@@ -143,6 +143,20 @@
       "seq": 17,
       "task": "T-001",
       "ts": "2026-11-13T09:13:29Z"
+    },
+    {
+      "detail": "S5",
+      "event": "step-done",
+      "seq": 18,
+      "task": "T-001",
+      "ts": "2026-11-13T09:18:32Z"
+    },
+    {
+      "detail": "S6",
+      "event": "step-done",
+      "seq": 19,
+      "task": "T-001",
+      "ts": "2026-11-13T09:18:32Z"
     }
   ],
   "kit_version": "0.1.0",
@@ -179,7 +193,9 @@
         "S1",
         "S2",
         "S3",
-        "S4"
+        "S4",
+        "S5",
+        "S6"
       ],
       "title": "Smoke test and recon (read-only)"
     },

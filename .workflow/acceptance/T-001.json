@@ -1,0 +1,89 @@
+[
+  {
+    "task": "T-001",
+    "started_utc": "2026-11-13T09:18:37Z",
+    "git_commit": "611682fbcae2734305f468bb164054ca24ec35f8",
+    "items": [
+      {
+        "id": "A1",
+        "verdict": "pass",
+        "path": "/mnt/data/local-ai-research/docs/recon/T-001.md",
+        "sha256": "2f69530d88b419f8c9ac7c01c8b25a1b43c14fde7fbe3ce9b46184e3a90f258f"
+      },
+      {
+        "id": "A2",
+        "cmd": "grep -cE '^\\| A([1-9]|1[0-6]) \\| (PASS|FAIL|INFO) \\|' docs/recon/T-001.md",
+        "exit_code": 0,
+        "output_sha256": "e6c21e8d260fe71882debdb339d2402a2ca7648529bc2303f48649bce0380017",
+        "output_bytes": 3,
+        "elapsed_s": 0.0,
+        "verdict": "pass"
+      },
+      {
+        "id": "A3",
+        "cmd": "S3=$(cat docs/recon/stage3-commit.txt) && git cat-file -e \"$S3^{commit}\" && echo ok",
+        "exit_code": 0,
+        "output_sha256": "dc51b8c96c2d745df3bd5590d990230a482fd247123599548e0632fdbf97fc22",
+        "output_bytes": 3,
+        "elapsed_s": 0.0,
+        "verdict": "pass"
+      },
+      {
+        "id": "A4",
+        "cmd": "bash -n docs/recon/commands.env && source docs/recon/commands.env && for v in GATE_CMD COVERAGE_CMD REPRO_CMD REPORT_CMD SCRUB_CMD CI_CMD; do [ -n \"${!v}\" ] || exit 1; done",
+        "exit_code": 0,
+        "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "output_bytes": 0,
+        "elapsed_s": 0.0,
+        "verdict": "pass"
+      },
+      {
+        "id": "A5",
+        "cmd": "S3=$(cat docs/recon/stage3-commit.txt) && git cat-file -e \"$S3^{commit}\" && ! git diff --name-only \"$S3\" HEAD -- src configs scripts pyproject.toml uv.lock CLAUDE.md .gitignore | grep -vxE 'CLAUDE\\.md|\\.gitignore|scripts/wf-[A-Za-z0-9_.-]+\\.sh|scripts/_wf\\.py'",
+        "exit_code": 1,
+        "output_sha256": "b0fa4ae54bb365265eaa44358e19b5c0b94d15a0a08662b9c97156fe2e074ac9",
+        "output_bytes": 14,
+        "elapsed_s": 0.0,
+        "verdict": "fail",
+        "reason": "exit code 1, wanted 0"
+      },
+      {
+        "id": "A6",
+        "cmd": "grep -qE '^Result: all assumptions PASS|^Resolved by decision E-[0-9]+' docs/recon/T-001.md",
+        "exit_code": 0,
+        "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "output_bytes": 0,
+        "elapsed_s": 0.0,
+        "verdict": "pass"
+      },
+      {
+        "id": "A7",
+        "cmd": "test -z \"$(git status --porcelain -- src configs scripts data reports tests)\"",
+        "exit_code": 0,
+        "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "output_bytes": 0,
+        "elapsed_s": 0.0,
+        "verdict": "pass"
+      }
+    ],
+    "evidence_files": {
+      "docs/recon/T-001.md": {
+        "exists": true,
+        "sha256": "2f69530d88b419f8c9ac7c01c8b25a1b43c14fde7fbe3ce9b46184e3a90f258f",
+        "bytes": 22391
+      },
+      "docs/recon/stage3-commit.txt": {
+        "exists": true,
+        "sha256": "e84ffe3786afe20cf3aeb53fe4450571377de45935897a9377c2f122be65327c",
+        "bytes": 41
+      },
+      "docs/recon/commands.env": {
+        "exists": true,
+        "sha256": "bf49d38307e3594f5a64c0f4e09fddbbddf6841e96555f12c086833685989c7c",
+        "bytes": 2694
+      }
+    },
+    "finished_utc": "2026-11-13T09:18:37Z",
+    "failures": 1
+  }
+]
