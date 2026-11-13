@@ -1,5 +1,5 @@
 {
-  "checksum": "35e20021edaaa9c55e9a879961c86fa0ddb441a885644a512e9875a98d0bb186",
+  "checksum": "6561191f0d892a4bf18761ae1eaf6fe47926d656cf2fb067163c9eb5282c3ed2",
   "events": [
     {
       "detail": "lane 3, pid 1807883",
@@ -35,13 +35,41 @@
       "seq": 4,
       "task": "T-017",
       "ts": "2026-11-13T11:55:29Z"
+    },
+    {
+      "detail": "restored to in-progress",
+      "event": "unblocked",
+      "seq": 5,
+      "task": "T-017",
+      "ts": "2026-11-13T12:52:02Z"
+    },
+    {
+      "detail": "decision E-004 recorded",
+      "event": "note",
+      "seq": 6,
+      "task": "T-017",
+      "ts": "2026-11-13T12:52:02Z"
+    },
+    {
+      "detail": "S3: design approved as E-004 option B; escalation decided 2026-11-13T12:52Z",
+      "event": "step-done",
+      "seq": 7,
+      "task": "T-017",
+      "ts": "2026-11-13T15:24:51Z"
+    },
+    {
+      "detail": "from S4",
+      "event": "resumed",
+      "seq": 8,
+      "task": "T-017",
+      "ts": "2026-11-13T15:25:01Z"
     }
   ],
   "lane": 3,
   "tasks": {
     "T-017": {
-      "blocked_from": "in-progress",
-      "blocked_reason": "escalation E-004",
+      "blocked_from": null,
+      "blocked_reason": null,
       "card_sha256": "9fd6ea8fce0fc308a3845667e930297a53db302322b68517902816999645a2a0",
       "claimed_by_lane": 3,
       "depends_on": [
@@ -61,10 +89,11 @@
       "resources": "light",
       "review": "post",
       "source": "plan",
-      "status": "blocked-decision",
+      "status": "in-progress",
       "steps_done": [
         "S1",
-        "S2"
+        "S2",
+        "S3"
       ],
       "title": "Unattended loop (wf-loop.sh)"
     }
