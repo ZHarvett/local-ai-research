@@ -1,0 +1,2 @@
+{"cell": "tuned-64K", "fields": {"metrics": true, "log_verbosity": 4, "context": 65536, "cpu_moe": true, "moe_cache_mib": 9472, "batch": 4096, "ubatch": 4096, "cache_type_k": "f16", "cache_type_v": "f16", "flash_attn": "on", "parallel": 1, "spec_type": "draft-mtp", "spec_draft_n_max": 1, "cache_ram": 2048}, "resolution": {}, "not_applicable": null, "utc": "2026-11-13T22:46:33Z"}
+{"cell": "stock-64K", "fields": {"metrics": true, "log_verbosity": 4, "context": 65536}, "resolution": {}, "not_applicable": null, "utc": "2026-11-13T22:55:33Z"}

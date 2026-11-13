@@ -107,3 +107,42 @@ Card T-007 names this file as the Stage 4 conditions log; the runbook's generic 
     next: PASS: run the one `--rerun-flagged` pass for this session (only if a unit is flagged), then the next session
   ```
 - Re-run pass: see the re-run entry below (3 flagged tuned-64K units).
+
+## Session stage4, re-run pass (once, `--rerun-flagged stage4`)
+- Started 23:23:46Z after `check-quiet.sh` (QUIET, exit 0; 452 processes; busy 0.2% over 10 s), MemAvailable
+  27.8 GiB (29,139,424 kB), no llama-server, GPU lock free. Job dir:
+  `data/logs/jobs/rerun-stage4-20261113T232346Z`. Units to re-run: 3 (tuned-64K repetitions 1, 3, 5, paging).
+- Poll 23:30:59Z: QUIET (exit 0; 458 processes; busy 10.5% over 10 s, llama-server). Re-run `state=running`
+  (pid 1928649), tuned-64K attempt 2 repetition 3 (B@16384); re-run canary-start and repetition 1 already done,
+  no new flags (total still 21, all attempt-1). MemAvailable 23.4 GiB (24,512,348 kB, server loaded). GPU
+  15,290 MiB, only the project's llama-server (pid 1929000). Top CPU (names): llama-server 132%, python 10.9%,
+  claude 1.2%. No stop rule fired.
+- Poll 23:38:33Z: QUIET (exit 0; 451 processes; busy 0.1% over 10 s). Re-run `state=complete`, runner exited
+  (job `status.json`: `"exit_code": 0, "state": "done"`, end 23:37:19Z). MemAvailable 27.9 GiB (29,212,296 kB).
+  GPU 3 MiB, no compute processes; `pgrep -x llama-server` empty. Drift: main no flag, rerun no flag. No stop
+  rule fired.
+- Ended 23:37:19Z (13.6 min; started 23:23:46Z), runner exit 0, state complete. Units re-run: 3 (tuned-64K
+  repetitions 1, 3, 5, paging). Result: all 3 attempt-2 windows clean — 0 major faults each, swap activity
+  0 / 0 / 50 MiB (`cells/tuned-64K-f9b81a84.json`, attempt-2 windows); resolved 3, still flagged 0. Re-run
+  canaries: 6 of 6 windows clean (0 major faults, gate output below); drift: no flag for main or rerun.
+  Attempt-2 measure 295.82 s for the 3 units; min free VRAM of the re-run tuned cell 1,031 MiB. No llama-server
+  left. tuned-64K now has 5 clean units (R1 fallback not needed; T-008's S2 check confirms).
+- Gate after the re-run (`stage3 gate`, exit 0): **PASS (a to f**; f at 3 of 17 attempt-1 tuned and canary
+  windows = 17.6%, limit 40%; the denominator now includes the six re-run canary windows). Verbatim:
+  ```
+  gate for stage3 session stage4: PASS
+    [PASS] a: the runner exited with 0 and the state is complete: state 'complete'; job exit code 0, state 'done'
+    [PASS] b: every cell has a final record: 2 of 2 cells final
+    [PASS] c: no accounting, warm_prefill or cache_miss flag: none
+    [PASS] d: no thermal or drift flag: thermal units none; drift {'main': None, 'rerun': None}
+    [PASS] e: no did_not_fit with reason startup_failure, startup_timeout, crash_mid_cell, oom_runtime: did_not_fit: none
+    [PASS] f: at most 40% of the tuned and canary windows paging-flagged and no flagged tuned or canary window above 1024 MiB of swap growth (stock windows excluded): 3 of 17 attempt-1 windows of the tuned cells and the canaries paging-flagged (17.6%, limit 40%); flagged windows above 1024 MiB of swap growth: none. Stock cells (reported, never fail the gate): 0 of 5 windows paging-flagged
+    paging-flagged windows per cell (attempt 1; stock cells are reported only):
+      canary-end [canary]: 0 of 3; largest swap growth 0 MiB; most major faults 0
+      canary-rerun-end [canary]: 0 of 3; largest swap growth 0 MiB; most major faults 0
+      canary-rerun-start [canary]: 0 of 3; largest swap growth 0 MiB; most major faults 0
+      canary-start [canary]: 0 of 3; largest swap growth -0 MiB; most major faults 383
+      stock-64K [stock]: 0 of 5; largest swap growth 0 MiB; most major faults 41
+      tuned-64K [tuned]: 3 of 5 (repetitions [0, 2, 4]); largest swap growth 220 MiB; most major faults 6751
+    next: PASS: run the one `--rerun-flagged` pass for this session (only if a unit is flagged), then the next session
+  ```

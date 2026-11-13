@@ -1,0 +1,198 @@
+{
+  "schema": 1,
+  "session_id": "stage4",
+  "created_utc": "2026-11-13T22:42:12Z",
+  "spec": {
+    "name": "stage4",
+    "path": "configs/sweeps/stage4.toml"
+  },
+  "spec_sha256": "6a11e6b13d8f94de0cf9af5bc80af6098296ec21034e49eeced011da752209b3",
+  "manifest_sha256": "ed750c1c73355d08d3f76742eb164721ebdfe7206ce2a7fcad89fd3bd5e9f27e",
+  "sampling_sha256": "09b6a27e5b086b3891ff66e0dd64f25deb12530e505cc69e4153c95716ee6743",
+  "git": {
+    "commit": "1307244870bf817744736ea42794ea9af803a008",
+    "short": "1307244870",
+    "dirty": false,
+    "dirty_paths": []
+  },
+  "filters": {},
+  "model_sha256": "42739874cc2ccfdb8523b23fbe52e29b2a7555c8176737ca9ca0b5d59859d41f",
+  "llama_cpp_commit": "57d04820dfef7a3519aac276d018a6fd71251895",
+  "allow_dirty": false,
+  "model": {
+    "sha256": "42739874cc2ccfdb8523b23fbe52e29b2a7555c8176737ca9ca0b5d59859d41f",
+    "verified": true,
+    "declared": "42739874cc2ccfdb8523b23fbe52e29b2a7555c8176737ca9ca0b5d59859d41f",
+    "size_bytes": 21713463040
+  },
+  "shuffle_seed": 20261109,
+  "cell_order": [
+    "tuned-64K",
+    "stock-64K"
+  ],
+  "cell_order_rule": "seeded shuffle respecting @n_fit dependencies (smallpc.sweep.spec.order_cells), not spec order",
+  "repetitions": 5,
+  "state": "complete",
+  "runs": [
+    {
+      "start_utc": "2026-11-13T22:42:12Z",
+      "pid": 1926396,
+      "mode": "run",
+      "code_commit": "1307244870",
+      "inhibit": {
+        "checked": true,
+        "active": true,
+        "tag": "smallpc-sweep-stage4-1794609732",
+        "line": "local-ai-research sweep 1000 <user> 1926383 systemd-inhibit sleep:idle smallpc-sweep-stage4-1794609732 block"
+      }
+    },
+    {
+      "start_utc": "2026-11-13T23:23:46Z",
+      "pid": 1928649,
+      "mode": "rerun",
+      "code_commit": "2179877f9f",
+      "inhibit": {
+        "checked": true,
+        "active": true,
+        "tag": "smallpc-sweep-stage4-1794612226",
+        "line": "local-ai-research sweep 1000 <user> 1928636 systemd-inhibit sleep:idle smallpc-sweep-stage4-1794612226 block"
+      },
+      "warnings": [
+        "code commit changed: session 1307244870 -> 2179877f9f; new records carry the new commit"
+      ],
+      "resumed": true
+    }
+  ],
+  "inhibit": {
+    "checked": true,
+    "active": true,
+    "tag": "smallpc-sweep-stage4-1794612226",
+    "line": "local-ai-research sweep 1000 <user> 1928636 systemd-inhibit sleep:idle smallpc-sweep-stage4-1794612226 block"
+  },
+  "drift": {
+    "main": {
+      "metrics": {
+        "pp_fresh_16k": {
+          "flag": null,
+          "relative_difference": 0.0004648460280384317,
+          "threshold": 0.05,
+          "start_mean": 575.5623428617264,
+          "end_mean": 575.8298907306942,
+          "start_values": [
+            577.898833349094,
+            572.3534756412837,
+            576.4347195948013
+          ],
+          "end_values": [
+            578.2638714328542,
+            573.0817579968498,
+            576.1440427623786
+          ]
+        },
+        "tg_16k": {
+          "flag": null,
+          "relative_difference": 0.0018800904755137788,
+          "threshold": 0.05,
+          "start_mean": 78.35115488687687,
+          "end_mean": 78.49846214692519,
+          "start_values": [
+            78.47603088297336,
+            78.36738157097727,
+            78.21005220667996
+          ],
+          "end_values": [
+            78.34391565246639,
+            78.57049742804695,
+            78.58097336026225
+          ]
+        },
+        "tg_short": {
+          "flag": null,
+          "relative_difference": 0.002432515045418578,
+          "threshold": 0.05,
+          "start_mean": 88.27371118108375,
+          "end_mean": 88.48843831164668,
+          "start_values": [
+            88.40436110456264,
+            88.21916027298855,
+            88.19761216570011
+          ],
+          "end_values": [
+            88.48017013029205,
+            88.48927516638312,
+            88.49586963826481
+          ]
+        }
+      },
+      "flag": null,
+      "decided_on": [
+        "pp_fresh_16k",
+        "tg_16k"
+      ],
+      "complete": true
+    },
+    "rerun": {
+      "metrics": {
+        "pp_fresh_16k": {
+          "flag": null,
+          "relative_difference": 0.0030156793784212143,
+          "threshold": 0.05,
+          "start_mean": 573.6685157456783,
+          "end_mean": 575.398516058662,
+          "start_values": [
+            576.3476884971603,
+            570.6863726231604,
+            573.9714861167143
+          ],
+          "end_values": [
+            578.1777562059004,
+            572.6335744529373,
+            575.3842175171483
+          ]
+        },
+        "tg_16k": {
+          "flag": null,
+          "relative_difference": 0.0010647555336012165,
+          "threshold": 0.05,
+          "start_mean": 78.42434833444891,
+          "end_mean": 78.34084557559073,
+          "start_values": [
+            78.42872087277212,
+            78.55688443790088,
+            78.28743969267373
+          ],
+          "end_values": [
+            78.3532695601868,
+            78.3402239352356,
+            78.32904323134984
+          ]
+        },
+        "tg_short": {
+          "flag": null,
+          "relative_difference": 0.00018459219294864857,
+          "threshold": 0.05,
+          "start_mean": 88.27153580677628,
+          "end_mean": 88.2878300431458,
+          "start_values": [
+            88.13038349085996,
+            88.40410647044943,
+            88.28011745901945
+          ],
+          "end_values": [
+            88.12135215699648,
+            88.5578978885267,
+            88.18424008391426
+          ]
+        }
+      },
+      "flag": null,
+      "decided_on": [
+        "pp_fresh_16k",
+        "tg_16k"
+      ],
+      "complete": true
+    }
+  },
+  "finished_utc": "2026-11-13T23:20:30Z",
+  "rerun_finished_utc": "2026-11-13T23:37:19Z"
+}
