@@ -27,7 +27,7 @@ files; change them through the scripts only.
 | T-015 | Private repo, CI and tag v0.1.0 | todo | 1 | none |
 | T-016 | Publish v0.1.0 | todo | 1 | none |
 | T-017 | Unattended loop (wf-loop.sh) | blocked-decision (judgement) | 3 | post |
-| T-019 | Stage 4 pre-flight (no GPU) | in-progress | 1 | post |
+| T-019 | Stage 4 pre-flight (no GPU) | done (judgement) | 1 | post |
 
 ## READY (grouped by lane)
 
@@ -45,12 +45,12 @@ _(none)_
 
 | lane | lock | worktree | tasks |
 |---|---|---|---|
-| 1 | pid 1876313 | - | - |
+| 1 | - | - | - |
 
 ## Last events
 
-- 2026-11-13T17:45:58Z note T-017 — disposition F-4: accept
-- 2026-11-13T17:45:59Z note T-017 — disposition F-5: accept
 - 2026-11-13T17:52:12Z escalated T-017 — E-006 (decision)
 - 2026-11-13T17:56:54Z step-done T-019 — S1: Stage 4 command list with pass signatures and stop rules (runbook sections 1-7, R1-R4)
 - 2026-11-13T17:56:54Z step-done T-019 — S2: P1-P7 PASS, P8 FAIL: T-017 uncommitted loop-design/loop-states edits dirty in main checkout
+- 2026-11-13T18:02:37Z step-done T-019 — S3: Result: all checks PASS (P8 re-check after lane-3 commits); acceptance run 1: 3/3 + A4 judgement, 0 failures; progress-log entry appended
+- 2026-11-13T18:02:38Z done T-019 — accept run at 2026-11-13T18:00:59Z
