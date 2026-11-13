@@ -1,0 +1,76 @@
+{
+  "checksum": "187356393647bbba6d5d4e5e3e768b8b4fd5c03f8c2554eaf3cd363e9f12a610",
+  "events": [
+    {
+      "detail": "lane 2, pid 1807601",
+      "event": "claimed",
+      "seq": 0,
+      "task": "T-005",
+      "ts": "2026-11-13T11:44:41Z"
+    },
+    {
+      "detail": "lane 2",
+      "event": "started",
+      "seq": 1,
+      "task": "T-005",
+      "ts": "2026-11-13T11:44:46Z"
+    },
+    {
+      "detail": "S1",
+      "event": "step-done",
+      "seq": 2,
+      "task": "T-005",
+      "ts": "2026-11-13T11:51:21Z"
+    },
+    {
+      "detail": "S2",
+      "event": "step-done",
+      "seq": 3,
+      "task": "T-005",
+      "ts": "2026-11-13T12:02:11Z"
+    },
+    {
+      "detail": "S3",
+      "event": "step-done",
+      "seq": 4,
+      "task": "T-005",
+      "ts": "2026-11-13T12:02:11Z"
+    },
+    {
+      "detail": "accept run at 2026-11-13T12:02:32Z",
+      "event": "done",
+      "seq": 5,
+      "task": "T-005",
+      "ts": "2026-11-13T12:02:41Z"
+    }
+  ],
+  "lane": 2,
+  "tasks": {
+    "T-005": {
+      "card_sha256": "fbe6b1afe9506933fd1f686494ce582009ddc50b13838a6238c2c85c0769d8b1",
+      "claimed_by_lane": 2,
+      "depends_on": [
+        "T-002",
+        "T-003"
+      ],
+      "files_write": [
+        "reports/baseline-report.md",
+        "tools/check_doc_numbers.py",
+        "tests/test_check_doc_numbers.py"
+      ],
+      "lane": 2,
+      "phase": "P1",
+      "resources": "light",
+      "review": "post",
+      "source": "plan",
+      "status": "done",
+      "steps_done": [
+        "S1",
+        "S2",
+        "S3"
+      ],
+      "title": "Baseline report draft and number checker"
+    }
+  },
+  "version": 1
+}
