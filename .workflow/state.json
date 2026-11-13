@@ -1,5 +1,5 @@
 {
-  "checksum": "47601006491f2883597a2549b1fd0b79eefd61af08487840f9c73d8628c49014",
+  "checksum": "29c459e94dc9a3641a1bf3d0fd3e43d9cec7766abd1e4d3efc240f0738d74feb",
   "created_utc": "2026-11-12T22:25:04Z",
   "escalations": {
     "E-001": {
@@ -46,7 +46,8 @@
     },
     "E-007": {
       "created_utc": "2026-11-13T18:34:58Z",
-      "status": "open",
+      "decided_utc": "2026-11-13T18:42:53Z",
+      "status": "decided",
       "task": "T-019",
       "type": "decision"
     }
@@ -919,6 +920,34 @@
       "seq": 123,
       "task": "T-019",
       "ts": "2026-11-13T18:34:58Z"
+    },
+    {
+      "detail": "restored to changes-requested",
+      "event": "unblocked",
+      "seq": 124,
+      "task": "T-019",
+      "ts": "2026-11-13T18:42:53Z"
+    },
+    {
+      "detail": "decision E-007 recorded",
+      "event": "note",
+      "seq": 125,
+      "task": "T-019",
+      "ts": "2026-11-13T18:42:53Z"
+    },
+    {
+      "detail": "lane 1",
+      "event": "started",
+      "seq": 126,
+      "task": "T-019",
+      "ts": "2026-11-13T18:50:27Z"
+    },
+    {
+      "detail": "accept run at 2026-11-13T18:50:27Z",
+      "event": "done",
+      "seq": 127,
+      "task": "T-019",
+      "ts": "2026-11-13T18:50:58Z"
     }
   ],
   "kit_version": "0.1.0",
@@ -1357,8 +1386,8 @@
       "title": "Unattended loop (wf-loop.sh)"
     },
     "T-019": {
-      "blocked_from": "changes-requested",
-      "blocked_reason": "escalation E-007",
+      "blocked_from": null,
+      "blocked_reason": null,
       "card_sha256": "9c7f0afd8fa7cfd28b26c8634d4b5d2d27d938e360d69e6ee8e80b0c31b7305c",
       "claimed_by_lane": 1,
       "depends_on": [
@@ -1374,7 +1403,7 @@
       "resources": "light",
       "review": "post",
       "source": "plan",
-      "status": "blocked-decision",
+      "status": "done",
       "steps_done": [
         "S1",
         "S2",
