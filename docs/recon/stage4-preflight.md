@@ -138,7 +138,7 @@ stored records. Rendered argv (stock): binary, `-m <model>`, `--host 127.0.0.1`,
 `-c 65536`, `--metrics`, `-lv 4` (12 items; no `--cache-ram`, i.e. llama.cpp's default).
 Rendered argv (tuned): the same head plus `-cmoe`, `--moe-cache-mib 9472`, `-b 4096`,
 `-ub 4096`, `-ctk f16`, `-ctv f16`, `-fa on`, `-np 1`, `--spec-type draft-mtp`,
-`--spec-draft-n-max 1`, `--cache-ram 2048`, `--metrics`, `-lv 4` (28 items).
+`--spec-draft-n-max 1`, `--cache-ram 2048`, `--metrics`, `-lv 4` (33 items).
 
 **Independent cross-check (repo CLI only):** for each cell,
 `uv run --frozen --quiet python -m smallpc.render data/raw/stage3-64K/resolved/<cell>.toml`

@@ -1,5 +1,5 @@
 {
-  "checksum": "4acf6cd5f419d3914abebe61656d032542a802b708e13d2dc24d5129a35f0820",
+  "checksum": "05f4acd27c2ea1e7c9a9f4e68208c45f17df713858f6fa19a639fdac2afaf121",
   "created_utc": "2026-11-12T22:25:04Z",
   "escalations": {
     "E-001": {
@@ -892,6 +892,20 @@
       "seq": 120,
       "task": "T-017",
       "ts": "2026-11-13T18:28:49Z"
+    },
+    {
+      "detail": "disposition F-1: accept",
+      "event": "note",
+      "seq": 121,
+      "task": "T-019",
+      "ts": "2026-11-13T18:31:18Z"
+    },
+    {
+      "detail": "disposition F-2: escalate",
+      "event": "note",
+      "seq": 122,
+      "task": "T-019",
+      "ts": "2026-11-13T18:31:43Z"
     }
   ],
   "kit_version": "0.1.0",
@@ -945,6 +959,22 @@
         "finding": "F-5",
         "reason": "NOTE FIX-DOC, verified at scripts/wf-loop.sh:254-265: the exhausted-review stop sits after address/inflight/post/ready/pre in the decision priority, so unrelated ready work or due reviews proceed first. Documenting this ordering in loop-design.md \u00a75 (consistent with the card's stop list; no behaviour change).",
         "severity": "NOTE"
+      }
+    ],
+    "T-019": [
+      {
+        "action_taken": "accept",
+        "cycle": 1,
+        "finding": "F-1",
+        "reason": "MINOR FIX-DOC, verified from raw records: data/raw/stage3-64K/cells/tuned-64K-f9b81a84.json argv has 33 items (stock-64K-22dc1178.json has 12, matching the doc's stock count). Fixed docs/recon/stage4-preflight.md:141 '(28 items)' -> '(33 items)'; the flag enumeration itself was already complete and correct. Number checker re-run: exit 0, '33 numbers verified, 32 sources'. Acceptance re-run after the fix.",
+        "severity": "MINOR"
+      },
+      {
+        "action_taken": "escalate",
+        "cycle": 1,
+        "finding": "F-2",
+        "reason": "MINOR DECIDE: card-interpretation question reserved to the planning chat \u2014 whether a transient P8 FAIL, resolved mid-session by the owning lane's own legitimate commits (bc8e0c3/1ba3bf9) before any escalation was filed, triggers card S3's 'if any check FAILs, escalate once' clause. Verified the review's facts: the FAIL was real at de6d586, the re-check passed, ca1d5ad touches only T-019's own files, and \u00a72.9 documents the reading that the clause attaches to the final Result. DECIDE findings are never resolved inline; escalating with options (a) ratify \u00a72.9's reading (recommended, optional one-line precedent in docs/decisions.md) or (b) require a retroactive escalation brief. No re-measurement or code change implied.",
+        "severity": "MINOR"
       }
     ]
   },

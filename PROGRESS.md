@@ -50,8 +50,8 @@ _(none)_
 
 ## Last events
 
-- 2026-11-13T18:19:16Z review-opened T-019 — cycle 1
-- 2026-11-13T18:19:24Z review-verdict T-019 — changes-requested (cycle 1, 2 findings)
 - 2026-11-13T18:21:00Z unblocked T-017 — restored to changes-requested
 - 2026-11-13T18:21:00Z note T-017 — decision E-006 recorded
 - 2026-11-13T18:28:49Z review-opened T-017 — cycle 2
+- 2026-11-13T18:31:18Z note T-019 — disposition F-1: accept
+- 2026-11-13T18:31:43Z note T-019 — disposition F-2: escalate
