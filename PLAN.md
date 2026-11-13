@@ -1,5 +1,5 @@
 # Step 0, remaining work: Stage 4, release v0.1.0, completion report
-*Version 1.1 · 13 November 2026*
+*Version 1.2 · 13 November 2026*
 
 ## Shared rules
 
@@ -64,7 +64,7 @@ Context: Step 0 (baseline setup) of "Local AI on a Small PC". Reference plan: do
 
 - P0: Pilot setup (13 Nov): T-001, T-002, T-003, and T-017 (unattended loop, can run beside the drafts)
 - P1: Drafts, the first parallel pair: T-004 and T-005 in parallel, then T-006
-- P2: Stage 4 (13 Nov or later, quiet machine): T-007, T-008
+- P2: Stage 4 (13 Nov or later, quiet machine): T-019 (pre-flight, light), T-007, T-008
 - P3: Post-Stage-4 code fixes: T-009
 - P4: Release: T-010 and T-011 in parallel, then T-012 to T-016
 
@@ -274,14 +274,16 @@ decision_rights:
 id: T-007
 title: Stage 4 session
 phase: P2
-depends_on: T-002, T-003
+depends_on: T-002, T-003, T-019
 lane: 1
 resources: exclusive-machine
 files_read: docs/runbook-stage3.md, docs/recon/T-001.md, docs/recon/commands.env, docs/recon/stage3-commit.txt, configs/sweeps/, configs/server/stock-64k.toml, configs/server/tuned-64k.toml
 files_write: data/raw/, docs/stage3-conditions.md, docs/stage4-conditions.md, docs/recon/stage4-session.txt, docs/decisions.md, docs/progress-log.md
 gates: Stage 4, the headline reproducibility run (about 45 minutes). It must be 13 November or later. Close every app except one terminal running Claude Code (scripts/check-quiet.sh must exit 0), keep the PC on mains power, and don't use it until this session says it has finished; following along on your phone is fine. Reply go.
-review: pre+post
+review: post
 preconditions:
+  - cmd: grep -q '^Result: all checks PASS' docs/recon/stage4-preflight.md
+    expect: exit_code 0
   - cmd: [ "$(date +%Y%m%d)" -ge 20261113 ]
     expect: exit_code 0
   - cmd: S3=$(cat docs/recon/stage3-commit.txt) && git cat-file -e "$S3^{commit}" && ! git diff --name-only "$S3" HEAD -- src configs scripts pyproject.toml uv.lock CLAUDE.md .gitignore | grep -vxE 'CLAUDE\.md|\.gitignore|scripts/wf(-[A-Za-z0-9_.-]+)?\.sh|scripts/_wf\.py'
@@ -497,7 +499,7 @@ preconditions:
   - cmd: test -z "$(git status --porcelain -- data reports docs)"
     expect: exit_code 0
 steps:
-  - S1: Write scripts/release-check.sh: read-only, bash, shellcheck-clean. It exits 0 only if all of these pass: (a) SCRUB_CMD over data, reports, docs, configs, README.md, CHANGELOG.md and CLAUDE.md finds nothing; (b) a scan of every commit and every path in the history (e.g. `git log -p --all` with the scrub module's patterns) finds nothing beyond the known WP0 occurrence of the account name, which is allowlisted by commit and path, never by the string itself (D8); (c) tools/check_doc_numbers.py passes on README.md, reports/baseline-report.md and reports/writeup.md; (d) there are no TODO-T010 placeholders; (e) LICENSE and LICENSE-DATA.md exist. (redo-safe)
+  - S1: Write scripts/release-check.sh: read-only, bash, shellcheck-clean. It exits 0 only if all of these pass: (a) SCRUB_CMD over data, reports, docs, configs, README.md, CHANGELOG.md and CLAUDE.md finds nothing; (b) a scan of every commit and every path in the history (e.g. `git log -p --all` with the scrub module's patterns) finds nothing beyond the known occurrences of the account name, which are allowlisted by commit and path, never by the string itself (D8): the WP0 commit(s), and the commits that introduced the path docs/recon/loop-states.md (their hashes are recorded in docs/decisions.md by the decision on the T-017 review finding); (c) tools/check_doc_numbers.py passes on README.md, reports/baseline-report.md and reports/writeup.md; (d) there are no TODO-T010 placeholders; (e) LICENSE and LICENSE-DATA.md exist. (redo-safe)
   - S2: Run it and write docs/recon/scrub-report.md with counts and locations only, never the matched values. (redo-safe)
   - S3: If anything is found beyond the known occurrence, escalate and stop. (not redo-safe)
   - S4: Commit and append the progress-log entry. (redo-safe)
@@ -507,12 +509,12 @@ acceptance:
   - cmd: shellcheck scripts/release-check.sh
     expect: exit_code 0
   - expect: file_exists docs/recon/scrub-report.md
-  - expect: manual "The history scan covers every commit and every path; the allowlist names only the known WP0 occurrence, by commit and path; the report contains no matched values."
+  - expect: manual "The history scan covers every commit and every path; the allowlist names only the known WP0 occurrence and the T-017 loop-states.md occurrence, by commit and path; the report contains no matched values."
 evidence: docs/recon/scrub-report.md, scripts/release-check.sh
 estimate: 60m
 decision_rights:
   - may: the script's structure and its output format
-  - must_escalate: any finding beyond the known occurrence; any need to edit committed data to remove a finding
+  - must_escalate: any finding beyond the two known occurrences; any need to edit committed data to remove a finding
 
 ### T-014 — Completion report and planning-chat review
 id: T-014
@@ -657,3 +659,35 @@ estimate: 120m
 decision_rights:
   - may: the script's internal structure; log format; the default per-session timeout within 60–120 minutes
   - must_escalate: the design itself (always); any need to change an existing file; any stop condition that cannot be detected from state.json or exit codes; any need to run a real session against this repo to test
+
+### T-019 — Stage 4 pre-flight (no GPU)
+id: T-019
+title: Stage 4 pre-flight (no GPU)
+phase: P2
+depends_on: T-002, T-003
+lane: 1
+resources: light
+files_read: docs/runbook-stage3.md, docs/recon/T-001.md, docs/recon/commands.env, docs/recon/stage3-commit.txt, configs/sweeps/, configs/server/, scripts/, src/smallpc/, data/raw/
+files_write: docs/recon/stage4-preflight.md, docs/progress-log.md
+gates: none
+review: post
+preconditions:
+  - cmd: test -f docs/recon/commands.env && ! pgrep -x llama-server
+    expect: exit_code 0
+steps:
+  - S1: Read the runbook's Stage 4 section and list in docs/recon/stage4-preflight.md every command Stage 4 will run, with its expected pass signature and the stop rules that apply. This stands in for the pre-review of T-007, which the kit cannot do on a task that has not run yet. (redo-safe)
+  - S2: Check, without starting any server or using the GPU, and record each as a row `| P<n> | PASS or FAIL | evidence |`: P1 every script the runbook names for Stage 4 exists and is executable (check-quiet.sh, sweep-status.sh, run-detached.sh, the GPU lock path); P2 the Stage 4 sweep spec exists and, rendered or read as the runbook says, gives stock-64K and tuned-64K the same server argument lists as the Stage 3 cells recorded in data/raw (compare checksums of the argument lists, and say how they were obtained); P3 the sweep tool's --help lists the re-run options the runbook uses, including --only and the re-run flagged mode; P4 the Stage 4 output location does not already exist; P5 free disk space on the repo's filesystem is at least twice the size of one Stage 3 session; P6 docs/recon/commands.env parses (`bash -n`) and every command in it names a tool that exists; P7 the R3 check from the shared rules passes now; P8 the tree is clean apart from workflow bookkeeping, and no state-changing wf command is needed between the clean check and the session start. (redo-safe)
+  - S3: End the file with `Result: all checks PASS` or `Result: FAIL <ids>`, commit, and append the progress-log entry. If any check FAILs, escalate once listing every failure. (redo-safe)
+acceptance:
+  - cmd: grep -cE '^\| P[1-8] \| (PASS|FAIL) \|' docs/recon/stage4-preflight.md
+    expect: stdout_regex ^8$
+  - cmd: grep -q '^Result: all checks PASS' docs/recon/stage4-preflight.md
+    expect: exit_code 0
+  - cmd: ! pgrep -x llama-server
+    expect: exit_code 0
+  - expect: manual "Each row has evidence a reader can re-run; P2 compares every cell's argument list, not only one; no server was started and the GPU was not used."
+evidence: docs/recon/stage4-preflight.md
+estimate: 30m
+decision_rights:
+  - may: how each check is carried out, provided no server is started and no GPU is used
+  - must_escalate: any FAIL; any need to change a file outside docs/recon/; any need to run something on the GPU

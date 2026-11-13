@@ -1,5 +1,5 @@
 {
-  "checksum": "4097debe1d9254eb32a96e3b709865e3131a5c8f91eb541b4a7ec2d88a5a2177",
+  "checksum": "2b4177ebeec825f8fddad593b8377e867261a7cd266d5d0d6e20da777ee78fe0",
   "created_utc": "2026-11-12T22:25:04Z",
   "escalations": {
     "E-001": {
@@ -717,6 +717,55 @@
       "seq": 96,
       "task": "T-006",
       "ts": "2026-11-13T15:58:46Z"
+    },
+    {
+      "detail": "cycle 1",
+      "event": "review-opened",
+      "seq": 97,
+      "task": "T-017",
+      "ts": "2026-11-13T16:02:57Z"
+    },
+    {
+      "detail": "changes-requested (cycle 1, 5 findings)",
+      "event": "review-verdict",
+      "seq": 98,
+      "task": "T-017",
+      "ts": "2026-11-13T16:02:57Z"
+    },
+    {
+      "detail": "card changed; re-acknowledgement required",
+      "event": "plan-changed",
+      "seq": 99,
+      "task": "T-007",
+      "ts": "2026-11-13T16:16:35Z"
+    },
+    {
+      "detail": "card changed; re-acknowledgement required",
+      "event": "plan-changed",
+      "seq": 100,
+      "task": "T-013",
+      "ts": "2026-11-13T16:16:35Z"
+    },
+    {
+      "detail": "new card in amended plan",
+      "event": "plan-added",
+      "seq": 101,
+      "task": "T-019",
+      "ts": "2026-11-13T16:16:35Z"
+    },
+    {
+      "detail": "sha256 6445a4e78029\u2026",
+      "event": "plan-amended",
+      "seq": 102,
+      "task": null,
+      "ts": "2026-11-13T16:16:35Z"
+    },
+    {
+      "detail": "dependencies satisfied",
+      "event": "ready",
+      "seq": 103,
+      "task": "T-019",
+      "ts": "2026-11-13T16:16:35Z"
     }
   ],
   "kit_version": "0.1.0",
@@ -728,9 +777,10 @@
     "P4"
   ],
   "plan_file": "PLAN.md",
-  "plan_sha256": "c6d7539068538f1b0b82714cbe1369159b0549403f7b91986ee8789a9bb09e46",
+  "plan_sha256": "6445a4e780291bbfd5e4249821ffac20311286fd9489fee2454d0847f8d8b79c",
   "review_cycles": {
-    "T-005": 1
+    "T-005": 1,
+    "T-017": 1
   },
   "review_dispositions": {},
   "tasks": {
@@ -877,10 +927,11 @@
       "title": "Write-up draft"
     },
     "T-007": {
-      "card_sha256": "b123a6d62fdefc85dd999ffdb49805e980f3e4f21f5bac9b38d5f6e21aa4abc0",
+      "card_sha256": "abff6d1cc8ccaf5c65e484ea5468cd8a289490fe21ef242a8bc4f9d1d929db51",
       "depends_on": [
         "T-002",
-        "T-003"
+        "T-003",
+        "T-019"
       ],
       "files_write": [
         "data/raw/",
@@ -894,9 +945,9 @@
       "phase": "P2",
       "plan_changed": true,
       "resources": "exclusive-machine",
-      "review": "pre+post",
+      "review": "post",
       "source": "plan",
-      "status": "ready",
+      "status": "todo",
       "title": "Stage 4 session"
     },
     "T-008": {
@@ -1000,7 +1051,7 @@
       "title": "README walkthrough from a clean shell"
     },
     "T-013": {
-      "card_sha256": "bbad6ddeb117b6972e0d1bb3ce18f813e5168013c881a3ad5581705b4513b501",
+      "card_sha256": "080bad60134f7a5468e9f555ae656e6cd423ef05f6436190461ce6ad4e8a184d",
       "depends_on": [
         "T-010",
         "T-011",
@@ -1013,6 +1064,7 @@
       ],
       "lane": 1,
       "phase": "P4",
+      "plan_changed": true,
       "resources": "light",
       "review": "post",
       "source": "plan",
@@ -1093,8 +1145,26 @@
       "resources": "light",
       "review": "post",
       "source": "plan",
-      "status": "done",
+      "status": "changes-requested",
       "title": "Unattended loop (wf-loop.sh)"
+    },
+    "T-019": {
+      "card_sha256": "9c7f0afd8fa7cfd28b26c8634d4b5d2d27d938e360d69e6ee8e80b0c31b7305c",
+      "depends_on": [
+        "T-002",
+        "T-003"
+      ],
+      "files_write": [
+        "docs/recon/stage4-preflight.md",
+        "docs/progress-log.md"
+      ],
+      "lane": 1,
+      "phase": "P2",
+      "resources": "light",
+      "review": "post",
+      "source": "plan",
+      "status": "ready",
+      "title": "Stage 4 pre-flight (no GPU)"
     }
   },
   "title": "Step 0, remaining work: Stage 4, release v0.1.0, completion report",
