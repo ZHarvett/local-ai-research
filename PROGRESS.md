@@ -48,8 +48,8 @@ _(none)_
 
 ## Last events
 
-- 2026-11-13T11:03:18Z started T-003 — lane 1
 - 2026-11-13T11:03:40Z gate-wait T-003 — Open a second terminal in the repo, start a fresh Claude Code session and run /calibrate-reviewer. When it has written .workflow/calibration.json, close that session and reply go here.
 - 2026-11-13T11:08:55Z gate-release T-003 — Zack said go
 - 2026-11-13T11:12:24Z step-done T-003 — S1
 - 2026-11-13T11:12:24Z step-done T-003 — S2
+- 2026-11-13T11:13:09Z step-done T-003 — S3

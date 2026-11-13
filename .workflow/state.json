@@ -1,5 +1,5 @@
 {
-  "checksum": "42191c10b83519164ab96f0a24885c241eb9d6c7282bf76b3fb559a7db56dbde",
+  "checksum": "6db8876ecb4648d3550108875a2c614269cd49a1a33d2e7794c25f2f6640dfbe",
   "created_utc": "2026-11-12T22:25:04Z",
   "escalations": {
     "E-001": {
@@ -402,6 +402,13 @@
       "seq": 53,
       "task": "T-003",
       "ts": "2026-11-13T11:12:24Z"
+    },
+    {
+      "detail": "S3",
+      "event": "step-done",
+      "seq": 54,
+      "task": "T-003",
+      "ts": "2026-11-13T11:13:09Z"
     }
   ],
   "kit_version": "0.1.0",
@@ -490,7 +497,8 @@
       "status": "in-progress",
       "steps_done": [
         "S1",
-        "S2"
+        "S2",
+        "S3"
       ],
       "title": "Reviewer calibration"
     },
