@@ -16,7 +16,7 @@ files; change them through the scripts only.
 | T-004 | README draft | done | 1 | none |
 | T-005 | Baseline report draft and number checker | accepted (judgement) | 2 | post |
 | T-006 | Write-up draft | done | 1 | none |
-| T-007 | Stage 4 session | todo ⚠ re-acknowledge | 1 | post |
+| T-007 | Stage 4 session | ready ⚠ re-acknowledge | 1 | post |
 | T-008 | S2 check and Stage 4 analysis | todo | 1 | post |
 | T-009 | Post-Stage-4 code fixes | todo | 1 | none |
 | T-010 | Final README, report, write-up and changelog | todo | 1 | post |
@@ -26,12 +26,12 @@ files; change them through the scripts only.
 | T-014 | Completion report and planning-chat review | todo | 1 | none |
 | T-015 | Private repo, CI and tag v0.1.0 | todo | 1 | none |
 | T-016 | Publish v0.1.0 | todo | 1 | none |
-| T-017 | Unattended loop (wf-loop.sh) | in-review (judgement) | 3 | post |
-| T-019 | Stage 4 pre-flight (no GPU) | done (judgement) | 1 | post |
+| T-017 | Unattended loop (wf-loop.sh) | accepted (judgement) | 3 | post |
+| T-019 | Stage 4 pre-flight (no GPU) | accepted (judgement) | 1 | post |
 
 ## READY (grouped by lane)
 
-_(none)_
+- lane 1: **T-007** Stage 4 session
 
 ## Escalation queue
 
@@ -39,7 +39,7 @@ _(none)_
 
 ## Review queue
 
-- **T-017** Unattended loop (wf-loop.sh) — in-review (cycle 2, max 2)
+_(none)_
 
 ## Lanes
 
@@ -49,8 +49,8 @@ _(none)_
 
 ## Last events
 
-- 2026-11-13T18:34:58Z escalated T-019 — E-007 (decision)
-- 2026-11-13T18:42:53Z unblocked T-019 — restored to changes-requested
-- 2026-11-13T18:42:53Z note T-019 — decision E-007 recorded
-- 2026-11-13T18:50:27Z started T-019 — lane 1
 - 2026-11-13T18:50:58Z done T-019 — accept run at 2026-11-13T18:50:27Z
+- 2026-11-13T19:10:11Z review-opened T-019 — cycle 2
+- 2026-11-13T19:10:11Z review-verdict T-019 — accepted (cycle 2, 0 findings)
+- 2026-11-13T19:10:11Z ready T-007 — dependencies satisfied
+- 2026-11-13T22:28:01Z review-verdict T-017 — accepted (cycle 2, 2 findings)

@@ -1,5 +1,5 @@
 {
-  "checksum": "29c459e94dc9a3641a1bf3d0fd3e43d9cec7766abd1e4d3efc240f0738d74feb",
+  "checksum": "09585f826f162e23e9a324225ed2dbcca84bd5de16fe3086a9f2e2e8617bf9ea",
   "created_utc": "2026-11-12T22:25:04Z",
   "escalations": {
     "E-001": {
@@ -948,6 +948,34 @@
       "seq": 127,
       "task": "T-019",
       "ts": "2026-11-13T18:50:58Z"
+    },
+    {
+      "detail": "cycle 2",
+      "event": "review-opened",
+      "seq": 128,
+      "task": "T-019",
+      "ts": "2026-11-13T19:10:11Z"
+    },
+    {
+      "detail": "accepted (cycle 2, 0 findings)",
+      "event": "review-verdict",
+      "seq": 129,
+      "task": "T-019",
+      "ts": "2026-11-13T19:10:11Z"
+    },
+    {
+      "detail": "dependencies satisfied",
+      "event": "ready",
+      "seq": 130,
+      "task": "T-007",
+      "ts": "2026-11-13T19:10:11Z"
+    },
+    {
+      "detail": "accepted (cycle 2, 2 findings)",
+      "event": "review-verdict",
+      "seq": 131,
+      "task": "T-017",
+      "ts": "2026-11-13T22:28:01Z"
     }
   ],
   "kit_version": "0.1.0",
@@ -963,7 +991,7 @@
   "review_cycles": {
     "T-005": 1,
     "T-017": 2,
-    "T-019": 1
+    "T-019": 2
   },
   "review_dispositions": {
     "T-017": [
@@ -1184,7 +1212,7 @@
       "resources": "exclusive-machine",
       "review": "post",
       "source": "plan",
-      "status": "todo",
+      "status": "ready",
       "title": "Stage 4 session"
     },
     "T-008": {
@@ -1382,7 +1410,7 @@
       "resources": "light",
       "review": "post",
       "source": "plan",
-      "status": "in-review",
+      "status": "accepted",
       "title": "Unattended loop (wf-loop.sh)"
     },
     "T-019": {
@@ -1403,7 +1431,7 @@
       "resources": "light",
       "review": "post",
       "source": "plan",
-      "status": "done",
+      "status": "accepted",
       "steps_done": [
         "S1",
         "S2",

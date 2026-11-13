@@ -190,5 +190,53 @@
     },
     "finished_utc": "2026-11-13T18:50:27Z",
     "failures": 0
+  },
+  {
+    "task": "T-019",
+    "started_utc": "2026-11-13T18:59:58Z",
+    "git_commit": "56e1c39345dae36cb9a663ef41ea08d8237ba885",
+    "items": [
+      {
+        "id": "A1",
+        "cmd": "grep -cE '^\\| P[1-8] \\| (PASS|FAIL) \\|' docs/recon/stage4-preflight.md",
+        "exit_code": 0,
+        "output_sha256": "aa67a169b0bba217aa0aa88a65346920c84c42447c36ba5f7ea65f422c1fe5d8",
+        "output_bytes": 2,
+        "elapsed_s": 0.0,
+        "verdict": "pass"
+      },
+      {
+        "id": "A2",
+        "cmd": "grep -q '^Result: all checks PASS' docs/recon/stage4-preflight.md",
+        "exit_code": 0,
+        "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "output_bytes": 0,
+        "elapsed_s": 0.0,
+        "verdict": "pass"
+      },
+      {
+        "id": "A3",
+        "cmd": "! pgrep -x llama-server",
+        "exit_code": 0,
+        "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "output_bytes": 0,
+        "elapsed_s": 0.0,
+        "verdict": "pass"
+      },
+      {
+        "id": "A4",
+        "verdict": "judgement",
+        "description": "Each row has evidence a reader can re-run; P2 compares every cell's argument list, not only one; no server was started and the GPU was not used."
+      }
+    ],
+    "evidence_files": {
+      "docs/recon/stage4-preflight.md": {
+        "exists": true,
+        "sha256": "3acb8be3122303723db1a9ec4a5828292d258069bab0d028754c19778107609e",
+        "bytes": 26267
+      }
+    },
+    "finished_utc": "2026-11-13T18:59:58Z",
+    "failures": 0
   }
 ]
