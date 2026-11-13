@@ -11,7 +11,7 @@ files; change them through the scripts only.
 | id | title | status | lane | review |
 |---|---|---|---|---|
 | T-001 | Smoke test and recon (read-only) | done ⚠ re-acknowledge | 1 | none |
-| T-002 | Record Stage 3 decisions and merge CLAUDE.md | ready | 1 | none |
+| T-002 | Record Stage 3 decisions and merge CLAUDE.md | in-progress | 1 | none |
 | T-003 | Reviewer calibration | todo | 1 | none |
 | T-004 | README draft | todo | 1 | none |
 | T-005 | Baseline report draft and number checker | todo | 2 | post |
@@ -30,7 +30,7 @@ files; change them through the scripts only.
 
 ## READY (grouped by lane)
 
-- lane 1: **T-002** Record Stage 3 decisions and merge CLAUDE.md
+_(none)_
 
 ## Escalation queue
 
@@ -44,12 +44,12 @@ _(none)_
 
 | lane | lock | worktree | tasks |
 |---|---|---|---|
-| 1 | - | - | - |
+| 1 | pid 1574040 | - | - |
 
 ## Last events
 
-- 2026-11-13T09:56:00Z step-done T-001 — S4
-- 2026-11-13T09:56:39Z step-done T-001 — S5
-- 2026-11-13T09:56:39Z step-done T-001 — S6
-- 2026-11-13T09:56:50Z done T-001 — accept run at 2026-11-13T09:56:44Z
 - 2026-11-13T09:56:50Z ready T-002 — dependencies satisfied
+- 2026-11-13T09:58:02Z claimed T-002 — lane 1, pid 1574040
+- 2026-11-13T09:58:02Z started T-002 — lane 1
+- 2026-11-13T10:03:55Z step-done T-002 — S1
+- 2026-11-13T10:05:22Z step-done T-002 — S2

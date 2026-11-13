@@ -1184,3 +1184,30 @@ Chosen option: A
 Reason: scripts/wf.sh is the kit dispatcher added by install commit f149338 and listed in .workflow-kit-manifest.json, with the same provenance as the wf-*.sh scripts; the pattern in PLAN.md was written too narrowly (a planning-chat error), and no code change or re-measurement is involved.
 Scope: standing rule
 Rule: Wherever PLAN.md (R3, A2, the T-001 acceptance, the T-007 precondition) uses the pattern scripts/wf-[A-Za-z0-9_.-]+\.sh for the allowed kit files, read it as scripts/wf(-[A-Za-z0-9_.-]+)?\.sh. For T-001 acceptance criterion 5, run the command with that corrected pattern, record its output in docs/recon/T-001.md under the heading "E-002 corrected check", and treat the criterion as passed by decision E-002. Do not edit PLAN.md or any card; the planning chat re-issues PLAN.md with the corrected pattern via --amend after T-001 is done. If the kit cannot record the criterion as passed by decision, stop and say so in one line instead of escalating again.
+
+---
+
+## 2026-11-12: Step-lead decisions after Stage 3 (planning chat)
+
+<!-- sources: PLAN.md, docs/recon/T-001.md, docs/decisions.md -->
+
+Recorded verbatim from the shared rules of card T-002 (PLAN.md v1.1, frozen with the
+plan). The only change: D2's bracket is filled with A7's finding from
+docs/recon/T-001.md, verbatim per decision E-001 rule (3).
+
+**Stage 3 decisions (planning chat, 12 November 2026)**
+- D1 The 128K headline uses all units, with the label "includes paging-flagged stock windows" and the clean-units figures beside it; S4(d) is a recorded deviation for 128K. This is the declared §5.4 rule, not a judgement call. Until T-009 fixes the rendered report (which calls stock-128K "not reportable"), data/analysis/stage3/headline.md is authoritative.
+- D2 The tuned-64K paging is the known file-page faulting of the MTP cell seen in Stage 2a; it is not investigated. Gate denominator per A7: 17 attempt-1 windows (tuned-64K 5, four canary cells x 3; stock excluded): 4 flagged = 23.5%; the gate tool reported 36.4% (4 of 11, re-run canary cells excluded); true pass under both. If stock windows were counted and the gate truly failed, it is accepted as a recorded deviation without re-measurement, because all four flagged units re-ran clean on fresh servers and the cause matches Stage 2a.
+- D3 The 32K swap sensitivity is not material. The point estimates barely move, and the wider intervals come from dropping 3 of 5 pairs. Docs state it (§5.5) and call the 32K decode gain small and not robust to excluding swap-active units. The T_turn_400 conclusions are unchanged.
+- D4 The edit of five test literals to "1.8" (commit 422eada) is accepted; CI was red at 8096461. T-009 makes the tests read the version from the plan file.
+- D5 The flakiness of tests/test_sweep_probe.py is fixed before release (T-009).
+- D6 Phase 0's HEAD check, read as HEAD = 8096461 with a clean tree, is accepted.
+- D7 The sanity output is named data/sanity/stage3-tuned.json (the runbook said stage3-all.json). Accepted as a minor deviation; docs cite the actual name.
+- D8 Git history is not rewritten. The Linux account name in the early WP0 commit matches the author name already public on every commit, and a rewrite would break the commit hashes that data and logs refer to. The current tree is scrubbed, and the history scan escalates only for findings beyond that known occurrence. No committed file may contain the account name; refer to it as <account-name>.
+- D9 Expert-cache hit rates are reported with the caveat that they include warm-up and the attempt-1 units of re-run windows. The figure axes (prefill and decode from 0, predicted_n labels clear of the whiskers) are fixed in T-009.
+**Stage 4 rules (declared 12 November 2026, before any Stage 4 data)**
+- R1 Tuned-64K gets stock's fallback. If it has fewer than 5 clean units after its re-run, S2 is evaluated for it on all units, labelled as such, and recorded as an S4(d) deviation.
+- R2 If the Stage 4 gate fails only because of tuned-64K paging, and every flagged unit re-runs clean, the session is accepted with a recorded deviation: a docs/decisions.md line starting "- R2 applied: Stage 4". Any other gate failure is escalated.
+- R3 Stage 4 runs on 13 November 2026 or later. Since the Stage 3 session commit, the only changes under src/, configs/, scripts/, pyproject.toml and uv.lock are the kit's new scripts/wf.sh, scripts/wf-*.sh and scripts/_wf.py, and the only existing files changed by the kit install are CLAUDE.md and .gitignore. Check: `S3=$(cat docs/recon/stage3-commit.txt) && git cat-file -e "$S3^{commit}" && ! git diff --name-only "$S3" HEAD -- src configs scripts pyproject.toml uv.lock CLAUDE.md .gitignore | grep -vxE 'CLAUDE\.md|\.gitignore|scripts/wf(-[A-Za-z0-9_.-]+)?\.sh|scripts/_wf\.py'`
+- R4 An S2 failure is reported and escalated, never re-measured automatically.
+

@@ -1,5 +1,5 @@
 {
-  "checksum": "94f74f85f6b92d4530876210a2babf5580b09f4349edaba13854f64225dce192",
+  "checksum": "380781f5918b1f999c5dea3aff42ebb3d4f8d6ce5601b4f0f38d4f4b68b87c85",
   "created_utc": "2026-11-12T22:25:04Z",
   "escalations": {
     "E-001": {
@@ -276,6 +276,34 @@
       "seq": 36,
       "task": "T-002",
       "ts": "2026-11-13T09:56:50Z"
+    },
+    {
+      "detail": "lane 1, pid 1574040",
+      "event": "claimed",
+      "seq": 37,
+      "task": "T-002",
+      "ts": "2026-11-13T09:58:02Z"
+    },
+    {
+      "detail": "lane 1",
+      "event": "started",
+      "seq": 38,
+      "task": "T-002",
+      "ts": "2026-11-13T09:58:02Z"
+    },
+    {
+      "detail": "S1",
+      "event": "step-done",
+      "seq": 39,
+      "task": "T-002",
+      "ts": "2026-11-13T10:03:55Z"
+    },
+    {
+      "detail": "S2",
+      "event": "step-done",
+      "seq": 40,
+      "task": "T-002",
+      "ts": "2026-11-13T10:05:22Z"
     }
   ],
   "kit_version": "0.1.0",
@@ -319,6 +347,7 @@
     },
     "T-002": {
       "card_sha256": "9b11c0c1a3ab9fa598db6ded75b36c4e603fcb08d8c96a79d523d033e94b83e9",
+      "claimed_by_lane": 1,
       "depends_on": [
         "T-001"
       ],
@@ -333,7 +362,11 @@
       "resources": "light",
       "review": "none",
       "source": "plan",
-      "status": "ready",
+      "status": "in-progress",
+      "steps_done": [
+        "S1",
+        "S2"
+      ],
       "title": "Record Stage 3 decisions and merge CLAUDE.md"
     },
     "T-003": {
