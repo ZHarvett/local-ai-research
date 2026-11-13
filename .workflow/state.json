@@ -1,5 +1,5 @@
 {
-  "checksum": "9c9a3fdcf851f6d733f4a84b2d07d8d5ab93fdc406a2fedce718bbaa10f86911",
+  "checksum": "4acf6cd5f419d3914abebe61656d032542a802b708e13d2dc24d5129a35f0820",
   "created_utc": "2026-11-12T22:25:04Z",
   "escalations": {
     "E-001": {
@@ -39,7 +39,8 @@
     },
     "E-006": {
       "created_utc": "2026-11-13T17:52:12Z",
-      "status": "open",
+      "decided_utc": "2026-11-13T18:21:00Z",
+      "status": "decided",
       "task": "T-017",
       "type": "decision"
     }
@@ -856,6 +857,41 @@
       "seq": 115,
       "task": "T-019",
       "ts": "2026-11-13T18:02:38Z"
+    },
+    {
+      "detail": "cycle 1",
+      "event": "review-opened",
+      "seq": 116,
+      "task": "T-019",
+      "ts": "2026-11-13T18:19:16Z"
+    },
+    {
+      "detail": "changes-requested (cycle 1, 2 findings)",
+      "event": "review-verdict",
+      "seq": 117,
+      "task": "T-019",
+      "ts": "2026-11-13T18:19:24Z"
+    },
+    {
+      "detail": "restored to changes-requested",
+      "event": "unblocked",
+      "seq": 118,
+      "task": "T-017",
+      "ts": "2026-11-13T18:21:00Z"
+    },
+    {
+      "detail": "decision E-006 recorded",
+      "event": "note",
+      "seq": 119,
+      "task": "T-017",
+      "ts": "2026-11-13T18:21:00Z"
+    },
+    {
+      "detail": "cycle 2",
+      "event": "review-opened",
+      "seq": 120,
+      "task": "T-017",
+      "ts": "2026-11-13T18:28:49Z"
     }
   ],
   "kit_version": "0.1.0",
@@ -870,7 +906,8 @@
   "plan_sha256": "6445a4e780291bbfd5e4249821ffac20311286fd9489fee2454d0847f8d8b79c",
   "review_cycles": {
     "T-005": 1,
-    "T-017": 1
+    "T-017": 2,
+    "T-019": 1
   },
   "review_dispositions": {
     "T-017": [
@@ -1253,8 +1290,8 @@
       "title": "Publish v0.1.0"
     },
     "T-017": {
-      "blocked_from": "changes-requested",
-      "blocked_reason": "escalation E-006",
+      "blocked_from": null,
+      "blocked_reason": null,
       "card_sha256": "9fd6ea8fce0fc308a3845667e930297a53db302322b68517902816999645a2a0",
       "depends_on": [
         "T-003"
@@ -1273,7 +1310,7 @@
       "resources": "light",
       "review": "post",
       "source": "plan",
-      "status": "blocked-decision",
+      "status": "in-review",
       "title": "Unattended loop (wf-loop.sh)"
     },
     "T-019": {
@@ -1292,7 +1329,7 @@
       "resources": "light",
       "review": "post",
       "source": "plan",
-      "status": "done",
+      "status": "changes-requested",
       "steps_done": [
         "S1",
         "S2",
