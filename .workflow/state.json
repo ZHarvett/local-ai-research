@@ -1,5 +1,5 @@
 {
-  "checksum": "7436b1420e475e32c160b77ae1ba7882cd5627d46bf3998ef56ce5a49db249b2",
+  "checksum": "7c8a75c7828fd12215fa7b93e8626dc174d446a448f18583a8fafe462426fd26",
   "created_utc": "2026-11-12T22:25:04Z",
   "escalations": {
     "E-001": {
@@ -346,6 +346,20 @@
       "seq": 45,
       "task": "T-002",
       "ts": "2026-11-13T10:15:23Z"
+    },
+    {
+      "detail": "accept run at 2026-11-13T10:14:28Z",
+      "event": "done",
+      "seq": 46,
+      "task": "T-002",
+      "ts": "2026-11-13T10:15:23Z"
+    },
+    {
+      "detail": "dependencies satisfied",
+      "event": "ready",
+      "seq": 47,
+      "task": "T-003",
+      "ts": "2026-11-13T10:15:23Z"
     }
   ],
   "kit_version": "0.1.0",
@@ -406,7 +420,7 @@
       "resources": "light",
       "review": "none",
       "source": "plan",
-      "status": "in-progress",
+      "status": "done",
       "steps_done": [
         "S1",
         "S2",
@@ -429,7 +443,7 @@
       "resources": "light",
       "review": "none",
       "source": "plan",
-      "status": "todo",
+      "status": "ready",
       "title": "Reviewer calibration"
     },
     "T-004": {
