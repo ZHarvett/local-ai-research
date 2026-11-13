@@ -49,8 +49,8 @@ _(none)_
 
 ## Last events
 
-- 2026-11-13T22:37:15Z claimed T-007 — lane 1, pid 1925611
-- 2026-11-13T22:37:15Z started T-007 — lane 1
 - 2026-11-13T22:39:28Z gate-wait T-007 — Stage 4, the headline reproducibility run (about 45 minutes). It must be 13 November or later. Close every app except one terminal running Claude Code (scripts/check-quiet.sh must exit 0), keep the PC on mains power, and don't use it until this session says it has finished; following along on your phone is fine. Reply go.
 - 2026-11-13T22:40:34Z gate-release T-007 — Zack said go
 - 2026-11-13T22:42:34Z step-done T-007 — S1
+- 2026-11-13T23:23:28Z step-done T-007 — S2
+- 2026-11-13T23:23:28Z step-done T-007 — S3
