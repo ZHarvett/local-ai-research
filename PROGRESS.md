@@ -30,7 +30,7 @@ files; change them through the scripts only.
 | T-018 | Kit repair: leave blocked-decision after a review verdict | accepted (judgement) | 2 | post |
 | T-019 | Stage 4 pre-flight (no GPU) | accepted (judgement) | 1 | post |
 | T-020 | Restore and verify the PCIe Gen4 link (hands-on) | done (judgement) | 1 | none |
-| T-021 | Stage 4 session, run 2 | changes-requested (judgement) | 1 | post |
+| T-021 | Stage 4 session, run 2 | in-review (judgement) | 1 | post |
 
 ## READY (grouped by lane)
 
@@ -42,7 +42,7 @@ _(none)_
 
 ## Review queue
 
-- **T-021** Stage 4 session, run 2 — changes-requested (cycle 1, max 2)
+- **T-021** Stage 4 session, run 2 — in-review (cycle 2, max 2)
 
 ## Lanes
 
@@ -52,8 +52,8 @@ _(none)_
 
 ## Last events
 
-- 2026-11-14T18:07:36Z unblocked T-021 — restored to changes-requested
 - 2026-11-14T18:07:36Z note T-021 — decision E-009 recorded
 - 2026-11-14T19:15:22Z plan-amended — sha256 a3d02a2a84ef…
 - 2026-11-14T19:49:43Z review-opened T-005 — cycle 2
 - 2026-11-14T19:49:43Z review-verdict T-005 — accepted (cycle 2, 5 findings)
+- 2026-11-14T19:58:41Z review-opened T-021 — cycle 2
