@@ -122,5 +122,67 @@
     },
     "finished_utc": "2026-11-14T15:18:07Z",
     "failures": 0
+  },
+  {
+    "task": "T-021",
+    "started_utc": "2026-11-14T17:37:26Z",
+    "git_commit": "8e7f4a251a52f70d0ba63fde5792dabb9fea4309",
+    "items": [
+      {
+        "id": "A1",
+        "cmd": "test -s docs/recon/stage4-session-run2.txt && ! cmp -s docs/recon/stage4-session.txt docs/recon/stage4-session-run2.txt",
+        "exit_code": 0,
+        "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "output_bytes": 0,
+        "elapsed_s": 0.0,
+        "verdict": "pass"
+      },
+      {
+        "id": "A2",
+        "cmd": "source docs/recon/commands.env && SESSION=\"$(cat docs/recon/stage4-session-run2.txt)\" && eval \"$COVERAGE_CMD\"",
+        "exit_code": 0,
+        "output_sha256": "1bdc8ec3151186304b1ef43ee31a086e83bd551b81e8f7bac0efb1f0f5275806",
+        "output_bytes": 574,
+        "elapsed_s": 7.2,
+        "verdict": "pass"
+      },
+      {
+        "id": "A3",
+        "cmd": "{ source docs/recon/commands.env && SESSION=\"$(cat docs/recon/stage4-session-run2.txt)\" && eval \"$GATE_CMD\"; } | grep -qw PASS || grep -q '^- R2 applied: Stage 4' docs/decisions.md",
+        "exit_code": 0,
+        "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "output_bytes": 0,
+        "elapsed_s": 0.3,
+        "verdict": "pass"
+      },
+      {
+        "id": "A4",
+        "cmd": "test -z \"$(git status --porcelain -- data)\" && ! pgrep -x llama-server",
+        "exit_code": 0,
+        "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "output_bytes": 0,
+        "elapsed_s": 0.0,
+        "verdict": "pass"
+      },
+      {
+        "id": "A5",
+        "verdict": "judgement",
+        "description": "The session started from a clean committed tree at a commit that passes R3; the runbook was followed; the quiet check passed at the start and at every poll; the link read 4, 8 at every sample; run 1's data and session file are untouched; the re-run pass was done; the conditions log is complete."
+      }
+    ],
+    "evidence_files": {
+      "docs/recon/stage4-session-run2.txt": {
+        "exists": true,
+        "sha256": "6eb755638dd61e4cd706eb43289fa41d4f7c965c1c328e2021e46361cefb774f",
+        "bytes": 11
+      },
+      "docs/stage4-run2-conditions.md": {
+        "exists": true,
+        "sha256": "404b55cd32f1cb61d9baf804f1c1613f982584c90af5d3a74c6fb2eca04ec298",
+        "bytes": 26055
+      }
+    },
+    "finished_utc": "2026-11-14T17:37:33Z",
+    "failures": 0
   }
 ]
