@@ -29,11 +29,11 @@ files; change them through the scripts only.
 | T-017 | Unattended loop (wf-loop.sh) | accepted (judgement) | 3 | post |
 | T-019 | Stage 4 pre-flight (no GPU) | accepted (judgement) | 1 | post |
 | T-020 | Restore and verify the PCIe Gen4 link (hands-on) | done (judgement) | 1 | none |
-| T-021 | Stage 4 session, run 2 | ready | 1 | post |
+| T-021 | Stage 4 session, run 2 | in-progress | 1 | post |
 
 ## READY (grouped by lane)
 
-- lane 1: **T-021** Stage 4 session, run 2
+_(none)_
 
 ## Escalation queue
 
@@ -47,12 +47,12 @@ _(none)_
 
 | lane | lock | worktree | tasks |
 |---|---|---|---|
-| 1 | - | - | - |
+| 1 | pid 3351 | - | - |
 
 ## Last events
 
-- 2026-11-14T11:55:59Z step-done T-020 — S3
-- 2026-11-14T11:55:59Z step-done T-020 — S4
-- 2026-11-14T11:58:49Z step-done T-020 — S5
-- 2026-11-14T11:58:49Z done T-020 — accept run at 2026-11-14T11:58:05Z
 - 2026-11-14T11:58:49Z ready T-021 — dependencies satisfied
+- 2026-11-14T12:54:52Z claimed T-021 — lane 1, pid 3351
+- 2026-11-14T12:54:52Z started T-021 — lane 1
+- 2026-11-14T12:57:43Z gate-wait T-021 — Stage 4, run 2 (about 45 minutes; the first run was invalid because of the PCIe link). Close every app except one terminal running Claude Code (scripts/check-quiet.sh must exit 0), keep the PC on mains power, and don't use it until this session says it has finished; following along on your phone is fine. Reply go.
+- 2026-11-14T14:28:38Z gate-release T-021 — Zack said go

@@ -1,5 +1,5 @@
 {
-  "checksum": "a797e71fa5241204488572fecdb8d247090074995bb405168e6497197b04b2fa",
+  "checksum": "066e9563709c69765aa20bc9fc96a127ac725b06a69e82ef32e3185b5e588f01",
   "created_utc": "2026-11-12T22:25:04Z",
   "escalations": {
     "E-001": {
@@ -1221,6 +1221,34 @@
       "seq": 165,
       "task": "T-021",
       "ts": "2026-11-14T11:58:49Z"
+    },
+    {
+      "detail": "lane 1, pid 3351",
+      "event": "claimed",
+      "seq": 166,
+      "task": "T-021",
+      "ts": "2026-11-14T12:54:52Z"
+    },
+    {
+      "detail": "lane 1",
+      "event": "started",
+      "seq": 167,
+      "task": "T-021",
+      "ts": "2026-11-14T12:54:52Z"
+    },
+    {
+      "detail": "Stage 4, run 2 (about 45 minutes; the first run was invalid because of the PCIe link). Close every app except one terminal running Claude Code (scripts/check-quiet.sh must exit 0), keep the PC on mains power, and don't use it until this session says it has finished; following along on your phone is fine. Reply go.",
+      "event": "gate-wait",
+      "seq": 168,
+      "task": "T-021",
+      "ts": "2026-11-14T12:57:43Z"
+    },
+    {
+      "detail": "Zack said go",
+      "event": "gate-release",
+      "seq": 169,
+      "task": "T-021",
+      "ts": "2026-11-14T14:28:38Z"
     }
   ],
   "kit_version": "0.1.0",
@@ -1725,6 +1753,7 @@
     },
     "T-021": {
       "card_sha256": "32c807e3f2c0381ee1ce3b0e9c5dd54ae7d84315292e60e1bacf7976eeb60d8a",
+      "claimed_by_lane": 1,
       "depends_on": [
         "T-020"
       ],
@@ -1735,12 +1764,14 @@
         "docs/decisions.md",
         "docs/progress-log.md"
       ],
+      "gate_message": "Stage 4, run 2 (about 45 minutes; the first run was invalid because of the PCIe link). Close every app except one terminal running Claude Code (scripts/check-quiet.sh must exit 0), keep the PC on mains power, and don't use it until this session says it has finished; following along on your phone is fine. Reply go.",
       "lane": 1,
       "phase": "P2",
       "resources": "exclusive-machine",
       "review": "post",
       "source": "plan",
-      "status": "ready",
+      "status": "in-progress",
+      "steps_done": [],
       "title": "Stage 4 session, run 2"
     }
   },
