@@ -18,7 +18,7 @@ files; change them through the scripts only.
 | T-006 | Write-up draft | done | 1 | none |
 | T-007 | Stage 4 session | accepted ⚠ re-acknowledge (judgement) | 1 | post |
 | T-008 | S2 check and Stage 4 analysis | accepted ⚠ re-acknowledge (judgement) | 1 | post |
-| T-009 | Post-Stage-4 code fixes | in-progress | 1 | none |
+| T-009 | Post-Stage-4 code fixes | blocked-decision | 1 | none |
 | T-010 | Final README, report, write-up and changelog | todo | 1 | post |
 | T-011 | Plan v1.9, upstream drafts, methodology | todo | 2 | none |
 | T-012 | README walkthrough from a clean shell | todo | 1 | none |
@@ -38,7 +38,7 @@ _(none)_
 
 ## Escalation queue
 
-_(none)_
+- **E-010** (assumption-mismatch, task T-009) — open
 
 ## Review queue
 
@@ -52,8 +52,8 @@ _(none)_
 
 ## Last events
 
-- 2026-11-14T20:34:49Z review-opened T-008 — cycle 1
-- 2026-11-14T20:34:49Z review-verdict T-008 — accepted (cycle 1, 0 findings)
-- 2026-11-14T20:34:49Z ready T-009 — dependencies satisfied
 - 2026-11-14T20:37:07Z claimed T-009 — lane 1, pid 120069
 - 2026-11-14T20:37:07Z started T-009 — lane 1
+- 2026-11-14T20:38:00Z step-done T-009 — S1
+- 2026-11-14T20:51:09Z step-done T-009 — S2
+- 2026-11-14T20:59:43Z escalated T-009 — E-010 (assumption-mismatch)
