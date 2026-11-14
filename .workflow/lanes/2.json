@@ -1,5 +1,5 @@
 {
-  "checksum": "510564ea40f610ce7fce7da5ef273faaacda1363bf5f86c744a4ea4c2157b96b",
+  "checksum": "0cbf3c1b38bc8ce1da2e30e8227385d2331d3bc74012755b9b92372ffd30c6cf",
   "events": [
     {
       "detail": "lane 2, pid 1807601",
@@ -56,6 +56,41 @@
       "seq": 7,
       "task": "T-018",
       "ts": "2026-11-14T16:00:15Z"
+    },
+    {
+      "detail": "S1: recon written; four defects confirmed at corrected lines; stale-worktree setup merge documented",
+      "event": "step-done",
+      "seq": 8,
+      "task": "T-018",
+      "ts": "2026-11-14T16:09:19Z"
+    },
+    {
+      "detail": "S2: four changes in _wf.py only, 59 changed lines; smoke-tested on /tmp fixture",
+      "event": "step-done",
+      "seq": 9,
+      "task": "T-018",
+      "ts": "2026-11-14T16:11:34Z"
+    },
+    {
+      "detail": "S3: 12 tests (6 card scenarios + regression guards); 49 pass with test_wf_loop.py; ruff clean",
+      "event": "step-done",
+      "seq": 10,
+      "task": "T-018",
+      "ts": "2026-11-14T16:13:21Z"
+    },
+    {
+      "detail": "S4: decisions line, shellcheck/ruff/diff-scope verified, acceptance run 1 (0 failures), progress-log entry",
+      "event": "step-done",
+      "seq": 11,
+      "task": "T-018",
+      "ts": "2026-11-14T16:19:27Z"
+    },
+    {
+      "detail": "accept run at 2026-11-14T16:18:16Z",
+      "event": "done",
+      "seq": 12,
+      "task": "T-018",
+      "ts": "2026-11-14T16:19:27Z"
     }
   ],
   "lane": 2,
@@ -104,8 +139,13 @@
       "resources": "light",
       "review": "post",
       "source": "plan",
-      "status": "in-progress",
-      "steps_done": [],
+      "status": "done",
+      "steps_done": [
+        "S1",
+        "S2",
+        "S3",
+        "S4"
+      ],
       "title": "Kit repair: leave blocked-decision after a review verdict"
     }
   },
