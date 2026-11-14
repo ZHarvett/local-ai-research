@@ -4,7 +4,7 @@ Rendered by `wf-progress.sh render` from `.workflow/state.json` and the lane
 files; change them through the scripts only.
 
 **Plan:** Step 0, remaining work: Stage 4, release v0.1.0, completion report  
-**Phase:** P1
+**Phase:** P2
 
 ## Tasks
 
@@ -14,7 +14,7 @@ files; change them through the scripts only.
 | T-002 | Record Stage 3 decisions and merge CLAUDE.md | done | 1 | none |
 | T-003 | Reviewer calibration | done | 1 | none |
 | T-004 | README draft | done | 1 | none |
-| T-005 | Baseline report draft and number checker | done (judgement) | 2 | post |
+| T-005 | Baseline report draft and number checker | accepted (judgement) | 2 | post |
 | T-006 | Write-up draft | done | 1 | none |
 | T-007 | Stage 4 session | accepted ⚠ re-acknowledge (judgement) | 1 | post |
 | T-008 | S2 check and Stage 4 analysis | todo ⚠ re-acknowledge | 1 | post |
@@ -52,8 +52,8 @@ _(none)_
 
 ## Last events
 
-- 2026-11-14T17:35:27Z review-verdict T-018 — accepted (cycle 1, 3 findings)
-- 2026-11-14T17:39:18Z escalated T-021 — E-009 (decision)
 - 2026-11-14T18:07:36Z unblocked T-021 — restored to changes-requested
 - 2026-11-14T18:07:36Z note T-021 — decision E-009 recorded
 - 2026-11-14T19:15:22Z plan-amended — sha256 a3d02a2a84ef…
+- 2026-11-14T19:49:43Z review-opened T-005 — cycle 2
+- 2026-11-14T19:49:43Z review-verdict T-005 — accepted (cycle 2, 5 findings)

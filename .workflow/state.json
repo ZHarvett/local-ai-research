@@ -1,5 +1,5 @@
 {
-  "checksum": "db167ea40893cb8de82eeaa9cb06db83264348662d8cf1f4bbf4687ad7b484f7",
+  "checksum": "7f849257f2753918074d0afa36621f224b09988ef125a682ab683a8ec021d5ec",
   "created_utc": "2026-11-12T22:25:04Z",
   "escalations": {
     "E-001": {
@@ -1529,6 +1529,20 @@
       "seq": 208,
       "task": null,
       "ts": "2026-11-14T19:15:22Z"
+    },
+    {
+      "detail": "cycle 2",
+      "event": "review-opened",
+      "seq": 209,
+      "task": "T-005",
+      "ts": "2026-11-14T19:49:43Z"
+    },
+    {
+      "detail": "accepted (cycle 2, 5 findings)",
+      "event": "review-verdict",
+      "seq": 210,
+      "task": "T-005",
+      "ts": "2026-11-14T19:49:43Z"
     }
   ],
   "kit_version": "0.1.0",
@@ -1542,7 +1556,7 @@
   "plan_file": "PLAN.md",
   "plan_sha256": "a3d02a2a84efadd1e361c4cd37c2b1cbb363e357afd68812a2a9109eaeb08aac",
   "review_cycles": {
-    "T-005": 1,
+    "T-005": 2,
     "T-007": 1,
     "T-017": 2,
     "T-018": 1,
@@ -1765,7 +1779,7 @@
       "resources": "light",
       "review": "post",
       "source": "plan",
-      "status": "done",
+      "status": "accepted",
       "title": "Baseline report draft and number checker"
     },
     "T-006": {
