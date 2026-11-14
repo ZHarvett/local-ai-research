@@ -1,5 +1,5 @@
 {
-  "checksum": "64ba6f9592a6315d2d2639e8f029d5a4db289f02f4101149cd009e095b8f3220",
+  "checksum": "85d6d361bc21f942c4b7782e5b1c28ed8bcd91e52cd22d26d518b0dedcfc3ba4",
   "created_utc": "2026-11-12T22:25:04Z",
   "escalations": {
     "E-001": {
@@ -1291,6 +1291,20 @@
       "seq": 175,
       "task": "T-021",
       "ts": "2026-11-14T15:13:42Z"
+    },
+    {
+      "detail": "cycle 1",
+      "event": "review-opened",
+      "seq": 176,
+      "task": "T-021",
+      "ts": "2026-11-14T15:29:42Z"
+    },
+    {
+      "detail": "blocked-decision (cycle 1, 6 findings)",
+      "event": "review-verdict",
+      "seq": 177,
+      "task": "T-021",
+      "ts": "2026-11-14T15:29:42Z"
     }
   ],
   "kit_version": "0.1.0",
@@ -1307,7 +1321,8 @@
     "T-005": 1,
     "T-007": 1,
     "T-017": 2,
-    "T-019": 2
+    "T-019": 2,
+    "T-021": 1
   },
   "review_dispositions": {
     "T-017": [
@@ -1812,7 +1827,7 @@
       "resources": "exclusive-machine",
       "review": "post",
       "source": "plan",
-      "status": "done",
+      "status": "blocked-decision",
       "steps_done": [
         "S1",
         "S2",
