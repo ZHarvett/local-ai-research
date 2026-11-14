@@ -12,6 +12,8 @@ import pytest
 sys.path.insert(0, str(Path(__file__).parent))
 from fixture_session import CellSpec, RepSpec, build_session, standard_cells  # noqa: E402
 from smallpc import analysis, labels, report, scrub, stats  # noqa: E402
+from smallpc.stage3 import headline as stage3_headline  # noqa: E402
+from smallpc.stage3 import render_md  # noqa: E402
 
 GOLDEN = Path(__file__).parent / "golden" / "report-fixture.md"
 COMMAND = "python -m smallpc.report render --sessions SESSIONS --out OUT --label functional-test"
@@ -171,6 +173,50 @@ def test_figures_parse_as_xml_and_carry_the_label_and_expected_text(res):
 
 def test_figures_are_deterministic(res):
     assert report.render_figures(res, "screening") == report.render_figures(res, "screening")
+
+
+def _capture_figures(monkeypatch, res, label):
+    """The live matplotlib figures, in FIGURES order, captured before _svg closes them."""
+    figs = []
+    orig = report._svg
+
+    def capture(fig):
+        figs.append(fig)
+        return orig(fig)
+
+    monkeypatch.setattr(report, "_svg", capture)
+    report.render_figures(res, label)
+    return figs
+
+
+def test_prefill_and_decode_y_axes_start_at_zero(res, monkeypatch):
+    figs = _capture_figures(monkeypatch, res, "functional-test")
+    for fig in figs[:2]:  # prefill-speed, decode-speed
+        for ax in fig.axes:
+            if ax.axison:
+                assert ax.get_ylim()[0] == 0, ax.get_title()
+
+
+def test_predicted_n_labels_sit_clear_of_the_whiskers(res, monkeypatch):
+    figs = _capture_figures(monkeypatch, res, "functional-test")
+    turn = figs[2]  # turn-time
+    seen = 0
+    for ax in turn.axes:
+        if not ax.axison:
+            continue
+        for t in ax.texts:
+            if not t.get_text().startswith("predicted_n"):
+                continue
+            x, y = t.get_position()
+            # the horizontal whisker of the T_B bar at the same y ends before the label starts
+            ends = [
+                max(ln.get_xdata())
+                for ln in ax.lines
+                if len(set(ln.get_ydata())) == 1 and abs(ln.get_ydata()[0] - y) < 1e-9
+            ]
+            assert ends and x > max(ends), (t.get_text(), x, ends)
+            seen += 1
+    assert seen, "the fixture has cells with predicted_n"
 
 
 def test_figures_with_no_data_render_a_clear_panel(tmp_path):
@@ -409,10 +455,74 @@ def test_results_label_on_stage3_shaped_data_points_small_stock_cells_to_the_hea
     assert "## Appendix: cells below 5 clean repetitions" in md
     assert "python -m smallpc.stage3 headline" in md and "Headline rule" in md
     assert "Appendix: screening data" not in md
-    assert "| stock-32K | 32K | 3/5 not reportable (n < 5) |" in md
-    # the other labels keep their appendix
+    # results mode applies §5.4 instead of the "not reportable" marker (T-009 S4)
+    assert "| stock-32K | 32K | 3/5 |" in md and "not reportable" not in md
+    # the other labels keep their appendix and the marker
     shortlist = report.render_report(r, "screening", command="x", plan="v1.7")
     assert "## Appendix: screening data" in shortlist and "stage3 headline" not in shortlist
+    assert "3/5 not reportable (n < 5)" in shortlist
+
+
+SANITY_32K = {"cells": {"tuned-32k": {"result": "pass"}}}
+
+
+def stage3_32k_session(tmp_path, stock_reps=None):
+    return build_session(
+        tmp_path,
+        "stage3-32K",
+        [
+            CellSpec("stock-32K", profile="stock", reps=stock_reps, pp=1000, tg=50),
+            CellSpec("tuned-32K", profile="tuned", pp=1900, tg=90, cache_mib=11520),
+        ],
+    )
+
+
+def test_results_headline_4_of_5_stock_is_all_units_labelled_with_clean_beside(tmp_path):
+    """S4: stock 4 clean of 5, tuned 5 clean -> the headline is all units, labelled, with the
+    clean-units figures beside it; the numbers are exactly the frozen headline pipeline's."""
+    reps = [RepSpec(i, flags=("paging",) if i == 3 else ()) for i in range(5)]
+    d = stage3_32k_session(tmp_path, stock_reps=reps)
+    r = analysis.analyse([d])
+    hl = stage3_headline.headline([d], SANITY_32K, "sanity.json")
+    e = hl["contexts"]["32K"]
+    assert e["headline"]["choice"] == "all"  # 4 paired clean units < 5
+    md = report.render_report(r, "results", command="x", plan="v1.8", headline_result=hl)
+    assert "## Headline (plan §5.4)" in md
+    assert '**Headline: all units, labelled "includes paging-flagged stock windows".**' in md
+    assert "S4(d) deviation" in md and "4 clean" in md and "4 paired" in md
+    assert "Clean-units figures beside it:" in md
+    for view, n in (("all", 5), ("clean", 4)):
+        ratio = e["ratios"][view]["t_turn_400"]
+        assert ratio["n_paired"] == n
+        assert f"| t_turn_400 | {render_md.ratio_cell(ratio)} | lower is faster |" in md
+    assert "not reportable" not in md and "| stock-32K | 32K | 4/5 |" in md
+
+
+def test_results_headline_clean_when_both_cells_have_5_clean(tmp_path):
+    d = stage3_32k_session(tmp_path)
+    r = analysis.analyse([d])
+    hl = stage3_headline.headline([d], SANITY_32K, "sanity.json")
+    assert hl["contexts"]["32K"]["headline"]["choice"] == "clean"
+    md = report.render_report(r, "results", command="x", plan="v1.8", headline_result=hl)
+    assert "**Headline: clean units** (5 clean, paired units)." in md
+    assert "Same comparison on all units (flagged units included):" in md
+    assert "**Headline: all units" not in md and "not reportable" not in md
+
+
+def test_cmd_render_results_writes_the_headline_section(tmp_path):
+    import json
+
+    reps = [RepSpec(i, flags=("paging",) if i == 3 else ()) for i in range(5)]
+    d = stage3_32k_session(tmp_path, stock_reps=reps)
+    sanity = tmp_path / "sanity.json"
+    sanity.write_text(json.dumps(SANITY_32K))
+    out = tmp_path / "out"
+    assert report.main(["render", "--sessions", str(d), "--out", str(out),
+                        "--label", "results", "--sanity", str(sanity)]) == 0  # fmt: skip
+    md = (out / "report.md").read_text()
+    assert "## Headline (plan §5.4)" in md
+    assert '**Headline: all units, labelled "includes paging-flagged stock windows".**' in md
+    assert "not reportable" not in md
 
 
 def test_results_report_shows_the_resident_compute_buffers_of_an_mtp_cell(tmp_path):
