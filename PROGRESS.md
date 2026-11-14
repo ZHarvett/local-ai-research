@@ -29,7 +29,7 @@ files; change them through the scripts only.
 | T-017 | Unattended loop (wf-loop.sh) | accepted (judgement) | 3 | post |
 | T-019 | Stage 4 pre-flight (no GPU) | accepted (judgement) | 1 | post |
 | T-020 | Restore and verify the PCIe Gen4 link (hands-on) | done (judgement) | 1 | none |
-| T-021 | Stage 4 session, run 2 | in-progress | 1 | post |
+| T-021 | Stage 4 session, run 2 | done (judgement) | 1 | post |
 
 ## READY (grouped by lane)
 
@@ -51,8 +51,8 @@ _(none)_
 
 ## Last events
 
-- 2026-11-14T14:28:38Z gate-release T-021 — Zack said go
-- 2026-11-14T14:31:33Z step-done T-021 — S1
 - 2026-11-14T14:58:43Z step-done T-021 — S2
 - 2026-11-14T14:59:16Z step-done T-021 — S3
 - 2026-11-14T15:11:50Z step-done T-021 — S4
+- 2026-11-14T15:12:32Z step-done T-021 — S5
+- 2026-11-14T15:13:42Z done T-021 — accept run at 2026-11-14T15:12:32Z

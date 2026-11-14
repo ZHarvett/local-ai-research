@@ -1,5 +1,5 @@
 {
-  "checksum": "6cf28e3beb46fa0153148a99d640c0af358a936f01518db73f7d49a9ab8d912b",
+  "checksum": "64ba6f9592a6315d2d2639e8f029d5a4db289f02f4101149cd009e095b8f3220",
   "created_utc": "2026-11-12T22:25:04Z",
   "escalations": {
     "E-001": {
@@ -1277,6 +1277,20 @@
       "seq": 173,
       "task": "T-021",
       "ts": "2026-11-14T15:11:50Z"
+    },
+    {
+      "detail": "S5",
+      "event": "step-done",
+      "seq": 174,
+      "task": "T-021",
+      "ts": "2026-11-14T15:12:32Z"
+    },
+    {
+      "detail": "accept run at 2026-11-14T15:12:32Z",
+      "event": "done",
+      "seq": 175,
+      "task": "T-021",
+      "ts": "2026-11-14T15:13:42Z"
     }
   ],
   "kit_version": "0.1.0",
@@ -1798,12 +1812,13 @@
       "resources": "exclusive-machine",
       "review": "post",
       "source": "plan",
-      "status": "in-progress",
+      "status": "done",
       "steps_done": [
         "S1",
         "S2",
         "S3",
-        "S4"
+        "S4",
+        "S5"
       ],
       "title": "Stage 4 session, run 2"
     }
