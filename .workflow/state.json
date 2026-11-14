@@ -1,5 +1,5 @@
 {
-  "checksum": "a70ce459664e5099572216eb01ae61007fe4c39de87da9f213cafaecb28d91f7",
+  "checksum": "c0df609713fdb1d3c496c45503f57fbcaa70e6409f124138c3c702d837d60e1e",
   "created_utc": "2026-11-12T22:25:04Z",
   "escalations": {
     "E-001": {
@@ -1438,6 +1438,62 @@
       "seq": 196,
       "task": "T-021",
       "ts": "2026-11-14T16:23:06Z"
+    },
+    {
+      "detail": "disposition F-1: accept",
+      "event": "note",
+      "seq": 197,
+      "task": "T-021",
+      "ts": "2026-11-14T17:30:39Z"
+    },
+    {
+      "detail": "disposition F-2: escalate",
+      "event": "note",
+      "seq": 198,
+      "task": "T-021",
+      "ts": "2026-11-14T17:30:39Z"
+    },
+    {
+      "detail": "disposition F-3: accept",
+      "event": "note",
+      "seq": 199,
+      "task": "T-021",
+      "ts": "2026-11-14T17:30:39Z"
+    },
+    {
+      "detail": "disposition F-4: accept",
+      "event": "note",
+      "seq": 200,
+      "task": "T-021",
+      "ts": "2026-11-14T17:30:40Z"
+    },
+    {
+      "detail": "disposition F-5: accept",
+      "event": "note",
+      "seq": 201,
+      "task": "T-021",
+      "ts": "2026-11-14T17:30:40Z"
+    },
+    {
+      "detail": "disposition F-6: accept",
+      "event": "note",
+      "seq": 202,
+      "task": "T-021",
+      "ts": "2026-11-14T17:30:40Z"
+    },
+    {
+      "detail": "cycle 1",
+      "event": "review-opened",
+      "seq": 203,
+      "task": "T-018",
+      "ts": "2026-11-14T17:35:23Z"
+    },
+    {
+      "detail": "accepted (cycle 1, 3 findings)",
+      "event": "review-verdict",
+      "seq": 204,
+      "task": "T-018",
+      "ts": "2026-11-14T17:35:27Z"
     }
   ],
   "kit_version": "0.1.0",
@@ -1454,6 +1510,7 @@
     "T-005": 1,
     "T-007": 1,
     "T-017": 2,
+    "T-018": 1,
     "T-019": 2,
     "T-021": 1
   },
@@ -1509,6 +1566,50 @@
         "finding": "F-2",
         "reason": "MINOR DECIDE: card-interpretation question reserved to the planning chat \u2014 whether a transient P8 FAIL, resolved mid-session by the owning lane's own legitimate commits (bc8e0c3/1ba3bf9) before any escalation was filed, triggers card S3's 'if any check FAILs, escalate once' clause. Verified the review's facts: the FAIL was real at de6d586, the re-check passed, ca1d5ad touches only T-019's own files, and \u00a72.9 documents the reading that the clause attaches to the final Result. DECIDE findings are never resolved inline; escalating with options (a) ratify \u00a72.9's reading (recommended, optional one-line precedent in docs/decisions.md) or (b) require a retroactive escalation brief. No re-measurement or code change implied.",
         "severity": "MINOR"
+      }
+    ],
+    "T-021": [
+      {
+        "action_taken": "accept",
+        "cycle": 1,
+        "finding": "F-1",
+        "reason": "MAJOR FIX-DOC, independently verified from committed raw data: data/raw/stage4-run2/events.jsonl 14:40:31Z warning fit_changed_explicit_placement on tuned-64K (fit_succeeded false, fit_intervened true, required_reduction_mib 18, offloaded_layers [42,42], tensor_overrides_to_cpu true) \u2014 the session's only warning; every other session has exactly one code_commit_changed. startup_excerpt: projected 14766 MiB vs 15772 MiB free (stage3-64K and stage4: 15803), 1024 MiB target missed by 18 MiB, 'context size set by user to 65536 -> no change', 'tensor_buft_overrides already set by user, abort'. argv, resolved config, props and measured VRAM byte/value-identical to run 1 (loaded 14934, after_warmup_used 15280, peak 15292, min_free 1019). Fix: add the warning, comparison table, startup lines, identity check and driver-confound link to docs/stage4-run2-conditions.md; name it in the T-008 handoff. No re-measure, no re-analysis of measurements.",
+        "severity": "MAJOR"
+      },
+      {
+        "action_taken": "escalate",
+        "cycle": 1,
+        "finding": "F-2",
+        "reason": "MAJOR DECIDE: the scope of R7's 'while a server is generating' is a rule interpretation the card's decision_rights.must_escalate reserves to the planning chat ('any stop rule firing, including R7'); the executor resolved the poll-3 ambiguity inline without an escalation brief. Reviewer's re-derivation, independently reproduced by me from committed telemetry: 3,556 sustained-generation samples (P1, >=50 W, >=2500 MHz) and all 2,657 measured-cell samples Gen4 x8; exactly two util>0 non-Gen4 rows session-wide, both idle-to-load ramps in re-run canaries (15:01:21.726Z util 94% gen 2 P5 9.92 W; 15:07:42.999Z util 26% gen 2 P5 9.77 W), link back at Gen4 within one 0.5 s sample. Escalating with option A (ratify under-load reading; reviewer recommendation) and option B (strict reading); reviewer orders no RE-MEASURE. A5's link clause stays ESCALATE until the ruling; R6 makes the interpretation consequential.",
+        "severity": "MAJOR"
+      },
+      {
+        "action_taken": "accept",
+        "cycle": 1,
+        "finding": "F-3",
+        "reason": "MINOR FIX-DOC, reproduced: uv run python tools/check_doc_numbers.py docs/stage4-run2-conditions.md exit 1, 20 of 61 unverified. Fix: add data/raw/stage4-run2/session.json, events.jsonl and the six cells/*.json to the sources line (precondition literals 27.93/28.47/0.03/0.84 are in the cell preconditions, measure times in phases_s, drift in session.json); derived markers on the rounded drift figures 0.00406/0.00373 and the rounded poll GiB line; note that the remaining poll readings are live observations with no committed repo source (run 1's accepted log has the same pattern, 45 of 75).",
+        "severity": "MINOR"
+      },
+      {
+        "action_taken": "accept",
+        "cycle": 1,
+        "finding": "F-4",
+        "reason": "MINOR FIX-DOC, verified in the run-2 cells/*.json vram blocks: the quoted 1,019/1,353/1,355/1,329 MiB are min_free_mib (whole-cell minimum); after_warmup_min_free_mib is 1031 (tuned), 1355 (stock a1), 1355 (stock a2), 1329 (canaries). Fix: relabel the end-summary line to min_free_mib and quote the after-warmup figures beside the two that differ. Not material to eligibility: every figure far above the 512 MiB floor (runbook).",
+        "severity": "MINOR"
+      },
+      {
+        "action_taken": "accept",
+        "cycle": 1,
+        "finding": "F-5",
+        "reason": "NOTE FIX-DOC, verified at src/smallpc/sweep/records.py:225-227 (incomplete batches dropped) and src/smallpc/sweep/status.py:80-84,107 (flag counts and request totals from complete batches only): poll rows are timestamped at poll start and sweep-status counts only complete batches, so poll 2's '64 requests, flags none' is correct \u2014 the stock repetition-2 batch (7 requests) only becomes visible when its last request lands at 14:48:37Z, after poll 2. Fix: one-line convention note in the polls section so the next reviewer does not raise a false MAJOR.",
+        "severity": "NOTE"
+      },
+      {
+        "action_taken": "accept",
+        "cycle": 1,
+        "finding": "F-6",
+        "reason": "NOTE FIX-DOC: the finding itself requires no T-021 file change (pre-existing design; .gitignore:8 excludes data/logs/*/ and the job status.json substance is already quoted in the conditions log). Accepting and recording the carry-forward to T-013/T-015 in this session's progress-log entry: the release archive will not contain the job logs behind gate criterion (a); the release tasks must quote them from the conditions log or rule on the exclusion.",
+        "severity": "NOTE"
       }
     ]
   },
@@ -1906,7 +2007,7 @@
       "resources": "light",
       "review": "post",
       "source": "plan",
-      "status": "done",
+      "status": "accepted",
       "title": "Kit repair: leave blocked-decision after a review verdict"
     },
     "T-019": {

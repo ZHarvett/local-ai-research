@@ -27,7 +27,7 @@ files; change them through the scripts only.
 | T-015 | Private repo, CI and tag v0.1.0 | todo | 1 | none |
 | T-016 | Publish v0.1.0 | todo | 1 | none |
 | T-017 | Unattended loop (wf-loop.sh) | accepted (judgement) | 3 | post |
-| T-018 | Kit repair: leave blocked-decision after a review verdict | done (judgement) | 2 | post |
+| T-018 | Kit repair: leave blocked-decision after a review verdict | accepted (judgement) | 2 | post |
 | T-019 | Stage 4 pre-flight (no GPU) | accepted (judgement) | 1 | post |
 | T-020 | Restore and verify the PCIe Gen4 link (hands-on) | done (judgement) | 1 | none |
 | T-021 | Stage 4 session, run 2 | changes-requested (judgement) | 1 | post |
@@ -52,8 +52,8 @@ _(none)_
 
 ## Last events
 
-- 2026-11-14T16:13:21Z step-done T-018 — S3: 12 tests (6 card scenarios + regression guards); 49 pass with test_wf_loop.py; ruff clean
-- 2026-11-14T16:19:27Z step-done T-018 — S4: decisions line, shellcheck/ruff/diff-scope verified, acceptance run 1 (0 failures), progress-log entry
-- 2026-11-14T16:19:27Z done T-018 — accept run at 2026-11-14T16:18:16Z
-- 2026-11-14T16:22:58Z lane-merged — lane 2
-- 2026-11-14T16:23:06Z unblocked T-021 — blocked-decision -> changes-requested
+- 2026-11-14T17:30:40Z note T-021 — disposition F-4: accept
+- 2026-11-14T17:30:40Z note T-021 — disposition F-5: accept
+- 2026-11-14T17:30:40Z note T-021 — disposition F-6: accept
+- 2026-11-14T17:35:23Z review-opened T-018 — cycle 1
+- 2026-11-14T17:35:27Z review-verdict T-018 — accepted (cycle 1, 3 findings)
