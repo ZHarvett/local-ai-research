@@ -1,5 +1,5 @@
 {
-  "checksum": "b94859192340832c2aeedbd68430589bdd8d0e2a047dd1844da26c2d894aec3b",
+  "checksum": "e5ff05939d9da88d44b53c12ab6afa1d8004b5c060b22ab6a34ddd85c2e146a8",
   "created_utc": "2026-11-12T22:25:04Z",
   "escalations": {
     "E-001": {
@@ -1634,6 +1634,20 @@
       "seq": 223,
       "task": "T-009",
       "ts": "2026-11-14T20:34:49Z"
+    },
+    {
+      "detail": "lane 1, pid 120069",
+      "event": "claimed",
+      "seq": 224,
+      "task": "T-009",
+      "ts": "2026-11-14T20:37:07Z"
+    },
+    {
+      "detail": "lane 1",
+      "event": "started",
+      "seq": 225,
+      "task": "T-009",
+      "ts": "2026-11-14T20:37:07Z"
     }
   ],
   "kit_version": "0.1.0",
@@ -1960,6 +1974,7 @@
     },
     "T-009": {
       "card_sha256": "ca9adfa7e6e005925c4c7f7fcd906244af4de9b5b7683e5e4c9ddd8a451cd0c9",
+      "claimed_by_lane": 1,
       "depends_on": [
         "T-008"
       ],
@@ -1976,7 +1991,8 @@
       "resources": "cpu-heavy",
       "review": "none",
       "source": "plan",
-      "status": "ready",
+      "status": "in-progress",
+      "steps_done": [],
       "title": "Post-Stage-4 code fixes"
     },
     "T-010": {
