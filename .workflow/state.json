@@ -1,5 +1,5 @@
 {
-  "checksum": "d4771c21508e070ed1e8dfb12b84472957cab83b2a61c011be2d19c5fb662b65",
+  "checksum": "2b965ee561508a4cc50d6c650bb86d6536d0a67593ac8e1f2d3d0e1c61048b25",
   "created_utc": "2026-11-12T22:25:04Z",
   "escalations": {
     "E-001": {
@@ -60,7 +60,8 @@
     },
     "E-009": {
       "created_utc": "2026-11-14T17:39:18Z",
-      "status": "open",
+      "decided_utc": "2026-11-14T18:07:36Z",
+      "status": "decided",
       "task": "T-021",
       "type": "decision"
     }
@@ -1507,6 +1508,20 @@
       "seq": 205,
       "task": "T-021",
       "ts": "2026-11-14T17:39:18Z"
+    },
+    {
+      "detail": "restored to changes-requested",
+      "event": "unblocked",
+      "seq": 206,
+      "task": "T-021",
+      "ts": "2026-11-14T18:07:36Z"
+    },
+    {
+      "detail": "decision E-009 recorded",
+      "event": "note",
+      "seq": 207,
+      "task": "T-021",
+      "ts": "2026-11-14T18:07:36Z"
     }
   ],
   "kit_version": "0.1.0",
@@ -2077,8 +2092,8 @@
       "title": "Restore and verify the PCIe Gen4 link (hands-on)"
     },
     "T-021": {
-      "blocked_from": "changes-requested",
-      "blocked_reason": "escalation E-009",
+      "blocked_from": null,
+      "blocked_reason": null,
       "card_sha256": "32c807e3f2c0381ee1ce3b0e9c5dd54ae7d84315292e60e1bacf7976eeb60d8a",
       "claimed_by_lane": 1,
       "depends_on": [
@@ -2097,7 +2112,7 @@
       "resources": "exclusive-machine",
       "review": "post",
       "source": "plan",
-      "status": "blocked-decision",
+      "status": "changes-requested",
       "steps_done": [
         "S1",
         "S2",

@@ -69,5 +69,76 @@
     },
     "finished_utc": "2026-11-14T16:18:18Z",
     "failures": 0
+  },
+  {
+    "task": "T-018",
+    "started_utc": "2026-11-14T17:27:50Z",
+    "git_commit": "dd675d4578116dfd4e08366bb8055d579c3b1f3f",
+    "items": [
+      {
+        "id": "A1",
+        "cmd": "uv run pytest -q tests/test_wf_unblock.py",
+        "exit_code": 0,
+        "output_sha256": "638946dbfd890f8b2866e8b8abf520364a4af9df6a8376dcb1f824f83c4ca036",
+        "output_bytes": 99,
+        "elapsed_s": 1.5,
+        "verdict": "pass"
+      },
+      {
+        "id": "A2",
+        "cmd": "shellcheck scripts/wf.sh scripts/wf-decision.sh scripts/wf-escalate.sh",
+        "exit_code": 0,
+        "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "output_bytes": 0,
+        "elapsed_s": 0.0,
+        "verdict": "pass"
+      },
+      {
+        "id": "A3",
+        "cmd": "uv run ruff check tests/test_wf_unblock.py && uv run ruff format --check tests/test_wf_unblock.py",
+        "exit_code": 0,
+        "output_sha256": "ce04ce92b16073000b77c97a42c00b98b96305692d9d5ed4dcfa5a9ca9ea62d6",
+        "output_bytes": 44,
+        "elapsed_s": 0.0,
+        "verdict": "pass"
+      },
+      {
+        "id": "A4",
+        "cmd": "S=$(git log --format=%H -n1 --grep='^plan: v1.4') && ! git diff --name-only \"$S\" HEAD -- src configs scripts pyproject.toml uv.lock | grep -vxE 'scripts/(_wf\\.py|wf\\.sh|wf-decision\\.sh|wf-escalate\\.sh)'",
+        "exit_code": 0,
+        "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "output_bytes": 0,
+        "elapsed_s": 0.0,
+        "verdict": "pass"
+      },
+      {
+        "id": "A5",
+        "cmd": "grep -q '^- Kit exception (T-018):' docs/decisions.md",
+        "exit_code": 0,
+        "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "output_bytes": 0,
+        "elapsed_s": 0.0,
+        "verdict": "pass"
+      },
+      {
+        "id": "A6",
+        "verdict": "judgement",
+        "description": "Only the four named kit scripts and the new test changed; unblock without --to behaves as before; the six test scenarios cover the T-021 failure exactly; no live state was touched."
+      }
+    ],
+    "evidence_files": {
+      "docs/recon/T-018-kit-repair.md": {
+        "exists": true,
+        "sha256": "19c658c28128423e389671c4f202df59b89a2092c670d10bfe2b9963228fead8",
+        "bytes": 10583
+      },
+      "tests/test_wf_unblock.py": {
+        "exists": true,
+        "sha256": "5e4f36641a45d537c96632f10971496b0d93a42cb879dfe5b3bf595fba69c6b0",
+        "bytes": 11055
+      }
+    },
+    "finished_utc": "2026-11-14T17:27:51Z",
+    "failures": 0
   }
 ]
