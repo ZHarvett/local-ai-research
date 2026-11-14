@@ -1,5 +1,5 @@
 {
-  "checksum": "85d6d361bc21f942c4b7782e5b1c28ed8bcd91e52cd22d26d518b0dedcfc3ba4",
+  "checksum": "c9b5e977589c113b5c23971563b1bc51ead9e4696f8272e67a85669000d8be8c",
   "created_utc": "2026-11-12T22:25:04Z",
   "escalations": {
     "E-001": {
@@ -1305,6 +1305,27 @@
       "seq": 177,
       "task": "T-021",
       "ts": "2026-11-14T15:29:42Z"
+    },
+    {
+      "detail": "new card in amended plan",
+      "event": "plan-added",
+      "seq": 178,
+      "task": "T-018",
+      "ts": "2026-11-14T15:58:43Z"
+    },
+    {
+      "detail": "sha256 fed612c8820c\u2026",
+      "event": "plan-amended",
+      "seq": 179,
+      "task": null,
+      "ts": "2026-11-14T15:58:43Z"
+    },
+    {
+      "detail": "dependencies satisfied",
+      "event": "ready",
+      "seq": 180,
+      "task": "T-018",
+      "ts": "2026-11-14T15:58:43Z"
     }
   ],
   "kit_version": "0.1.0",
@@ -1316,7 +1337,7 @@
     "P4"
   ],
   "plan_file": "PLAN.md",
-  "plan_sha256": "c8fde913a305a5de7bd917418a4225e81bf45e40ba404a2a9b50d1a93580737d",
+  "plan_sha256": "fed612c8820c8a182df0e181b7cc345db47629e65f2dfda2337b71a59d3114d5",
   "review_cycles": {
     "T-005": 1,
     "T-007": 1,
@@ -1754,6 +1775,27 @@
       "source": "plan",
       "status": "accepted",
       "title": "Unattended loop (wf-loop.sh)"
+    },
+    "T-018": {
+      "card_sha256": "cb611e62b5fa39055e2bf57217b7cf953eaa96b8b4e605eaecbc8ae82a2330f7",
+      "depends_on": [],
+      "files_write": [
+        "scripts/_wf.py",
+        "scripts/wf.sh",
+        "scripts/wf-decision.sh",
+        "scripts/wf-escalate.sh",
+        "tests/test_wf_unblock.py",
+        "docs/recon/T-018-kit-repair.md",
+        "docs/decisions.md",
+        "docs/progress-log.md"
+      ],
+      "lane": 2,
+      "phase": "P2",
+      "resources": "light",
+      "review": "post",
+      "source": "plan",
+      "status": "ready",
+      "title": "Kit repair: leave blocked-decision after a review verdict"
     },
     "T-019": {
       "blocked_from": null,

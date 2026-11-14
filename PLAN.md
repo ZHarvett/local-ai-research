@@ -1,12 +1,12 @@
 # Step 0, remaining work: Stage 4, release v0.1.0, completion report
-*Version 1.3 · 14 November 2026*
+*Version 1.4 · 14 November 2026*
 
 ## Shared rules
 
 Context: Step 0 (baseline setup) of "Local AI on a Small PC". Reference plan: docs/plans/step-0-baseline.md (v1.8; v1.9 from T-011). Runbook: docs/runbook-stage3.md. Decisions: docs/decisions.md. The planning chat cannot see the repo, so every escalation brief must be self-contained.
 
 1. Evidence, not memory. Every number written anywhere is copied from a named repo file. Docs carry a `<!-- sources: path, path -->` line for tools/check_doc_numbers.py (built in T-005), and derived numbers are marked `<!-- derived: how -->` on their line. Commands come from the runbook or from docs/recon/commands.env (written in T-001), never from memory.
-2. Code is frozen until T-008 is accepted. No change to any existing file under src/, configs/ or scripts/, or to pyproject.toml or uv.lock. After T-008, only the cards that name such files may change them.
+2. Code is frozen until T-008 is accepted. No change to any existing file under src/, configs/ or scripts/, or to pyproject.toml or uv.lock. After T-008, only the cards that name such files may change them. One exception, ruled on 14 November 2026 (T-021 stuck in the kit after a review verdict of blocked-decision): T-018 may change only the kit scripts scripts/_wf.py, scripts/wf.sh, scripts/wf-decision.sh and scripts/wf-escalate.sh, and add one new kit test file. Nothing under src/ or configs/, no other script, no pyproject.toml or uv.lock. This is safe for the measurements: Stage 4 run 2 started from commit c4bdc4d, which R3 checked, and its data is already committed.
 3. data/raw/ is append-only and never edited by hand. A superseded run is marked superseded, never deleted. A RE-MEASURE happens only after an approved escalation, as a new gated task.
 4. Safety (the umbrella's rules win):
    - no sudo (propose the commands instead) and no --allow-dirty;
@@ -67,7 +67,7 @@ Context: Step 0 (baseline setup) of "Local AI on a Small PC". Reference plan: do
 
 - P0: Pilot setup (13 Nov): T-001, T-002, T-003, and T-017 (unattended loop, can run beside the drafts)
 - P1: Drafts, the first parallel pair: T-004 and T-005 in parallel, then T-006
-- P2: Stage 4 (13 Nov or later, quiet machine): T-019 (pre-flight, light), T-007 (run 1, invalid: PCIe link ran Gen3), T-020 (restore and verify the PCIe Gen4 link), T-021 (Stage 4 run 2), T-008 (S2 check on run 2)
+- P2: Stage 4 (13 Nov or later, quiet machine): T-019 (pre-flight, light), T-007 (run 1, invalid: PCIe link ran Gen3), T-020 (restore and verify the PCIe Gen4 link), T-021 (Stage 4 run 2), T-018 (kit repair, lane 2, needed to get T-021 out of its stuck review state), T-008 (S2 check on run 2)
 - P3: Post-Stage-4 code fixes: T-009
 - P4: Release: T-010 and T-011 in parallel, then T-012 to T-016
 
@@ -316,6 +316,46 @@ estimate: 75m
 decision_rights:
   - may: commit messages; the polling cadence within the runbook
   - must_escalate: any stop rule firing; a gate failure not covered by R2; a quiet-condition violation; any failed precondition; anything that would need --allow-dirty or a code change
+
+### T-018 — Kit repair: leave blocked-decision after a review verdict
+id: T-018
+title: Kit repair: leave blocked-decision after a review verdict
+phase: P2
+depends_on: none
+lane: 2
+lane_reason: It changes only kit scripts and one new test file, needs no GPU, and runs while lane 1 is stuck on T-021.
+resources: light
+files_read: scripts/_wf.py, scripts/wf.sh, scripts/wf-decision.sh, scripts/wf-escalate.sh, docs/WORKFLOW.md, docs/decisions.md, reviews/T-021/, escalations/
+files_write: scripts/_wf.py, scripts/wf.sh, scripts/wf-decision.sh, scripts/wf-escalate.sh, tests/test_wf_unblock.py, docs/recon/T-018-kit-repair.md, docs/decisions.md, docs/progress-log.md
+gates: none
+review: post
+preconditions:
+  - cmd: test -f scripts/_wf.py && ! pgrep -x llama-server
+    expect: exit_code 0
+  - cmd: test -z "$(git status --porcelain -- src configs scripts tests pyproject.toml uv.lock)"
+    expect: exit_code 0
+steps:
+  - S1: Write docs/recon/T-018-kit-repair.md with the problem as found by the T-021 session, with file:line evidence in scripts/_wf.py: cmd_review_verdict (about lines 1939-1944) records no blocked_from for a blocked-decision verdict; cmd_escalate sets blocked_from to the task's current status even when that is already blocked-decision; cmd_unblock (about 2017-2033) falls back to todo, which TRANSITIONS forbids from blocked-decision; cmd_decision (about 2117-2126) writes docs/decisions.md and marks the escalation decided before the unblock that can then fail. Re-read the code and correct any line number that is wrong. (redo-safe)
+  - S2: Make four changes in the kit scripts and nothing else. (1) Add `wf.sh unblock T-NNN --to STATUS`, accepted only when STATUS is a legal transition out of blocked-decision in the existing TRANSITIONS table (done, in-review or changes-requested), refusing anything else, and writing an event that names the old and new status; without --to the command behaves exactly as before. (2) cmd_review_verdict records blocked_from for a blocked-decision verdict (changes-requested, the status the review protocol returns to). (3) cmd_escalate keeps an existing blocked_from when the task is already blocked-decision instead of overwriting it with blocked-decision. (4) cmd_decision works out the unblock target before it writes anything, and if the task cannot be unblocked it refuses without writing docs/decisions.md or marking the escalation decided. Keep the change small; if it needs more than about 80 changed lines, escalate. (not redo-safe)
+  - S3: Write tests/test_wf_unblock.py, using a temporary copy of a state and never the live .workflow/: unblock --to changes-requested works on a blocked-decision task with no blocked_from; --to ready, todo and accepted are refused; unblock without --to still returns to blocked_from; a review verdict of blocked-decision records blocked_from; escalate on an already blocked task keeps blocked_from; decision on a task that cannot be unblocked leaves docs/decisions.md and the escalation untouched. Run it with the kit's existing tests. (redo-safe)
+  - S4: Append to docs/decisions.md one line starting "- Kit exception (T-018):" saying that the Shared rule 2 freeze was lifted for these four scripts and one test file only, why, and the commit. Run shellcheck on the changed shell scripts, ruff on the new test, confirm with git diff --stat that nothing under src/ or configs/ and no other script changed, commit, and append the progress-log entry. Do not touch T-021 or any live state beyond this task's own. (redo-safe)
+acceptance:
+  - cmd: uv run pytest -q tests/test_wf_unblock.py
+    expect: exit_code 0
+  - cmd: shellcheck scripts/wf.sh scripts/wf-decision.sh scripts/wf-escalate.sh
+    expect: exit_code 0
+  - cmd: uv run ruff check tests/test_wf_unblock.py && uv run ruff format --check tests/test_wf_unblock.py
+    expect: exit_code 0
+  - cmd: S=$(git log --format=%H -n1 --grep='^plan: v1.4') && ! git diff --name-only "$S" HEAD -- src configs scripts pyproject.toml uv.lock | grep -vxE 'scripts/(_wf\.py|wf\.sh|wf-decision\.sh|wf-escalate\.sh)'
+    expect: exit_code 0
+  - cmd: grep -q '^- Kit exception (T-018):' docs/decisions.md
+    expect: exit_code 0
+  - expect: manual "Only the four named kit scripts and the new test changed; unblock without --to behaves as before; the six test scenarios cover the T-021 failure exactly; no live state was touched."
+evidence: docs/recon/T-018-kit-repair.md, tests/test_wf_unblock.py
+estimate: 60m
+decision_rights:
+  - may: the option names, the wording of messages, how the tests build their temporary state
+  - must_escalate: any change beyond the four scripts and the one test file; any need to touch live .workflow/ state; a fix that needs more than about 80 changed lines; any doubt that the existing transitions allow the change
 
 ### T-008 — S2 check and Stage 4 analysis
 id: T-008

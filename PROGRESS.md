@@ -27,13 +27,14 @@ files; change them through the scripts only.
 | T-015 | Private repo, CI and tag v0.1.0 | todo | 1 | none |
 | T-016 | Publish v0.1.0 | todo | 1 | none |
 | T-017 | Unattended loop (wf-loop.sh) | accepted (judgement) | 3 | post |
+| T-018 | Kit repair: leave blocked-decision after a review verdict | ready | 2 | post |
 | T-019 | Stage 4 pre-flight (no GPU) | accepted (judgement) | 1 | post |
 | T-020 | Restore and verify the PCIe Gen4 link (hands-on) | done (judgement) | 1 | none |
 | T-021 | Stage 4 session, run 2 | blocked-decision (judgement) | 1 | post |
 
 ## READY (grouped by lane)
 
-_(none)_
+- lane 2: **T-018** Kit repair: leave blocked-decision after a review verdict
 
 ## Escalation queue
 
@@ -51,8 +52,8 @@ _(none)_
 
 ## Last events
 
-- 2026-11-14T15:11:50Z step-done T-021 — S4
-- 2026-11-14T15:12:32Z step-done T-021 — S5
-- 2026-11-14T15:13:42Z done T-021 — accept run at 2026-11-14T15:12:32Z
 - 2026-11-14T15:29:42Z review-opened T-021 — cycle 1
 - 2026-11-14T15:29:42Z review-verdict T-021 — blocked-decision (cycle 1, 6 findings)
+- 2026-11-14T15:58:43Z plan-added T-018 — new card in amended plan
+- 2026-11-14T15:58:43Z plan-amended — sha256 fed612c8820c…
+- 2026-11-14T15:58:43Z ready T-018 — dependencies satisfied
