@@ -1,5 +1,5 @@
 {
-  "checksum": "c1351b477ba6e990f2001d9c51b735e97864ebfc3f0ffc3a23fb982009591e36",
+  "checksum": "2a64c73ffdff0374bfcf972906081956bda81f5c79d0b907af9f93e521cc78bb",
   "created_utc": "2026-11-12T22:25:04Z",
   "escalations": {
     "E-001": {
@@ -1760,6 +1760,41 @@
       "seq": 239,
       "task": "T-009",
       "ts": "2026-11-14T22:15:23Z"
+    },
+    {
+      "detail": "lane 1, pid 109446",
+      "event": "claimed",
+      "seq": 240,
+      "task": "T-009",
+      "ts": "2026-11-14T22:17:00Z"
+    },
+    {
+      "detail": "lane 1",
+      "event": "started",
+      "seq": 241,
+      "task": "T-009",
+      "ts": "2026-11-14T22:17:00Z"
+    },
+    {
+      "detail": "S1",
+      "event": "step-done",
+      "seq": 242,
+      "task": "T-009",
+      "ts": "2026-11-14T22:17:17Z"
+    },
+    {
+      "detail": "S2",
+      "event": "step-done",
+      "seq": 243,
+      "task": "T-009",
+      "ts": "2026-11-14T22:17:17Z"
+    },
+    {
+      "detail": "S3",
+      "event": "step-done",
+      "seq": 244,
+      "task": "T-009",
+      "ts": "2026-11-14T22:20:54Z"
     }
   ],
   "kit_version": "0.1.0",
@@ -2088,6 +2123,7 @@
       "blocked_from": null,
       "blocked_reason": null,
       "card_sha256": "a1182b70a3c57ecb615edb3c5723ddc7c3c8225f15605e65c8959f560c14b6ee",
+      "claimed_by_lane": 1,
       "depends_on": [
         "T-008"
       ],
@@ -2106,7 +2142,12 @@
       "resources": "cpu-heavy",
       "review": "none",
       "source": "plan",
-      "status": "ready",
+      "status": "in-progress",
+      "steps_done": [
+        "S1",
+        "S2",
+        "S3"
+      ],
       "title": "Post-Stage-4 code fixes"
     },
     "T-010": {

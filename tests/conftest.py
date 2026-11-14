@@ -1,11 +1,27 @@
 from __future__ import annotations
 
+import re
 import socket
 from pathlib import Path
 
 import pytest
 
 REPO = Path(__file__).resolve().parents[1]
+
+
+def plan_version_from_header() -> str:
+    """The plan version read straight from the plan header, independent of the code under test.
+
+    Tests assert against this instead of a literal so a plan version bump (e.g. T-011's
+    v1.9) does not break them (T-009 S3, decision D4).
+    """
+    line = (REPO / "docs/plans/step-0-baseline.md").read_text().splitlines()[2]
+    m = re.match(r"\*Version (\d+\.\d+)\b", line)
+    if not m:
+        raise AssertionError(f"cannot read the plan version from line 3: {line!r}")
+    return m.group(1)
+
+
 FIXTURES = REPO / "tests/fixtures"
 GOLDEN = REPO / "tests/golden"
 EXAMPLES = REPO / "configs/server/examples"
