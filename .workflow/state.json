@@ -1,5 +1,5 @@
 {
-  "checksum": "2dcdc5e59f43fecfa3ed9425748404121bfee4b08569f095ba37f924d8f5a6c4",
+  "checksum": "7386dec36f80a90d67e34ffb92d102ad353cbd4df4c8ea2add10bb39421f6207",
   "created_utc": "2026-11-12T22:25:04Z",
   "escalations": {
     "E-001": {
@@ -1550,6 +1550,20 @@
       "seq": 211,
       "task": "T-021",
       "ts": "2026-11-14T19:58:41Z"
+    },
+    {
+      "detail": "accepted (cycle 2, 2 findings)",
+      "event": "review-verdict",
+      "seq": 212,
+      "task": "T-021",
+      "ts": "2026-11-14T20:15:26Z"
+    },
+    {
+      "detail": "dependencies satisfied",
+      "event": "ready",
+      "seq": 213,
+      "task": "T-008",
+      "ts": "2026-11-14T20:15:26Z"
     }
   ],
   "kit_version": "0.1.0",
@@ -1863,7 +1877,7 @@
       "resources": "light",
       "review": "post",
       "source": "plan",
-      "status": "todo",
+      "status": "ready",
       "title": "S2 check and Stage 4 analysis"
     },
     "T-009": {
@@ -2140,7 +2154,7 @@
       "resources": "exclusive-machine",
       "review": "post",
       "source": "plan",
-      "status": "in-review",
+      "status": "accepted",
       "steps_done": [
         "S1",
         "S2",

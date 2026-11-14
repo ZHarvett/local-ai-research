@@ -17,7 +17,7 @@ files; change them through the scripts only.
 | T-005 | Baseline report draft and number checker | accepted (judgement) | 2 | post |
 | T-006 | Write-up draft | done | 1 | none |
 | T-007 | Stage 4 session | accepted ⚠ re-acknowledge (judgement) | 1 | post |
-| T-008 | S2 check and Stage 4 analysis | todo ⚠ re-acknowledge | 1 | post |
+| T-008 | S2 check and Stage 4 analysis | ready ⚠ re-acknowledge | 1 | post |
 | T-009 | Post-Stage-4 code fixes | todo | 1 | none |
 | T-010 | Final README, report, write-up and changelog | todo | 1 | post |
 | T-011 | Plan v1.9, upstream drafts, methodology | todo | 2 | none |
@@ -30,11 +30,11 @@ files; change them through the scripts only.
 | T-018 | Kit repair: leave blocked-decision after a review verdict | accepted (judgement) | 2 | post |
 | T-019 | Stage 4 pre-flight (no GPU) | accepted (judgement) | 1 | post |
 | T-020 | Restore and verify the PCIe Gen4 link (hands-on) | done (judgement) | 1 | none |
-| T-021 | Stage 4 session, run 2 | in-review (judgement) | 1 | post |
+| T-021 | Stage 4 session, run 2 | accepted (judgement) | 1 | post |
 
 ## READY (grouped by lane)
 
-_(none)_
+- lane 1: **T-008** S2 check and Stage 4 analysis
 
 ## Escalation queue
 
@@ -42,7 +42,7 @@ _(none)_
 
 ## Review queue
 
-- **T-021** Stage 4 session, run 2 — in-review (cycle 2, max 2)
+_(none)_
 
 ## Lanes
 
@@ -52,8 +52,8 @@ _(none)_
 
 ## Last events
 
-- 2026-11-14T18:07:36Z note T-021 — decision E-009 recorded
-- 2026-11-14T19:15:22Z plan-amended — sha256 a3d02a2a84ef…
 - 2026-11-14T19:49:43Z review-opened T-005 — cycle 2
 - 2026-11-14T19:49:43Z review-verdict T-005 — accepted (cycle 2, 5 findings)
 - 2026-11-14T19:58:41Z review-opened T-021 — cycle 2
+- 2026-11-14T20:15:26Z review-verdict T-021 — accepted (cycle 2, 2 findings)
+- 2026-11-14T20:15:26Z ready T-008 — dependencies satisfied
