@@ -1,5 +1,5 @@
 {
-  "checksum": "edb2a8018a943f3be5d4e39f51651000161d080505597446612d7f4ed57e4f8e",
+  "checksum": "a797e71fa5241204488572fecdb8d247090074995bb405168e6497197b04b2fa",
   "created_utc": "2026-11-12T22:25:04Z",
   "escalations": {
     "E-001": {
@@ -1200,6 +1200,27 @@
       "seq": 162,
       "task": "T-020",
       "ts": "2026-11-14T11:55:59Z"
+    },
+    {
+      "detail": "S5",
+      "event": "step-done",
+      "seq": 163,
+      "task": "T-020",
+      "ts": "2026-11-14T11:58:49Z"
+    },
+    {
+      "detail": "accept run at 2026-11-14T11:58:05Z",
+      "event": "done",
+      "seq": 164,
+      "task": "T-020",
+      "ts": "2026-11-14T11:58:49Z"
+    },
+    {
+      "detail": "dependencies satisfied",
+      "event": "ready",
+      "seq": 165,
+      "task": "T-021",
+      "ts": "2026-11-14T11:58:49Z"
     }
   ],
   "kit_version": "0.1.0",
@@ -1692,12 +1713,13 @@
       "resources": "exclusive-machine",
       "review": "none",
       "source": "plan",
-      "status": "in-progress",
+      "status": "done",
       "steps_done": [
         "S1",
         "S2",
         "S3",
-        "S4"
+        "S4",
+        "S5"
       ],
       "title": "Restore and verify the PCIe Gen4 link (hands-on)"
     },
@@ -1718,7 +1740,7 @@
       "resources": "exclusive-machine",
       "review": "post",
       "source": "plan",
-      "status": "todo",
+      "status": "ready",
       "title": "Stage 4 session, run 2"
     }
   },
