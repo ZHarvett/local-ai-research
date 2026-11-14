@@ -1,5 +1,5 @@
 {
-  "checksum": "c816722dd9f94ae5daaa1252db1ebd9952ccb7d132bf6a82e8830681608778d4",
+  "checksum": "78d868018170fc8c270a4de67a673517be740bf8bdafc161a8962978f8b85345",
   "created_utc": "2026-11-12T22:25:04Z",
   "escalations": {
     "E-001": {
@@ -1823,6 +1823,27 @@
       "seq": 248,
       "task": "T-009",
       "ts": "2026-11-14T22:46:32Z"
+    },
+    {
+      "detail": "accept run at 2026-11-14T22:46:49Z",
+      "event": "done",
+      "seq": 249,
+      "task": "T-009",
+      "ts": "2026-11-14T23:15:06Z"
+    },
+    {
+      "detail": "dependencies satisfied",
+      "event": "ready",
+      "seq": 250,
+      "task": "T-010",
+      "ts": "2026-11-14T23:15:06Z"
+    },
+    {
+      "detail": "dependencies satisfied",
+      "event": "ready",
+      "seq": 251,
+      "task": "T-011",
+      "ts": "2026-11-14T23:15:06Z"
     }
   ],
   "kit_version": "0.1.0",
@@ -2170,7 +2191,7 @@
       "resources": "cpu-heavy",
       "review": "none",
       "source": "plan",
-      "status": "in-progress",
+      "status": "done",
       "steps_done": [
         "S1",
         "S2",
@@ -2202,7 +2223,7 @@
       "resources": "light",
       "review": "post",
       "source": "plan",
-      "status": "todo",
+      "status": "ready",
       "title": "Final README, report, write-up and changelog"
     },
     "T-011": {
@@ -2222,7 +2243,7 @@
       "resources": "light",
       "review": "none",
       "source": "plan",
-      "status": "todo",
+      "status": "ready",
       "title": "Plan v1.9, upstream drafts, methodology"
     },
     "T-012": {
