@@ -143,6 +143,10 @@ TRANSITIONS: dict[str, set[str]] = {
     "cancelled": set(),
 }
 
+# Explicit targets for `wf.sh unblock --to` (T-018): the review-flow return statuses,
+# each a legal transition out of blocked-decision in TRANSITIONS above.
+UNBLOCK_TO_TARGETS = ("done", "in-review", "changes-requested")
+
 BRIEF_REQUIRED_SECTIONS = (
     "## What happened",
     "## Why it cannot proceed",
@@ -1936,10 +1940,14 @@ def cmd_review_verdict(repo: Path, args: argparse.Namespace) -> None:
     archive = repo / "reviews" / tid / f"r{cycle}-REVIEW_REPORT.md"
     archive.parent.mkdir(parents=True, exist_ok=True)
     shutil.copyfile(report, archive)
+    # T-018: a blocked-decision verdict returns to changes-requested when unblocked
+    # (the status /address-review works from); record it so unblock has a target.
+    extra = {"blocked_from": "changes-requested"} if verdict == "blocked-decision" else None
     mutate(
         repo,
         tid,
         verdict,
+        extra,
         event="review-verdict",
         detail=f"{verdict} (cycle {cycle}, {len(findings)} findings)",
     )
@@ -2018,16 +2026,29 @@ def cmd_unblock(repo: Path, args: argparse.Namespace) -> None:
     _, _, task = find_task(repo, args.task)
     if task["status"] != "blocked-decision":
         die(f"task {args.task} is {task['status']}, not blocked-decision")
-    restore = task.get("blocked_from", "todo")
-    if restore not in TRANSITIONS["blocked-decision"]:
-        restore = "todo"
+    old = task["status"]
+    to = getattr(args, "to", None)
+    if to is not None:
+        # T-018: explicit target for tasks whose blocked_from is missing or illegal
+        if to not in UNBLOCK_TO_TARGETS or to not in TRANSITIONS["blocked-decision"]:
+            die(
+                f"--to {to} is not a legal unblock target "
+                f"(allowed: {', '.join(UNBLOCK_TO_TARGETS)})"
+            )
+        restore = to
+        detail = f"{old} -> {restore}"
+    else:
+        restore = task.get("blocked_from", "todo")
+        if restore not in TRANSITIONS["blocked-decision"]:
+            restore = "todo"
+        detail = f"restored to {restore}"
     mutate(
         repo,
         args.task,
         restore,
         {"blocked_from": None, "blocked_reason": None},
         event="unblocked",
-        detail=f"restored to {restore}",
+        detail=detail,
     )
     print(f"{args.task} unblocked -> {restore}")
 
@@ -2087,12 +2108,17 @@ def cmd_escalate(repo: Path, args: argparse.Namespace) -> None:
     render_progress(repo)
     if tid:
         task = _task_record_anywhere(repo, tid)
+        blocked_from = task["status"]
+        if task["status"] == "blocked-decision":
+            # T-018: already blocked — keep the original return status instead of
+            # overwriting it with blocked-decision (which can never be restored to)
+            blocked_from = task.get("blocked_from")
         mutate(
             repo,
             tid,
             "blocked-decision",
             {
-                "blocked_from": task["status"],
+                "blocked_from": blocked_from,
                 "blocked_reason": f"escalation {eid}",
             },
             event="escalated",
@@ -2114,6 +2140,23 @@ def cmd_decision(repo: Path, args: argparse.Namespace) -> None:
     reply = read_brief(args.reply_file)
     if not re.search(rf"^DECISION {re.escape(eid)}\b", reply, re.M):
         die(f"the reply must start with a 'DECISION {eid}' line")
+    tid = info.get("task")
+    task = _task_record_anywhere(repo, tid) if tid and tid != "-" else None
+    if task is not None:
+        # T-018: work out the unblock target BEFORE writing anything — otherwise a
+        # failed unblock leaves docs/decisions.md and a decided escalation behind
+        if task["status"] != "blocked-decision":
+            die(
+                f"task {tid} is {task['status']}, not blocked-decision; cannot "
+                f"unblock — decision {eid} not recorded"
+            )
+        restore = task.get("blocked_from", "todo")
+        if restore not in TRANSITIONS["blocked-decision"]:
+            die(
+                f"task {tid} has no legal unblock target (blocked_from="
+                f"{task.get('blocked_from')!r}); run wf.sh unblock {tid} --to STATUS "
+                f"first — decision {eid} not recorded"
+            )
     decisions = repo / "docs" / "decisions.md"
     decisions.parent.mkdir(parents=True, exist_ok=True)
     with open(decisions, "a", encoding="utf-8") as fh:
@@ -2121,8 +2164,7 @@ def cmd_decision(repo: Path, args: argparse.Namespace) -> None:
     state["escalations"][eid]["status"] = "decided"
     state["escalations"][eid]["decided_utc"] = now_utc()
     save_json(state_path(repo), state)
-    tid = info.get("task")
-    if tid and tid != "-" and _task_record_anywhere(repo, tid):
+    if task is not None:
         cmd_unblock(repo, argparse.Namespace(task=tid))
     append_event_note(repo, tid or "-", f"decision {eid} recorded")
     print(f"decision {eid} recorded in {decisions}; task {tid or '-'} unblocked")
@@ -2586,8 +2628,9 @@ def build_parser() -> argparse.ArgumentParser:
     s.add_argument("--reason", required=True)
     s.set_defaults(fn=cmd_block)
 
-    s = sp("unblock", "blocked-decision -> the status it was blocked from")
+    s = sp("unblock", "blocked-decision -> the status it was blocked from (or --to STATUS)")
     s.add_argument("task")
+    s.add_argument("--to", metavar="STATUS", default=None)
     s.set_defaults(fn=cmd_unblock)
 
     s = sp("escalate", "create escalations/E-NNN.md and block the task")
