@@ -8,6 +8,7 @@ FAKE_EXIT_AT_START=N  exit immediately with code N
 
 import os
 import signal
+import socket
 import sys
 import time
 from http.server import BaseHTTPRequestHandler, HTTPServer
@@ -37,6 +38,15 @@ def on_sigint(*_):
     sys.exit(0)
 
 
+class Server(HTTPServer):
+    """SO_REUSEPORT: the free_port fixture holds a bound, non-listening reservation on this
+    port for the whole test (A13 TOCTOU fix); join it instead of racing it."""
+
+    def server_bind(self):
+        self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
+        super().server_bind()
+
+
 signal.signal(signal.SIGINT, signal.SIG_IGN if os.environ.get("FAKE_IGNORE_SIGINT") else on_sigint)
 print(f"fake server: listening on {host}:{port}; argv={args}", flush=True)
-HTTPServer((host, port), Handler).serve_forever()
+Server((host, port), Handler).serve_forever()

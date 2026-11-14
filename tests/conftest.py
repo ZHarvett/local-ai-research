@@ -14,9 +14,14 @@ EXAMPLE_NAMES = ["stock-64k", "fit-64k-q8", "cmoe-cache-64k", "mtp-64k"]
 
 @pytest.fixture
 def free_port() -> int:
+    # Hold the reservation for the whole test: closing it before the server binds leaves a
+    # TOCTOU window in which the port can be taken (A13). SO_REUSEPORT lets the mock/fake
+    # servers bind alongside it; the reservation never listens, so incoming connections and
+    # launch-server.sh's busy check (ss -ltn) only ever see the real server.
     with socket.socket() as s:
+        s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
         s.bind(("127.0.0.1", 0))
-        return s.getsockname()[1]
+        yield s.getsockname()[1]
 
 
 # The toy task contains one deliberately failing test; it is run only by tests/test_toy_task.py,

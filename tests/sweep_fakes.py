@@ -78,32 +78,37 @@ class FakeSampler:
 
     def start(self):
         self.out.parent.mkdir(parents=True, exist_ok=True)
+        self._sample()  # deterministic first row: no race with the thread's first tick (A13)
         self._t = threading.Thread(target=self._loop, daemon=True)
         self._t.start()
         return self
 
+    def _sample(self):
+        used = None
+        with contextlib.suppress(OSError, ValueError):
+            used = float(self.vram_file.read_text()) if self.vram_file else None
+        row = dict.fromkeys(telemetry.COLUMNS)
+        row.update(t_epoch=time.time(), gpu_mem_used_mib=used, tctl_c=60.0, majflt=0.0,
+                   pswpin=5.0, server_vmswap_kib=0.0, gpu_temp_c=55.0,
+                   server_rss_anon_kib=2048.0, server_rss_file_kib=4096.0,
+                   server_rss_shmem_kib=0.0)  # fmt: skip
+        for c in telemetry.COLUMNS:
+            if c.startswith("reason_"):
+                row[c] = False
+        if self.hook:
+            self.hook(row)
+        self.rows.append(row)
+
     def _loop(self):
         while not self._stop.is_set():
-            used = None
-            with contextlib.suppress(OSError, ValueError):
-                used = float(self.vram_file.read_text()) if self.vram_file else None
-            row = dict.fromkeys(telemetry.COLUMNS)
-            row.update(t_epoch=time.time(), gpu_mem_used_mib=used, tctl_c=60.0, majflt=0.0,
-                       pswpin=5.0, server_vmswap_kib=0.0, gpu_temp_c=55.0,
-                       server_rss_anon_kib=2048.0, server_rss_file_kib=4096.0,
-                       server_rss_shmem_kib=0.0)  # fmt: skip
-            for c in telemetry.COLUMNS:
-                if c.startswith("reason_"):
-                    row[c] = False
-            if self.hook:
-                self.hook(row)
-            self.rows.append(row)
+            self._sample()
             time.sleep(0.05)
 
     def stop(self):
         self._stop.set()
         if self._t:
             self._t.join(2)
+        self._sample()  # the CSV always carries the state at stop, whatever the thread did
         with open(self.out, "w", newline="") as fh:
             w = csv.DictWriter(fh, fieldnames=telemetry.COLUMNS)
             w.writeheader()
