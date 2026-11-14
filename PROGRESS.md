@@ -17,7 +17,7 @@ files; change them through the scripts only.
 | T-005 | Baseline report draft and number checker | accepted (judgement) | 2 | post |
 | T-006 | Write-up draft | done | 1 | none |
 | T-007 | Stage 4 session | accepted ⚠ re-acknowledge (judgement) | 1 | post |
-| T-008 | S2 check and Stage 4 analysis | ready ⚠ re-acknowledge | 1 | post |
+| T-008 | S2 check and Stage 4 analysis | done ⚠ re-acknowledge (judgement) | 1 | post |
 | T-009 | Post-Stage-4 code fixes | todo | 1 | none |
 | T-010 | Final README, report, write-up and changelog | todo | 1 | post |
 | T-011 | Plan v1.9, upstream drafts, methodology | todo | 2 | none |
@@ -34,7 +34,7 @@ files; change them through the scripts only.
 
 ## READY (grouped by lane)
 
-- lane 1: **T-008** S2 check and Stage 4 analysis
+_(none)_
 
 ## Escalation queue
 
@@ -52,8 +52,8 @@ _(none)_
 
 ## Last events
 
-- 2026-11-14T19:49:43Z review-opened T-005 — cycle 2
-- 2026-11-14T19:49:43Z review-verdict T-005 — accepted (cycle 2, 5 findings)
-- 2026-11-14T19:58:41Z review-opened T-021 — cycle 2
-- 2026-11-14T20:15:26Z review-verdict T-021 — accepted (cycle 2, 2 findings)
-- 2026-11-14T20:15:26Z ready T-008 — dependencies satisfied
+- 2026-11-14T20:17:54Z step-done T-008 — S1
+- 2026-11-14T20:20:28Z step-done T-008 — S2
+- 2026-11-14T20:23:54Z step-done T-008 — S3
+- 2026-11-14T20:23:55Z step-done T-008 — S4
+- 2026-11-14T20:25:47Z done T-008 — accept run at 2026-11-14T20:25:10Z

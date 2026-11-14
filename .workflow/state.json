@@ -1,5 +1,5 @@
 {
-  "checksum": "7386dec36f80a90d67e34ffb92d102ad353cbd4df4c8ea2add10bb39421f6207",
+  "checksum": "911e42cb9d550ef61ca358e32783b77a795a42c53d3fbdfd7661d3d7276b9304",
   "created_utc": "2026-11-12T22:25:04Z",
   "escalations": {
     "E-001": {
@@ -1564,6 +1564,55 @@
       "seq": 213,
       "task": "T-008",
       "ts": "2026-11-14T20:15:26Z"
+    },
+    {
+      "detail": "lane 1, pid 116395",
+      "event": "claimed",
+      "seq": 214,
+      "task": "T-008",
+      "ts": "2026-11-14T20:16:47Z"
+    },
+    {
+      "detail": "lane 1",
+      "event": "started",
+      "seq": 215,
+      "task": "T-008",
+      "ts": "2026-11-14T20:16:47Z"
+    },
+    {
+      "detail": "S1",
+      "event": "step-done",
+      "seq": 216,
+      "task": "T-008",
+      "ts": "2026-11-14T20:17:54Z"
+    },
+    {
+      "detail": "S2",
+      "event": "step-done",
+      "seq": 217,
+      "task": "T-008",
+      "ts": "2026-11-14T20:20:28Z"
+    },
+    {
+      "detail": "S3",
+      "event": "step-done",
+      "seq": 218,
+      "task": "T-008",
+      "ts": "2026-11-14T20:23:54Z"
+    },
+    {
+      "detail": "S4",
+      "event": "step-done",
+      "seq": 219,
+      "task": "T-008",
+      "ts": "2026-11-14T20:23:55Z"
+    },
+    {
+      "detail": "accept run at 2026-11-14T20:25:10Z",
+      "event": "done",
+      "seq": 220,
+      "task": "T-008",
+      "ts": "2026-11-14T20:25:47Z"
     }
   ],
   "kit_version": "0.1.0",
@@ -1861,6 +1910,7 @@
     },
     "T-008": {
       "card_sha256": "c394c8b4667740a65b7b371dd7bbfe0ddfcb431d750ffd71f57223a1ce526d50",
+      "claimed_by_lane": 1,
       "depends_on": [
         "T-021"
       ],
@@ -1877,7 +1927,13 @@
       "resources": "light",
       "review": "post",
       "source": "plan",
-      "status": "ready",
+      "status": "done",
+      "steps_done": [
+        "S1",
+        "S2",
+        "S3",
+        "S4"
+      ],
       "title": "S2 check and Stage 4 analysis"
     },
     "T-009": {
