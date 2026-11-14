@@ -1,5 +1,5 @@
 {
-  "checksum": "911e42cb9d550ef61ca358e32783b77a795a42c53d3fbdfd7661d3d7276b9304",
+  "checksum": "b94859192340832c2aeedbd68430589bdd8d0e2a047dd1844da26c2d894aec3b",
   "created_utc": "2026-11-12T22:25:04Z",
   "escalations": {
     "E-001": {
@@ -1613,6 +1613,27 @@
       "seq": 220,
       "task": "T-008",
       "ts": "2026-11-14T20:25:47Z"
+    },
+    {
+      "detail": "cycle 1",
+      "event": "review-opened",
+      "seq": 221,
+      "task": "T-008",
+      "ts": "2026-11-14T20:34:49Z"
+    },
+    {
+      "detail": "accepted (cycle 1, 0 findings)",
+      "event": "review-verdict",
+      "seq": 222,
+      "task": "T-008",
+      "ts": "2026-11-14T20:34:49Z"
+    },
+    {
+      "detail": "dependencies satisfied",
+      "event": "ready",
+      "seq": 223,
+      "task": "T-009",
+      "ts": "2026-11-14T20:34:49Z"
     }
   ],
   "kit_version": "0.1.0",
@@ -1628,6 +1649,7 @@
   "review_cycles": {
     "T-005": 2,
     "T-007": 1,
+    "T-008": 1,
     "T-017": 2,
     "T-018": 1,
     "T-019": 2,
@@ -1927,7 +1949,7 @@
       "resources": "light",
       "review": "post",
       "source": "plan",
-      "status": "done",
+      "status": "accepted",
       "steps_done": [
         "S1",
         "S2",
@@ -1954,7 +1976,7 @@
       "resources": "cpu-heavy",
       "review": "none",
       "source": "plan",
-      "status": "todo",
+      "status": "ready",
       "title": "Post-Stage-4 code fixes"
     },
     "T-010": {

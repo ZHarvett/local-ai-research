@@ -4,7 +4,7 @@ Rendered by `wf-progress.sh render` from `.workflow/state.json` and the lane
 files; change them through the scripts only.
 
 **Plan:** Step 0, remaining work: Stage 4, release v0.1.0, completion report  
-**Phase:** P2
+**Phase:** P3
 
 ## Tasks
 
@@ -17,8 +17,8 @@ files; change them through the scripts only.
 | T-005 | Baseline report draft and number checker | accepted (judgement) | 2 | post |
 | T-006 | Write-up draft | done | 1 | none |
 | T-007 | Stage 4 session | accepted ⚠ re-acknowledge (judgement) | 1 | post |
-| T-008 | S2 check and Stage 4 analysis | done ⚠ re-acknowledge (judgement) | 1 | post |
-| T-009 | Post-Stage-4 code fixes | todo | 1 | none |
+| T-008 | S2 check and Stage 4 analysis | accepted ⚠ re-acknowledge (judgement) | 1 | post |
+| T-009 | Post-Stage-4 code fixes | ready | 1 | none |
 | T-010 | Final README, report, write-up and changelog | todo | 1 | post |
 | T-011 | Plan v1.9, upstream drafts, methodology | todo | 2 | none |
 | T-012 | README walkthrough from a clean shell | todo | 1 | none |
@@ -34,7 +34,7 @@ files; change them through the scripts only.
 
 ## READY (grouped by lane)
 
-_(none)_
+- lane 1: **T-009** Post-Stage-4 code fixes
 
 ## Escalation queue
 
@@ -52,8 +52,8 @@ _(none)_
 
 ## Last events
 
-- 2026-11-14T20:17:54Z step-done T-008 — S1
-- 2026-11-14T20:20:28Z step-done T-008 — S2
-- 2026-11-14T20:23:54Z step-done T-008 — S3
 - 2026-11-14T20:23:55Z step-done T-008 — S4
 - 2026-11-14T20:25:47Z done T-008 — accept run at 2026-11-14T20:25:10Z
+- 2026-11-14T20:34:49Z review-opened T-008 — cycle 1
+- 2026-11-14T20:34:49Z review-verdict T-008 — accepted (cycle 1, 0 findings)
+- 2026-11-14T20:34:49Z ready T-009 — dependencies satisfied
