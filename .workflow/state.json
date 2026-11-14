@@ -1,5 +1,5 @@
 {
-  "checksum": "f691ca4e0682c8502a26e3ae8ecbfaf641177668593f238cf568808b316ee06d",
+  "checksum": "92747ecf94ba493beee17cee7c3f34e04e04a0630034fc52ed39bc9057247115",
   "created_utc": "2026-11-12T22:25:04Z",
   "escalations": {
     "E-001": {
@@ -49,6 +49,12 @@
       "decided_utc": "2026-11-13T18:42:53Z",
       "status": "decided",
       "task": "T-019",
+      "type": "decision"
+    },
+    "E-008": {
+      "created_utc": "2026-11-14T00:17:16Z",
+      "status": "open",
+      "task": "T-008",
       "type": "decision"
     }
   },
@@ -1067,6 +1073,41 @@
       "seq": 144,
       "task": "T-008",
       "ts": "2026-11-13T23:57:44Z"
+    },
+    {
+      "detail": "lane 1, pid 1925611",
+      "event": "claimed",
+      "seq": 145,
+      "task": "T-008",
+      "ts": "2026-11-14T00:06:33Z"
+    },
+    {
+      "detail": "lane 1",
+      "event": "started",
+      "seq": 146,
+      "task": "T-008",
+      "ts": "2026-11-14T00:06:33Z"
+    },
+    {
+      "detail": "S1",
+      "event": "step-done",
+      "seq": 147,
+      "task": "T-008",
+      "ts": "2026-11-14T00:13:07Z"
+    },
+    {
+      "detail": "S2",
+      "event": "step-done",
+      "seq": 148,
+      "task": "T-008",
+      "ts": "2026-11-14T00:14:08Z"
+    },
+    {
+      "detail": "E-008 (decision)",
+      "event": "escalated",
+      "seq": 149,
+      "task": "T-008",
+      "ts": "2026-11-14T00:17:16Z"
     }
   ],
   "kit_version": "0.1.0",
@@ -1317,7 +1358,10 @@
       "title": "Stage 4 session"
     },
     "T-008": {
+      "blocked_from": "in-progress",
+      "blocked_reason": "escalation E-008",
       "card_sha256": "70a7b0a3eb459f8ebb596da46992443ede07b0908e47729d828365337eac0f44",
+      "claimed_by_lane": 1,
       "depends_on": [
         "T-007"
       ],
@@ -1332,7 +1376,11 @@
       "resources": "light",
       "review": "post",
       "source": "plan",
-      "status": "ready",
+      "status": "blocked-decision",
+      "steps_done": [
+        "S1",
+        "S2"
+      ],
       "title": "S2 check and Stage 4 analysis"
     },
     "T-009": {
