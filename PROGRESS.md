@@ -48,7 +48,7 @@ _(none)_
 
 | lane | lock | worktree | tasks |
 |---|---|---|---|
-| 1 | pid 120069 | - | - |
+| 1 | - | - | - |
 
 ## Last events
 
