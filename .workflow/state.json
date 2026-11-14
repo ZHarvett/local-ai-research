@@ -1,5 +1,5 @@
 {
-  "checksum": "c9b5e977589c113b5c23971563b1bc51ead9e4696f8272e67a85669000d8be8c",
+  "checksum": "a70ce459664e5099572216eb01ae61007fe4c39de87da9f213cafaecb28d91f7",
   "created_utc": "2026-11-12T22:25:04Z",
   "escalations": {
     "E-001": {
@@ -502,6 +502,13 @@
       "ts": "2026-11-13T11:44:41Z"
     },
     {
+      "detail": "lane 2, pid 1807601",
+      "event": "claimed",
+      "seq": 0,
+      "task": "T-005",
+      "ts": "2026-11-13T11:44:41Z"
+    },
+    {
       "detail": "lane 2",
       "event": "migrated-to-lane",
       "seq": 62,
@@ -535,6 +542,20 @@
       "seq": 1,
       "task": "T-017",
       "ts": "2026-11-13T11:44:46Z"
+    },
+    {
+      "detail": "lane 2",
+      "event": "started",
+      "seq": 1,
+      "task": "T-005",
+      "ts": "2026-11-13T11:44:46Z"
+    },
+    {
+      "detail": "S1",
+      "event": "step-done",
+      "seq": 2,
+      "task": "T-005",
+      "ts": "2026-11-13T11:51:21Z"
     },
     {
       "detail": "S1",
@@ -607,11 +628,32 @@
       "ts": "2026-11-13T12:02:11Z"
     },
     {
+      "detail": "S2",
+      "event": "step-done",
+      "seq": 3,
+      "task": "T-005",
+      "ts": "2026-11-13T12:02:11Z"
+    },
+    {
       "detail": "S3",
       "event": "step-done",
       "seq": 4,
       "task": "T-005",
       "ts": "2026-11-13T12:02:11Z"
+    },
+    {
+      "detail": "S3",
+      "event": "step-done",
+      "seq": 4,
+      "task": "T-005",
+      "ts": "2026-11-13T12:02:11Z"
+    },
+    {
+      "detail": "accept run at 2026-11-13T12:02:32Z",
+      "event": "done",
+      "seq": 5,
+      "task": "T-005",
+      "ts": "2026-11-13T12:02:41Z"
     },
     {
       "detail": "accept run at 2026-11-13T12:02:32Z",
@@ -1326,6 +1368,76 @@
       "seq": 180,
       "task": "T-018",
       "ts": "2026-11-14T15:58:43Z"
+    },
+    {
+      "detail": "lane 2, pid 19216",
+      "event": "claimed",
+      "seq": 6,
+      "task": "T-018",
+      "ts": "2026-11-14T16:00:11Z"
+    },
+    {
+      "detail": "lane 2",
+      "event": "migrated-to-lane",
+      "seq": 181,
+      "task": "T-018",
+      "ts": "2026-11-14T16:00:11Z"
+    },
+    {
+      "detail": "lane 2",
+      "event": "started",
+      "seq": 7,
+      "task": "T-018",
+      "ts": "2026-11-14T16:00:15Z"
+    },
+    {
+      "detail": "S1: recon written; four defects confirmed at corrected lines; stale-worktree setup merge documented",
+      "event": "step-done",
+      "seq": 8,
+      "task": "T-018",
+      "ts": "2026-11-14T16:09:19Z"
+    },
+    {
+      "detail": "S2: four changes in _wf.py only, 59 changed lines; smoke-tested on /tmp fixture",
+      "event": "step-done",
+      "seq": 9,
+      "task": "T-018",
+      "ts": "2026-11-14T16:11:34Z"
+    },
+    {
+      "detail": "S3: 12 tests (6 card scenarios + regression guards); 49 pass with test_wf_loop.py; ruff clean",
+      "event": "step-done",
+      "seq": 10,
+      "task": "T-018",
+      "ts": "2026-11-14T16:13:21Z"
+    },
+    {
+      "detail": "S4: decisions line, shellcheck/ruff/diff-scope verified, acceptance run 1 (0 failures), progress-log entry",
+      "event": "step-done",
+      "seq": 11,
+      "task": "T-018",
+      "ts": "2026-11-14T16:19:27Z"
+    },
+    {
+      "detail": "accept run at 2026-11-14T16:18:16Z",
+      "event": "done",
+      "seq": 12,
+      "task": "T-018",
+      "ts": "2026-11-14T16:19:27Z"
+    },
+    {
+      "detail": "lane 2",
+      "event": "lane-merged",
+      "seq": 195,
+      "task": null,
+      "ts": "2026-11-14T16:22:58Z"
+    },
+    {
+      "detail": "blocked-decision -> changes-requested",
+      "event": "unblocked",
+      "seq": 196,
+      "task": "T-021",
+      "ts": "2026-11-14T16:23:06Z"
     }
   ],
   "kit_version": "0.1.0",
@@ -1517,7 +1629,7 @@
       "resources": "light",
       "review": "post",
       "source": "plan",
-      "status": "accepted",
+      "status": "done",
       "title": "Baseline report draft and number checker"
     },
     "T-006": {
@@ -1794,7 +1906,7 @@
       "resources": "light",
       "review": "post",
       "source": "plan",
-      "status": "ready",
+      "status": "done",
       "title": "Kit repair: leave blocked-decision after a review verdict"
     },
     "T-019": {
@@ -1851,6 +1963,8 @@
       "title": "Restore and verify the PCIe Gen4 link (hands-on)"
     },
     "T-021": {
+      "blocked_from": null,
+      "blocked_reason": null,
       "card_sha256": "32c807e3f2c0381ee1ce3b0e9c5dd54ae7d84315292e60e1bacf7976eeb60d8a",
       "claimed_by_lane": 1,
       "depends_on": [
@@ -1869,7 +1983,7 @@
       "resources": "exclusive-machine",
       "review": "post",
       "source": "plan",
-      "status": "blocked-decision",
+      "status": "changes-requested",
       "steps_done": [
         "S1",
         "S2",

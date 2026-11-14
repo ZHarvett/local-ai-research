@@ -4,7 +4,7 @@ Rendered by `wf-progress.sh render` from `.workflow/state.json` and the lane
 files; change them through the scripts only.
 
 **Plan:** Step 0, remaining work: Stage 4, release v0.1.0, completion report  
-**Phase:** P2
+**Phase:** P1
 
 ## Tasks
 
@@ -14,7 +14,7 @@ files; change them through the scripts only.
 | T-002 | Record Stage 3 decisions and merge CLAUDE.md | done | 1 | none |
 | T-003 | Reviewer calibration | done | 1 | none |
 | T-004 | README draft | done | 1 | none |
-| T-005 | Baseline report draft and number checker | accepted (judgement) | 2 | post |
+| T-005 | Baseline report draft and number checker | done (judgement) | 2 | post |
 | T-006 | Write-up draft | done | 1 | none |
 | T-007 | Stage 4 session | accepted ⚠ re-acknowledge (judgement) | 1 | post |
 | T-008 | S2 check and Stage 4 analysis | todo ⚠ re-acknowledge | 1 | post |
@@ -27,14 +27,14 @@ files; change them through the scripts only.
 | T-015 | Private repo, CI and tag v0.1.0 | todo | 1 | none |
 | T-016 | Publish v0.1.0 | todo | 1 | none |
 | T-017 | Unattended loop (wf-loop.sh) | accepted (judgement) | 3 | post |
-| T-018 | Kit repair: leave blocked-decision after a review verdict | ready | 2 | post |
+| T-018 | Kit repair: leave blocked-decision after a review verdict | done (judgement) | 2 | post |
 | T-019 | Stage 4 pre-flight (no GPU) | accepted (judgement) | 1 | post |
 | T-020 | Restore and verify the PCIe Gen4 link (hands-on) | done (judgement) | 1 | none |
-| T-021 | Stage 4 session, run 2 | blocked-decision (judgement) | 1 | post |
+| T-021 | Stage 4 session, run 2 | changes-requested (judgement) | 1 | post |
 
 ## READY (grouped by lane)
 
-- lane 2: **T-018** Kit repair: leave blocked-decision after a review verdict
+_(none)_
 
 ## Escalation queue
 
@@ -42,7 +42,7 @@ _(none)_
 
 ## Review queue
 
-_(none)_
+- **T-021** Stage 4 session, run 2 — changes-requested (cycle 1, max 2)
 
 ## Lanes
 
@@ -52,8 +52,8 @@ _(none)_
 
 ## Last events
 
-- 2026-11-14T15:29:42Z review-opened T-021 — cycle 1
-- 2026-11-14T15:29:42Z review-verdict T-021 — blocked-decision (cycle 1, 6 findings)
-- 2026-11-14T15:58:43Z plan-added T-018 — new card in amended plan
-- 2026-11-14T15:58:43Z plan-amended — sha256 fed612c8820c…
-- 2026-11-14T15:58:43Z ready T-018 — dependencies satisfied
+- 2026-11-14T16:13:21Z step-done T-018 — S3: 12 tests (6 card scenarios + regression guards); 49 pass with test_wf_loop.py; ruff clean
+- 2026-11-14T16:19:27Z step-done T-018 — S4: decisions line, shellcheck/ruff/diff-scope verified, acceptance run 1 (0 failures), progress-log entry
+- 2026-11-14T16:19:27Z done T-018 — accept run at 2026-11-14T16:18:16Z
+- 2026-11-14T16:22:58Z lane-merged — lane 2
+- 2026-11-14T16:23:06Z unblocked T-021 — blocked-decision -> changes-requested
