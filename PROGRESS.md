@@ -18,8 +18,8 @@ files; change them through the scripts only.
 | T-006 | Write-up draft | done | 1 | none |
 | T-007 | Stage 4 session | accepted ⚠ re-acknowledge (judgement) | 1 | post |
 | T-008 | S2 check and Stage 4 analysis | accepted ⚠ re-acknowledge (judgement) | 1 | post |
-| T-009 | Post-Stage-4 code fixes | blocked-decision | 1 | none |
-| T-010 | Final README, report, write-up and changelog | todo | 1 | post |
+| T-009 | Post-Stage-4 code fixes | ready ⚠ re-acknowledge | 1 | none |
+| T-010 | Final README, report, write-up and changelog | todo ⚠ re-acknowledge | 1 | post |
 | T-011 | Plan v1.9, upstream drafts, methodology | todo | 2 | none |
 | T-012 | README walkthrough from a clean shell | todo | 1 | none |
 | T-013 | Scrub and release checks | todo ⚠ re-acknowledge | 1 | post |
@@ -34,7 +34,7 @@ files; change them through the scripts only.
 
 ## READY (grouped by lane)
 
-_(none)_
+- lane 1: **T-009** Post-Stage-4 code fixes
 
 ## Escalation queue
 
@@ -52,8 +52,8 @@ _(none)_
 
 ## Last events
 
-- 2026-11-14T20:37:07Z started T-009 — lane 1
-- 2026-11-14T20:38:00Z step-done T-009 — S1
-- 2026-11-14T20:51:09Z step-done T-009 — S2
-- 2026-11-14T20:59:43Z escalated T-009 — E-010 (assumption-mismatch)
 - 2026-11-14T21:35:33Z machine-lock-released — /dev/shm/local-ai-research-machine.lock
+- 2026-11-14T22:01:12Z plan-changed T-009 — card changed; re-acknowledgement required
+- 2026-11-14T22:01:12Z plan-changed T-010 — card changed; re-acknowledgement required
+- 2026-11-14T22:01:12Z plan-amended — sha256 9cf384e43275…
+- 2026-11-14T22:01:12Z ready T-009 — dependencies satisfied

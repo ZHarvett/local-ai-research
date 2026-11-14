@@ -1,5 +1,5 @@
 {
-  "checksum": "008833db98deb601eed81625a4c98f80a37ea274d3c73acaee8c0f44afb92ea0",
+  "checksum": "16f2f1c3cc25c32569468e02bb3488c2b19bfea6603cbfb737983bbc3c5df7ca",
   "created_utc": "2026-11-12T22:25:04Z",
   "escalations": {
     "E-001": {
@@ -1682,6 +1682,34 @@
       "seq": 229,
       "task": null,
       "ts": "2026-11-14T21:35:33Z"
+    },
+    {
+      "detail": "card changed; re-acknowledgement required",
+      "event": "plan-changed",
+      "seq": 230,
+      "task": "T-009",
+      "ts": "2026-11-14T22:01:12Z"
+    },
+    {
+      "detail": "card changed; re-acknowledgement required",
+      "event": "plan-changed",
+      "seq": 231,
+      "task": "T-010",
+      "ts": "2026-11-14T22:01:12Z"
+    },
+    {
+      "detail": "sha256 9cf384e43275\u2026",
+      "event": "plan-amended",
+      "seq": 232,
+      "task": null,
+      "ts": "2026-11-14T22:01:12Z"
+    },
+    {
+      "detail": "dependencies satisfied",
+      "event": "ready",
+      "seq": 233,
+      "task": "T-009",
+      "ts": "2026-11-14T22:01:12Z"
     }
   ],
   "kit_version": "0.1.0",
@@ -1693,7 +1721,7 @@
     "P4"
   ],
   "plan_file": "PLAN.md",
-  "plan_sha256": "a3d02a2a84efadd1e361c4cd37c2b1cbb363e357afd68812a2a9109eaeb08aac",
+  "plan_sha256": "9cf384e432759b79eccd1d175d1ee5faa61ccaffc7c3a31ff3413669f7346c87",
   "review_cycles": {
     "T-005": 2,
     "T-007": 1,
@@ -2007,10 +2035,7 @@
       "title": "S2 check and Stage 4 analysis"
     },
     "T-009": {
-      "blocked_from": "in-progress",
-      "blocked_reason": "escalation E-010",
-      "card_sha256": "ca9adfa7e6e005925c4c7f7fcd906244af4de9b5b7683e5e4c9ddd8a451cd0c9",
-      "claimed_by_lane": 1,
+      "card_sha256": "a1182b70a3c57ecb615edb3c5723ddc7c3c8225f15605e65c8959f560c14b6ee",
       "depends_on": [
         "T-008"
       ],
@@ -2018,24 +2043,22 @@
         "tests/",
         "src/smallpc/",
         "reports/stage3/",
-        "reports/stage4/",
+        "reports/stage4-run2/",
+        "docs/recon/stage4-preflight.md",
         "docs/recon/T-009-start.txt",
         "docs/progress-log.md"
       ],
       "lane": 1,
       "phase": "P3",
+      "plan_changed": true,
       "resources": "cpu-heavy",
       "review": "none",
       "source": "plan",
-      "status": "blocked-decision",
-      "steps_done": [
-        "S1",
-        "S2"
-      ],
+      "status": "ready",
       "title": "Post-Stage-4 code fixes"
     },
     "T-010": {
-      "card_sha256": "2c44695f110d784ac1fa8661441da00a6fc5f62eb9bfaba3c85c10989dc0a8db",
+      "card_sha256": "fbfdd311bad7f60e1cdab5d5ea87957f767846f7f3be6c891cac37f5aba98d5b",
       "depends_on": [
         "T-004",
         "T-005",
@@ -2050,6 +2073,7 @@
       ],
       "lane": 1,
       "phase": "P4",
+      "plan_changed": true,
       "resources": "light",
       "review": "post",
       "source": "plan",

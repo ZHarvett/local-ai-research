@@ -1,5 +1,5 @@
 # Step 0, remaining work: Stage 4, release v0.1.0, completion report
-*Version 1.5 · 14 November 2026*
+*Version 1.6 · 14 November 2026*
 
 ## Shared rules
 
@@ -481,7 +481,7 @@ depends_on: T-008
 lane: 1
 resources: cpu-heavy
 files_read: docs/recon/T-001.md, docs/recon/commands.env, tests/, src/smallpc/, data/analysis/stage3/headline.md, data/analysis/stage4/
-files_write: tests/, src/smallpc/, reports/stage3/, reports/stage4/, docs/recon/T-009-start.txt, docs/progress-log.md
+files_write: tests/, src/smallpc/, reports/stage3/, reports/stage4-run2/, docs/recon/stage4-preflight.md, docs/recon/T-009-start.txt, docs/progress-log.md
 gates: none
 review: none
 preconditions:
@@ -491,10 +491,19 @@ steps:
   - S2: Fix the flakiness of tests/test_sweep_probe.py according to A13's diagnosis, changing tests/ only. (redo-safe)
   - S3: Make the tests read the plan version from the header of docs/plans/step-0-baseline.md instead of a literal. (redo-safe)
   - S4: In the report-rendering module that A8 identified, make the rendered report apply the §5.4 headline rule: clean units if both cells have at least 5 clean paired units, otherwise all units with the label "includes paging-flagged stock windows" and the clean figures beside it, consistent with headline.md. Add a test for the 4-of-5 stock case. Fix the figures: the prefill and decode y-axes start at 0, and the predicted_n labels sit clear of the whiskers. (redo-safe)
-  - S5: Re-render reports/stage3/ and reports/stage4/ with REPORT_CMD. Only the rendering may change, not any number. (redo-safe)
-  - S6: Run CI_CMD 5 times, commit, and append the progress-log entry. (redo-safe)
+  - S5: Re-render reports/stage3/ with the combined command in that report's own provenance line (--sessions data/raw/stage3-32K data/raw/stage3-64K data/raw/stage3-128K), and re-render reports/stage4-run2/ with REPORT_CMD and SESSION=stage4-run2, as T-021 S3 did. Never touch reports/stage4/: it is the superseded run-1 diagnostic (R5). Only the rendering may change, not any number. (redo-safe)
+  - S6: Format docs/recon/stage4-preflight.md with `uv run ruff format docs/recon/stage4-preflight.md`; CI_CMD's format check flags the Python block inside it (E-010). It is a formatting-only change: check with git diff that no number, no `<!-- sources -->` line and no non-whitespace word changed, and touch no other docs file. (redo-safe)
+  - S7: Run CI_CMD once to confirm it is green, commit, and append the progress-log entry. The five-run stability check is done by the five acceptance items below, each running CI_CMD once. (redo-safe)
 acceptance:
-  - cmd: source docs/recon/commands.env && for i in 1 2 3 4 5; do eval "$CI_CMD" || exit 1; done
+  - cmd: source docs/recon/commands.env && eval "$CI_CMD"
+    expect: exit_code 0
+  - cmd: source docs/recon/commands.env && eval "$CI_CMD"
+    expect: exit_code 0
+  - cmd: source docs/recon/commands.env && eval "$CI_CMD"
+    expect: exit_code 0
+  - cmd: source docs/recon/commands.env && eval "$CI_CMD"
+    expect: exit_code 0
+  - cmd: source docs/recon/commands.env && eval "$CI_CMD"
     expect: exit_code 0
   - cmd: grep -rq 'includes paging-flagged stock windows' reports/stage3 && ! grep -rq 'not reportable' reports/stage3
     expect: exit_code 0
@@ -502,10 +511,12 @@ acceptance:
     expect: exit_code 0
   - cmd: ! grep -rnE 'version.{0,20}"1\.[0-9]"' tests/
     expect: exit_code 0
-evidence: reports/stage3/, reports/stage4/
+  - cmd: test -z "$(git diff --name-only "$(cat docs/recon/T-009-start.txt)" HEAD -- reports/stage4)"
+    expect: exit_code 0
+evidence: reports/stage3/report.md, reports/stage4-run2/report.md
 estimate: 90m
 decision_rights:
-  - may: implementation details in tests/ and in the report-rendering module
+  - may: implementation details in tests/ and in the report-rendering module; the formatting-only change to docs/recon/stage4-preflight.md
   - must_escalate: any change to measurement, statistics or headline code; any change under data/; a re-rendered number that differs from headline.md or the repro output; a flakiness cause found in src/
 
 ### T-010 — Final README, report, write-up and changelog
@@ -515,7 +526,7 @@ phase: P4
 depends_on: T-004, T-005, T-006, T-009
 lane: 1
 resources: light
-files_read: data/analysis/stage4/, reports/stage3/, reports/stage4/, docs/decisions.md, docs/plans/step-0-baseline.md
+files_read: data/analysis/stage4/, reports/stage3/, reports/stage4-run2/, docs/decisions.md, docs/plans/step-0-baseline.md
 files_write: README.md, reports/baseline-report.md, reports/writeup.md, CHANGELOG.md
 gates: none
 review: post
