@@ -52,8 +52,8 @@ _(none)_
 
 ## Last events
 
-- 2026-11-14T20:37:07Z claimed T-009 — lane 1, pid 120069
 - 2026-11-14T20:37:07Z started T-009 — lane 1
 - 2026-11-14T20:38:00Z step-done T-009 — S1
 - 2026-11-14T20:51:09Z step-done T-009 — S2
 - 2026-11-14T20:59:43Z escalated T-009 — E-010 (assumption-mismatch)
+- 2026-11-14T21:35:33Z machine-lock-released — /dev/shm/local-ai-research-machine.lock

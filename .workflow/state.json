@@ -1,5 +1,5 @@
 {
-  "checksum": "db0e1b7cc783992eb5d5644c6a78458105238f8c18aa4638274e7967b7a57237",
+  "checksum": "008833db98deb601eed81625a4c98f80a37ea274d3c73acaee8c0f44afb92ea0",
   "created_utc": "2026-11-12T22:25:04Z",
   "escalations": {
     "E-001": {
@@ -1675,6 +1675,13 @@
       "seq": 228,
       "task": "T-009",
       "ts": "2026-11-14T20:59:43Z"
+    },
+    {
+      "detail": "/dev/shm/local-ai-research-machine.lock",
+      "event": "machine-lock-released",
+      "seq": 229,
+      "task": null,
+      "ts": "2026-11-14T21:35:33Z"
     }
   ],
   "kit_version": "0.1.0",
