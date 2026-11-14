@@ -48,12 +48,12 @@ _(none)_
 
 | lane | lock | worktree | tasks |
 |---|---|---|---|
-| 1 | pid 3351 | - | - |
+| 1 | - | - | - |
 
 ## Last events
 
-- 2026-11-14T17:35:23Z review-opened T-018 — cycle 1
 - 2026-11-14T17:35:27Z review-verdict T-018 — accepted (cycle 1, 3 findings)
 - 2026-11-14T17:39:18Z escalated T-021 — E-009 (decision)
 - 2026-11-14T18:07:36Z unblocked T-021 — restored to changes-requested
 - 2026-11-14T18:07:36Z note T-021 — decision E-009 recorded
+- 2026-11-14T19:15:22Z plan-amended — sha256 a3d02a2a84ef…

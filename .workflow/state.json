@@ -1,5 +1,5 @@
 {
-  "checksum": "2b965ee561508a4cc50d6c650bb86d6536d0a67593ac8e1f2d3d0e1c61048b25",
+  "checksum": "db167ea40893cb8de82eeaa9cb06db83264348662d8cf1f4bbf4687ad7b484f7",
   "created_utc": "2026-11-12T22:25:04Z",
   "escalations": {
     "E-001": {
@@ -1522,6 +1522,13 @@
       "seq": 207,
       "task": "T-021",
       "ts": "2026-11-14T18:07:36Z"
+    },
+    {
+      "detail": "sha256 a3d02a2a84ef\u2026",
+      "event": "plan-amended",
+      "seq": 208,
+      "task": null,
+      "ts": "2026-11-14T19:15:22Z"
     }
   ],
   "kit_version": "0.1.0",
@@ -1533,7 +1540,7 @@
     "P4"
   ],
   "plan_file": "PLAN.md",
-  "plan_sha256": "fed612c8820c8a182df0e181b7cc345db47629e65f2dfda2337b71a59d3114d5",
+  "plan_sha256": "a3d02a2a84efadd1e361c4cd37c2b1cbb363e357afd68812a2a9109eaeb08aac",
   "review_cycles": {
     "T-005": 1,
     "T-007": 1,

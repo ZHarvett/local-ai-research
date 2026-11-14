@@ -1,5 +1,5 @@
 # Step 0, remaining work: Stage 4, release v0.1.0, completion report
-*Version 1.4 · 14 November 2026*
+*Version 1.5 · 14 November 2026*
 
 ## Shared rules
 
@@ -21,6 +21,7 @@ Context: Step 0 (baseline setup) of "Local AI on a Small PC". Reference plan: do
    - 1 flagged window of 80 (not 100) in the later Stage 2 sessions;
    - MTP helped about 2 to 5% per turn (not 3 to 5%), and costs 9 to 16% of prefill speed and 0.75 to 1.5 GiB of VRAM;
    - Stage 3 took about 2.1 hours (90 minutes of sessions plus 38 minutes of re-runs).
+9. Standing delegation to the driver (the /drive command), from v1.5 on 14 November 2026. The driver may decide an open escalation itself, without the planning chat, only if ALL of these hold: (a) the brief names a recommended option and states high confidence; (b) that option is reversible and touches only docs, wording, bookkeeping, tests, or kit tooling that an approved task already covers; (c) it does not touch measurement data, a decision to re-measure, the S1 to S5 criteria or their wording, rules R1 to R7 or how they are read, the plan's cards, dependencies or gates, the scrub, release or publish steps, anything outside the repo, git history, secrets, or the code freeze; (d) no option in the brief is described as irreversible or costly to undo. At most 3 such decisions per /drive run and 1 per task. The driver records the decision with the words "Decided by driver under rule 9" in its Reason and lists every one in its report. Anything else goes to the planning chat. The planning chat may overrule any such decision later; that is a new decision, never a rewrite.
 
 **Stage 3 decisions (planning chat, 12 November 2026)**
 
