@@ -1,11 +1,11 @@
 | cell | metric | original mean [95% CI] | allowed range | re-measured mean | result |
 |---|---|---|---|---|---|
-| stock-64K | T_turn_400 (s) | 9.288 [9.238, 9.338] | [8.824, 9.753] | 11.797 | FAIL |
-| stock-64K | fresh prefill 32K (tok/s) | 844.155 [840.328, 847.982] | [801.947, 886.363] | 505.860 | FAIL |
-| stock-64K | decode at 32K depth (tok/s) | 73.881 [73.792, 73.970] | [70.187, 77.575] | 73.394 | PASS |
-| tuned-64K | T_turn_400 (s) | 6.413 [6.003, 6.824] | [6.003, 6.824] | 8.050 | FAIL |
-| tuned-64K | fresh prefill 32K (tok/s) | 2024.852 [2001.669, 2048.034] | [1923.609, 2126.094] | 1481.084 | FAIL |
-| tuned-64K | decode at 32K depth (tok/s) | 91.644 [85.476, 97.812] | [85.476, 97.812] | 76.480 | FAIL |
+| stock-64K | T_turn_400 (s) | 9.288 [9.238, 9.338] | [8.824, 9.753] | 9.100 | PASS |
+| stock-64K | fresh prefill 32K (tok/s) | 844.155 [840.328, 847.982] | [801.947, 886.363] | 853.861 | PASS |
+| stock-64K | decode at 32K depth (tok/s) | 73.881 [73.792, 73.970] | [70.187, 77.575] | 75.936 | PASS |
+| tuned-64K | T_turn_400 (s) | 6.413 [6.003, 6.824] | [6.003, 6.824] | 6.296 | PASS |
+| tuned-64K | fresh prefill 32K (tok/s) | 2024.852 [2001.669, 2048.034] | [1923.609, 2126.094] | 2000.895 | PASS |
+| tuned-64K | decode at 32K depth (tok/s) | 91.644 [85.476, 97.812] | [85.476, 97.812] | 93.459 | PASS |
 
 - stock-64K, T_turn_400 (s): evaluated on clean units
 - stock-64K, fresh prefill 32K (tok/s): evaluated on clean units

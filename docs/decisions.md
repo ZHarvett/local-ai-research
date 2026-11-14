@@ -1295,6 +1295,17 @@ Rule: R5 run 1 is superseded and run 2 (docs/recon/stage4-session-run2.txt) is t
 - R7 clarified: (E-009, 14 November 2026) R7 applies to sustained generation. The link must read gen 4, width 8 whenever a request is in flight and the GPU is loaded (power at or above 50 W, or P-state P1). Idle downshifts, and at most one 0.5 s ramp sample at the idle-to-load transition, do not count. No sample inside a measured cell window may be anything other than 4, 8. Any ambiguity about R7 is escalated, never resolved by the executor. R6 is unchanged: no run 3 without a new decision.
 - Run-1 session id: `stage4` (`docs/recon/stage4-session.txt`), superseded, never deleted (R5). T-020 verified the restored link at Gen4 x8 under load on 2026-11-14 (`docs/recon/pcie-link.md`, `Result: link PASS`); run 2 (T-021) proceeds under R5 to R7.
 - Run-2 session id: `stage4-run2` (`docs/recon/stage4-session-run2.txt`), launched 2026-11-14T14:30:49Z from `c4bdc4d` (clean tree, R3 PASS); main 26.1 min + one re-run pass 9.2 min; gate PASS a to f before and after the re-run; every sample in the measured cell windows read "4, 8" (R7 as clarified by E-009; idle downshifts and two idle-to-load ramp rows recorded, not averaged, in `docs/stage4-run2-conditions.md`). Both cells end with 5 clean units; R1 fallback and R2 not needed. This is T-008's S2 run (R5). <!-- sources: docs/stage4-run2-conditions.md, data/raw/stage4-run2/session.json -->
+- Stage 4 S2 result (T-008, run 2, recorded 2026-11-14): **PASS — 6 of 6 rows**, `REPRO_CMD` exit 0 (`docs/recon/commands.env`, `SESSION=stage4-run2`); verbatim output `data/analysis/stage4/repro-output.txt`, summary `data/analysis/stage4/s2-summary.md` and `.json`. R1 not triggered: both cells 5 clean of 5 on both days (verified with the frozen `smallpc.stage3.views.Data`), every row on clean units, no S4(d) deviation from R1. Run 1's S2 outputs moved to `data/analysis/stage4-run1-superseded/` (R5, never deleted). Report rendered with `REPORT_CMD` into `reports/stage4-run2/`; the run-1 render stays in `reports/stage4/` as the excluded diagnostic, marked superseded by a README beside it. Kernel/driver caveat per E-009: S2 passed on a changed kernel and driver (`7.3.4-1-cachyos` / `620.70.06` vs Stage 3's `7.3.1-1-cachyos` / `615.78.08`), recorded in `reports/stage4-run2/caveats.md` with the fit-warning second symptom from `docs/stage4-run2-conditions.md`.
+
+  | cell | metric | Stage 3 mean [95% CI] | allowed range (wider of CI, ±5%) | Stage 4 mean | unit set | result |
+  |---|---|---|---|---|---|---|
+  | stock-64K | T_turn_400 (s) | 9.288 [9.238, 9.338] | [8.824, 9.753] | 9.100 | clean | PASS |
+  | stock-64K | fresh prefill 32K (tok/s) | 844.155 [840.328, 847.982] | [801.947, 886.363] | 853.861 | clean | PASS |
+  | stock-64K | decode at 32K depth (tok/s) | 73.881 [73.792, 73.970] | [70.187, 77.575] | 75.936 | clean | PASS |
+  | tuned-64K | T_turn_400 (s) | 6.413 [6.003, 6.824] | [6.003, 6.824] | 6.296 | clean | PASS |
+  | tuned-64K | fresh prefill 32K (tok/s) | 2024.852 [2001.669, 2048.034] | [1923.609, 2126.094] | 2000.895 | clean | PASS |
+  | tuned-64K | decode at 32K depth (tok/s) | 91.644 [85.476, 97.812] | [85.476, 97.812] | 93.459 | clean | PASS |
+  <!-- sources: data/analysis/stage4/repro-output.txt, docs/stage4-run2-conditions.md, data/analysis/stage4/s2-summary.md -->
 
 ## 2026-11-14: Kit exception, T-018
 

@@ -1,29 +1,29 @@
 {
-  "overall": "FAIL",
+  "overall": "PASS",
   "stock-64K/T_turn_400": {
     "metric": "T_turn_400 (s)",
     "stage3_mean": 9.288,
     "stage3_ci": [9.238, 9.338],
     "allowed_range": [8.824, 9.753],
-    "stage4_mean": 11.797,
+    "stage4_mean": 9.1,
     "evaluated_on": "clean units",
-    "pass": false
+    "pass": true
   },
   "stock-64K/fresh_prefill_32K": {
     "metric": "fresh prefill 32K (tok/s)",
     "stage3_mean": 844.155,
     "stage3_ci": [840.328, 847.982],
     "allowed_range": [801.947, 886.363],
-    "stage4_mean": 505.86,
+    "stage4_mean": 853.861,
     "evaluated_on": "clean units",
-    "pass": false
+    "pass": true
   },
   "stock-64K/decode_32K": {
     "metric": "decode at 32K depth (tok/s)",
     "stage3_mean": 73.881,
     "stage3_ci": [73.792, 73.97],
     "allowed_range": [70.187, 77.575],
-    "stage4_mean": 73.394,
+    "stage4_mean": 75.936,
     "evaluated_on": "clean units",
     "pass": true
   },
@@ -32,26 +32,26 @@
     "stage3_mean": 6.413,
     "stage3_ci": [6.003, 6.824],
     "allowed_range": [6.003, 6.824],
-    "stage4_mean": 8.05,
+    "stage4_mean": 6.296,
     "evaluated_on": "clean units",
-    "pass": false
+    "pass": true
   },
   "tuned-64K/fresh_prefill_32K": {
     "metric": "fresh prefill 32K (tok/s)",
     "stage3_mean": 2024.852,
     "stage3_ci": [2001.669, 2048.034],
     "allowed_range": [1923.609, 2126.094],
-    "stage4_mean": 1481.084,
+    "stage4_mean": 2000.895,
     "evaluated_on": "clean units",
-    "pass": false
+    "pass": true
   },
   "tuned-64K/decode_32K": {
     "metric": "decode at 32K depth (tok/s)",
     "stage3_mean": 91.644,
     "stage3_ci": [85.476, 97.812],
     "allowed_range": [85.476, 97.812],
-    "stage4_mean": 76.48,
+    "stage4_mean": 93.459,
     "evaluated_on": "clean units",
-    "pass": false
+    "pass": true
   }
 }
