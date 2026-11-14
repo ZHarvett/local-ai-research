@@ -164,8 +164,10 @@ from smallpc.sweep import spec as sp
 ROOT = Path("/mnt/data/local-ai-research")
 SESS = ROOT / "data/raw/stage3-64K"
 
+
 def sha_argv(argv):
     return hashlib.sha256(json.dumps(argv, separators=(",", ":")).encode()).hexdigest()
+
 
 spec = load_sweep(ROOT / "configs/sweeps/stage4.toml")
 cells = sp.expand(spec, ROOT)
@@ -178,26 +180,36 @@ for c in cells:
     rec = json.loads(next((SESS / "cells").glob(f"{c.name}-*.json")).read_text())
     cfg = ServerConfig.model_validate({"profile": c.profile, **c.overrides})
     argv = render_argv(cfg, machine, model)
-    eff = cfg.effective().model_dump(exclude_none=True); eff.pop("profile", None)
+    eff = cfg.effective().model_dump(exclude_none=True)
+    eff.pop("profile", None)
     toml_bytes = sp.render_toml(c.profile, eff).encode()
     resolved_bytes = (SESS / rec["resolved_config"]).read_bytes()
     out["cells"][c.name] = {
         "argv_equal": argv == rec["argv"],
         "argv_sha256_rendered": sha_argv(argv),
         "argv_sha256_recorded": sha_argv(rec["argv"]),
-        "config_hash_rendered": provenance.config_hash(argv, rec["model_sha256"], rec["llama_cpp_commit"]),
+        "config_hash_rendered": provenance.config_hash(
+            argv, rec["model_sha256"], rec["llama_cpp_commit"]
+        ),
         "config_hash_recorded": rec["config_hash"],
         "resolved_toml_equal": toml_bytes == resolved_bytes,
         "resolved_toml_sha256_rendered": hashlib.sha256(toml_bytes).hexdigest(),
         "resolved_toml_sha256_recorded": hashlib.sha256(resolved_bytes).hexdigest(),
     }
 out["env_matches_records"] = all(
-    model.sha256 == json.loads(next((SESS / "cells").glob(f"{n}-*.json")).read_text())["model_sha256"]
-    and build["commit"] == json.loads(next((SESS / "cells").glob(f"{n}-*.json")).read_text())["llama_cpp_commit"]
-    for n in out["cells"])
-out["all_equal"] = all(e["argv_equal"] and e["argv_sha256_rendered"] == e["argv_sha256_recorded"]
-    and e["config_hash_rendered"] == e["config_hash_recorded"] and e["resolved_toml_equal"]
-    for e in out["cells"].values())
+    model.sha256
+    == json.loads(next((SESS / "cells").glob(f"{n}-*.json")).read_text())["model_sha256"]
+    and build["commit"]
+    == json.loads(next((SESS / "cells").glob(f"{n}-*.json")).read_text())["llama_cpp_commit"]
+    for n in out["cells"]
+)
+out["all_equal"] = all(
+    e["argv_equal"]
+    and e["argv_sha256_rendered"] == e["argv_sha256_recorded"]
+    and e["config_hash_rendered"] == e["config_hash_recorded"]
+    and e["resolved_toml_equal"]
+    for e in out["cells"].values()
+)
 print(json.dumps(out, indent=1))
 ```
 
