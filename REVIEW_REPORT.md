@@ -1,171 +1,78 @@
-# Review T-017 (cycle 2)
+# Review T-007 (cycle 1)
 
 ## Model
 
-qwen4-max-preview (the config records a single model for executor and reviewer;
-adversarial re-derivation, read-only).
-
-## Why this cycle exists
-
-Cycle 1 (`reviews/T-017/r1-REVIEW_REPORT.md`) returned **changes-requested**: F-1
-(MAJOR, DECIDE — pre-reviews of `ready` `pre+post` tasks are unachievable under the
-frozen kit), F-2 (MINOR, FIX-DOC — D8 account-name home path in a committed file),
-F-3 (MINOR, FIX-DOC — design still showed the superseded stdin lane mechanism),
-F-4 / F-5 (NOTE, FIX-DOC — kill semantics; review-exhausted ordering). Since then:
-
-- F-2–F-5 doc fixes committed in `bc8e0c3`; acceptance re-run (run 3, 0 failures).
-- F-1 escalated as **E-006** (`1ba3bf9`); the planning chat decided **option A**
-  (2026-11-13T18:21:00Z, `docs/decisions.md:1256-1264`): pre-reviews are not performed
-  under the frozen kit, the loop's `pre` branch stays as inert code, no code change,
-  and T-017 "may be accepted and finished". The E-006 rule-4 F-2 follow-up (introducing
-  + fix commit hashes) was recorded under the decision (`8e441c9`).
-- Cycle 2 was opened by the address session (`8e441c9`); `review_cycles[T-017]=2`,
-  status `in-review`. This report records the verdict for that open cycle (review-open
-  is not re-run: it requires `done`/`changes-requested` and would exceed `max_review_cycles=2`).
+qwen4-max-preview (the config records a single model for executor and reviewer).
 
 ## Acceptance verdicts
 
-Re-ran `bash scripts/wf.sh accept T-017` myself (**run 5, 0 failures**, at HEAD
-`56e1c39`). Evidence hashes re-verified and identical to run 4: `loop-states.md`
-`09e5a378…`, `loop-design.md` `99a4ad87…`, `wf-loop.sh` `a16ed003…` (the script is
-byte-for-byte unchanged since the S4 build — consistent with E-006 option A "no code
-change"). The working tree carries uncommitted **T-019** cycle-2 review artifacts
-(`REVIEW_REPORT.md`, `reviews/T-019/r2`, `.workflow/`, `PROGRESS.md`); none is under
-`src/ configs/ scripts/ pyproject.toml uv.lock`, so A5 (a committed `HEAD` diff) is
-unaffected, and T-017's own files are untouched since `bc8e0c3`.
+Re-ran `bash scripts/wf.sh accept T-007` myself (run 2, 2026-11-13T23:48:48Z, at HEAD `e6c33be`):
+A1–A4 PASS with output hashes identical to run 1; A5 judgement assessed below. No gpu or
+exclusive-machine task is in progress and no machine lock is held, so nothing was DEFERRED —
+every acceptance command is light analysis (no GPU).
 
 | item | verdict | note |
 |---|---|---|
-| A1 | PASS | `shellcheck scripts/wf-loop.sh` re-run, exit 0, no output. |
-| A2 | PASS | `uv run pytest -q tests/test_wf_loop.py` re-run: **37 passed in 4.03s** (also re-run `-v`: every stop condition #1–#10, the E-005 guard exception, lane ordering, the review flow and dry-run are named tests). Fixtures are isolated: `make_fixture` builds a temp git repo + fixture state + a **fake claude** (`WF_LOOP_CLAUDE_BIN`→fake, `WF_LOOP_REPO`→temp repo, lock/log in `tmp_path`); `from conftest import REPO` only locates the script. No test invokes the real CLI or this repo's state. |
-| A3 | PASS | `bash scripts/wf-loop.sh --help` re-run, exit 0; usage lists all stop conditions + env knobs + the supervised-first-run note. |
-| A4 | PASS | `uv run ruff check` + `ruff format --check` on the test file re-run, exit 0. |
-| A5 | PASS | Re-ran the `--diff-filter=MD` check from start `49f92c2`; empty. `git diff --stat 49f92c2..HEAD` over the task's files shows only **Added** files (script, command, tests, two recon notes, start-HEAD file) + `M docs/progress-log.md` — all within `files_write`. No existing file under src/configs/scripts/pyproject/uv.lock touched. |
-| A6 | PASS | `! grep -q 'dangerously-skip-permissions' scripts/wf-loop.sh` re-run, exit 0. Extra args come only from `WF_LOOP_CLAUDE_ARGS` (`wf-loop.sh:402`, `read -r -a`, no eval of args); covered by `test_claude_args_come_only_from_env`. |
-| A7 | PASS | `.claude/commands/keep-continuing.md` exists; `sha256` `be0f29d3…` matches the accept-time record (runs 3–5). |
-| A8 | PASS | Judged clause-by-clause against the code and the 37 re-run tests — see below. |
+| A1 | PASS | `docs/recon/stage4-session.txt` non-empty: `stage4` + newline, 6 bytes, sha256 `f0a2f992de07…` — identical to run 1. |
+| A2 | PASS | `COVERAGE_CMD` exit 0; output byte-identical to run 1 (sha `1bdc8ec3…`, 574 bytes). Caveat: this is the generic WP10/WP11 interval-coverage simulation, not a stage4-specific check — see F-3. |
+| A3 | PASS | Re-ran `GATE_CMD` myself: `gate for stage3 session stage4: PASS`, a–f all PASS, exit 0. Output matches the conditions log's post-rerun block verbatim (f: 3 of 17 attempt-1 tuned+canary windows = 17.6%, limit 40%; no flagged window >1024 MiB swap growth; stock 0 of 5 reported). No `- R2 applied: Stage 4` line in `docs/decisions.md` — the gate passed outright (the only "R2" match is the rule definition at line 1210). |
+| A4 | PASS | `git status --porcelain -- data` empty; `pgrep -x llama-server` empty; GPU lock free (`flock -n .locks/gpu.lock` succeeded). |
+| A5 | PASS | Judgement, re-derived from evidence: **(1) Clean start at an R3-passing commit** — `session.json` git: commit `1307244870bf…`, `dirty: false`, `dirty_paths: []`, `allow_dirty: false`; `git show --stat 1307244` touches only the two conditions docs + kit bookkeeping; the R3 check re-run at `1307244` and at HEAD both PASS; zero changes under `src/ configs/ scripts/ pyproject.toml uv.lock tests/` in `33c9231..HEAD`. **(2) Runbook followed** — spec check re-run (2 cells, 5 repetitions, canary true, `total_h 0.58`); `run-sweep.sh` detaches via `run-detached.sh --gpu` under the GPU lock + `systemd-inhibit` (job `status.json` command lines confirm both jobs); gate → exactly one `--rerun-flagged` pass (`session.json` runs: run + rerun; `rerun_plan` tuned-64K [0,2,4]) → gate again → commit, per §6. The rerun's `code_commit_changed` warning (1307244→2179877) matches established Stage 3 practice (all three Stage 3 reruns carry the identical warning). Human gate released on Zack's "go" 22:40:34Z; date condition met (13 Nov 22:42 UTC / 14 Nov local). **(3) Quiet at start and every poll** — pre-start, pre-launch, 5 session polls, pre-rerun and 2 rerun polls recorded verbatim with exit 0; poll timestamps align with the `events.jsonl` cell timeline; cadence ~7–8 min (card's sleep 420). **(4) Re-run done** — 3 units, attempt 2, all clean (0 major faults each; swap 0/0/50 MiB), resolved 3 / still flagged 0; re-run canaries 6/6 clean; tuned-64K ends with 5 clean units (my S2 evidence run confirms both cells evaluated on clean units, R1 fallback not needed). **(5) Conditions log complete** per the stage3 template; every numeric claim checked re-derives (below). |
 
-**A8 clause-by-clause (re-derived):**
-- *Never passes a gate:* no `gate-release` path exists; `awaiting-gate` → stop
-  (`wf-loop.sh:266-269`), and new task work requires `not (gates or open_esc or blocked)`
-  (`:254`). `test_stop_2_open_gate`.
-- *Never works a task with an open escalation:* an escalated task is `blocked-decision`,
-  excluded from every review list (`:226-230`) and blocking new work (`:254`); an open
-  escalation stops the loop (`:270-272`). `test_stop_3_open_escalation`,
-  `test_stop_4_blocked_decision`, `test_never_reviews_a_blocked_task`.
-- *Never starts a second task after the deadline:* `now >= DEADLINE` checked before every
-  launch (`:499-501`); a running session is bounded by `timeout`. `test_stop_1_deadline_before_any_session`.
-- *Runs lanes in order:* `ready` sorted by `(lane, id)` (`:217-220`); several lanes →
-  lowest-numbered `/lane N`, one → `/continue` (E-004 option B, `:255-261`).
-  `test_single_ready_lane_uses_continue`, `test_multi_lane_uses_lowest_lane_then_continue`.
-- *Runs only reviews that are due:* status- and cycle-bounded lists (`:226-230`), never a
-  `blocked-decision` task, never past `max_review_cycles`. `test_post_review_then_idle`,
-  `test_in_flight_review_finished`, `test_address_review_flow`, `test_review_cycles_exhausted_stops`,
-  `test_pre_review_while_gated`.
-- *Stops on the first human-needed state:* `finish()` prints reason + task id (`:90-99`) on
-  gate/escalation/blocked/acceptance-fail/no-progress/non-zero/usage-limit/dirty/timeout/guard-fail;
-  new blockers appearing mid-session stop (`:548-554`). `test_final_message_names_reason_and_task` + all stop tests.
-
-Live read-only `--dry-run` against the real state printed
-`next action: continue task=T-007 lane=1 prompt=/continue` — with T-017 `in-review` at
-cycle 2 (exhausted) and T-007 `ready`, the loop correctly takes ready work first (F-5
-ordering) rather than stopping on the exhausted review; no gate/escalation/blocked is open
-(E-006/E-007 both `decided`). No `/tmp/wf-loop-<stamp>.log` exists — consistent with the
-attestation that the loop was never run against real state (dry-run takes no lock, starts no
-session, cleans its `/tmp` scratch dir).
-
-## Verification of the cycle-1 findings and E-006 application
-
-- **F-1 (MAJOR → resolved by E-006 option A).** Re-derived the kit precondition:
-  `cmd_review_open` accepts only `done`/`changes-requested` (`_wf.py:1892-1893`) and
-  `TRANSITIONS["ready"]` has no review state — so a pre-review of a `ready` task cannot
-  complete. The decision (`docs/decisions.md:1259-1262`) rules pre-reviews not performed,
-  the `pre` branch kept inert. Verified the branch is still present and unchanged
-  (`wf-loop.sh:229,262-263`), no `pre+post` task remains in the plan (T-007 is `post` since
-  v1.2), and the script hash is unchanged → option A's "no code change" honoured. The
-  design carries the gap note (§11.3). **Resolved.** (Doc-freshness nit → F-1 below.)
-- **F-2 (privacy → fixed, verified).** `git grep -l -F "<account-name>"` over **HEAD** and
-  the **working tree** returns nothing (filenames-only check; the name was never printed).
-  `loop-states.md:372` now reads `~/.local/bin/claude (home path scrubbed per D8)`. Pickaxe
-  `git log --format=%h -S"/home/<account-name>" -- docs/recon/loop-states.md` returns exactly
-  `3f41e18` (introduce) and `bc8e0c3` (remove); both commits exist. This matches the E-006
-  rule-4 record (`docs/decisions.md:1264`) verbatim. **Resolved.**
-- **F-3 (design addendum → present).** `loop-design.md` §11.1 records E-004 option B
-  (supersedes §4's stdin mechanism, which now carries a "superseded" note at `:134-137`);
-  §8 question 1 marked resolved; §11.2 records the E-005 guard exception. **Resolved.**
-- **F-4 (kill semantics → documented).** `keep-continuing.md:23-29` states `kill <pid>`
-  stops only the loop; an in-flight claude session (child of `timeout`) runs to completion
-  and still obeys the kit. **Resolved.**
-- **F-5 (review-exhausted ordering → documented).** `loop-design.md:176-183` (§5) records
-  that an exhausted review stops only after ready work / due reviews; matches the helper
-  priority (`wf-loop.sh:248-287`) and the live dry-run. **Resolved.**
-
-Evidence integrity: all three evidence hashes re-verified; the acceptance records are
-kit-generated (run 5 appended by my re-run); the recon docs are legitimate authored
-evidence, not hand-written forgeries — the privacy fix and pickaxe hashes were independently
-re-derived, not taken on trust. My re-run agrees with the executor's runs 1–4 (0 failures,
-identical hashes) — no executor/reviewer disagreement.
+Numbers re-derived from raw data (all match the conditions log and progress entry): 21 paging
+flags = 3 windows × 7 requests, tuned-64K attempt 1 reps 0/2/4 (`records.jsonl`); flagged-window
+max swap growth 219.65→220 MiB and max major faults 6,751 (`cells/tuned-64K-f9b81a84.json`
+`windows[].paging`); stock 0/5 flagged, max 41 faults; canary-start max 383 faults; attempt-2
+windows 0 faults, swap 0/0/50 MiB; measure times stock 1197.08 s, tuned a1 499.88 s, a2 295.82 s,
+canaries 167.23/167.88 s; after-warmup min free VRAM 1031/1355/1329 MiB; cell preconditions
+26.48/27.62/27.71/27.77 GiB, all `ok: true`, 0 s idle waits; drift main `pp_fresh_16k` rel diff
+0.00046 (<0.05), rerun no flag; durations 38.3 min (22:42:12→23:20:30Z) and 13.6 min rerun
+(23:23:46→23:37:19Z); both job `status.json` exit 0 / done; gate denominators 3/11 = 27.3%
+pre-rerun, 3/17 = 17.6% post-rerun; resolved configs equal the committed server configs plus the
+spec's `--metrics -lv 4` (stock keeps llama.cpp defaults incl. `--cache-ram 8192`); all kB→GiB
+conversions in the log correct; `scrub --check data/raw/stage4`: 0 findings in 25 files.
 
 ## Findings
 
 | id | severity | action | evidence | required action |
 |---|---|---|---|---|
-| F-1 | NOTE | FIX-DOC | docs/recon/loop-design.md:111-112,206-208,308-323; docs/decisions.md:1256-1264 | Refresh §11.3 (and the §3 step 4 / §6 gap notes) to record that E-006 was **decided option A** — they still say "open" / "pending the planning chat's decision" / "await the planning chat's ruling". The authoritative ruling is in docs/decisions.md; this is a freshness nit in named evidence. Cheapest: a short addendum line, can ride with T-010's doc pass. Non-blocking (E-006 rule 3 authorises acceptance; the brief called softening §3/§6 optional). |
-| F-2 | NOTE | FIX-CODE | scripts/wf-loop.sh:419,24-27; .claude/commands/review.md (no commit step); .gitignore; tests/test_wf_loop.py:321-336 | `dirty_tree()` excludes only `PROGRESS.md`/`.workflow/`. A `/review` session records a verdict but does **not** commit (review.md has no commit step; `REVIEW_REPORT.md`/`reviews/` are not gitignored), so it leaves `M REVIEW_REPORT.md` + `?? reviews/T-xxx/rN` — verified live: the filter flags exactly those. The loop would therefore stop "unexpected dirty tree" after a cleanly-finished review. **Safe** (stops, never proceeds dangerously) and a documented conservative choice (header :24-27); code frozen per E-006. Recommend widening the exclusion to review artifacts, or having review sessions commit — decide at the supervised first run (E-004 change 4) / T-018. No test covers post-review churn (`test_stop_8_kit_rendered_churn_is_expected` uses PROGRESS/.workflow only). Non-blocking for T-017. |
-
-**F-1 (NOTE, FIX-DOC).** The design is named acceptance evidence, and §11.3 still frames
-F-1/E-006 as awaiting a ruling that has already been made (option A). A reader of the design
-alone would think the decision is pending. The decision itself is correctly recorded in
-`docs/decisions.md`, the code matches option A, and E-006 explicitly authorises acceptance,
-so this does not block — but the design should be refreshed for accuracy (the same principle
-as cycle-1 F-3).
-
-**F-2 (NOTE, FIX-CODE, deferred).** Re-derivable operational interaction, not a coding error
-in the reviewed behaviour: the dirty-tree exclusion list omits the kit's review artifacts.
-It is a *safe* stop and the design deliberately chose a conservative check, so it is recorded
-as an observation for the supervised first run / T-018 rather than a defect requiring a fix
-cycle (cycles are exhausted and E-006 froze the code). It does, however, mean the unattended
-loop cannot currently progress past a post-review without a human committing the review
-artifacts — worth resolving before relying on the loop unattended.
+| F-1 | MAJOR | RE-ANALYSE | `data/raw/stage4/session.json` (drift) vs `data/raw/stage3-64K/session.json`; `data/raw/*/telemetry/*.csv.gz` (`pcie_gen`); `nvidia-smi --query-gpu=pcie.link.gen.max` | **Between-day machine-state change — not a T-007 protocol violation, but it breaks reproducibility.** The PCIe link trained at **Gen4 x8 in all three Stage 3 sessions but Gen3 x8 throughout Stage 4** (telemetry counts: stage3-32K/64K/128K dominated by 4.0; stage4 5,718 samples at 3.0, none at 4.0; the GPU now reports `pcie.link.gen.max=3`). Canary fresh prefill fell **945.26 → 575.56 tok/s (−39%)** while canary decode was ~unchanged (78.83→78.35, 89.70→88.27); config hash, model sha256 and llama.cpp commit are identical across days. Measure times vs Stage 3 actuals: stock 760.32→1197.08 s (+57%), tuned 377.08→499.88 s (+33%). I ran `REPRO_CMD` as read-only review evidence: **S2 FAILS 5 of 6 rows** — stock T_turn_400 9.288→11.797 s, stock fresh-prefill-32K 844.2→505.9 tok/s, tuned T_turn_400 6.413→8.050 s, tuned fresh-prefill-32K 2024.9→1481.1 tok/s, tuned decode-32K 91.64→76.48 tok/s; stock decode-32K PASS (73.88→73.39); both cells on clean units; exit 1. No T-007 stop rule covers link state (the drift gate is within-session; quiet/MemAvailable/GPU-process checks all passed), and the card deliberately defers S2 to T-008. **T-008 must run S2 officially, report it, and escalate per R4 — never auto-re-measure.** The escalation brief should carry this PCIe evidence so the planning chat can DECIDE: (a) restore the Gen4 link (BIOS/kernel setting — Zack's hands, no sudo by Claude) and re-measure Stage 4 as a new gated task via approved escalation, or (b) accept a recorded reproducibility deviation with cause. The reviewer does not order RE-MEASURE. |
+| F-2 | MINOR | FIX-DOC | `docs/stage4-conditions.md:82-85` | The pace note compares only to the Stage 1/2 *estimate inputs* (153.3 / 75.5 s per repetition) and attributes the overrun mainly to stock; it does not record the between-day canary prefill drop (945.26→575.56 tok/s) or the PCIe Gen4→Gen3 change, and tuned is also +33% vs the Stage 3 *actual*. Append a clearly-marked post-session review observation with these numbers and telemetry pointers (or carry them in T-008's analysis). No change to any recorded measurement; `data/raw/` untouched. |
+| F-3 | NOTE | NONE | `docs/recon/commands.env` (`COVERAGE_CMD`); `.workflow/acceptance/T-007.json` A2 | A2's `COVERAGE_CMD` is the generic interval-coverage simulation (20,000 experiments, 1,000 resamples, seed 1) and ignores `$SESSION`; it passes as the card specifies but is not evidence about Stage 4's intervals. Card-defined; no executor action. |
+| F-4 | NOTE | NONE | `.gitignore:8` (`data/logs/*/`); conditions-log citations of job `status.json` | The job logs (`data/logs/jobs/sweep-stage4-20261113T224212Z/`, `rerun-stage4-20261113T232346Z/`) are gitignored, so gate criterion a's job-exit evidence is local-only — consistent with Stage 3 practice, and the gate re-derives it at run time. Recorded so the release checks know the repo alone cannot re-derive criterion a after a machine wipe. |
 
 ## Task verdict
 
 accepted
 
-Rationale: all 7 mechanical items PASS on my own re-run (run 5, 0 failures) and A8's six
-behavioural clauses hold as implemented, each covered by an isolated fixture test (37
-passed). Every cycle-1 finding is resolved: F-1 by the planning chat's E-006 option A
-(no code change; inert `pre` branch kept; verified), F-2 by a verified privacy scrub
-(no account name in HEAD or working tree; pickaxe hashes match the rule-4 record), and
-F-3/F-4/F-5 by doc fixes I re-read in place. E-006 rule 3 explicitly states T-017's code is
-complete and may be accepted and finished. The two remaining items are NOTE-level (a design
-freshness nit and a safe, documented dirty-tree observation routed to the supervised run /
-T-018); neither is a BLOCKER or MAJOR, and neither warrants stranding the task in a third
-cycle the kit cannot open. Accepted.
+All five acceptance items hold on re-derivation: the session ran detached from a clean,
+R3-passing committed tree, the runbook was followed command-for-command, quiet held at the
+start and every poll, exactly one re-run pass resolved all 3 flagged units clean, both gates
+passed a–f, and the conditions log is complete and numerically faithful to the raw data. The
+executor's report and my re-run agree everywhere. F-1 is a real, material problem for the
+*project* (Stage 4 does not reproduce Stage 3, and the PCIe link downgrade is the leading
+candidate cause), but it is not a defect in T-007's work: the card assigns S2 to T-008 and R4
+prescribes report-and-escalate on failure. T-008 should not start its analysis assuming S2 will
+pass — my evidence run shows it fails 5 of 6 rows.
+
+Kit bookkeeping note: this review left `.workflow/acceptance/T-007.json` (run 2),
+`REVIEW_REPORT.md`, `reviews/T-007/r1-REVIEW_REPORT.md` and the wf state changes in the working
+tree; per established practice (e.g. commit `33c9231`) the next session commits them.
 
 ## What I did not verify
 
-- **Real headless behaviour of `/continue`, `/lane N`, `/review`, `/address-review`** —
-  forbidden in T-017 (S2, E-004 change 2); all session behaviour is verified against fake
-  claude only. E-004 change 4's supervised first real run (~1 hour, awake) is still pending
-  and is the real verification — F-2 above is exactly the kind of thing it should surface.
-- **T-013's history-scan method.** The E-006 rule-4 allowlist (`3f41e18`, `bc8e0c3`) is
-  correct for the prescribed `git log -S` pickaxe (re-derived, matches). I did not read
-  T-013's card: if its scan greps every commit's tree rather than pickaxe, the account name
-  also persists in the intermediate commits that carry `loop-states.md` unchanged, and the
-  allowlist would need the full range. Out of T-017 scope; flagged for T-013.
-- The full `_wf.py` read claimed by the recon: I spot-checked the review-open/verdict,
-  TRANSITIONS, effective_tasks merge, accept-record and guard code plus the cited ranges.
-  Not re-derived: lock line ranges, cmd_claim internals, the full live exit-code table.
-- S2's headless `/status` exit code itself (the /tmp captures corroborate the output; I did
-  not re-run headless /status).
-- The executor's attestation "never ran the loop against real state": supported by the
-  fixture-only tests, the absence of any `/tmp/wf-loop-<stamp>.log`, and my own read-only
-  dry-run — not provable after the fact.
-- `keep-continuing.md`'s detached launch (setsid/nohup) was not executed (it would start a
-  real loop); the `$!` pid semantics under setsid were reasoned about, not tested.
-- The concurrent **T-019** cycle-2 review artifacts left uncommitted in the tree (out of
-  scope; noted only as context — they are T-019's, finalized in state at seq 128-130, and
-  their root working copy is identical to `reviews/T-019/r2-REVIEW_REPORT.md`).
-- No heavy items: T-017 is `light`; nothing DEFERRED. No GPU/exclusive-machine task was in
-  progress during this review.
+- Historical quiet-check outputs and poll samples (process counts, MemAvailable, GPU memory,
+  CPU busy at poll times): taken from the conditions log as recorded. They are internally
+  consistent and align with the `events.jsonl` timeline, but are not re-derivable after the fact.
+- The pre-rerun gate output (the "3 of 11" block): checked for internal consistency (correct
+  denominator, drift main-only, no rerun canaries listed) and against the commit history, but
+  not re-run against the historical tree at `2179877` — the job logs are untracked, so criterion
+  a could not be re-derived there.
+- The cause of the PCIe Gen4→Gen3 change (BIOS setting, kernel update, ASPM): outside the repo;
+  not investigated. The link–prefill correlation is evidence, not a proven causal chain. Note
+  also that tuned decode at 32K depth fell 16.5% while the canary `tg_16k` fell only 0.6% —
+  T-008's analysis should look at that asymmetry (MTP interaction is one candidate).
+- The executor's chat reasoning: not available to me, and not requested (protocol).
+- `CI_CMD`, report render, headline: not T-007 acceptance items; not run.
+- The S2 table quoted in F-1 is my read-only evidence run, not T-008's official recorded run;
+  T-008 must re-run and record it.
