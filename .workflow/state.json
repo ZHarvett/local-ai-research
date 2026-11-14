@@ -1,5 +1,5 @@
 {
-  "checksum": "0183bfc68d47750c7f8a8d6dd90f381f38ec46caba615d74c662227ee93f0212",
+  "checksum": "c1351b477ba6e990f2001d9c51b735e97864ebfc3f0ffc3a23fb982009591e36",
   "created_utc": "2026-11-12T22:25:04Z",
   "escalations": {
     "E-001": {
@@ -74,7 +74,8 @@
     },
     "E-011": {
       "created_utc": "2026-11-14T22:06:38Z",
-      "status": "open",
+      "decided_utc": "2026-11-14T22:15:23Z",
+      "status": "decided",
       "task": "T-009",
       "type": "assumption-mismatch"
     }
@@ -1736,6 +1737,27 @@
       "detail": "decision E-010 recorded",
       "event": "note",
       "seq": 236,
+      "task": "T-009",
+      "ts": "2026-11-14T22:15:23Z"
+    },
+    {
+      "detail": "re-block so E-011 can be recorded",
+      "event": "blocked",
+      "seq": 237,
+      "task": "T-009",
+      "ts": "2026-11-14T22:15:23Z"
+    },
+    {
+      "detail": "restored to ready",
+      "event": "unblocked",
+      "seq": 238,
+      "task": "T-009",
+      "ts": "2026-11-14T22:15:23Z"
+    },
+    {
+      "detail": "decision E-011 recorded",
+      "event": "note",
+      "seq": 239,
       "task": "T-009",
       "ts": "2026-11-14T22:15:23Z"
     }

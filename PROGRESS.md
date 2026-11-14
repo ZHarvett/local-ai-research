@@ -38,7 +38,7 @@ files; change them through the scripts only.
 
 ## Escalation queue
 
-- **E-011** (assumption-mismatch, task T-009) — open
+_(none)_
 
 ## Review queue
 
@@ -52,8 +52,8 @@ _(none)_
 
 ## Last events
 
-- 2026-11-14T22:01:12Z plan-amended — sha256 9cf384e43275…
-- 2026-11-14T22:01:12Z ready T-009 — dependencies satisfied
-- 2026-11-14T22:06:39Z escalated T-009 — E-011 (assumption-mismatch)
 - 2026-11-14T22:15:23Z unblocked T-009 — restored to ready
 - 2026-11-14T22:15:23Z note T-009 — decision E-010 recorded
+- 2026-11-14T22:15:23Z blocked T-009 — re-block so E-011 can be recorded
+- 2026-11-14T22:15:23Z unblocked T-009 — restored to ready
+- 2026-11-14T22:15:23Z note T-009 — decision E-011 recorded
