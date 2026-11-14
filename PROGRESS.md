@@ -37,7 +37,7 @@ files; change them through the scripts only.
 
 ## Escalation queue
 
-- **E-008** (decision, task T-008) — open
+_(none)_
 
 ## Review queue
 
