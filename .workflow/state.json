@@ -1,5 +1,5 @@
 {
-  "checksum": "92747ecf94ba493beee17cee7c3f34e04e04a0630034fc52ed39bc9057247115",
+  "checksum": "c6c19834be46922e3bf820f5527923728879b6d31dad8ed2043b4f293ead5787",
   "created_utc": "2026-11-12T22:25:04Z",
   "escalations": {
     "E-001": {
@@ -1108,6 +1108,41 @@
       "seq": 149,
       "task": "T-008",
       "ts": "2026-11-14T00:17:16Z"
+    },
+    {
+      "detail": "card changed; re-acknowledgement required",
+      "event": "plan-changed",
+      "seq": 150,
+      "task": "T-008",
+      "ts": "2026-11-14T11:14:40Z"
+    },
+    {
+      "detail": "new card in amended plan",
+      "event": "plan-added",
+      "seq": 151,
+      "task": "T-020",
+      "ts": "2026-11-14T11:14:40Z"
+    },
+    {
+      "detail": "new card in amended plan",
+      "event": "plan-added",
+      "seq": 152,
+      "task": "T-021",
+      "ts": "2026-11-14T11:14:40Z"
+    },
+    {
+      "detail": "sha256 c8fde913a305\u2026",
+      "event": "plan-amended",
+      "seq": 153,
+      "task": null,
+      "ts": "2026-11-14T11:14:40Z"
+    },
+    {
+      "detail": "dependencies satisfied",
+      "event": "ready",
+      "seq": 154,
+      "task": "T-020",
+      "ts": "2026-11-14T11:14:40Z"
     }
   ],
   "kit_version": "0.1.0",
@@ -1119,7 +1154,7 @@
     "P4"
   ],
   "plan_file": "PLAN.md",
-  "plan_sha256": "6445a4e780291bbfd5e4249821ffac20311286fd9489fee2454d0847f8d8b79c",
+  "plan_sha256": "c8fde913a305a5de7bd917418a4225e81bf45e40ba404a2a9b50d1a93580737d",
   "review_cycles": {
     "T-005": 1,
     "T-007": 1,
@@ -1358,29 +1393,24 @@
       "title": "Stage 4 session"
     },
     "T-008": {
-      "blocked_from": "in-progress",
-      "blocked_reason": "escalation E-008",
-      "card_sha256": "70a7b0a3eb459f8ebb596da46992443ede07b0908e47729d828365337eac0f44",
-      "claimed_by_lane": 1,
+      "card_sha256": "c394c8b4667740a65b7b371dd7bbfe0ddfcb431d750ffd71f57223a1ce526d50",
       "depends_on": [
-        "T-007"
+        "T-021"
       ],
       "files_write": [
         "data/analysis/stage4/",
+        "data/analysis/stage4-run1-superseded/",
         "reports/stage4/",
         "docs/decisions.md",
         "docs/progress-log.md"
       ],
       "lane": 1,
       "phase": "P2",
+      "plan_changed": true,
       "resources": "light",
       "review": "post",
       "source": "plan",
-      "status": "blocked-decision",
-      "steps_done": [
-        "S1",
-        "S2"
-      ],
+      "status": "todo",
       "title": "S2 check and Stage 4 analysis"
     },
     "T-009": {
@@ -1587,6 +1617,44 @@
         "S3"
       ],
       "title": "Stage 4 pre-flight (no GPU)"
+    },
+    "T-020": {
+      "card_sha256": "0a56fb179a1d19cfffc0c33a54369a9ff84f206d3d50949126a754fd128fcbc3",
+      "depends_on": [
+        "T-007"
+      ],
+      "files_write": [
+        "docs/recon/pcie-link.md",
+        "docs/decisions.md",
+        "docs/progress-log.md"
+      ],
+      "lane": 1,
+      "phase": "P2",
+      "resources": "exclusive-machine",
+      "review": "none",
+      "source": "plan",
+      "status": "ready",
+      "title": "Restore and verify the PCIe Gen4 link (hands-on)"
+    },
+    "T-021": {
+      "card_sha256": "32c807e3f2c0381ee1ce3b0e9c5dd54ae7d84315292e60e1bacf7976eeb60d8a",
+      "depends_on": [
+        "T-020"
+      ],
+      "files_write": [
+        "data/raw/",
+        "docs/stage4-run2-conditions.md",
+        "docs/recon/stage4-session-run2.txt",
+        "docs/decisions.md",
+        "docs/progress-log.md"
+      ],
+      "lane": 1,
+      "phase": "P2",
+      "resources": "exclusive-machine",
+      "review": "post",
+      "source": "plan",
+      "status": "todo",
+      "title": "Stage 4 session, run 2"
     }
   },
   "title": "Step 0, remaining work: Stage 4, release v0.1.0, completion report",

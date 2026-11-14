@@ -1,5 +1,5 @@
 # Step 0, remaining work: Stage 4, release v0.1.0, completion report
-*Version 1.2 · 13 November 2026*
+*Version 1.3 · 14 November 2026*
 
 ## Shared rules
 
@@ -40,6 +40,9 @@ Context: Step 0 (baseline setup) of "Local AI on a Small PC". Reference plan: do
 - R2 If the Stage 4 gate fails only because of tuned-64K paging, and every flagged unit re-runs clean, the session is accepted with a recorded deviation: a docs/decisions.md line starting "- R2 applied: Stage 4". Any other gate failure is escalated.
 - R3 Stage 4 runs on 13 November 2026 or later. Since the Stage 3 session commit, the only changes under src/, configs/, scripts/, pyproject.toml and uv.lock are the kit's new scripts/wf.sh, scripts/wf-*.sh and scripts/_wf.py, and the only existing files changed by the kit install are CLAUDE.md and .gitignore. Check: `S3=$(cat docs/recon/stage3-commit.txt) && git cat-file -e "$S3^{commit}" && ! git diff --name-only "$S3" HEAD -- src configs scripts pyproject.toml uv.lock CLAUDE.md .gitignore | grep -vxE 'CLAUDE\.md|\.gitignore|scripts/wf(-[A-Za-z0-9_.-]+)?\.sh|scripts/_wf\.py'`
 - R4 An S2 failure is reported and escalated, never re-measured automatically.
+- R5 (declared 14 November 2026, after E-008) Stage 4 run 1, whose session id is in docs/recon/stage4-session.txt, is invalid for S2: the GPU's PCIe link ran at Gen3 x8 instead of Gen4 x8 for the whole session. Run 1 is marked superseded, never deleted, and is reported as an excluded diagnostic. Run 2 (docs/recon/stage4-session-run2.txt) is the S2 run. R1 to R3 apply to run 2 unchanged.
+- R6 Run 2 is the only re-run. If run 2, with the link verified at Gen4 x8 under load at the start and at every poll, fails S2, that is a genuine S2 FAIL: escalate under R4, and no run 3 without a new decision.
+- R7 Every gated GPU session checks the link under load with nvidia-smi --query-gpu=pcie.link.gen.current,pcie.link.width.current --format=csv,noheader. Anything other than "4, 8" while a server is generating stops the session and escalates; it is never averaged into the data.
 
 ## Assumption register
 
@@ -64,7 +67,7 @@ Context: Step 0 (baseline setup) of "Local AI on a Small PC". Reference plan: do
 
 - P0: Pilot setup (13 Nov): T-001, T-002, T-003, and T-017 (unattended loop, can run beside the drafts)
 - P1: Drafts, the first parallel pair: T-004 and T-005 in parallel, then T-006
-- P2: Stage 4 (13 Nov or later, quiet machine): T-019 (pre-flight, light), T-007, T-008
+- P2: Stage 4 (13 Nov or later, quiet machine): T-019 (pre-flight, light), T-007 (run 1, invalid: PCIe link ran Gen3), T-020 (restore and verify the PCIe Gen4 link), T-021 (Stage 4 run 2), T-008 (S2 check on run 2)
 - P3: Post-Stage-4 code fixes: T-009
 - P4: Release: T-010 and T-011 in parallel, then T-012 to T-016
 
@@ -318,33 +321,116 @@ decision_rights:
 id: T-008
 title: S2 check and Stage 4 analysis
 phase: P2
-depends_on: T-007
+depends_on: T-021
 lane: 1
 resources: light
-files_read: docs/recon/commands.env, docs/recon/stage4-session.txt, data/raw/, data/analysis/stage3/, docs/decisions.md
-files_write: data/analysis/stage4/, reports/stage4/, docs/decisions.md, docs/progress-log.md
+files_read: docs/recon/commands.env, docs/recon/stage4-session.txt, docs/recon/stage4-session-run2.txt, data/raw/, data/analysis/stage3/, docs/decisions.md
+files_write: data/analysis/stage4/, data/analysis/stage4-run1-superseded/, reports/stage4/, docs/decisions.md, docs/progress-log.md
 gates: none
 review: post
 preconditions:
-  - cmd: test -s docs/recon/stage4-session.txt
+  - cmd: test -s docs/recon/stage4-session-run2.txt && grep -q "^- R5 " docs/decisions.md
     expect: exit_code 0
 steps:
-  - S1: Run REPRO_CMD, saving its full output to data/analysis/stage4/repro-output.txt, and apply R1 to tuned-64K. Write data/analysis/stage4/s2-summary.md with a sources line: for stock and tuned, and for each of T_turn_400, fresh prefill at 32K and decode at 32K depth, give the Stage 3 value with its CI, the Stage 4 value, whether it falls within the CI or ±5% (whichever is wider), the unit set used (clean or all) and PASS or FAIL. Also write data/analysis/stage4/s2-summary.json with the key "overall" set to "PASS" or "FAIL" and one key per row. (redo-safe)
-  - S2: Render the Stage 4 report with REPORT_CMD into reports/stage4/. (redo-safe)
-  - S3: If any row FAILs, escalate under R4 and stop. (not redo-safe)
-  - S4: Record any R1 deviation in docs/decisions.md, append the progress-log entry and commit. (redo-safe)
+  - S1: If data/analysis/stage4/ already holds outputs from run 1, move each file into data/analysis/stage4-run1-superseded/ with git mv (never delete), and add a one-line README.md there saying run 1 is superseded under R5. Then use the run-2 session for everything below. (redo-safe)
+  - S2: Run REPRO_CMD with SESSION taken from docs/recon/stage4-session-run2.txt, saving its full output to data/analysis/stage4/repro-output.txt, and apply R1 to tuned-64K. Write data/analysis/stage4/s2-summary.md with a sources line: for stock and tuned, and for each of T_turn_400, fresh prefill at 32K and decode at 32K depth, give the Stage 3 value with its CI, the Stage 4 value, whether it falls within the CI or ±5% (whichever is wider), the unit set used (clean or all) and PASS or FAIL. Also write data/analysis/stage4/s2-summary.json with the key "overall" set to "PASS" or "FAIL" and one key per row. (redo-safe)
+  - S3: Render the Stage 4 report with REPORT_CMD into reports/stage4/. (redo-safe)
+  - S4: If any row FAILs, escalate under R4 and R6 and stop. (not redo-safe)
+  - S5: Record any R1 deviation in docs/decisions.md, append the progress-log entry and commit. (redo-safe)
 acceptance:
-  - cmd: source docs/recon/commands.env && SESSION="$(cat docs/recon/stage4-session.txt)" && eval "$REPRO_CMD"
+  - cmd: source docs/recon/commands.env && SESSION="$(cat docs/recon/stage4-session-run2.txt)" && eval "$REPRO_CMD"
     expect: exit_code 0
   - expect: json_eq data/analysis/stage4/s2-summary.json overall PASS
   - cmd: uv run python tools/check_doc_numbers.py data/analysis/stage4/s2-summary.md
     expect: exit_code 0
   - expect: manual "The S2 rows match repro-output.txt, and R1 is applied only if tuned-64K had fewer than 5 clean units."
 evidence: data/analysis/stage4/repro-output.txt, data/analysis/stage4/s2-summary.md, data/analysis/stage4/s2-summary.json
-estimate: 40m
+estimate: 45m
 decision_rights:
   - may: the summary layout
   - must_escalate: any S2 FAIL (R4); any discrepancy between the repro output and the summary; any need to change analysis code
+
+### T-020 — Restore and verify the PCIe Gen4 link (hands-on)
+id: T-020
+title: Restore and verify the PCIe Gen4 link (hands-on)
+phase: P2
+depends_on: T-007
+lane: 1
+resources: exclusive-machine
+files_read: docs/runbook-stage3.md, docs/recon/T-001.md, docs/recon/commands.env, docs/stage3-conditions.md, docs/stage4-conditions.md, data/raw/
+files_write: docs/recon/pcie-link.md, docs/decisions.md, docs/progress-log.md
+gates: PCIe link repair (E-008). Stage 4 run 1 ran with the GPU link at Gen3 x8 instead of Gen4 x8. Before you reply go, do the checks in the escalation reply on your machine: a full power-off (not a reboot) with the mains lead out for 30 seconds, check that the GPU is seated, and in the BIOS set the GPU slot's PCIe speed to Gen4 rather than Auto. Then boot, close every app except one terminal running Claude Code, keep the PC on mains power, and reply go. This session will test the link under load; it is about 10 minutes.
+review: none
+preconditions:
+  - cmd: ! pgrep -x llama-server
+    expect: exit_code 0
+  - cmd: command -v nvidia-smi
+    expect: exit_code 0
+steps:
+  - S1: In docs/recon/pcie-link.md, record read-only evidence for run 1 and for Stage 3: what docs/stage4-conditions.md, docs/stage3-conditions.md and the raw sweep metadata say about the PCIe link generation and width (state plainly if a source does not record it), and whether Stage 3 ran at Gen4 x8 (the measured 14.3 GB/s in docs/recon/T-001.md is only consistent with Gen4 x8). If any evidence says that Stage 3 itself ran at Gen3, escalate immediately: that changes the baseline, not only Stage 4. (redo-safe)
+  - S2: Record the current link state with nvidia-smi --query-gpu=name,pcie.link.gen.current,pcie.link.gen.max,pcie.link.width.current,pcie.link.width.max --format=csv at idle (idle may show a lower generation by design; this row is for the record only), plus the kernel messages about PCIe or NVRM since boot (journalctl -k -b | grep -iE 'pcie|aer|nvrm|downgrad' | tail -n 30). (redo-safe)
+  - S3: Put the GPU under load as the runbook's tuned-64K launch does (start the tuned-64K server as the runbook says, send one long prompt and generate about 400 tokens), and while it is generating sample the link ten times, one second apart, with nvidia-smi --query-gpu=pcie.link.gen.current,pcie.link.width.current --format=csv,noheader. Then stop the server and confirm the GPU lock is free. Write any server logs to /tmp, not to data/ or the repo. Record the ten samples. Run the same host-to-device bandwidth check that Stage 1 used (the command is in docs/recon/T-001.md or the runbook) and record the result. (not redo-safe)
+  - S4: Write the last line of docs/recon/pcie-link.md as `Result: link PASS` if all ten samples read "4, 8" and the bandwidth is at least 13 GB/s, otherwise `Result: link FAIL`. On FAIL, escalate with the evidence and stop: do not start Stage 4 at Gen3. (redo-safe)
+  - S5: Append the R5 to R7 section to docs/decisions.md (title "2026-11-14: Stage 4 run 1 invalid, E-008"), copying the three rules from the Shared rules block verbatim, one line each, plus one line with the run-1 session id. Commit, and append the progress-log entry. (redo-safe)
+acceptance:
+  - cmd: tail -n 1 docs/recon/pcie-link.md | grep -qx 'Result: link PASS'
+    expect: exit_code 0
+  - cmd: grep -c '^- R[567] ' docs/decisions.md
+    expect: stdout_regex ^3$
+  - cmd: ! pgrep -x llama-server
+    expect: exit_code 0
+  - cmd: test -z "$(git status --porcelain -- src configs scripts data tests pyproject.toml uv.lock)"
+    expect: exit_code 0
+  - expect: manual "The ten under-load samples are in the file and all read 4, 8; the bandwidth figure is the Stage 1 command's own output; the Stage 3 link evidence is stated honestly, including where it was not recorded; no file under src/, configs/ or scripts/ changed."
+evidence: docs/recon/pcie-link.md
+estimate: 30m
+decision_rights:
+  - may: the long prompt used for the load, provided it is the one the runbook uses for its probes
+  - must_escalate: a link FAIL; any sign that Stage 3 ran at Gen3; any need for sudo or a code change; anything the runbook does not cover
+
+### T-021 — Stage 4 session, run 2
+id: T-021
+title: Stage 4 session, run 2
+phase: P2
+depends_on: T-020
+lane: 1
+resources: exclusive-machine
+files_read: docs/runbook-stage3.md, docs/recon/T-001.md, docs/recon/commands.env, docs/recon/stage3-commit.txt, docs/recon/pcie-link.md, configs/sweeps/, configs/server/stock-64k.toml, configs/server/tuned-64k.toml
+files_write: data/raw/, docs/stage4-run2-conditions.md, docs/recon/stage4-session-run2.txt, docs/decisions.md, docs/progress-log.md
+gates: Stage 4, run 2 (about 45 minutes; the first run was invalid because of the PCIe link). Close every app except one terminal running Claude Code (scripts/check-quiet.sh must exit 0), keep the PC on mains power, and don't use it until this session says it has finished; following along on your phone is fine. Reply go.
+review: post
+preconditions:
+  - cmd: tail -n 1 docs/recon/pcie-link.md | grep -qx 'Result: link PASS'
+    expect: exit_code 0
+  - cmd: grep -q '^- R5 ' docs/decisions.md
+    expect: exit_code 0
+  - cmd: S3=$(cat docs/recon/stage3-commit.txt) && git cat-file -e "$S3^{commit}" && ! git diff --name-only "$S3" HEAD -- src configs scripts pyproject.toml uv.lock CLAUDE.md .gitignore | grep -vxE 'CLAUDE\.md|\.gitignore|scripts/wf(-[A-Za-z0-9_.-]+)?\.sh|scripts/_wf\.py'
+    expect: exit_code 0
+  - cmd: test -z "$(git status --porcelain -- src configs scripts data tests pyproject.toml uv.lock)"
+    expect: exit_code 0
+  - cmd: ! pgrep -x llama-server
+    expect: exit_code 0
+steps:
+  - S1: Run scripts/check-quiet.sh (it must exit 0). Read the runbook's Stage 4 section and check that its session-start command can create a second Stage 4 session beside run 1 without overwriting or reusing run 1's data (look at how it names the session). If it cannot without a code change or --allow-dirty, escalate and stop. Commit any workflow bookkeeping so that the whole tree is clean. Then, with no state-changing wf command in between, start the Stage 4 session exactly as the runbook says (detached, from the clean committed tree). Write the new session id to docs/recon/stage4-session-run2.txt and never touch docs/recon/stage4-session.txt. (not redo-safe)
+  - S2: Poll as the runbook says (sleep 420 plus scripts/sweep-status.sh plus a light CPU sample), and at every poll while a server is generating also sample the link per R7. Keep the conditions log in docs/stage4-run2-conditions.md, with the link sample on every row. Apply the runbook's stop rules and R7. (redo-safe)
+  - S3: Run GATE_CMD for the run-2 session. If it fails, apply R2 or escalate. (redo-safe)
+  - S4: Run one --rerun-flagged pass as the runbook says, then the gate again. (not redo-safe)
+  - S5: Commit the data and the conditions log, append the progress-log entry, and confirm that no server is running and the GPU lock is free. (redo-safe)
+acceptance:
+  - cmd: test -s docs/recon/stage4-session-run2.txt && ! cmp -s docs/recon/stage4-session.txt docs/recon/stage4-session-run2.txt
+    expect: exit_code 0
+  - cmd: source docs/recon/commands.env && SESSION="$(cat docs/recon/stage4-session-run2.txt)" && eval "$COVERAGE_CMD"
+    expect: exit_code 0
+  - cmd: { source docs/recon/commands.env && SESSION="$(cat docs/recon/stage4-session-run2.txt)" && eval "$GATE_CMD"; } | grep -qw PASS || grep -q '^- R2 applied: Stage 4' docs/decisions.md
+    expect: exit_code 0
+  - cmd: test -z "$(git status --porcelain -- data)" && ! pgrep -x llama-server
+    expect: exit_code 0
+  - expect: manual "The session started from a clean committed tree at a commit that passes R3; the runbook was followed; the quiet check passed at the start and at every poll; the link read 4, 8 at every sample; run 1's data and session file are untouched; the re-run pass was done; the conditions log is complete."
+evidence: docs/recon/stage4-session-run2.txt, docs/stage4-run2-conditions.md
+estimate: 75m
+decision_rights:
+  - may: commit messages; the polling cadence within the runbook
+  - must_escalate: any stop rule firing, including R7; a gate failure not covered by R2; a quiet-condition violation; any failed precondition; anything that would need --allow-dirty or a code change
 
 ### T-009 — Post-Stage-4 code fixes
 id: T-009

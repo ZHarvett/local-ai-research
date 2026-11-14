@@ -17,7 +17,7 @@ files; change them through the scripts only.
 | T-005 | Baseline report draft and number checker | accepted (judgement) | 2 | post |
 | T-006 | Write-up draft | done | 1 | none |
 | T-007 | Stage 4 session | accepted ⚠ re-acknowledge (judgement) | 1 | post |
-| T-008 | S2 check and Stage 4 analysis | blocked-decision | 1 | post |
+| T-008 | S2 check and Stage 4 analysis | todo ⚠ re-acknowledge | 1 | post |
 | T-009 | Post-Stage-4 code fixes | todo | 1 | none |
 | T-010 | Final README, report, write-up and changelog | todo | 1 | post |
 | T-011 | Plan v1.9, upstream drafts, methodology | todo | 2 | none |
@@ -28,10 +28,12 @@ files; change them through the scripts only.
 | T-016 | Publish v0.1.0 | todo | 1 | none |
 | T-017 | Unattended loop (wf-loop.sh) | accepted (judgement) | 3 | post |
 | T-019 | Stage 4 pre-flight (no GPU) | accepted (judgement) | 1 | post |
+| T-020 | Restore and verify the PCIe Gen4 link (hands-on) | ready | 1 | none |
+| T-021 | Stage 4 session, run 2 | todo | 1 | post |
 
 ## READY (grouped by lane)
 
-_(none)_
+- lane 1: **T-020** Restore and verify the PCIe Gen4 link (hands-on)
 
 ## Escalation queue
 
@@ -45,12 +47,12 @@ _(none)_
 
 | lane | lock | worktree | tasks |
 |---|---|---|---|
-| 1 | pid 1925611 | - | - |
+| 1 | - | - | - |
 
 ## Last events
 
-- 2026-11-14T00:06:33Z claimed T-008 — lane 1, pid 1925611
-- 2026-11-14T00:06:33Z started T-008 — lane 1
-- 2026-11-14T00:13:07Z step-done T-008 — S1
-- 2026-11-14T00:14:08Z step-done T-008 — S2
-- 2026-11-14T00:17:16Z escalated T-008 — E-008 (decision)
+- 2026-11-14T11:14:40Z plan-changed T-008 — card changed; re-acknowledgement required
+- 2026-11-14T11:14:40Z plan-added T-020 — new card in amended plan
+- 2026-11-14T11:14:40Z plan-added T-021 — new card in amended plan
+- 2026-11-14T11:14:40Z plan-amended — sha256 c8fde913a305…
+- 2026-11-14T11:14:40Z ready T-020 — dependencies satisfied
