@@ -4,7 +4,7 @@ Rendered by `wf-progress.sh render` from `.workflow/state.json` and the lane
 files; change them through the scripts only.
 
 **Plan:** Step 0, remaining work: Stage 4, release v0.1.0, completion report  
-**Phase:** P1
+**Phase:** P2
 
 ## Tasks
 
@@ -13,27 +13,28 @@ files; change them through the scripts only.
 | T-001 | Smoke test and recon (read-only) | done ⚠ re-acknowledge | 1 | none |
 | T-002 | Record Stage 3 decisions and merge CLAUDE.md | done | 1 | none |
 | T-003 | Reviewer calibration | done | 1 | none |
-| T-004 | README draft | ready | 1 | none |
-| T-005 | Baseline report draft and number checker | ready | 2 | post |
-| T-006 | Write-up draft | todo | 1 | none |
-| T-007 | Stage 4 session | ready ⚠ re-acknowledge | 1 | pre+post |
-| T-008 | S2 check and Stage 4 analysis | todo | 1 | post |
+| T-004 | README draft | done | 1 | none |
+| T-005 | Baseline report draft and number checker | accepted (judgement) | 2 | post |
+| T-006 | Write-up draft | done | 1 | none |
+| T-007 | Stage 4 session | accepted ⚠ re-acknowledge (judgement) | 1 | post |
+| T-008 | S2 check and Stage 4 analysis | todo ⚠ re-acknowledge | 1 | post |
 | T-009 | Post-Stage-4 code fixes | todo | 1 | none |
 | T-010 | Final README, report, write-up and changelog | todo | 1 | post |
 | T-011 | Plan v1.9, upstream drafts, methodology | todo | 2 | none |
 | T-012 | README walkthrough from a clean shell | todo | 1 | none |
-| T-013 | Scrub and release checks | todo | 1 | post |
+| T-013 | Scrub and release checks | todo ⚠ re-acknowledge | 1 | post |
 | T-014 | Completion report and planning-chat review | todo | 1 | none |
 | T-015 | Private repo, CI and tag v0.1.0 | todo | 1 | none |
 | T-016 | Publish v0.1.0 | todo | 1 | none |
-| T-017 | Unattended loop (wf-loop.sh) | ready | 3 | post |
+| T-017 | Unattended loop (wf-loop.sh) | accepted (judgement) | 3 | post |
+| T-018 | Kit repair: leave blocked-decision after a review verdict | ready | 2 | post |
+| T-019 | Stage 4 pre-flight (no GPU) | accepted (judgement) | 1 | post |
+| T-020 | Restore and verify the PCIe Gen4 link (hands-on) | done (judgement) | 1 | none |
+| T-021 | Stage 4 session, run 2 | blocked-decision (judgement) | 1 | post |
 
 ## READY (grouped by lane)
 
-- lane 1: **T-004** README draft
-- lane 1: **T-007** Stage 4 session
-- lane 2: **T-005** Baseline report draft and number checker
-- lane 3: **T-017** Unattended loop (wf-loop.sh)
+- lane 2: **T-018** Kit repair: leave blocked-decision after a review verdict
 
 ## Escalation queue
 
@@ -47,12 +48,12 @@ _(none)_
 
 | lane | lock | worktree | tasks |
 |---|---|---|---|
-| 1 | - | - | - |
+| 1 | pid 3351 | - | - |
 
 ## Last events
 
-- 2026-11-13T11:13:14Z done T-003 — accept run at 2026-11-13T11:12:32Z
-- 2026-11-13T11:13:14Z ready T-004 — dependencies satisfied
-- 2026-11-13T11:13:14Z ready T-005 — dependencies satisfied
-- 2026-11-13T11:13:14Z ready T-007 — dependencies satisfied
-- 2026-11-13T11:13:14Z ready T-017 — dependencies satisfied
+- 2026-11-14T15:29:42Z review-opened T-021 — cycle 1
+- 2026-11-14T15:29:42Z review-verdict T-021 — blocked-decision (cycle 1, 6 findings)
+- 2026-11-14T15:58:43Z plan-added T-018 — new card in amended plan
+- 2026-11-14T15:58:43Z plan-amended — sha256 fed612c8820c…
+- 2026-11-14T15:58:43Z ready T-018 — dependencies satisfied

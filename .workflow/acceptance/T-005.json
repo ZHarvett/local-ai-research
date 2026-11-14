@@ -60,5 +60,67 @@
     },
     "finished_utc": "2026-11-13T12:02:32Z",
     "failures": 0
+  },
+  {
+    "task": "T-005",
+    "started_utc": "2026-11-13T15:23:03Z",
+    "git_commit": "6761913a5ca95c26ac5f05d0bd57c4549dd74555",
+    "items": [
+      {
+        "id": "A1",
+        "cmd": "uv run python tools/check_doc_numbers.py reports/baseline-report.md",
+        "exit_code": 0,
+        "output_sha256": "3c7bafd14cac8e79d4302b908065a2b0648a4bb690b51b179c55c2c4f80f6338",
+        "output_bytes": 80,
+        "elapsed_s": 0.1,
+        "verdict": "pass"
+      },
+      {
+        "id": "A2",
+        "cmd": "uv run pytest -q tests/test_check_doc_numbers.py",
+        "exit_code": 0,
+        "output_sha256": "2f4168c91d5fa59222eee23d952b692459ecaf1c4af01d5fa43f0cd19fb9f9d4",
+        "output_bytes": 99,
+        "elapsed_s": 0.2,
+        "verdict": "pass"
+      },
+      {
+        "id": "A3",
+        "cmd": "uv run ruff check tools/check_doc_numbers.py tests/test_check_doc_numbers.py && uv run ruff format --check tools/check_doc_numbers.py tests/test_check_doc_numbers.py",
+        "exit_code": 0,
+        "output_sha256": "afa20b27dacc9bf0aba3c1d265964c21e04ab42f6e39e2dd4769718ceded003a",
+        "output_bytes": 45,
+        "elapsed_s": 0.1,
+        "verdict": "pass"
+      },
+      {
+        "id": "A4",
+        "cmd": "grep -q 'includes paging-flagged stock windows' reports/baseline-report.md && grep -q 'stage3-tuned.json' reports/baseline-report.md && ! grep -q 'not reportable' reports/baseline-report.md",
+        "exit_code": 0,
+        "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "output_bytes": 0,
+        "elapsed_s": 0.0,
+        "verdict": "pass"
+      },
+      {
+        "id": "A5",
+        "verdict": "judgement",
+        "description": "Every table traces to a named file; selection data and headline results are labelled correctly; D1, D3, D7 and D9 are applied; nothing is claimed beyond the data."
+      }
+    ],
+    "evidence_files": {
+      "reports/baseline-report.md": {
+        "exists": true,
+        "sha256": "78c8d07dadd08dea2a2500d58ada4be54a094ed802d17ebebcac292d612d624c",
+        "bytes": 34927
+      },
+      "tools/check_doc_numbers.py": {
+        "exists": true,
+        "sha256": "fdb85c29fa482d8608580bfa36a3f873d26dd0634378e781fb12e9d82cecdc93",
+        "bytes": 5003
+      }
+    },
+    "finished_utc": "2026-11-13T15:23:03Z",
+    "failures": 0
   }
 ]

@@ -1,0 +1,59 @@
+[
+  {
+    "task": "T-020",
+    "started_utc": "2026-11-14T11:58:05Z",
+    "git_commit": "3f55c72826bce75b18ccdb6f79601f11708dc15d",
+    "items": [
+      {
+        "id": "A1",
+        "cmd": "tail -n 1 docs/recon/pcie-link.md | grep -qx 'Result: link PASS'",
+        "exit_code": 0,
+        "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "output_bytes": 0,
+        "elapsed_s": 0.0,
+        "verdict": "pass"
+      },
+      {
+        "id": "A2",
+        "cmd": "grep -c '^- R[567] ' docs/decisions.md",
+        "exit_code": 0,
+        "output_sha256": "1121cfccd5913f0a63fec40a6ffd44ea64f9dc135c66634ba001d10bcf4302a2",
+        "output_bytes": 2,
+        "elapsed_s": 0.0,
+        "verdict": "pass"
+      },
+      {
+        "id": "A3",
+        "cmd": "! pgrep -x llama-server",
+        "exit_code": 0,
+        "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "output_bytes": 0,
+        "elapsed_s": 0.0,
+        "verdict": "pass"
+      },
+      {
+        "id": "A4",
+        "cmd": "test -z \"$(git status --porcelain -- src configs scripts data tests pyproject.toml uv.lock)\"",
+        "exit_code": 0,
+        "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "output_bytes": 0,
+        "elapsed_s": 0.0,
+        "verdict": "pass"
+      },
+      {
+        "id": "A5",
+        "verdict": "judgement",
+        "description": "The ten under-load samples are in the file and all read 4, 8; the bandwidth figure is the Stage 1 command's own output; the Stage 3 link evidence is stated honestly, including where it was not recorded; no file under src/, configs/ or scripts/ changed."
+      }
+    ],
+    "evidence_files": {
+      "docs/recon/pcie-link.md": {
+        "exists": true,
+        "sha256": "e9ff7a5062c607708f022910912e8946f635392d0ba9ecf21201a91568c34150",
+        "bytes": 29046
+      }
+    },
+    "finished_utc": "2026-11-14T11:58:05Z",
+    "failures": 0
+  }
+]

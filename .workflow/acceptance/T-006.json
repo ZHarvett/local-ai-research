@@ -1,0 +1,45 @@
+[
+  {
+    "task": "T-006",
+    "started_utc": "2026-11-13T15:58:33Z",
+    "git_commit": "d4badce125ff0152faa1ea511edf54dce218f845",
+    "items": [
+      {
+        "id": "A1",
+        "cmd": "uv run python tools/check_doc_numbers.py reports/writeup.md",
+        "exit_code": 0,
+        "output_sha256": "5ff93a03de6aa00d14e2f5d3fc56d8fe4d28517f6890009730bcb0243559f105",
+        "output_bytes": 70,
+        "elapsed_s": 0.0,
+        "verdict": "pass"
+      },
+      {
+        "id": "A2",
+        "cmd": "test \"$(wc -w < reports/writeup.md)\" -le 1800 && grep -q 'TODO-T010' reports/writeup.md",
+        "exit_code": 0,
+        "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "output_bytes": 0,
+        "elapsed_s": 0.0,
+        "verdict": "pass"
+      },
+      {
+        "id": "A3",
+        "cmd": "for t in T-004 T-005 T-006; do grep -q \"$t\" docs/progress-log.md || exit 1; done",
+        "exit_code": 0,
+        "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "output_bytes": 0,
+        "elapsed_s": 0.0,
+        "verdict": "pass"
+      }
+    ],
+    "evidence_files": {
+      "reports/writeup.md": {
+        "exists": true,
+        "sha256": "ea1e36a4a268b53cbceae620b76fa22dbb2b7a3a69aea32d2b62f148f18112d0",
+        "bytes": 8706
+      }
+    },
+    "finished_utc": "2026-11-13T15:58:33Z",
+    "failures": 0
+  }
+]

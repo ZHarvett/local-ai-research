@@ -1,0 +1,126 @@
+[
+  {
+    "task": "T-007",
+    "started_utc": "2026-11-13T23:42:29Z",
+    "git_commit": "fdc2eae7f5df66f7b4f2c2f7d705a935045b6863",
+    "items": [
+      {
+        "id": "A1",
+        "cmd": "test -s docs/recon/stage4-session.txt",
+        "exit_code": 0,
+        "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "output_bytes": 0,
+        "elapsed_s": 0.0,
+        "verdict": "pass"
+      },
+      {
+        "id": "A2",
+        "cmd": "source docs/recon/commands.env && SESSION=\"$(cat docs/recon/stage4-session.txt)\" && eval \"$COVERAGE_CMD\"",
+        "exit_code": 0,
+        "output_sha256": "1bdc8ec3151186304b1ef43ee31a086e83bd551b81e8f7bac0efb1f0f5275806",
+        "output_bytes": 574,
+        "elapsed_s": 7.2,
+        "verdict": "pass"
+      },
+      {
+        "id": "A3",
+        "cmd": "{ source docs/recon/commands.env && SESSION=\"$(cat docs/recon/stage4-session.txt)\" && eval \"$GATE_CMD\"; } | grep -qw PASS || grep -q '^- R2 applied: Stage 4' docs/decisions.md",
+        "exit_code": 0,
+        "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "output_bytes": 0,
+        "elapsed_s": 0.3,
+        "verdict": "pass"
+      },
+      {
+        "id": "A4",
+        "cmd": "test -z \"$(git status --porcelain -- data)\" && ! pgrep -x llama-server",
+        "exit_code": 0,
+        "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "output_bytes": 0,
+        "elapsed_s": 0.0,
+        "verdict": "pass"
+      },
+      {
+        "id": "A5",
+        "verdict": "judgement",
+        "description": "The session started from a clean committed tree at a commit that passes R3; the runbook was followed; the quiet check passed at the start and at every poll; the re-run pass was done; the conditions log is complete."
+      }
+    ],
+    "evidence_files": {
+      "docs/recon/stage4-session.txt": {
+        "exists": true,
+        "sha256": "f0a2f992de07a18a5e405328f42a5aa40c15470874bca6708f4d92190aaa9556",
+        "bytes": 6
+      },
+      "docs/stage4-conditions.md": {
+        "exists": true,
+        "sha256": "5e497876896ce16a0e638baeb3255f4a96c94b8cdd7cad5bfc14fb3e8ebc4787",
+        "bytes": 13733
+      }
+    },
+    "finished_utc": "2026-11-13T23:42:37Z",
+    "failures": 0
+  },
+  {
+    "task": "T-007",
+    "started_utc": "2026-11-13T23:48:48Z",
+    "git_commit": "e6c33befc378be10d969d2be68c7b433777ba12a",
+    "items": [
+      {
+        "id": "A1",
+        "cmd": "test -s docs/recon/stage4-session.txt",
+        "exit_code": 0,
+        "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "output_bytes": 0,
+        "elapsed_s": 0.0,
+        "verdict": "pass"
+      },
+      {
+        "id": "A2",
+        "cmd": "source docs/recon/commands.env && SESSION=\"$(cat docs/recon/stage4-session.txt)\" && eval \"$COVERAGE_CMD\"",
+        "exit_code": 0,
+        "output_sha256": "1bdc8ec3151186304b1ef43ee31a086e83bd551b81e8f7bac0efb1f0f5275806",
+        "output_bytes": 574,
+        "elapsed_s": 7.2,
+        "verdict": "pass"
+      },
+      {
+        "id": "A3",
+        "cmd": "{ source docs/recon/commands.env && SESSION=\"$(cat docs/recon/stage4-session.txt)\" && eval \"$GATE_CMD\"; } | grep -qw PASS || grep -q '^- R2 applied: Stage 4' docs/decisions.md",
+        "exit_code": 0,
+        "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "output_bytes": 0,
+        "elapsed_s": 0.3,
+        "verdict": "pass"
+      },
+      {
+        "id": "A4",
+        "cmd": "test -z \"$(git status --porcelain -- data)\" && ! pgrep -x llama-server",
+        "exit_code": 0,
+        "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "output_bytes": 0,
+        "elapsed_s": 0.0,
+        "verdict": "pass"
+      },
+      {
+        "id": "A5",
+        "verdict": "judgement",
+        "description": "The session started from a clean committed tree at a commit that passes R3; the runbook was followed; the quiet check passed at the start and at every poll; the re-run pass was done; the conditions log is complete."
+      }
+    ],
+    "evidence_files": {
+      "docs/recon/stage4-session.txt": {
+        "exists": true,
+        "sha256": "f0a2f992de07a18a5e405328f42a5aa40c15470874bca6708f4d92190aaa9556",
+        "bytes": 6
+      },
+      "docs/stage4-conditions.md": {
+        "exists": true,
+        "sha256": "5e497876896ce16a0e638baeb3255f4a96c94b8cdd7cad5bfc14fb3e8ebc4787",
+        "bytes": 13733
+      }
+    },
+    "finished_utc": "2026-11-13T23:48:56Z",
+    "failures": 0
+  }
+]

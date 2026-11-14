@@ -1230,3 +1230,67 @@ Replace item 3 (the two lines beginning "3. Picking the next task") with:
 3. Picking the next task from `bash scripts/wf.sh ready` (if several lanes are ready, ask which
    lane to start, as `/continue` does), claiming and starting it, and reading ONLY its card
    (`bash scripts/wf-card.sh T-xxx`) — never `PLAN.md` whole.
+
+---
+
+## DECISION E-005 (2026-11-13T12:52:02Z)
+
+DECISION E-005
+Chosen option: B
+Reason: The diagnosis is sound: recompute_ready re-promotes lane-owned placeholders to ready, so the guard fails whenever lanes run concurrently. The fix is small but touches the engine, so it waits until after Stage 4; until then an exact, narrow exception avoids deadlocking the sessions that must run to clear it.
+Scope: standing rule
+Rule: (1) Interim exception: when the ONLY failing guard lines are of the exact form "GUARD: task T-NNN is in the main state as ready AND in lane N; run wf.sh merge-lanes N", AND bash scripts/wf.sh status shows that task as in-progress, awaiting-gate or blocked-decision, treat the guard as non-fatal and continue; never run merge-lanes N for an active lane. Any other guard line, or such a line where status shows the task as ready, todo or done, stops the session as before. State is still never edited by hand. (2) The fix (recompute_ready leaves tasks owned by a lane mirror alone, with a regression test for concurrent lanes) is scheduled as a new task T-018 after T-008. The planning chat adds it in the next PLAN.md amend; sessions do not add it. scripts/_wf.py is a kit file, so R3 allows the change; it must not happen before Stage 4.
+
+---
+
+## DECISION E-004 (2026-11-13T12:52:02Z)
+
+DECISION E-004
+Chosen option: B
+Reason: The design is well grounded in the recon. /lane N asks no question, so it is deterministic headlessly, whereas piping yes to /continue is untested and an unattended loop should not rest on an unverified mechanism.
+Scope: this plan
+Rule: Design in docs/recon/loop-design.md approved with these changes. (1) Lane answer: when tasks in several lanes are ready, the loop starts the lowest-numbered such lane with claude -p "/lane N"; when only one lane has ready tasks it runs claude -p "/continue". The card's literal /continue prompt is relaxed accordingly for this task. (2) T-017 never runs /continue, /lane or /review headlessly in its own tests; fake claude only. (3) The loop stops on any guard failure except the placeholder line defined in the E-005 decision. (4) keep-continuing.md and the loop's start message tell the user to make the first real run a supervised one of about 1 hour while awake. (5) The loop's final message names the stop reason and the task id.
+
+---
+
+## DECISION E-006 (2026-11-13T18:21:00Z)
+
+DECISION E-006
+Chosen option: A
+Reason: The kit cannot open a review on a ready task, no task in PLAN.md has review pre+post any more (T-007 is post-only since v1.2), the gap is documented in loop-design.md section 11.3, and the loop's pre-review branch is inert and safe, so no code change is needed.
+Scope: this plan
+Rule: (1) Pre-reviews are not performed under the frozen kit; the loop's pre-review branch stays as inert code. (2) Options B and C are not scheduled; they are reconsidered only if a pre+post task is ever added, and would then ride along with the T-018 kit change (T-018 is the E-005 guard fix, added by the planning chat after T-008). (3) T-017's code is complete: after this decision it may be accepted and finished (re-run accept if the evidence hashes need refreshing, then close it through the kit's normal commands). (4) F-2 follow-up: record in docs/decisions.md, under this decision, the commit hashes that introduced the path docs/recon/loop-states.md with the account name in a home path, and the fix commit bc8e0c3 that removed it. Find the introducing commits with git log --format=%h -S"$VAR" -- docs/recon/loop-states.md, where $VAR is a shell variable holding the string; never write the account name into any file, escalation brief or log. These commits are a second known occurrence for T-013's history scan, allowlisted by commit hash and path only.
+
+**F-2 follow-up (E-006 rule 4, recorded 2026-11-13 by the T-017 address-review session).** The account home path (the `<account-name>` of D8; never written here) in `docs/recon/loop-states.md` was introduced by commit `3f41e18` (T-017 S1–S2 recon) and removed by fix commit `bc8e0c3` (T-017 address review cycle 1, F-2). Found with `git log --format=%h -S"$VAR" -- docs/recon/loop-states.md`, where `$VAR` was the home-path prefix built from the live account (`/home/$(id -un)`) — the account name was never written into any file, brief or log. This is the second known occurrence for T-013's history scan (the first is the WP0 occurrence already allowlisted by D8), allowlisted by commit hash and path only: `3f41e18` and `bc8e0c3`, path `docs/recon/loop-states.md`. No history rewrite (D8).
+
+---
+
+## DECISION E-007 (2026-11-13T18:42:53Z)
+
+DECISION E-007
+Chosen option: A
+Reason: The card's "escalate once listing every failure" attaches to the final Result. The P8 FAIL was caused by another lane's uncommitted work, cleared by that lane's own commits before T-019 filed anything, with no workaround by T-019 and the full sequence documented and independently verified by the reviewer.
+Scope: this plan
+Rule: (1) Ratify the reading in stage4-preflight section 2.9 for T-019. Precedent, scoped exactly: a pre-flight or recon check that FAILs transiently needs no escalation when ALL of these hold: the cause is another lane's legitimate work cleared by that lane's own commits; the checking session applied no workaround and committed no other lane's files; the check was re-run and passed; the final Result is all-PASS; the whole sequence is documented in the output file. Any other FAIL still escalates. Record this one line in docs/decisions.md under this decision. (2) T-019 may now be closed through the kit's normal commands; no review cycle 2 is needed because no BLOCKER or MAJOR was fixed. (3) F-3 (runbook line 146: 1,578 should be 1,577) and the review-parser limitation on findings whose action has a parenthetical (scripts/_wf.py:1918) are routed by the planning chat into the T-018 amend after T-008; sessions do not add or fix them.
+
+**Precedent (E-007 rule 1, recorded 2026-11-13 by the T-019 closing session).** A pre-flight or recon check that FAILs transiently needs no escalation when ALL of these hold: the cause is another lane's legitimate work cleared by that lane's own commits; the checking session applied no workaround and committed no other lane's files; the check was re-run and passed; the final Result is all-PASS; the whole sequence is documented in the output file. Any other FAIL still escalates.
+
+---
+
+## DECISION E-008 (2026-11-14T11:14:40Z)
+
+DECISION E-008
+Chosen option: A. Stage 4 run 1 is invalid for S2 because the GPU's PCIe link ran at Gen3 x8 instead of Gen4 x8 for the whole session. Restore and verify the Gen4 x8 link under load (new task T-020), then re-measure Stage 4 as a new gated task (T-021, run 2). Options B and C (accept run 1 as-is, or widen the S2 tolerance to absorb the slowdown) are rejected.
+Reason: S2 asks whether the same configuration reproduces on the same machine. Run 1 did not run on the same machine state (a slower link, about 25 to 40 percent slower prefill, lower power draw, same clocks), so a FAIL there says nothing about reproducibility, and a PASS obtained by widening the tolerance would be meaningless. The within-session drift rule could not catch this because the link was wrong from the first request.
+Scope: Stage 4 run 1 (session id in docs/recon/stage4-session.txt) is marked superseded, never deleted, and reported as an excluded diagnostic. Its raw data, session file and any analysis outputs stay in the repo. T-008 is re-pointed at run 2 and depends on T-021. Planning-chat PLAN.md v1.3 adds T-020 and T-021 and rules R5 to R7. No code, config or script changes. This is the approved escalation that shared rule 3 requires for a RE-MEASURE.
+Rule: R5 run 1 is superseded and run 2 (docs/recon/stage4-session-run2.txt) is the S2 run, with R1 to R3 unchanged. R6 run 2 is the only re-run: if it fails S2 with the link verified Gen4 x8 at the start and at every poll, that is a genuine FAIL, escalated under R4, and there is no run 3 without a new decision. R7 every gated GPU session samples the link under load and stops and escalates on anything other than gen 4, width 8. If the link cannot be restored to Gen4 x8, do not run Stage 4 at Gen3: escalate.
+
+---
+
+## 2026-11-14: Stage 4 run 1 invalid, E-008
+
+- R5 (declared 14 November 2026, after E-008) Stage 4 run 1, whose session id is in docs/recon/stage4-session.txt, is invalid for S2: the GPU's PCIe link ran at Gen3 x8 instead of Gen4 x8 for the whole session. Run 1 is marked superseded, never deleted, and is reported as an excluded diagnostic. Run 2 (docs/recon/stage4-session-run2.txt) is the S2 run. R1 to R3 apply to run 2 unchanged.
+- R6 Run 2 is the only re-run. If run 2, with the link verified at Gen4 x8 under load at the start and at every poll, fails S2, that is a genuine S2 FAIL: escalate under R4, and no run 3 without a new decision.
+- R7 Every gated GPU session checks the link under load with nvidia-smi --query-gpu=pcie.link.gen.current,pcie.link.width.current --format=csv,noheader. Anything other than "4, 8" while a server is generating stops the session and escalates; it is never averaged into the data.
+- Run-1 session id: `stage4` (`docs/recon/stage4-session.txt`), superseded, never deleted (R5). T-020 verified the restored link at Gen4 x8 under load on 2026-11-14 (`docs/recon/pcie-link.md`, `Result: link PASS`); run 2 (T-021) proceeds under R5 to R7.
+- Run-2 session id: `stage4-run2` (`docs/recon/stage4-session-run2.txt`), launched 2026-11-14T14:30:49Z from `c4bdc4d` (clean tree, R3 PASS); main 26.1 min + one re-run pass 9.2 min; gate PASS a to f before and after the re-run; every under-load link sample read "4, 8" (R7; idle-gap downshifts recorded, not averaged, in `docs/stage4-run2-conditions.md`). Both cells end with 5 clean units; R1 fallback and R2 not needed. This is T-008's S2 run (R5). <!-- sources: docs/stage4-run2-conditions.md, data/raw/stage4-run2/session.json -->

@@ -1,5 +1,5 @@
 {
-  "checksum": "83267648509ed478245d3d85bdeb48f47c527a2b88c1d49c87de06b752471e61",
+  "checksum": "c9b5e977589c113b5c23971563b1bc51ead9e4696f8272e67a85669000d8be8c",
   "created_utc": "2026-11-12T22:25:04Z",
   "escalations": {
     "E-001": {
@@ -21,6 +21,41 @@
       "decided_utc": "2026-11-13T10:09:30Z",
       "status": "decided",
       "task": "T-002",
+      "type": "decision"
+    },
+    "E-004": {
+      "created_utc": "2026-11-13T11:55:29Z",
+      "decided_utc": "2026-11-13T12:52:02Z",
+      "status": "decided",
+      "task": "T-017",
+      "type": "decision"
+    },
+    "E-005": {
+      "created_utc": "2026-11-13T11:58:50Z",
+      "decided_utc": "2026-11-13T12:52:02Z",
+      "status": "decided",
+      "task": "",
+      "type": "problem"
+    },
+    "E-006": {
+      "created_utc": "2026-11-13T17:52:12Z",
+      "decided_utc": "2026-11-13T18:21:00Z",
+      "status": "decided",
+      "task": "T-017",
+      "type": "decision"
+    },
+    "E-007": {
+      "created_utc": "2026-11-13T18:34:58Z",
+      "decided_utc": "2026-11-13T18:42:53Z",
+      "status": "decided",
+      "task": "T-019",
+      "type": "decision"
+    },
+    "E-008": {
+      "created_utc": "2026-11-14T00:17:16Z",
+      "decided_utc": "2026-11-14T11:14:40Z",
+      "status": "decided",
+      "task": "T-008",
       "type": "decision"
     }
   },
@@ -444,6 +479,853 @@
       "seq": 59,
       "task": "T-017",
       "ts": "2026-11-13T11:13:14Z"
+    },
+    {
+      "detail": "lane 1, pid 1807463",
+      "event": "claimed",
+      "seq": 60,
+      "task": "T-004",
+      "ts": "2026-11-13T11:44:00Z"
+    },
+    {
+      "detail": "lane 1",
+      "event": "started",
+      "seq": 61,
+      "task": "T-004",
+      "ts": "2026-11-13T11:44:00Z"
+    },
+    {
+      "detail": "lane 2, pid 1807601",
+      "event": "claimed",
+      "seq": 0,
+      "task": "T-005",
+      "ts": "2026-11-13T11:44:41Z"
+    },
+    {
+      "detail": "lane 2",
+      "event": "migrated-to-lane",
+      "seq": 62,
+      "task": "T-005",
+      "ts": "2026-11-13T11:44:41Z"
+    },
+    {
+      "detail": "lane 3, pid 1807883",
+      "event": "claimed",
+      "seq": 0,
+      "task": "T-017",
+      "ts": "2026-11-13T11:44:43Z"
+    },
+    {
+      "detail": "lane 3",
+      "event": "migrated-to-lane",
+      "seq": 63,
+      "task": "T-017",
+      "ts": "2026-11-13T11:44:43Z"
+    },
+    {
+      "detail": "lane 2",
+      "event": "started",
+      "seq": 1,
+      "task": "T-005",
+      "ts": "2026-11-13T11:44:46Z"
+    },
+    {
+      "detail": "lane 3",
+      "event": "started",
+      "seq": 1,
+      "task": "T-017",
+      "ts": "2026-11-13T11:44:46Z"
+    },
+    {
+      "detail": "S1",
+      "event": "step-done",
+      "seq": 2,
+      "task": "T-005",
+      "ts": "2026-11-13T11:51:21Z"
+    },
+    {
+      "detail": "S1",
+      "event": "step-done",
+      "seq": 2,
+      "task": "T-017",
+      "ts": "2026-11-13T11:52:10Z"
+    },
+    {
+      "detail": "S2",
+      "event": "step-done",
+      "seq": 3,
+      "task": "T-017",
+      "ts": "2026-11-13T11:52:10Z"
+    },
+    {
+      "detail": "S1",
+      "event": "step-done",
+      "seq": 64,
+      "task": "T-004",
+      "ts": "2026-11-13T11:54:13Z"
+    },
+    {
+      "detail": "dependencies satisfied",
+      "event": "ready",
+      "seq": 65,
+      "task": "T-005",
+      "ts": "2026-11-13T11:54:13Z"
+    },
+    {
+      "detail": "dependencies satisfied",
+      "event": "ready",
+      "seq": 66,
+      "task": "T-017",
+      "ts": "2026-11-13T11:54:13Z"
+    },
+    {
+      "detail": "S2",
+      "event": "step-done",
+      "seq": 67,
+      "task": "T-004",
+      "ts": "2026-11-13T11:54:25Z"
+    },
+    {
+      "detail": "accept run at 2026-11-13T11:54:25Z",
+      "event": "done",
+      "seq": 68,
+      "task": "T-004",
+      "ts": "2026-11-13T11:54:31Z"
+    },
+    {
+      "detail": "E-004 (decision)",
+      "event": "escalated",
+      "seq": 4,
+      "task": "T-017",
+      "ts": "2026-11-13T11:55:29Z"
+    },
+    {
+      "detail": "S2",
+      "event": "step-done",
+      "seq": 3,
+      "task": "T-005",
+      "ts": "2026-11-13T12:02:11Z"
+    },
+    {
+      "detail": "S3",
+      "event": "step-done",
+      "seq": 4,
+      "task": "T-005",
+      "ts": "2026-11-13T12:02:11Z"
+    },
+    {
+      "detail": "accept run at 2026-11-13T12:02:32Z",
+      "event": "done",
+      "seq": 5,
+      "task": "T-005",
+      "ts": "2026-11-13T12:02:41Z"
+    },
+    {
+      "detail": "lane 2",
+      "event": "lane-merged",
+      "seq": 75,
+      "task": null,
+      "ts": "2026-11-13T12:49:23Z"
+    },
+    {
+      "detail": "restored to in-progress",
+      "event": "unblocked",
+      "seq": 5,
+      "task": "T-017",
+      "ts": "2026-11-13T12:52:02Z"
+    },
+    {
+      "detail": "decision E-004 recorded",
+      "event": "note",
+      "seq": 6,
+      "task": "T-017",
+      "ts": "2026-11-13T12:52:02Z"
+    },
+    {
+      "detail": "S3: design approved as E-004 option B; escalation decided 2026-11-13T12:52Z",
+      "event": "step-done",
+      "seq": 7,
+      "task": "T-017",
+      "ts": "2026-11-13T15:24:51Z"
+    },
+    {
+      "detail": "from S4",
+      "event": "resumed",
+      "seq": 8,
+      "task": "T-017",
+      "ts": "2026-11-13T15:25:01Z"
+    },
+    {
+      "detail": "cycle 1",
+      "event": "review-opened",
+      "seq": 76,
+      "task": "T-005",
+      "ts": "2026-11-13T15:30:38Z"
+    },
+    {
+      "detail": "accepted (cycle 1, 0 findings)",
+      "event": "review-verdict",
+      "seq": 77,
+      "task": "T-005",
+      "ts": "2026-11-13T15:30:38Z"
+    },
+    {
+      "detail": "dependencies satisfied",
+      "event": "ready",
+      "seq": 78,
+      "task": "T-006",
+      "ts": "2026-11-13T15:30:38Z"
+    },
+    {
+      "detail": "S4: wf-loop.sh + keep-continuing.md + 32 fake-claude tests; shellcheck/ruff/pytest clean; commit cdb9bc0",
+      "event": "step-done",
+      "seq": 9,
+      "task": "T-017",
+      "ts": "2026-11-13T15:40:46Z"
+    },
+    {
+      "detail": "S5: --dry-run added; 37 tests pass; fixtures only",
+      "event": "step-done",
+      "seq": 10,
+      "task": "T-017",
+      "ts": "2026-11-13T15:41:59Z"
+    },
+    {
+      "detail": "accept run at 2026-11-13T15:42:35Z",
+      "event": "done",
+      "seq": 11,
+      "task": "T-017",
+      "ts": "2026-11-13T15:43:40Z"
+    },
+    {
+      "detail": "lane 3",
+      "event": "lane-merged",
+      "seq": 91,
+      "task": null,
+      "ts": "2026-11-13T15:49:48Z"
+    },
+    {
+      "detail": "lane 1, pid 1574040",
+      "event": "claimed",
+      "seq": 92,
+      "task": "T-006",
+      "ts": "2026-11-13T15:50:53Z"
+    },
+    {
+      "detail": "lane 1",
+      "event": "started",
+      "seq": 93,
+      "task": "T-006",
+      "ts": "2026-11-13T15:50:53Z"
+    },
+    {
+      "detail": "S1",
+      "event": "step-done",
+      "seq": 94,
+      "task": "T-006",
+      "ts": "2026-11-13T15:56:18Z"
+    },
+    {
+      "detail": "S2",
+      "event": "step-done",
+      "seq": 95,
+      "task": "T-006",
+      "ts": "2026-11-13T15:58:46Z"
+    },
+    {
+      "detail": "accept run at 2026-11-13T15:58:33Z",
+      "event": "done",
+      "seq": 96,
+      "task": "T-006",
+      "ts": "2026-11-13T15:58:46Z"
+    },
+    {
+      "detail": "cycle 1",
+      "event": "review-opened",
+      "seq": 97,
+      "task": "T-017",
+      "ts": "2026-11-13T16:02:57Z"
+    },
+    {
+      "detail": "changes-requested (cycle 1, 5 findings)",
+      "event": "review-verdict",
+      "seq": 98,
+      "task": "T-017",
+      "ts": "2026-11-13T16:02:57Z"
+    },
+    {
+      "detail": "card changed; re-acknowledgement required",
+      "event": "plan-changed",
+      "seq": 99,
+      "task": "T-007",
+      "ts": "2026-11-13T16:16:35Z"
+    },
+    {
+      "detail": "card changed; re-acknowledgement required",
+      "event": "plan-changed",
+      "seq": 100,
+      "task": "T-013",
+      "ts": "2026-11-13T16:16:35Z"
+    },
+    {
+      "detail": "new card in amended plan",
+      "event": "plan-added",
+      "seq": 101,
+      "task": "T-019",
+      "ts": "2026-11-13T16:16:35Z"
+    },
+    {
+      "detail": "sha256 6445a4e78029\u2026",
+      "event": "plan-amended",
+      "seq": 102,
+      "task": null,
+      "ts": "2026-11-13T16:16:35Z"
+    },
+    {
+      "detail": "dependencies satisfied",
+      "event": "ready",
+      "seq": 103,
+      "task": "T-019",
+      "ts": "2026-11-13T16:16:35Z"
+    },
+    {
+      "detail": "lane 1, pid 1876313",
+      "event": "claimed",
+      "seq": 104,
+      "task": "T-019",
+      "ts": "2026-11-13T17:44:12Z"
+    },
+    {
+      "detail": "lane 1",
+      "event": "started",
+      "seq": 105,
+      "task": "T-019",
+      "ts": "2026-11-13T17:44:12Z"
+    },
+    {
+      "detail": "disposition F-1: escalate",
+      "event": "note",
+      "seq": 106,
+      "task": "T-017",
+      "ts": "2026-11-13T17:45:54Z"
+    },
+    {
+      "detail": "disposition F-2: accept",
+      "event": "note",
+      "seq": 107,
+      "task": "T-017",
+      "ts": "2026-11-13T17:45:55Z"
+    },
+    {
+      "detail": "disposition F-3: accept",
+      "event": "note",
+      "seq": 108,
+      "task": "T-017",
+      "ts": "2026-11-13T17:45:56Z"
+    },
+    {
+      "detail": "disposition F-4: accept",
+      "event": "note",
+      "seq": 109,
+      "task": "T-017",
+      "ts": "2026-11-13T17:45:58Z"
+    },
+    {
+      "detail": "disposition F-5: accept",
+      "event": "note",
+      "seq": 110,
+      "task": "T-017",
+      "ts": "2026-11-13T17:45:59Z"
+    },
+    {
+      "detail": "E-006 (decision)",
+      "event": "escalated",
+      "seq": 111,
+      "task": "T-017",
+      "ts": "2026-11-13T17:52:12Z"
+    },
+    {
+      "detail": "S1: Stage 4 command list with pass signatures and stop rules (runbook sections 1-7, R1-R4)",
+      "event": "step-done",
+      "seq": 112,
+      "task": "T-019",
+      "ts": "2026-11-13T17:56:54Z"
+    },
+    {
+      "detail": "S2: P1-P7 PASS, P8 FAIL: T-017 uncommitted loop-design/loop-states edits dirty in main checkout",
+      "event": "step-done",
+      "seq": 113,
+      "task": "T-019",
+      "ts": "2026-11-13T17:56:54Z"
+    },
+    {
+      "detail": "S3: Result: all checks PASS (P8 re-check after lane-3 commits); acceptance run 1: 3/3 + A4 judgement, 0 failures; progress-log entry appended",
+      "event": "step-done",
+      "seq": 114,
+      "task": "T-019",
+      "ts": "2026-11-13T18:02:37Z"
+    },
+    {
+      "detail": "accept run at 2026-11-13T18:00:59Z",
+      "event": "done",
+      "seq": 115,
+      "task": "T-019",
+      "ts": "2026-11-13T18:02:38Z"
+    },
+    {
+      "detail": "cycle 1",
+      "event": "review-opened",
+      "seq": 116,
+      "task": "T-019",
+      "ts": "2026-11-13T18:19:16Z"
+    },
+    {
+      "detail": "changes-requested (cycle 1, 2 findings)",
+      "event": "review-verdict",
+      "seq": 117,
+      "task": "T-019",
+      "ts": "2026-11-13T18:19:24Z"
+    },
+    {
+      "detail": "restored to changes-requested",
+      "event": "unblocked",
+      "seq": 118,
+      "task": "T-017",
+      "ts": "2026-11-13T18:21:00Z"
+    },
+    {
+      "detail": "decision E-006 recorded",
+      "event": "note",
+      "seq": 119,
+      "task": "T-017",
+      "ts": "2026-11-13T18:21:00Z"
+    },
+    {
+      "detail": "cycle 2",
+      "event": "review-opened",
+      "seq": 120,
+      "task": "T-017",
+      "ts": "2026-11-13T18:28:49Z"
+    },
+    {
+      "detail": "disposition F-1: accept",
+      "event": "note",
+      "seq": 121,
+      "task": "T-019",
+      "ts": "2026-11-13T18:31:18Z"
+    },
+    {
+      "detail": "disposition F-2: escalate",
+      "event": "note",
+      "seq": 122,
+      "task": "T-019",
+      "ts": "2026-11-13T18:31:43Z"
+    },
+    {
+      "detail": "E-007 (decision)",
+      "event": "escalated",
+      "seq": 123,
+      "task": "T-019",
+      "ts": "2026-11-13T18:34:58Z"
+    },
+    {
+      "detail": "restored to changes-requested",
+      "event": "unblocked",
+      "seq": 124,
+      "task": "T-019",
+      "ts": "2026-11-13T18:42:53Z"
+    },
+    {
+      "detail": "decision E-007 recorded",
+      "event": "note",
+      "seq": 125,
+      "task": "T-019",
+      "ts": "2026-11-13T18:42:53Z"
+    },
+    {
+      "detail": "lane 1",
+      "event": "started",
+      "seq": 126,
+      "task": "T-019",
+      "ts": "2026-11-13T18:50:27Z"
+    },
+    {
+      "detail": "accept run at 2026-11-13T18:50:27Z",
+      "event": "done",
+      "seq": 127,
+      "task": "T-019",
+      "ts": "2026-11-13T18:50:58Z"
+    },
+    {
+      "detail": "cycle 2",
+      "event": "review-opened",
+      "seq": 128,
+      "task": "T-019",
+      "ts": "2026-11-13T19:10:11Z"
+    },
+    {
+      "detail": "accepted (cycle 2, 0 findings)",
+      "event": "review-verdict",
+      "seq": 129,
+      "task": "T-019",
+      "ts": "2026-11-13T19:10:11Z"
+    },
+    {
+      "detail": "dependencies satisfied",
+      "event": "ready",
+      "seq": 130,
+      "task": "T-007",
+      "ts": "2026-11-13T19:10:11Z"
+    },
+    {
+      "detail": "accepted (cycle 2, 2 findings)",
+      "event": "review-verdict",
+      "seq": 131,
+      "task": "T-017",
+      "ts": "2026-11-13T22:28:01Z"
+    },
+    {
+      "detail": "lane 1, pid 1925611",
+      "event": "claimed",
+      "seq": 132,
+      "task": "T-007",
+      "ts": "2026-11-13T22:37:15Z"
+    },
+    {
+      "detail": "lane 1",
+      "event": "started",
+      "seq": 133,
+      "task": "T-007",
+      "ts": "2026-11-13T22:37:15Z"
+    },
+    {
+      "detail": "Stage 4, the headline reproducibility run (about 45 minutes). It must be 13 November or later. Close every app except one terminal running Claude Code (scripts/check-quiet.sh must exit 0), keep the PC on mains power, and don't use it until this session says it has finished; following along on your phone is fine. Reply go.",
+      "event": "gate-wait",
+      "seq": 134,
+      "task": "T-007",
+      "ts": "2026-11-13T22:39:28Z"
+    },
+    {
+      "detail": "Zack said go",
+      "event": "gate-release",
+      "seq": 135,
+      "task": "T-007",
+      "ts": "2026-11-13T22:40:34Z"
+    },
+    {
+      "detail": "S1",
+      "event": "step-done",
+      "seq": 136,
+      "task": "T-007",
+      "ts": "2026-11-13T22:42:34Z"
+    },
+    {
+      "detail": "S2",
+      "event": "step-done",
+      "seq": 137,
+      "task": "T-007",
+      "ts": "2026-11-13T23:23:28Z"
+    },
+    {
+      "detail": "S3",
+      "event": "step-done",
+      "seq": 138,
+      "task": "T-007",
+      "ts": "2026-11-13T23:23:28Z"
+    },
+    {
+      "detail": "S4",
+      "event": "step-done",
+      "seq": 139,
+      "task": "T-007",
+      "ts": "2026-11-13T23:40:59Z"
+    },
+    {
+      "detail": "S5",
+      "event": "step-done",
+      "seq": 140,
+      "task": "T-007",
+      "ts": "2026-11-13T23:43:53Z"
+    },
+    {
+      "detail": "accept run at 2026-11-13T23:42:29Z",
+      "event": "done",
+      "seq": 141,
+      "task": "T-007",
+      "ts": "2026-11-13T23:43:53Z"
+    },
+    {
+      "detail": "cycle 1",
+      "event": "review-opened",
+      "seq": 142,
+      "task": "T-007",
+      "ts": "2026-11-13T23:57:44Z"
+    },
+    {
+      "detail": "accepted (cycle 1, 4 findings)",
+      "event": "review-verdict",
+      "seq": 143,
+      "task": "T-007",
+      "ts": "2026-11-13T23:57:44Z"
+    },
+    {
+      "detail": "dependencies satisfied",
+      "event": "ready",
+      "seq": 144,
+      "task": "T-008",
+      "ts": "2026-11-13T23:57:44Z"
+    },
+    {
+      "detail": "lane 1, pid 1925611",
+      "event": "claimed",
+      "seq": 145,
+      "task": "T-008",
+      "ts": "2026-11-14T00:06:33Z"
+    },
+    {
+      "detail": "lane 1",
+      "event": "started",
+      "seq": 146,
+      "task": "T-008",
+      "ts": "2026-11-14T00:06:33Z"
+    },
+    {
+      "detail": "S1",
+      "event": "step-done",
+      "seq": 147,
+      "task": "T-008",
+      "ts": "2026-11-14T00:13:07Z"
+    },
+    {
+      "detail": "S2",
+      "event": "step-done",
+      "seq": 148,
+      "task": "T-008",
+      "ts": "2026-11-14T00:14:08Z"
+    },
+    {
+      "detail": "E-008 (decision)",
+      "event": "escalated",
+      "seq": 149,
+      "task": "T-008",
+      "ts": "2026-11-14T00:17:16Z"
+    },
+    {
+      "detail": "card changed; re-acknowledgement required",
+      "event": "plan-changed",
+      "seq": 150,
+      "task": "T-008",
+      "ts": "2026-11-14T11:14:40Z"
+    },
+    {
+      "detail": "new card in amended plan",
+      "event": "plan-added",
+      "seq": 151,
+      "task": "T-020",
+      "ts": "2026-11-14T11:14:40Z"
+    },
+    {
+      "detail": "new card in amended plan",
+      "event": "plan-added",
+      "seq": 152,
+      "task": "T-021",
+      "ts": "2026-11-14T11:14:40Z"
+    },
+    {
+      "detail": "sha256 c8fde913a305\u2026",
+      "event": "plan-amended",
+      "seq": 153,
+      "task": null,
+      "ts": "2026-11-14T11:14:40Z"
+    },
+    {
+      "detail": "dependencies satisfied",
+      "event": "ready",
+      "seq": 154,
+      "task": "T-020",
+      "ts": "2026-11-14T11:14:40Z"
+    },
+    {
+      "detail": "lane 1, pid 3828",
+      "event": "claimed",
+      "seq": 155,
+      "task": "T-020",
+      "ts": "2026-11-14T11:18:58Z"
+    },
+    {
+      "detail": "lane 1",
+      "event": "started",
+      "seq": 156,
+      "task": "T-020",
+      "ts": "2026-11-14T11:19:02Z"
+    },
+    {
+      "detail": "S1",
+      "event": "step-done",
+      "seq": 157,
+      "task": "T-020",
+      "ts": "2026-11-14T11:28:51Z"
+    },
+    {
+      "detail": "PCIe link repair (E-008). Stage 4 run 1 ran with the GPU link at Gen3 x8 instead of Gen4 x8. Before you reply go, do the checks in the escalation reply on your machine: a full power-off (not a reboot) with the mains lead out for 30 seconds, check that the GPU is seated, and in the BIOS set the GPU slot's PCIe speed to Gen4 rather than Auto. Then boot, close every app except one terminal running Claude Code, keep the PC on mains power, and reply go. This session will test the link under load; it is about 10 minutes.",
+      "event": "gate-wait",
+      "seq": 158,
+      "task": "T-020",
+      "ts": "2026-11-14T11:28:57Z"
+    },
+    {
+      "detail": "Zack said go",
+      "event": "gate-release",
+      "seq": 159,
+      "task": "T-020",
+      "ts": "2026-11-14T11:46:10Z"
+    },
+    {
+      "detail": "S2",
+      "event": "step-done",
+      "seq": 160,
+      "task": "T-020",
+      "ts": "2026-11-14T11:50:15Z"
+    },
+    {
+      "detail": "S3",
+      "event": "step-done",
+      "seq": 161,
+      "task": "T-020",
+      "ts": "2026-11-14T11:55:59Z"
+    },
+    {
+      "detail": "S4",
+      "event": "step-done",
+      "seq": 162,
+      "task": "T-020",
+      "ts": "2026-11-14T11:55:59Z"
+    },
+    {
+      "detail": "S5",
+      "event": "step-done",
+      "seq": 163,
+      "task": "T-020",
+      "ts": "2026-11-14T11:58:49Z"
+    },
+    {
+      "detail": "accept run at 2026-11-14T11:58:05Z",
+      "event": "done",
+      "seq": 164,
+      "task": "T-020",
+      "ts": "2026-11-14T11:58:49Z"
+    },
+    {
+      "detail": "dependencies satisfied",
+      "event": "ready",
+      "seq": 165,
+      "task": "T-021",
+      "ts": "2026-11-14T11:58:49Z"
+    },
+    {
+      "detail": "lane 1, pid 3351",
+      "event": "claimed",
+      "seq": 166,
+      "task": "T-021",
+      "ts": "2026-11-14T12:54:52Z"
+    },
+    {
+      "detail": "lane 1",
+      "event": "started",
+      "seq": 167,
+      "task": "T-021",
+      "ts": "2026-11-14T12:54:52Z"
+    },
+    {
+      "detail": "Stage 4, run 2 (about 45 minutes; the first run was invalid because of the PCIe link). Close every app except one terminal running Claude Code (scripts/check-quiet.sh must exit 0), keep the PC on mains power, and don't use it until this session says it has finished; following along on your phone is fine. Reply go.",
+      "event": "gate-wait",
+      "seq": 168,
+      "task": "T-021",
+      "ts": "2026-11-14T12:57:43Z"
+    },
+    {
+      "detail": "Zack said go",
+      "event": "gate-release",
+      "seq": 169,
+      "task": "T-021",
+      "ts": "2026-11-14T14:28:38Z"
+    },
+    {
+      "detail": "S1",
+      "event": "step-done",
+      "seq": 170,
+      "task": "T-021",
+      "ts": "2026-11-14T14:31:33Z"
+    },
+    {
+      "detail": "S2",
+      "event": "step-done",
+      "seq": 171,
+      "task": "T-021",
+      "ts": "2026-11-14T14:58:43Z"
+    },
+    {
+      "detail": "S3",
+      "event": "step-done",
+      "seq": 172,
+      "task": "T-021",
+      "ts": "2026-11-14T14:59:16Z"
+    },
+    {
+      "detail": "S4",
+      "event": "step-done",
+      "seq": 173,
+      "task": "T-021",
+      "ts": "2026-11-14T15:11:50Z"
+    },
+    {
+      "detail": "S5",
+      "event": "step-done",
+      "seq": 174,
+      "task": "T-021",
+      "ts": "2026-11-14T15:12:32Z"
+    },
+    {
+      "detail": "accept run at 2026-11-14T15:12:32Z",
+      "event": "done",
+      "seq": 175,
+      "task": "T-021",
+      "ts": "2026-11-14T15:13:42Z"
+    },
+    {
+      "detail": "cycle 1",
+      "event": "review-opened",
+      "seq": 176,
+      "task": "T-021",
+      "ts": "2026-11-14T15:29:42Z"
+    },
+    {
+      "detail": "blocked-decision (cycle 1, 6 findings)",
+      "event": "review-verdict",
+      "seq": 177,
+      "task": "T-021",
+      "ts": "2026-11-14T15:29:42Z"
+    },
+    {
+      "detail": "new card in amended plan",
+      "event": "plan-added",
+      "seq": 178,
+      "task": "T-018",
+      "ts": "2026-11-14T15:58:43Z"
+    },
+    {
+      "detail": "sha256 fed612c8820c\u2026",
+      "event": "plan-amended",
+      "seq": 179,
+      "task": null,
+      "ts": "2026-11-14T15:58:43Z"
+    },
+    {
+      "detail": "dependencies satisfied",
+      "event": "ready",
+      "seq": 180,
+      "task": "T-018",
+      "ts": "2026-11-14T15:58:43Z"
     }
   ],
   "kit_version": "0.1.0",
@@ -455,9 +1337,69 @@
     "P4"
   ],
   "plan_file": "PLAN.md",
-  "plan_sha256": "c6d7539068538f1b0b82714cbe1369159b0549403f7b91986ee8789a9bb09e46",
-  "review_cycles": {},
-  "review_dispositions": {},
+  "plan_sha256": "fed612c8820c8a182df0e181b7cc345db47629e65f2dfda2337b71a59d3114d5",
+  "review_cycles": {
+    "T-005": 1,
+    "T-007": 1,
+    "T-017": 2,
+    "T-019": 2,
+    "T-021": 1
+  },
+  "review_dispositions": {
+    "T-017": [
+      {
+        "action_taken": "escalate",
+        "cycle": 1,
+        "finding": "F-1",
+        "reason": "MAJOR DECIDE: verified against scripts/_wf.py:1891-1892 (review-open accepts only done/changes-requested) and TRANSITIONS['ready'] (_wf.py:105, no review state). The pre-review of a ready pre+post task promised by card S3 / design \u00a73 step 4 / \u00a76 cannot complete under the frozen kit; T-007 (ready, pre+post) is next. Per shared rule 7 and the review protocol, DECIDE findings are never resolved inline: escalating to the planning chat with options (a) interim protocol, (b) post-T-008 kit change, (c) explicit-stop pre branch.",
+        "severity": "MAJOR"
+      },
+      {
+        "action_taken": "accept",
+        "cycle": 1,
+        "finding": "F-2",
+        "reason": "MINOR FIX-DOC, verified: docs/recon/loop-states.md:372 is the only committed file containing the account home path (git grep). D8 violation; fixing at source by replacing the home path with ~ and re-running wf.sh accept T-017 to refresh the evidence hash. No history rewrite (D8).",
+        "severity": "MINOR"
+      },
+      {
+        "action_taken": "accept",
+        "cycle": 1,
+        "finding": "F-3",
+        "reason": "MINOR FIX-DOC, verified: loop-design.md \u00a74 (lines 132-146) still presents the stdin-yes lane answer (option A) and \u00a78 question 1 still recommends A, while E-004 chose option B. Adding a decision addendum covering E-004 option B, the E-005 guard exception and the F-1 gap, with superseded-markers on \u00a74/\u00a78 so the named evidence matches the shipped code.",
+        "severity": "MINOR"
+      },
+      {
+        "action_taken": "accept",
+        "cycle": 1,
+        "finding": "F-4",
+        "reason": "NOTE FIX-DOC, verified at .claude/commands/keep-continuing.md:23. Taking the documentation option (no code change; scripts frozen until T-008): kill <pid> stops only the loop; an in-flight claude session (child of timeout) runs to completion and still obeys the kit protocol. Process-group kill not adopted: would change wf-loop.sh and the setsid/$! pid semantics were never tested live.",
+        "severity": "NOTE"
+      },
+      {
+        "action_taken": "accept",
+        "cycle": 1,
+        "finding": "F-5",
+        "reason": "NOTE FIX-DOC, verified at scripts/wf-loop.sh:254-265: the exhausted-review stop sits after address/inflight/post/ready/pre in the decision priority, so unrelated ready work or due reviews proceed first. Documenting this ordering in loop-design.md \u00a75 (consistent with the card's stop list; no behaviour change).",
+        "severity": "NOTE"
+      }
+    ],
+    "T-019": [
+      {
+        "action_taken": "accept",
+        "cycle": 1,
+        "finding": "F-1",
+        "reason": "MINOR FIX-DOC, verified from raw records: data/raw/stage3-64K/cells/tuned-64K-f9b81a84.json argv has 33 items (stock-64K-22dc1178.json has 12, matching the doc's stock count). Fixed docs/recon/stage4-preflight.md:141 '(28 items)' -> '(33 items)'; the flag enumeration itself was already complete and correct. Number checker re-run: exit 0, '33 numbers verified, 32 sources'. Acceptance re-run after the fix.",
+        "severity": "MINOR"
+      },
+      {
+        "action_taken": "escalate",
+        "cycle": 1,
+        "finding": "F-2",
+        "reason": "MINOR DECIDE: card-interpretation question reserved to the planning chat \u2014 whether a transient P8 FAIL, resolved mid-session by the owning lane's own legitimate commits (bc8e0c3/1ba3bf9) before any escalation was filed, triggers card S3's 'if any check FAILs, escalate once' clause. Verified the review's facts: the FAIL was real at de6d586, the re-check passed, ca1d5ad touches only T-019's own files, and \u00a72.9 documents the reading that the clause attaches to the final Result. DECIDE findings are never resolved inline; escalating with options (a) ratify \u00a72.9's reading (recommended, optional one-line precedent in docs/decisions.md) or (b) require a retroactive escalation brief. No re-measurement or code change implied.",
+        "severity": "MINOR"
+      }
+    ]
+  },
   "tasks": {
     "T-001": {
       "card_sha256": "809b9affd5d3b48476523ab4ae1be70a45cb8deebc10f4be46623e79e79aae3a",
@@ -539,6 +1481,7 @@
     },
     "T-004": {
       "card_sha256": "4fa36e93467135a354c4a995d6f3ade27308de60189d083c2f9201aee37b370c",
+      "claimed_by_lane": 1,
       "depends_on": [
         "T-002",
         "T-003"
@@ -551,7 +1494,11 @@
       "resources": "light",
       "review": "none",
       "source": "plan",
-      "status": "ready",
+      "status": "done",
+      "steps_done": [
+        "S1",
+        "S2"
+      ],
       "title": "README draft"
     },
     "T-005": {
@@ -570,11 +1517,12 @@
       "resources": "light",
       "review": "post",
       "source": "plan",
-      "status": "ready",
+      "status": "accepted",
       "title": "Baseline report draft and number checker"
     },
     "T-006": {
       "card_sha256": "e52d8c8acfd4f668c7dcd94fc5284bd95be49f4cadd2f464c8076abd1493b89a",
+      "claimed_by_lane": 1,
       "depends_on": [
         "T-004",
         "T-005"
@@ -588,14 +1536,20 @@
       "resources": "light",
       "review": "none",
       "source": "plan",
-      "status": "todo",
+      "status": "done",
+      "steps_done": [
+        "S1",
+        "S2"
+      ],
       "title": "Write-up draft"
     },
     "T-007": {
-      "card_sha256": "b123a6d62fdefc85dd999ffdb49805e980f3e4f21f5bac9b38d5f6e21aa4abc0",
+      "card_sha256": "abff6d1cc8ccaf5c65e484ea5468cd8a289490fe21ef242a8bc4f9d1d929db51",
+      "claimed_by_lane": 1,
       "depends_on": [
         "T-002",
-        "T-003"
+        "T-003",
+        "T-019"
       ],
       "files_write": [
         "data/raw/",
@@ -605,28 +1559,38 @@
         "docs/decisions.md",
         "docs/progress-log.md"
       ],
+      "gate_message": "Stage 4, the headline reproducibility run (about 45 minutes). It must be 13 November or later. Close every app except one terminal running Claude Code (scripts/check-quiet.sh must exit 0), keep the PC on mains power, and don't use it until this session says it has finished; following along on your phone is fine. Reply go.",
       "lane": 1,
       "phase": "P2",
       "plan_changed": true,
       "resources": "exclusive-machine",
-      "review": "pre+post",
+      "review": "post",
       "source": "plan",
-      "status": "ready",
+      "status": "accepted",
+      "steps_done": [
+        "S1",
+        "S2",
+        "S3",
+        "S4",
+        "S5"
+      ],
       "title": "Stage 4 session"
     },
     "T-008": {
-      "card_sha256": "70a7b0a3eb459f8ebb596da46992443ede07b0908e47729d828365337eac0f44",
+      "card_sha256": "c394c8b4667740a65b7b371dd7bbfe0ddfcb431d750ffd71f57223a1ce526d50",
       "depends_on": [
-        "T-007"
+        "T-021"
       ],
       "files_write": [
         "data/analysis/stage4/",
+        "data/analysis/stage4-run1-superseded/",
         "reports/stage4/",
         "docs/decisions.md",
         "docs/progress-log.md"
       ],
       "lane": 1,
       "phase": "P2",
+      "plan_changed": true,
       "resources": "light",
       "review": "post",
       "source": "plan",
@@ -715,7 +1679,7 @@
       "title": "README walkthrough from a clean shell"
     },
     "T-013": {
-      "card_sha256": "bbad6ddeb117b6972e0d1bb3ce18f813e5168013c881a3ad5581705b4513b501",
+      "card_sha256": "080bad60134f7a5468e9f555ae656e6cd423ef05f6436190461ce6ad4e8a184d",
       "depends_on": [
         "T-010",
         "T-011",
@@ -728,6 +1692,7 @@
       ],
       "lane": 1,
       "phase": "P4",
+      "plan_changed": true,
       "resources": "light",
       "review": "post",
       "source": "plan",
@@ -788,6 +1753,8 @@
       "title": "Publish v0.1.0"
     },
     "T-017": {
+      "blocked_from": null,
+      "blocked_reason": null,
       "card_sha256": "9fd6ea8fce0fc308a3845667e930297a53db302322b68517902816999645a2a0",
       "depends_on": [
         "T-003"
@@ -806,8 +1773,111 @@
       "resources": "light",
       "review": "post",
       "source": "plan",
-      "status": "ready",
+      "status": "accepted",
       "title": "Unattended loop (wf-loop.sh)"
+    },
+    "T-018": {
+      "card_sha256": "cb611e62b5fa39055e2bf57217b7cf953eaa96b8b4e605eaecbc8ae82a2330f7",
+      "depends_on": [],
+      "files_write": [
+        "scripts/_wf.py",
+        "scripts/wf.sh",
+        "scripts/wf-decision.sh",
+        "scripts/wf-escalate.sh",
+        "tests/test_wf_unblock.py",
+        "docs/recon/T-018-kit-repair.md",
+        "docs/decisions.md",
+        "docs/progress-log.md"
+      ],
+      "lane": 2,
+      "phase": "P2",
+      "resources": "light",
+      "review": "post",
+      "source": "plan",
+      "status": "ready",
+      "title": "Kit repair: leave blocked-decision after a review verdict"
+    },
+    "T-019": {
+      "blocked_from": null,
+      "blocked_reason": null,
+      "card_sha256": "9c7f0afd8fa7cfd28b26c8634d4b5d2d27d938e360d69e6ee8e80b0c31b7305c",
+      "claimed_by_lane": 1,
+      "depends_on": [
+        "T-002",
+        "T-003"
+      ],
+      "files_write": [
+        "docs/recon/stage4-preflight.md",
+        "docs/progress-log.md"
+      ],
+      "lane": 1,
+      "phase": "P2",
+      "resources": "light",
+      "review": "post",
+      "source": "plan",
+      "status": "accepted",
+      "steps_done": [
+        "S1",
+        "S2",
+        "S3"
+      ],
+      "title": "Stage 4 pre-flight (no GPU)"
+    },
+    "T-020": {
+      "card_sha256": "0a56fb179a1d19cfffc0c33a54369a9ff84f206d3d50949126a754fd128fcbc3",
+      "claimed_by_lane": 1,
+      "depends_on": [
+        "T-007"
+      ],
+      "files_write": [
+        "docs/recon/pcie-link.md",
+        "docs/decisions.md",
+        "docs/progress-log.md"
+      ],
+      "gate_message": "PCIe link repair (E-008). Stage 4 run 1 ran with the GPU link at Gen3 x8 instead of Gen4 x8. Before you reply go, do the checks in the escalation reply on your machine: a full power-off (not a reboot) with the mains lead out for 30 seconds, check that the GPU is seated, and in the BIOS set the GPU slot's PCIe speed to Gen4 rather than Auto. Then boot, close every app except one terminal running Claude Code, keep the PC on mains power, and reply go. This session will test the link under load; it is about 10 minutes.",
+      "lane": 1,
+      "phase": "P2",
+      "resources": "exclusive-machine",
+      "review": "none",
+      "source": "plan",
+      "status": "done",
+      "steps_done": [
+        "S1",
+        "S2",
+        "S3",
+        "S4",
+        "S5"
+      ],
+      "title": "Restore and verify the PCIe Gen4 link (hands-on)"
+    },
+    "T-021": {
+      "card_sha256": "32c807e3f2c0381ee1ce3b0e9c5dd54ae7d84315292e60e1bacf7976eeb60d8a",
+      "claimed_by_lane": 1,
+      "depends_on": [
+        "T-020"
+      ],
+      "files_write": [
+        "data/raw/",
+        "docs/stage4-run2-conditions.md",
+        "docs/recon/stage4-session-run2.txt",
+        "docs/decisions.md",
+        "docs/progress-log.md"
+      ],
+      "gate_message": "Stage 4, run 2 (about 45 minutes; the first run was invalid because of the PCIe link). Close every app except one terminal running Claude Code (scripts/check-quiet.sh must exit 0), keep the PC on mains power, and don't use it until this session says it has finished; following along on your phone is fine. Reply go.",
+      "lane": 1,
+      "phase": "P2",
+      "resources": "exclusive-machine",
+      "review": "post",
+      "source": "plan",
+      "status": "blocked-decision",
+      "steps_done": [
+        "S1",
+        "S2",
+        "S3",
+        "S4",
+        "S5"
+      ],
+      "title": "Stage 4 session, run 2"
     }
   },
   "title": "Step 0, remaining work: Stage 4, release v0.1.0, completion report",
