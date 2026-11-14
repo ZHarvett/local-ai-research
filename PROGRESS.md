@@ -16,8 +16,8 @@ files; change them through the scripts only.
 | T-004 | README draft | done | 1 | none |
 | T-005 | Baseline report draft and number checker | accepted (judgement) | 2 | post |
 | T-006 | Write-up draft | done | 1 | none |
-| T-007 | Stage 4 session | done ⚠ re-acknowledge (judgement) | 1 | post |
-| T-008 | S2 check and Stage 4 analysis | todo | 1 | post |
+| T-007 | Stage 4 session | accepted ⚠ re-acknowledge (judgement) | 1 | post |
+| T-008 | S2 check and Stage 4 analysis | ready | 1 | post |
 | T-009 | Post-Stage-4 code fixes | todo | 1 | none |
 | T-010 | Final README, report, write-up and changelog | todo | 1 | post |
 | T-011 | Plan v1.9, upstream drafts, methodology | todo | 2 | none |
@@ -31,7 +31,7 @@ files; change them through the scripts only.
 
 ## READY (grouped by lane)
 
-_(none)_
+- lane 1: **T-008** S2 check and Stage 4 analysis
 
 ## Escalation queue
 
@@ -49,8 +49,8 @@ _(none)_
 
 ## Last events
 
-- 2026-11-13T23:23:28Z step-done T-007 — S2
-- 2026-11-13T23:23:28Z step-done T-007 — S3
-- 2026-11-13T23:40:59Z step-done T-007 — S4
 - 2026-11-13T23:43:53Z step-done T-007 — S5
 - 2026-11-13T23:43:53Z done T-007 — accept run at 2026-11-13T23:42:29Z
+- 2026-11-13T23:57:44Z review-opened T-007 — cycle 1
+- 2026-11-13T23:57:44Z review-verdict T-007 — accepted (cycle 1, 4 findings)
+- 2026-11-13T23:57:44Z ready T-008 — dependencies satisfied

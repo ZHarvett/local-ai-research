@@ -1,5 +1,5 @@
 {
-  "checksum": "77d61be2bd232561e33b88513b072232bd312faa7541e2b5e715cc53ebf995b6",
+  "checksum": "f691ca4e0682c8502a26e3ae8ecbfaf641177668593f238cf568808b316ee06d",
   "created_utc": "2026-11-12T22:25:04Z",
   "escalations": {
     "E-001": {
@@ -1046,6 +1046,27 @@
       "seq": 141,
       "task": "T-007",
       "ts": "2026-11-13T23:43:53Z"
+    },
+    {
+      "detail": "cycle 1",
+      "event": "review-opened",
+      "seq": 142,
+      "task": "T-007",
+      "ts": "2026-11-13T23:57:44Z"
+    },
+    {
+      "detail": "accepted (cycle 1, 4 findings)",
+      "event": "review-verdict",
+      "seq": 143,
+      "task": "T-007",
+      "ts": "2026-11-13T23:57:44Z"
+    },
+    {
+      "detail": "dependencies satisfied",
+      "event": "ready",
+      "seq": 144,
+      "task": "T-008",
+      "ts": "2026-11-13T23:57:44Z"
     }
   ],
   "kit_version": "0.1.0",
@@ -1060,6 +1081,7 @@
   "plan_sha256": "6445a4e780291bbfd5e4249821ffac20311286fd9489fee2454d0847f8d8b79c",
   "review_cycles": {
     "T-005": 1,
+    "T-007": 1,
     "T-017": 2,
     "T-019": 2
   },
@@ -1284,7 +1306,7 @@
       "resources": "exclusive-machine",
       "review": "post",
       "source": "plan",
-      "status": "done",
+      "status": "accepted",
       "steps_done": [
         "S1",
         "S2",
@@ -1310,7 +1332,7 @@
       "resources": "light",
       "review": "post",
       "source": "plan",
-      "status": "todo",
+      "status": "ready",
       "title": "S2 check and Stage 4 analysis"
     },
     "T-009": {
