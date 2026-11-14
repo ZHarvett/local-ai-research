@@ -1,5 +1,5 @@
 {
-  "checksum": "16f2f1c3cc25c32569468e02bb3488c2b19bfea6603cbfb737983bbc3c5df7ca",
+  "checksum": "43cd5007a79ec10dff110c1a75817910a24f1e1bc5b42f294d5dad3e0bf7550a",
   "created_utc": "2026-11-12T22:25:04Z",
   "escalations": {
     "E-001": {
@@ -67,6 +67,12 @@
     },
     "E-010": {
       "created_utc": "2026-11-14T20:59:43Z",
+      "status": "open",
+      "task": "T-009",
+      "type": "assumption-mismatch"
+    },
+    "E-011": {
+      "created_utc": "2026-11-14T22:06:38Z",
       "status": "open",
       "task": "T-009",
       "type": "assumption-mismatch"
@@ -1710,6 +1716,13 @@
       "seq": 233,
       "task": "T-009",
       "ts": "2026-11-14T22:01:12Z"
+    },
+    {
+      "detail": "E-011 (assumption-mismatch)",
+      "event": "escalated",
+      "seq": 234,
+      "task": "T-009",
+      "ts": "2026-11-14T22:06:39Z"
     }
   ],
   "kit_version": "0.1.0",
@@ -2035,6 +2048,8 @@
       "title": "S2 check and Stage 4 analysis"
     },
     "T-009": {
+      "blocked_from": "ready",
+      "blocked_reason": "escalation E-011",
       "card_sha256": "a1182b70a3c57ecb615edb3c5723ddc7c3c8225f15605e65c8959f560c14b6ee",
       "depends_on": [
         "T-008"
@@ -2054,7 +2069,7 @@
       "resources": "cpu-heavy",
       "review": "none",
       "source": "plan",
-      "status": "ready",
+      "status": "blocked-decision",
       "title": "Post-Stage-4 code fixes"
     },
     "T-010": {
