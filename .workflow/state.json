@@ -1,5 +1,5 @@
 {
-  "checksum": "d29e0afa4cb96626d1d6c5b9ead04fd3533b181e00c55120714d2ef235c452de",
+  "checksum": "edb2a8018a943f3be5d4e39f51651000161d080505597446612d7f4ed57e4f8e",
   "created_utc": "2026-11-12T22:25:04Z",
   "escalations": {
     "E-001": {
@@ -1144,6 +1144,62 @@
       "seq": 154,
       "task": "T-020",
       "ts": "2026-11-14T11:14:40Z"
+    },
+    {
+      "detail": "lane 1, pid 3828",
+      "event": "claimed",
+      "seq": 155,
+      "task": "T-020",
+      "ts": "2026-11-14T11:18:58Z"
+    },
+    {
+      "detail": "lane 1",
+      "event": "started",
+      "seq": 156,
+      "task": "T-020",
+      "ts": "2026-11-14T11:19:02Z"
+    },
+    {
+      "detail": "S1",
+      "event": "step-done",
+      "seq": 157,
+      "task": "T-020",
+      "ts": "2026-11-14T11:28:51Z"
+    },
+    {
+      "detail": "PCIe link repair (E-008). Stage 4 run 1 ran with the GPU link at Gen3 x8 instead of Gen4 x8. Before you reply go, do the checks in the escalation reply on your machine: a full power-off (not a reboot) with the mains lead out for 30 seconds, check that the GPU is seated, and in the BIOS set the GPU slot's PCIe speed to Gen4 rather than Auto. Then boot, close every app except one terminal running Claude Code, keep the PC on mains power, and reply go. This session will test the link under load; it is about 10 minutes.",
+      "event": "gate-wait",
+      "seq": 158,
+      "task": "T-020",
+      "ts": "2026-11-14T11:28:57Z"
+    },
+    {
+      "detail": "Zack said go",
+      "event": "gate-release",
+      "seq": 159,
+      "task": "T-020",
+      "ts": "2026-11-14T11:46:10Z"
+    },
+    {
+      "detail": "S2",
+      "event": "step-done",
+      "seq": 160,
+      "task": "T-020",
+      "ts": "2026-11-14T11:50:15Z"
+    },
+    {
+      "detail": "S3",
+      "event": "step-done",
+      "seq": 161,
+      "task": "T-020",
+      "ts": "2026-11-14T11:55:59Z"
+    },
+    {
+      "detail": "S4",
+      "event": "step-done",
+      "seq": 162,
+      "task": "T-020",
+      "ts": "2026-11-14T11:55:59Z"
     }
   ],
   "kit_version": "0.1.0",
@@ -1621,6 +1677,7 @@
     },
     "T-020": {
       "card_sha256": "0a56fb179a1d19cfffc0c33a54369a9ff84f206d3d50949126a754fd128fcbc3",
+      "claimed_by_lane": 1,
       "depends_on": [
         "T-007"
       ],
@@ -1629,12 +1686,19 @@
         "docs/decisions.md",
         "docs/progress-log.md"
       ],
+      "gate_message": "PCIe link repair (E-008). Stage 4 run 1 ran with the GPU link at Gen3 x8 instead of Gen4 x8. Before you reply go, do the checks in the escalation reply on your machine: a full power-off (not a reboot) with the mains lead out for 30 seconds, check that the GPU is seated, and in the BIOS set the GPU slot's PCIe speed to Gen4 rather than Auto. Then boot, close every app except one terminal running Claude Code, keep the PC on mains power, and reply go. This session will test the link under load; it is about 10 minutes.",
       "lane": 1,
       "phase": "P2",
       "resources": "exclusive-machine",
       "review": "none",
       "source": "plan",
-      "status": "ready",
+      "status": "in-progress",
+      "steps_done": [
+        "S1",
+        "S2",
+        "S3",
+        "S4"
+      ],
       "title": "Restore and verify the PCIe Gen4 link (hands-on)"
     },
     "T-021": {

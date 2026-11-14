@@ -28,12 +28,12 @@ files; change them through the scripts only.
 | T-016 | Publish v0.1.0 | todo | 1 | none |
 | T-017 | Unattended loop (wf-loop.sh) | accepted (judgement) | 3 | post |
 | T-019 | Stage 4 pre-flight (no GPU) | accepted (judgement) | 1 | post |
-| T-020 | Restore and verify the PCIe Gen4 link (hands-on) | ready | 1 | none |
+| T-020 | Restore and verify the PCIe Gen4 link (hands-on) | in-progress | 1 | none |
 | T-021 | Stage 4 session, run 2 | todo | 1 | post |
 
 ## READY (grouped by lane)
 
-- lane 1: **T-020** Restore and verify the PCIe Gen4 link (hands-on)
+_(none)_
 
 ## Escalation queue
 
@@ -47,12 +47,12 @@ _(none)_
 
 | lane | lock | worktree | tasks |
 |---|---|---|---|
-| 1 | - | - | - |
+| 1 | pid 3828 | - | - |
 
 ## Last events
 
-- 2026-11-14T11:14:40Z plan-changed T-008 — card changed; re-acknowledgement required
-- 2026-11-14T11:14:40Z plan-added T-020 — new card in amended plan
-- 2026-11-14T11:14:40Z plan-added T-021 — new card in amended plan
-- 2026-11-14T11:14:40Z plan-amended — sha256 c8fde913a305…
-- 2026-11-14T11:14:40Z ready T-020 — dependencies satisfied
+- 2026-11-14T11:28:57Z gate-wait T-020 — PCIe link repair (E-008). Stage 4 run 1 ran with the GPU link at Gen3 x8 instead of Gen4 x8. Before you reply go, do the checks in the escalation reply on your machine: a full power-off (not a reboot) with the mains lead out for 30 seconds, check that the GPU is seated, and in the BIOS set the GPU slot's PCIe speed to Gen4 rather than Auto. Then boot, close every app except one terminal running Claude Code, keep the PC on mains power, and reply go. This session will test the link under load; it is about 10 minutes.
+- 2026-11-14T11:46:10Z gate-release T-020 — Zack said go
+- 2026-11-14T11:50:15Z step-done T-020 — S2
+- 2026-11-14T11:55:59Z step-done T-020 — S3
+- 2026-11-14T11:55:59Z step-done T-020 — S4
