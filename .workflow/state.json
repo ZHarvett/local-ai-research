@@ -1,5 +1,5 @@
 {
-  "checksum": "066e9563709c69765aa20bc9fc96a127ac725b06a69e82ef32e3185b5e588f01",
+  "checksum": "6cf28e3beb46fa0153148a99d640c0af358a936f01518db73f7d49a9ab8d912b",
   "created_utc": "2026-11-12T22:25:04Z",
   "escalations": {
     "E-001": {
@@ -1249,6 +1249,34 @@
       "seq": 169,
       "task": "T-021",
       "ts": "2026-11-14T14:28:38Z"
+    },
+    {
+      "detail": "S1",
+      "event": "step-done",
+      "seq": 170,
+      "task": "T-021",
+      "ts": "2026-11-14T14:31:33Z"
+    },
+    {
+      "detail": "S2",
+      "event": "step-done",
+      "seq": 171,
+      "task": "T-021",
+      "ts": "2026-11-14T14:58:43Z"
+    },
+    {
+      "detail": "S3",
+      "event": "step-done",
+      "seq": 172,
+      "task": "T-021",
+      "ts": "2026-11-14T14:59:16Z"
+    },
+    {
+      "detail": "S4",
+      "event": "step-done",
+      "seq": 173,
+      "task": "T-021",
+      "ts": "2026-11-14T15:11:50Z"
     }
   ],
   "kit_version": "0.1.0",
@@ -1771,7 +1799,12 @@
       "review": "post",
       "source": "plan",
       "status": "in-progress",
-      "steps_done": [],
+      "steps_done": [
+        "S1",
+        "S2",
+        "S3",
+        "S4"
+      ],
       "title": "Stage 4 session, run 2"
     }
   },

@@ -51,8 +51,8 @@ _(none)_
 
 ## Last events
 
-- 2026-11-14T11:58:49Z ready T-021 — dependencies satisfied
-- 2026-11-14T12:54:52Z claimed T-021 — lane 1, pid 3351
-- 2026-11-14T12:54:52Z started T-021 — lane 1
-- 2026-11-14T12:57:43Z gate-wait T-021 — Stage 4, run 2 (about 45 minutes; the first run was invalid because of the PCIe link). Close every app except one terminal running Claude Code (scripts/check-quiet.sh must exit 0), keep the PC on mains power, and don't use it until this session says it has finished; following along on your phone is fine. Reply go.
 - 2026-11-14T14:28:38Z gate-release T-021 — Zack said go
+- 2026-11-14T14:31:33Z step-done T-021 — S1
+- 2026-11-14T14:58:43Z step-done T-021 — S2
+- 2026-11-14T14:59:16Z step-done T-021 — S3
+- 2026-11-14T15:11:50Z step-done T-021 — S4

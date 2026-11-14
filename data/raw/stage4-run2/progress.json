@@ -1,0 +1,14 @@
+{
+  "session_id": "stage4-run2",
+  "state": "complete",
+  "phase": "done",
+  "cells_total": 1,
+  "cells_done": 0,
+  "started_utc": "2026-11-14T14:30:50Z",
+  "updated_utc": "2026-11-14T15:08:49Z",
+  "cell": "canary-rerun-end",
+  "repetition": 115,
+  "depth": 16384,
+  "kind": "B",
+  "mode": "rerun"
+}
