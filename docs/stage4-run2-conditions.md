@@ -100,6 +100,8 @@ run 1's accepted log (added post-review, cycle-1 F-3).
   rule fired. Idle readings are recorded here as idle and never averaged into the data. The session reached `state=complete`
   at 14:56:54Z, before any stop decision would have been actionable. If the review reads R7 more strictly (any non-4, 8
   sample at a generating poll, regardless of per-sample load), this entry is the escalation point.
+  **Resolved:** this entry became escalation E-009 (`escalations/E-009.md`); decided 2026-11-14T18:07:36Z, option A
+  (ratify the under-load reading) — see the R7 ruling section below (added post-decision, cycle-1 F-2).
 - 14:56:54Z: `state=complete`, runner exited (job `status.json`: `"exit_code": 0, "state": "done"`, end 14:56:54Z),
   cells 2/2, drift main no flag. Duration 26.1 min (14:30:49Z to 14:56:54Z; runbook estimate 26 min, 29 min with 10%). <!-- derived: job status.json start/end -->
   Request flags: 7 `paging`, all stock-64K repetition 2 (0-indexed), attempt 1 (`records.jsonl`); tuned-64K 0 flags,
@@ -212,6 +214,40 @@ run 1's accepted log (added post-review, cycle-1 F-3).
     next: PASS: run the one `--rerun-flagged` pass for this session (only if a unit is flagged), then the next session
   ```
 
+## Session stage4-run2, R7 ruling E-009 (added post-decision, cycle-1 F-2)
+- Ruling: DECISION E-009 (2026-11-14T18:07:36Z, `docs/decisions.md`, option A) ratifies the under-load reading:
+  R7 applies to sustained generation; run 2 stands as the S2 run; no re-measure; T-008 proceeds on it. The clarified
+  rule is the `- R7 clarified:` line in `docs/decisions.md`; the poll-3 investigation entry above became escalation
+  E-009 (`escalations/E-009.md`).
+- Telemetry verification, re-derived from the committed `data/raw/stage4-run2/telemetry/*.csv.gz` (7 cell instances,
+  3,805 data rows; reproduced by the cycle-1 review and again when applying the ruling):
+  - Sustained generation (P-state P1, power at or above 50 W, gr clock at or above 2500 MHz): 3,556 samples, every
+    one "4, 8". <!-- derived: telemetry rows with gpu_pstate P1 and gpu_power_w >= 50 and gpu_clock_gr_mhz >= 2500; pcie_gen/pcie_width columns -->
+  - Every sample of the three measured cell instances is Gen4 x8: stock-64K-i0 1,544 rows, stock-64K-i1 342 rows,
+    tuned-64K-i0 771 rows = 2,657 rows, no exception at any utilization. <!-- derived: row counts and pcie_gen/pcie_width columns of stock-64K-22dc1178-i0/i1 and tuned-64K-f9b81a84-i0 telemetry -->
+  - Poll 3's exact sequence is machine-confirmed: canary-end telemetry shows util 0.0 from 14:55:41.474Z to <!-- derived: canary-end-debea778-i0.csv.gz, t_utc/gpu_util_pct/pcie_gen columns -->
+    14:55:46.476Z, gen 4→2 at 14:55:43.975Z and 2→1 at 14:55:45.976Z, back to 4 at 14:55:46.977Z — sampling that at <!-- derived: same file and columns -->
+    1 s yields 4, 2, 2, 1, 4, the sequence logged at poll 3.
+  - Count note: the cycle-1 review's session total "4,091 rows" does not reproduce — the committed run-2 telemetry
+    holds 3,805 data rows (3,812 lines including the 7 CSV headers). The substantive counts above do reproduce. <!-- derived: line counts of data/raw/stage4-run2/telemetry/*.csv.gz minus one header line per file -->
+- The two ramp rows — the only rows session-wide with util > 0 and gen ≠ 4, both in re-run canary cells, both
+  idle-to-load ramps (evidence from the cycle-1 review that the executor did not have at poll 3):
+  - `canary-rerun-start-debea778-i0.csv.gz` 15:01:21.726Z: util 94%, gen 2, width 8, power 9.92 W, P5, gr clock <!-- derived: named telemetry file, t_utc/gpu_util_pct/pcie_gen/pcie_width/gpu_power_w/gpu_pstate/gpu_clock_gr_mhz columns -->
+    1012 MHz. The four preceding rows are util 0 with power decaying 34.8 → 23.85 → 23.85 → 10.22 W; the next 0.5 s <!-- derived: same file and columns; 0.5 s = t_epoch cadence -->
+    sample (15:01:22.226Z) is gen 4, 28.5 W, P1, 2820 MHz, util 96%. <!-- derived: same file and columns -->
+  - `canary-rerun-end-debea778-i0.csv.gz` 15:07:42.999Z: util 26%, gen 2, width 8, power 9.77 W, P5, gr clock <!-- derived: named telemetry file, same columns as the ramp row above -->
+    577 MHz; previous row util 0 / gen 2 / 10.12 W; next sample (15:07:43.499Z) gen 4, 32.61 W, P1, util 96%. <!-- derived: same file and columns -->
+  - `utilization.gpu` is a trailing average: it reads high while power, clock and P-state still show an idle card,
+    and the link re-negotiates to Gen4 within one 0.5 s sample. Under the clarified R7 these are transition <!-- derived: 0.5 s = telemetry t_epoch cadence; ramp interpretation per DECISION E-009 -->
+    artefacts that do not count; neither row is inside a measured cell window (canaries are link/health checks,
+    not S2 data).
+- Process note (per E-009): the executor's poll-3 reading was substantively right, but the card's
+  `decision_rights.must_escalate` reserves R7 to the planning chat ("any stop rule firing, including R7"); the
+  executor should have filed an escalation brief on the ambiguity instead of resolving it inline. Recorded, no
+  penalty, no change to the data; any future R7 ambiguity is escalated, never resolved by the executor.
+- Evidence wording per the ruling (A5's link clause is read this way; no plan amendment): every sample in the
+  measured cell windows read "4, 8"; non-(4,8) samples occurred only at idle and at the two 0.5 s ramp rows above. <!-- derived: 0.5 s = telemetry t_epoch cadence; wording per DECISION E-009 Scope -->
+
 ## Session stage4-run2, end summary
 - Duration: main 26.1 min (14:30:49Z to 14:56:54Z), re-run 9.2 min (14:59:35Z to 15:08:49Z); both runners exit 0; <!-- derived: job status.json start/end pairs -->
   inhibit active for both (tags `smallpc-sweep-stage4-run2-1794666649`, `smallpc-sweep-stage4-run2-1794668375`, not refused).
@@ -244,7 +280,9 @@ run 1's accepted log (added post-review, cycle-1 F-3).
   5,562); its attempt-2 re-run is clean (0 major faults, 0.0 MiB swap activity). Tuned and canary windows: 0 of 11
   attempt-1 flagged (0 of 17 including the re-run canaries) — no MTP file-page faulting this run (run 1 and Stage 3 64K
   had it; D2). No stop rule fired at any point.
-- Link (R7) summary: every confirmed-generation sample read "4, 8" — poll 1 5/5 (93% util), poll 2 5/5 (97%),
-  poll-3 investigation burst 5/5 (38–65%), re-run poll 5/5 (per-sample util 0/0/0/98/98%). Non-4, 8 readings occurred
-  only at 0% utilization (idle gaps and the idle end state), the documented idle downshift; see the R7 investigation
-  entry above. Nothing was averaged into the data.
+- Link (R7) summary, read per DECISION E-009 (R7 clarified; updated post-decision, cycle-1 F-2): every sample in the
+  measured cell windows read "4, 8" (telemetry verification in the E-009 ruling section above). Poll samples: poll 1
+  5/5 (93% util), poll 2 5/5 (97%), poll-3 investigation burst 5/5 (38–65%), re-run poll 5/5 (per-sample util
+  0/0/0/98/98%). Non-(4,8) samples occurred only at idle (0% utilization gaps and the idle end state, the documented
+  idle downshift) and at two 0.5 s idle-to-load ramp rows in the re-run canaries (E-009 ruling section). <!-- derived: 0.5 s = telemetry t_epoch cadence, data/raw/stage4-run2/telemetry/*.csv.gz -->
+  Nothing was averaged into the data.
