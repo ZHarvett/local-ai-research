@@ -52,12 +52,11 @@ _(none)_
 | lane | lock | worktree | tasks |
 |---|---|---|---|
 | 1 | - | - | - |
-| 2 | - | yes | T-005, T-011, T-018 |
 
 ## Last events
 
-- 2026-11-15T10:47:32Z ready T-022 — dependencies satisfied
 - 2026-11-15T10:51:52Z claimed T-011 — lane 2, pid 433504
 - 2026-11-15T10:51:52Z migrated-to-lane T-011 — lane 2
 - 2026-11-15T10:51:58Z started T-011 — lane 2
 - 2026-11-15T11:04:00Z lane-released — lane 2; reverted: T-011
+- 2026-11-15T11:04:29Z lane-merged — lane 2
