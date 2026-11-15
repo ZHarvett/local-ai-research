@@ -1,5 +1,5 @@
 {
-  "checksum": "c2c7da81476efdd634b1ef5e721d473a52bfc8f39985786025b635606b6c2b83",
+  "checksum": "2bb1c3ca393ca5a40864512ec19209850f90084109b56db3c5a096dda9ae4851",
   "created_utc": "2026-11-12T22:25:04Z",
   "escalations": {
     "E-001": {
@@ -3272,6 +3272,34 @@
       "seq": 452,
       "task": "T-013",
       "ts": "2026-11-15T14:47:14Z"
+    },
+    {
+      "detail": "from S3",
+      "event": "resumed",
+      "seq": 453,
+      "task": "T-013",
+      "ts": "2026-11-15T14:49:40Z"
+    },
+    {
+      "detail": "S3",
+      "event": "step-done",
+      "seq": 454,
+      "task": "T-013",
+      "ts": "2026-11-15T14:53:53Z"
+    },
+    {
+      "detail": "S4",
+      "event": "step-done",
+      "seq": 455,
+      "task": "T-013",
+      "ts": "2026-11-15T14:55:15Z"
+    },
+    {
+      "detail": "accept run at 2026-11-15T14:54:05Z",
+      "event": "done",
+      "seq": 456,
+      "task": "T-013",
+      "ts": "2026-11-15T14:55:15Z"
     }
   ],
   "kit_version": "0.1.0",
@@ -3728,10 +3756,12 @@
       "resources": "light",
       "review": "post",
       "source": "plan",
-      "status": "in-progress",
+      "status": "done",
       "steps_done": [
         "S1",
-        "S2"
+        "S2",
+        "S3",
+        "S4"
       ],
       "title": "Scrub and release checks"
     },

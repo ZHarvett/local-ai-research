@@ -1,0 +1,52 @@
+[
+  {
+    "task": "T-013",
+    "started_utc": "2026-11-15T14:54:05Z",
+    "git_commit": "158078bf235c860c057ccd768cf12e6de8932fa0",
+    "items": [
+      {
+        "id": "A1",
+        "cmd": "bash scripts/release-check.sh",
+        "exit_code": 0,
+        "output_sha256": "e045645ce8a00443d27c5c3f26c93d4af9ce882f25138b19ecd84206a49c8e8a",
+        "output_bytes": 1090,
+        "elapsed_s": 3.1,
+        "verdict": "pass"
+      },
+      {
+        "id": "A2",
+        "cmd": "shellcheck scripts/release-check.sh",
+        "exit_code": 0,
+        "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "output_bytes": 0,
+        "elapsed_s": 0.0,
+        "verdict": "pass"
+      },
+      {
+        "id": "A3",
+        "verdict": "pass",
+        "path": "/mnt/data/local-ai-research/docs/recon/scrub-report.md",
+        "sha256": "f794bea664b019b3d53996f506ebdfceeb70ffebab51dfcf2b09098ba1d5dfd9"
+      },
+      {
+        "id": "A4",
+        "verdict": "judgement",
+        "description": "The history scan covers every commit and every path; the allowlist names only the known WP0 occurrence and the T-017 loop-states.md occurrence, by commit and path; the report contains no matched values."
+      }
+    ],
+    "evidence_files": {
+      "docs/recon/scrub-report.md": {
+        "exists": true,
+        "sha256": "f794bea664b019b3d53996f506ebdfceeb70ffebab51dfcf2b09098ba1d5dfd9",
+        "bytes": 6867
+      },
+      "scripts/release-check.sh": {
+        "exists": true,
+        "sha256": "b7569acca588df40e708fdca5e65ac4e4cfb4fe235ae8d6c92bfbf76156c3126",
+        "bytes": 5542
+      }
+    },
+    "finished_utc": "2026-11-15T14:54:08Z",
+    "failures": 0
+  }
+]
