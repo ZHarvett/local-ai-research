@@ -1,5 +1,5 @@
 {
-  "checksum": "66a4600b814b7616ac15e6d523fb8e8786e27923c772db11d9486eac39644a5d",
+  "checksum": "3956f1b25cbb2128b9c56d8c85e5b0f0a48a7feb8558c9a3b1dec29c39691f8c",
   "events": [
     {
       "detail": "lane 2, pid 1807601",
@@ -105,6 +105,76 @@
       "seq": 14,
       "task": "T-011",
       "ts": "2026-11-15T09:17:13Z"
+    },
+    {
+      "detail": "S1",
+      "event": "step-done",
+      "seq": 15,
+      "task": "T-011",
+      "ts": "2026-11-15T09:21:52Z"
+    },
+    {
+      "detail": "S2",
+      "event": "step-done",
+      "seq": 16,
+      "task": "T-011",
+      "ts": "2026-11-15T09:22:02Z"
+    },
+    {
+      "detail": "S3",
+      "event": "step-done",
+      "seq": 17,
+      "task": "T-011",
+      "ts": "2026-11-15T09:22:14Z"
+    },
+    {
+      "detail": "S4",
+      "event": "step-done",
+      "seq": 18,
+      "task": "T-011",
+      "ts": "2026-11-15T09:22:23Z"
+    },
+    {
+      "detail": "S5",
+      "event": "step-done",
+      "seq": 19,
+      "task": "T-011",
+      "ts": "2026-11-15T09:22:34Z"
+    },
+    {
+      "detail": "S6",
+      "event": "step-done",
+      "seq": 20,
+      "task": "T-011",
+      "ts": "2026-11-15T09:22:44Z"
+    },
+    {
+      "detail": "S7",
+      "event": "step-done",
+      "seq": 21,
+      "task": "T-011",
+      "ts": "2026-11-15T09:30:43Z"
+    },
+    {
+      "detail": "S8: methodology.md written (plan \u00a75 prose, 6 decimals verified, scrub clean); environment.md left unchanged \u2014 A12 (docs/recon/T-001.md:259) found it EXISTS and not outdated (dated inventory snapshot, 2026-11-08)",
+      "event": "step-done",
+      "seq": 22,
+      "task": "T-011",
+      "ts": "2026-11-15T09:33:50Z"
+    },
+    {
+      "detail": "S9: plan diff verified: 5 hunks, 14 insertions + 1 deletion, only edits (a)-(f); committed 24013d3 (plan), eb574f8 (drafts), ee77b46 (methodology); no progress-log entry per card (T-012 appends)",
+      "event": "step-done",
+      "seq": 23,
+      "task": "T-011",
+      "ts": "2026-11-15T09:34:23Z"
+    },
+    {
+      "detail": "E-012 (assumption-mismatch)",
+      "event": "escalated",
+      "seq": 24,
+      "task": "T-011",
+      "ts": "2026-11-15T09:42:01Z"
     }
   ],
   "lane": 2,
@@ -135,6 +205,8 @@
       "title": "Baseline report draft and number checker"
     },
     "T-011": {
+      "blocked_from": "in-progress",
+      "blocked_reason": "escalation E-012",
       "card_sha256": "4454048de0535e56b8cdd3d725d6f0969a0e1c413c5ede31a3e75a66eba94f71",
       "claimed_by_lane": 2,
       "depends_on": [
@@ -152,8 +224,18 @@
       "resources": "light",
       "review": "none",
       "source": "plan",
-      "status": "in-progress",
-      "steps_done": [],
+      "status": "blocked-decision",
+      "steps_done": [
+        "S1",
+        "S2",
+        "S3",
+        "S4",
+        "S5",
+        "S6",
+        "S7",
+        "S8",
+        "S9"
+      ],
       "title": "Plan v1.9, upstream drafts, methodology"
     },
     "T-018": {
