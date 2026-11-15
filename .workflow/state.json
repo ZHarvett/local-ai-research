@@ -1,5 +1,5 @@
 {
-  "checksum": "cc40e480179e3332c758614cc6258ff382a52f11509cd096b4e34f1ba5630b24",
+  "checksum": "3d840ed38c9dd4b7fa4f8cb315ffecfc3106ea37eaeb82f2457634e150f4f3da",
   "created_utc": "2026-11-12T22:25:04Z",
   "escalations": {
     "E-001": {
@@ -98,6 +98,12 @@
       "decided_utc": "2026-11-15T14:47:14Z",
       "status": "decided",
       "task": "T-013",
+      "type": "decision"
+    },
+    "E-015": {
+      "created_utc": "2026-11-15T15:21:59Z",
+      "status": "open",
+      "task": "T-014",
       "type": "decision"
     }
   },
@@ -3321,6 +3327,41 @@
       "seq": 459,
       "task": "T-014",
       "ts": "2026-11-15T15:08:05Z"
+    },
+    {
+      "detail": "lane 1, pid 585671",
+      "event": "claimed",
+      "seq": 460,
+      "task": "T-014",
+      "ts": "2026-11-15T15:09:54Z"
+    },
+    {
+      "detail": "lane 1",
+      "event": "started",
+      "seq": 461,
+      "task": "T-014",
+      "ts": "2026-11-15T15:09:54Z"
+    },
+    {
+      "detail": "S1",
+      "event": "step-done",
+      "seq": 462,
+      "task": "T-014",
+      "ts": "2026-11-15T15:13:23Z"
+    },
+    {
+      "detail": "S2",
+      "event": "step-done",
+      "seq": 463,
+      "task": "T-014",
+      "ts": "2026-11-15T15:20:57Z"
+    },
+    {
+      "detail": "E-015 (decision)",
+      "event": "escalated",
+      "seq": 464,
+      "task": "T-014",
+      "ts": "2026-11-15T15:21:59Z"
     }
   ],
   "kit_version": "0.1.0",
@@ -3788,7 +3829,10 @@
       "title": "Scrub and release checks"
     },
     "T-014": {
+      "blocked_from": "in-progress",
+      "blocked_reason": "escalation E-015",
       "card_sha256": "dfa079547a2067e2f7e61ac054561af8d0edb17660b1c8d9265df91a75c3600b",
+      "claimed_by_lane": 1,
       "depends_on": [
         "T-012",
         "T-013"
@@ -3803,7 +3847,11 @@
       "resources": "light",
       "review": "none",
       "source": "plan",
-      "status": "ready",
+      "status": "blocked-decision",
+      "steps_done": [
+        "S1",
+        "S2"
+      ],
       "title": "Completion report and planning-chat review"
     },
     "T-015": {
