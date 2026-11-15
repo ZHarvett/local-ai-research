@@ -1,0 +1,45 @@
+[
+  {
+    "task": "T-014",
+    "started_utc": "2026-11-15T17:12:35Z",
+    "git_commit": "e42c80912356d015fb50394b3b35e2aaedb3b472",
+    "items": [
+      {
+        "id": "A1",
+        "cmd": "uv run python tools/check_doc_numbers.py docs/step-0-completion-report.md",
+        "exit_code": 0,
+        "output_sha256": "c4f6e2e68484455f7efb5f8733c214bbc31354ef5f82f5b208e4bf7233cf433f",
+        "output_bytes": 85,
+        "elapsed_s": 0.0,
+        "verdict": "pass"
+      },
+      {
+        "id": "A2",
+        "cmd": "bash scripts/release-check.sh",
+        "exit_code": 0,
+        "output_sha256": "6feeedf0c0b17b5979ef0220134c5ddb67767504cd5e54ba7607d9882e95c902",
+        "output_bytes": 1090,
+        "elapsed_s": 3.1,
+        "verdict": "pass"
+      },
+      {
+        "id": "A3",
+        "cmd": "grep -qE 'T-014.*E-[0-9]+' docs/progress-log.md",
+        "exit_code": 0,
+        "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "output_bytes": 0,
+        "elapsed_s": 0.0,
+        "verdict": "pass"
+      }
+    ],
+    "evidence_files": {
+      "docs/step-0-completion-report.md": {
+        "exists": true,
+        "sha256": "6af455654d3a69f28acac5cfdc34af41c80af334ec508f99e5f71576412c19cd",
+        "bytes": 19371
+      }
+    },
+    "finished_utc": "2026-11-15T17:12:38Z",
+    "failures": 0
+  }
+]
