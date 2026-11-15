@@ -1,5 +1,5 @@
 {
-  "checksum": "78d868018170fc8c270a4de67a673517be740bf8bdafc161a8962978f8b85345",
+  "checksum": "d8a1fc116452cb036d6690d4fdb94a80025a533d0dfa3b9b1a3f6e08e8a4f014",
   "created_utc": "2026-11-12T22:25:04Z",
   "escalations": {
     "E-001": {
@@ -1844,6 +1844,34 @@
       "seq": 251,
       "task": "T-011",
       "ts": "2026-11-14T23:15:06Z"
+    },
+    {
+      "detail": "lane 1, pid 365187",
+      "event": "claimed",
+      "seq": 252,
+      "task": "T-010",
+      "ts": "2026-11-15T08:50:56Z"
+    },
+    {
+      "detail": "lane 1",
+      "event": "started",
+      "seq": 253,
+      "task": "T-010",
+      "ts": "2026-11-15T08:51:00Z"
+    },
+    {
+      "detail": "S1",
+      "event": "step-done",
+      "seq": 254,
+      "task": "T-010",
+      "ts": "2026-11-15T09:01:18Z"
+    },
+    {
+      "detail": "S2",
+      "event": "step-done",
+      "seq": 255,
+      "task": "T-010",
+      "ts": "2026-11-15T09:02:38Z"
     }
   ],
   "kit_version": "0.1.0",
@@ -2205,6 +2233,7 @@
     },
     "T-010": {
       "card_sha256": "fbfdd311bad7f60e1cdab5d5ea87957f767846f7f3be6c891cac37f5aba98d5b",
+      "claimed_by_lane": 1,
       "depends_on": [
         "T-004",
         "T-005",
@@ -2223,7 +2252,11 @@
       "resources": "light",
       "review": "post",
       "source": "plan",
-      "status": "ready",
+      "status": "in-progress",
+      "steps_done": [
+        "S1",
+        "S2"
+      ],
       "title": "Final README, report, write-up and changelog"
     },
     "T-011": {
