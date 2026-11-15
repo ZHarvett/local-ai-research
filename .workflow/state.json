@@ -1,5 +1,5 @@
 {
-  "checksum": "e467b1e9ff672b5a559059a61e1e6b2da010054cf269acc1cde53fc792f4dc48",
+  "checksum": "ea99235cf72cecdac7ada1e874b83c5aac4e3ae1ee2564a2482d82a16e7e3134",
   "created_utc": "2026-11-12T22:25:04Z",
   "escalations": {
     "E-001": {
@@ -2809,7 +2809,8 @@
     "T-017": 2,
     "T-018": 1,
     "T-019": 2,
-    "T-021": 2
+    "T-021": 2,
+    "T-022": 1
   },
   "review_dispositions": {
     "T-017": [
