@@ -1,5 +1,5 @@
 {
-  "checksum": "0cbf3c1b38bc8ce1da2e30e8227385d2331d3bc74012755b9b92372ffd30c6cf",
+  "checksum": "66a4600b814b7616ac15e6d523fb8e8786e27923c772db11d9486eac39644a5d",
   "events": [
     {
       "detail": "lane 2, pid 1807601",
@@ -91,6 +91,20 @@
       "seq": 12,
       "task": "T-018",
       "ts": "2026-11-14T16:19:27Z"
+    },
+    {
+      "detail": "lane 2, pid 369553",
+      "event": "claimed",
+      "seq": 13,
+      "task": "T-011",
+      "ts": "2026-11-15T09:17:13Z"
+    },
+    {
+      "detail": "lane 2",
+      "event": "started",
+      "seq": 14,
+      "task": "T-011",
+      "ts": "2026-11-15T09:17:13Z"
     }
   ],
   "lane": 2,
@@ -119,6 +133,28 @@
         "S3"
       ],
       "title": "Baseline report draft and number checker"
+    },
+    "T-011": {
+      "card_sha256": "4454048de0535e56b8cdd3d725d6f0969a0e1c413c5ede31a3e75a66eba94f71",
+      "claimed_by_lane": 2,
+      "depends_on": [
+        "T-008",
+        "T-009"
+      ],
+      "files_write": [
+        "docs/plans/step-0-baseline.md",
+        "docs/upstream/",
+        "docs/methodology.md",
+        "docs/environment.md"
+      ],
+      "lane": 2,
+      "phase": "P4",
+      "resources": "light",
+      "review": "none",
+      "source": "plan",
+      "status": "in-progress",
+      "steps_done": [],
+      "title": "Plan v1.9, upstream drafts, methodology"
     },
     "T-018": {
       "card_sha256": "cb611e62b5fa39055e2bf57217b7cf953eaa96b8b4e605eaecbc8ae82a2330f7",
