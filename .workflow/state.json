@@ -1,5 +1,5 @@
 {
-  "checksum": "18d8aa413731cb7041494bbc7cf48cc8d233f0ea5f64655069b36f3d1c5a0100",
+  "checksum": "f8bb3d31f0f7a7e0ec3cf6d61aa9aa5d8664d194e4dbd1804196c4f8441a578a",
   "created_utc": "2026-11-12T22:25:04Z",
   "escalations": {
     "E-001": {
@@ -2705,6 +2705,41 @@
       "seq": 373,
       "task": null,
       "ts": "2026-11-15T12:05:35Z"
+    },
+    {
+      "detail": "lane 1, pid 466967",
+      "event": "claimed",
+      "seq": 374,
+      "task": "T-012",
+      "ts": "2026-11-15T12:06:29Z"
+    },
+    {
+      "detail": "lane 1",
+      "event": "started",
+      "seq": 375,
+      "task": "T-012",
+      "ts": "2026-11-15T12:06:29Z"
+    },
+    {
+      "detail": "The GPU is needed for about 15 minutes. Make sure no game or other GPU job is running; the machine doesn't need to be quiet. Reply go.",
+      "event": "gate-wait",
+      "seq": 376,
+      "task": "T-012",
+      "ts": "2026-11-15T12:10:54Z"
+    },
+    {
+      "detail": "/dev/shm/local-ai-research-machine.lock",
+      "event": "machine-lock-released",
+      "seq": 377,
+      "task": null,
+      "ts": "2026-11-15T12:58:58Z"
+    },
+    {
+      "detail": "Zack said go",
+      "event": "gate-release",
+      "seq": 378,
+      "task": "T-012",
+      "ts": "2026-11-15T12:58:58Z"
     }
   ],
   "kit_version": "0.1.0",
@@ -3116,6 +3151,7 @@
     },
     "T-012": {
       "card_sha256": "19745e39a4f871fb6f1d97b9f68ccc60c4ca4a9c5fee80879e49caa0f678d0bd",
+      "claimed_by_lane": 1,
       "depends_on": [
         "T-010",
         "T-011"
@@ -3124,12 +3160,14 @@
         "data/health/readme-walkthrough.log",
         "docs/progress-log.md"
       ],
+      "gate_message": "The GPU is needed for about 15 minutes. Make sure no game or other GPU job is running; the machine doesn't need to be quiet. Reply go.",
       "lane": 1,
       "phase": "P4",
       "resources": "gpu",
       "review": "none",
       "source": "plan",
-      "status": "ready",
+      "status": "in-progress",
+      "steps_done": [],
       "title": "README walkthrough from a clean shell"
     },
     "T-013": {
