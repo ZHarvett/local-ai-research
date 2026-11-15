@@ -19,7 +19,7 @@ files; change them through the scripts only.
 | T-007 | Stage 4 session | accepted ⚠ re-acknowledge (judgement) | 1 | post |
 | T-008 | S2 check and Stage 4 analysis | accepted ⚠ re-acknowledge (judgement) | 1 | post |
 | T-009 | Post-Stage-4 code fixes | done ⚠ re-acknowledge | 1 | none |
-| T-010 | Final README, report, write-up and changelog | done ⚠ re-acknowledge (judgement) | 1 | post |
+| T-010 | Final README, report, write-up and changelog | accepted ⚠ re-acknowledge (judgement) | 1 | post |
 | T-011 | Plan v1.9, upstream drafts, methodology | ready | 2 | none |
 | T-012 | README walkthrough from a clean shell | todo | 1 | none |
 | T-013 | Scrub and release checks | todo ⚠ re-acknowledge | 1 | post |
@@ -52,8 +52,8 @@ _(none)_
 
 ## Last events
 
-- 2026-11-15T08:50:56Z claimed T-010 — lane 1, pid 365187
-- 2026-11-15T08:51:00Z started T-010 — lane 1
 - 2026-11-15T09:01:18Z step-done T-010 — S1
 - 2026-11-15T09:02:38Z step-done T-010 — S2
 - 2026-11-15T09:03:57Z done T-010 — accept run at 2026-11-15T09:03:49Z
+- 2026-11-15T09:13:27Z review-opened T-010 — cycle 1
+- 2026-11-15T09:14:23Z review-verdict T-010 — accepted (cycle 1, 0 findings)

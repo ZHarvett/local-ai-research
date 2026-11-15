@@ -1,5 +1,5 @@
 {
-  "checksum": "fa518a12549a9269b041f06b91626ced03f8a1ecf8302417f0e9630ce10a7476",
+  "checksum": "b44312ec1cdaa03bf2a257652e6a575996a0ba4005478d7bd2b3a9bcd2815ffd",
   "created_utc": "2026-11-12T22:25:04Z",
   "escalations": {
     "E-001": {
@@ -1879,6 +1879,20 @@
       "seq": 256,
       "task": "T-010",
       "ts": "2026-11-15T09:03:57Z"
+    },
+    {
+      "detail": "cycle 1",
+      "event": "review-opened",
+      "seq": 257,
+      "task": "T-010",
+      "ts": "2026-11-15T09:13:27Z"
+    },
+    {
+      "detail": "accepted (cycle 1, 0 findings)",
+      "event": "review-verdict",
+      "seq": 258,
+      "task": "T-010",
+      "ts": "2026-11-15T09:14:23Z"
     }
   ],
   "kit_version": "0.1.0",
@@ -1895,6 +1909,7 @@
     "T-005": 2,
     "T-007": 1,
     "T-008": 1,
+    "T-010": 1,
     "T-017": 2,
     "T-018": 1,
     "T-019": 2,
@@ -2259,7 +2274,7 @@
       "resources": "light",
       "review": "post",
       "source": "plan",
-      "status": "done",
+      "status": "accepted",
       "steps_done": [
         "S1",
         "S2"

@@ -1,62 +1,115 @@
-# Review T-008 (cycle 1)
+# Review T-010 (cycle 1)
 
 ## Model
 
-qwen4-max-preview (single model for executor and reviewer; adversarial re-derivation, read-only).
+Running as: qwen4-max-preview (same model as the executor; adversarial, read-only review).
 
 ## Acceptance verdicts
 
-Re-ran `bash scripts/wf.sh accept T-008` myself (record run 2, 0 failures). Evidence hashes
-identical to the executor's run 1: repro-output `10ff296c9b69`, s2-summary.md `8d46940332a5`,
-s2-summary.json `831a466b0f00`.
+Re-ran `bash scripts/wf.sh accept T-010` myself (run 2, 2026-11-15T09:05:28Z, HEAD f015f12):
+3/3 mechanical PASS, 0 failures, output hashes identical to the executor's run 1
+(A2 `37689a87…`, A1/A3 empty-output hash), evidence-file hashes identical
+(README `5af8480b…`, report `47cdcf23…`, writeup `5dd9843f…`, CHANGELOG `2f54fb22…`).
 
 | item | verdict | note |
 |---|---|---|
-| A1 | PASS | `REPRO_CMD` with `SESSION=stage4-run2` exit 0; accept's stdout sha256 `10ff296c…` equals the committed `data/analysis/stage4/repro-output.txt` (1092 bytes). Independently rebuilt with the frozen `smallpc.stage3.repro.build`/`render`: `render + "\n"` is byte-identical to the committed file. |
-| A2 | PASS | `s2-summary.json` `overall: PASS`. All 6 rows recomputed from `data/raw/stage3-64K` + `data/raw/stage4-run2`; the allowed band re-derived from scratch as the wider of the Stage 3 CI and ±5% of the Stage 3 mean (matches the tool's lo/hi to 1e-9) and each PASS re-evaluated independently. |
-| A3 | PASS | `tools/check_doc_numbers.py data/analysis/stage4/s2-summary.md` exit 0 — 55 numbers verified, 4 sources (matches the progress-log claim). |
-| A4 | PASS (judgement) | Rows match: md table == JSON == fresh tool output for all 6 rows (programmatic comparison, `/tmp/t008-review/verify.py`). R1 correctly **not** triggered: re-derived `n_clean`/`n_total` with the frozen `views.Data` — stock-64K and tuned-64K are 5/5 on **both** days (`MIN_CLEAN_PAIRED = 5`). Run 2's only flagged unit is stock-64K rep 2 attempt 1 (`paging`), superseded by a clean attempt 2; tuned-64K has zero flags. No all-units fallback banner; every row reads "evaluated on clean units". R1's condition (<5 clean units) holds for neither cell, so not applying it is correct. |
+| A1 | PASS | Re-ran: no `TODO-T010` in README.md, reports/baseline-report.md, reports/writeup.md. The only remaining repo mentions are historical progress-log entries describing the draft state (append-only history, out of A1's scope). |
+| A2 | PASS | Re-ran the checker on all three docs: exit 0, byte-identical output to the executor's run. Extra: also ran it on CHANGELOG.md (not required by A2) — 15 numbers verified, exit 0. Checker scope understood and its blind spots covered manually (see F-1). |
+| A3 | PASS | Re-ran: `## v0.1.0 — Step 0 baseline` present. Card S2 content checked: the entry covers the six configs + launch/stop scripts, sweep/analysis tooling, data (incl. run 1 kept superseded), reports, and provenance (b12208 / 57d04820…, model revision + SHA-256, harness pins). |
+| A4 | PASS | Judgement re-derived from the evidence, not the executor's report. Detail below. |
 
-### Other re-derivations (beyond the mechanical acceptance)
+### A4 evidence (what was checked, against what)
 
-- **S1 supersession (R5):** the three run-1 files in `data/analysis/stage4-run1-superseded/`
-  are sha256-identical to their `a52bd82` originals in `data/analysis/stage4/` (nothing deleted
-  or edited); the one-line README is present. The run-1 render `reports/stage4/report.md` +
-  figures is unchanged (`git diff a52bd82..HEAD` empty for those paths). The superseded run-1
-  JSON reads `overall: FAIL`, 1 of 6 rows passing — matching the summary's "5 of 6 rows" claim.
-- **Code freeze (shared rule 2):** `git diff --name-only a52bd82..HEAD -- src configs scripts
-  pyproject.toml uv.lock` is empty. `data/raw/` untouched (0 files in the diff).
-- **Report authenticity (S3):** a fresh `REPORT_CMD` with `SESSION=stage4-run2` rendered into
-  `/tmp/t008-review/render` is byte-identical to `reports/stage4-run2/report.md` + all 5 figures,
-  except the "Regenerate with" line that echoes `--out` (proof the committed render used
-  `--out reports/stage4-run2`). `caveats.md` is the documented hand-written companion, not
-  renderer output. Report headline numbers match the repro means (stock 9.10 / 853.9 / 75.9;
-  tuned 6.30 / 2000.9 / 93.5), both cells 5/5, provenance commit `c4bdc4db4a`, snapshot
-  `f66a698dee8dbca0`.
-- **Gate:** re-ran `GATE_CMD` on `stage4-run2` myself — exit 0, PASS a to f (f: 0 of 17
-  attempt-1 tuned+canary windows flagged; stock 1 of 5, rep 2), matching the conditions log's
-  post-rerun gate. R2 not needed.
-- **Kernel/driver confound:** verified from the authoritative env snapshots
-  (`data/raw/stage3-64K/snapshots/66c04f6c276af71a.json`: `7.3.1-1-cachyos` / `615.78.08`;
-  `data/raw/stage4-run2/snapshots/f66a698dee8dbca0.json`: `7.3.4-1-cachyos` / `620.70.06`).
-  The fit-warning numbers in `caveats.md` (18 MiB short of the 1024 MiB target; 31 MiB drop,
-  15803 → 15772) match `docs/stage4-run2-conditions.md:118-148`.
-- **Number checkers:** `caveats.md` exit 0 (5 numbers), `docs/decisions.md` exit 0 (372 numbers)
-  — both match the progress-log claims. The decisions.md S2 table equals the repro output.
-- **Privacy:** `SCRUB_CMD` exit 0, 0 findings in 4458 files (courtesy scan; release scrub is T-013).
-- **S4/S5:** no FAIL row, so no R4/R6 escalation was required; no R1 deviation to record; the
-  progress-log entry is appended in §12.5 format.
+- **Plan §9 README coverage.** All five §9 README bullets present: what-this-is + hardware
+  (`README.md:15-61`), quick start with prerequisites/build/download-verify/launch
+  (`README.md:86-170`), rerun on a 12–16 GB machine via `machine.toml` (`README.md:172-226`),
+  results with CIs (`README.md:228-320`), limitations and licences (`README.md:322-370`).
+  Provenance and exact commands also covered. Non-README §9 items (tag, CI, scrub, write-up
+  review, completion report) are correctly stated as pending, not claimed.
+- **S2 stated as measured.** `reports/baseline-report.md:591-598` ("S2 is measured … PASS,
+  6 of 6 rows"), S5 row "pending T-015/T-016" as the card requires; the clean-shell half of
+  S2 is explicitly pending T-012 in all three docs. The S2 tables in README (`README.md:298-305`),
+  report (`reports/baseline-report.md:513-520`) and `data/analysis/stage4/s2-summary.md` match
+  `data/analysis/stage4/repro-output.txt` **verbatim, row for row** (means, CIs, allowed ranges,
+  results, clean-unit sets); `s2-summary.json` `overall: PASS` (precondition re-checked).
+  "Two rows inside the CI, four inside ±5%" matches the summary's band analysis; the ±5%
+  arithmetic re-derived (e.g. 844.155×0.95 = 801.947, ×1.05 = 886.363).
+- **D1–D9, R1–R7 applied correctly.** D1: 128K all-units headline labelled "includes
+  paging-flagged stock windows", clean-units figures beside it, S4(d) deviation recorded —
+  in all three docs, matching `headline.md:139` and the rendered `reports/stage3/report.md:229`
+  (T-009 fix confirmed present, so the README's updated D1 note is accurate). D2: tuned-64K
+  paging = known Stage 2a file-page faulting, not investigated, 4/4 re-ran clean; gate 36.4%
+  (4 of 11, limit 40%) and A7 denominator 23.5% (4 of 17 = 5 + 4×3) both match
+  `docs/progress-log.md:405,438`. D3: 32K swap sensitivity not material, decode gain small /
+  not robust (TG 1.157 [0.981, 1.365] / 1.142 [0.999, 1.305] / 1.057 [0.859, 1.300];
+  T_turn 0.712 [0.629, 0.807]) — matches `headline.md:67-75`. D7: actual sanity file name
+  cited with the deviation note. D8: grep of the four docs finds no account name, hostname
+  or home path (only the public licence name ZHarvett, as in LICENSE/LICENSE-DATA.md).
+  D9: hit-rate caveats (warm-up + attempt-1 units, decode-batch only, public-code workloads)
+  in report §5 and writeup. D4/D5/D6 are tooling/historical and correctly recorded in report
+  §7 without touching data. R1 not triggered (5 clean of 5 both cells both days, per
+  s2-summary and the run-2 render); R2 not needed; R3 clean tree `c4bdc4d`; R4/R6 no automatic
+  re-measure, run 2 the only re-run; R5 run 1 superseded, kept (`reports/stage4/`,
+  `data/analysis/stage4-run1-superseded/` exist; its summary reads "FAIL — 5 of 6 rows fail",
+  matching the report's "overall FAIL, 5 of 6 rows"); R7 every measured-window sample "4, 8"
+  per E-009 clarification, idle/ramp samples recorded not averaged.
+- **Numbers attached to the right metric/cell (the checker cannot see this).** Compared in
+  full against their named sources: all Stage 3 ratio tables and per-depth tables
+  (report §5 vs `headline.md` — every row matches, incl. stock-128K clean vs all-units views);
+  README headline min–max rows re-derived from the per-depth ratios (all four rows correct);
+  absolute T_turn cell figures; Stage 2 table vs `docs/stage2-summary.md:26-34`; Stage 1
+  shortlist vs `reports/stage1/select-screening.md`; VRAM breakdown, hit rates
+  (97.0/94.3/93.9 % with hits/misses/copied/uploaded) and the 8-row excluded-diagnostics table
+  vs `reports/stage3/report.md:337-385`; run-2 render ratio 0.691 [0.655, 0.730] and spec sha
+  `6a11e6b13d8f94de` (runs 1 and 2) vs `reports/stage4-run2/report.md:15,88`; provenance block
+  vs `data/env/build-info.json` (tag, commit, date, flags, cmake 4.4.5 / ninja 1.13.2 /
+  nvcc V13.4.92 / gcc 16.2.1, binary sha `c6b14a4b…`, v0.9.0 recorded-only, 120a rewrite per
+  decisions:105), `configs/model.toml`, `configs/harness.toml` (1.19.5, 0.2.1-rc.5, 295, 643,
+  node 26.13.0, npm 12.2.1, lockfile sha), `configs/machine.toml` (127.0.0.1:8080);
+  hardware table vs `docs/environment.md` (615.78.08, 180.00 W, 30.46 GiB, zram 30.5G,
+  swappiness 150, 7.3.1-1-cachyos, 16,311 MiB, iGPU displays, uv 0.13.7, EXPO 6000 MT/s).
+- **Integer claims the checker skips — all verified:** 57 Stage 1 cells; 6/6, 5/5, 4/5 unit
+  counts; 14 of 38 + 1 of 38, 15 clean attempt-2; 15 of 75 (2a); 1 of 80 (later Stage 2);
+  2f 2-of-5 / 3-of-5 at 8192, 0-of-5 at 2048, 159,451 faults; 47,576 faults / 586 MiB
+  (tuned-64K), 22,810 / 4,200 and attempt-1 2,004 (stock-128K:3, decisions:1160),
+  5,562 / 2,752 (run-2 stock rep 2); 82 Stage 1 logs at n_threads 8; 8-gram 8 vs reference 2;
+  expert-cache 11,520/9,472/8,704 (probed) vs 9,471/8,701 (server-reported) correctly
+  distinguished; VRAM peaks/min-free incl. writeup's 14,926–15,290 range.
+- **Derived lines re-derived:** (18.4+26.4+45.9+8.2+11.6+17.8)/60 = 2.14 h ≈ 2.1 h
+  (per-session figures match progress-log:404-407); (90+38)/60 ≈ 2.1 h; 1−(0.690…0.706) ≈
+  30 %; pp 2.304–2.926 → "2.3–2.9×", tg 1.089–1.239 → "1.1–1.2×"; 768/1536 MiB = 0.75/1.5 GiB
+  (and the README's "of max-fit expert cache" phrasing is faithful to decisions:1131 — the
+  MTP cache reduction is exactly 768/1024/1536 MiB); 15,803−15,772 = 31 MiB.
+- **Shared-rule-8 corrections carried:** 1 of 80 (not 100); MTP 2–5 % (4.6 % at 32K draft-2
+  excluded, 2.4 % at 64K draft-1), 9–16 % prefill, 0.75–1.5 GiB; Stage 3 ≈ 2.1 h — all present
+  and matching decisions:1123-1132.
+- **Commands and script claims:** rerun commands match runbook §3 (README's sanity-file name
+  correctly uses the actual `stage3-tuned.json` with the D7 note); hf download matches
+  decisions WP4 (huggingface_hub 2.4.0, HF_HOME, --local-dir); launch-server.sh health default
+  300 s, `/dev/shm/local-ai-research-*` enforcement, GPU lock; stop-server.sh SIGINT→SIGKILL
+  default 60 s; run-detached.sh `<name> -- <cmd>` → `data/logs/jobs/<name>-<UTC>/` job.log +
+  status.json; run-sweep.sh systemd-inhibit + GPU lock; build script MIN_BUILD=12017, targets
+  llama-server/llama-bench/llama-cli, "15–40 minutes" header; runbook 24 GiB expected /
+  20 GiB abort; Stage 4 estimate 26/29/44 min (runbook:156); run-1 38.3+13.6 min
+  (progress-log T-007); run-2 26.1+9.2 min (conditions:252); "within 1.3 % of selection data"
+  (progress-log:412); plan §4 ≈30 GB, §5.5 coverage 95/91–92/88–90 %, §13 batch 2.3–2.9×.
+- **Diff scope and freeze.** `git diff 7a7f2b2..HEAD` touches only the four card files plus
+  kit state (`.workflow/`, PROGRESS.md via `wf.sh done`). No src/configs/scripts/pyproject/
+  uv.lock change (freeze respected). Removed lines in the docs are only TODO placeholders,
+  DRAFT banners and section renumbering — **no T-005/T-006 conclusion changed** (the one
+  substantive edit, README's D1 note, updates "rendering not yet fixed" → "fixed in T-009",
+  which I confirmed in the rendered report). No progress-log entry added (shared-rule-6
+  exemption for T-010 respected; T-012 appends it).
 
 ## Findings
 
 | id | severity | action | evidence | required action |
 |---|---|---|---|---|
-| F-1 | MINOR | FIX-DOC (carry-forward; no T-008 rework) | PLAN.md:378 (card S3 "into reports/stage4/"); reports/stage4/README.md; reports/stage4-run2/report.md:8; docs/progress-log.md T-008 S3 bullet | The render landed in `reports/stage4-run2/`, not the card's literal `reports/stage4/`. **I accept the executor's interpretation:** `REPORT_CMD` is session-parameterized (`--out reports/$SESSION`), S1 says "use the run-2 session for everything below", and E-008 Scope keeps run-1 analysis outputs in the repo — overwriting `reports/stage4/` would destroy the run-1 render. A pointer README marks the supersession, and the render is proven tool-generated. The same literal path recurs in **T-009 S5** ("Re-render … reports/stage4/") and **T-010** `files_read`: carry the convention forward (valid render = `reports/stage4-run2/`; `reports/stage4/` = superseded run-1 diagnostic) so T-009/T-010 do not "fix" it by overwriting. The planning chat may ratify the path in plan v1.9 (T-011). Cheapest action is documentation carry-forward, not a directory move. |
-| F-2 | NOTE | none for T-008 (already documented; carried to T-009/T-010) | reports/stage4-run2/report.md:59-62; src/smallpc/select.py:49-54; data/sanity/stage3-tuned.json (`cells` keys); reports/stage4-run2/caveats.md:42-49 | The eligibility table reads "output sanity check not run" / "No eligible candidate" for both cells. Cause verified read-only: `select.sanity_state` looks up `stock-64K`/`tuned-64K` in the sanity union whose keys are Stage 2 names (`P1-64K-b2048`, `tuned-64k`, …), so nothing matches. Pre-existing frozen-renderer behaviour, identical to the accepted Stage 3 and run-1 renders; the S2 verdict comes from the repro tool, not this table. The executor correctly deferred any change to a code-owning card. No T-008 action. |
-| F-3 | NOTE | carry-forward to T-010 | reports/stage4-run2/caveats.md:18-27; data/raw/stage4-run2/snapshots/f66a698dee8dbca0.json; data/raw/stage3-64K/snapshots/66c04f6c276af71a.json; docs/stage4-run2-conditions.md:118-148 | The E-009-required kernel/driver caveat is present and accurate (S2 passed on `7.3.4-1-cachyos` / `620.70.06` vs Stage 3's `7.3.1-1-cachyos` / `615.78.08`), with the fit-warning second symptom. The snapshots also show CUDA driver-support 13.4 → 13.5 (same upgrade, covered by "changed driver"). This confound must survive into T-010's final report and write-up; it is a caveat on the S2 PASS, not a defect in T-008. |
+| F-1 | NOTE | none (recorded for T-013) | tools/check_doc_numbers.py:29,69-70 | The checker guarantees only decimal-token presence somewhere in the union of declared sources; integers (counts, MiB) and whole `derived:` lines are exempt, and metric/cell attachment is not checked. A2's PASS is therefore weaker than "every number is right". This review covered those blind spots manually (above) and found no mismatch. No T-010 action; keep the limitation in mind for the T-013 release checks. |
+| F-2 | NOTE | none | reports/writeup.md:89; docs/plans/step-0-baseline.md:225,822 | "Draft length 1 is bit-identical to MTP off" is copied from the plan (§5.4 Stage 2 outcome, §13) — a declared source, so the evidence rule is satisfied. It is not re-derivable from the committed sanity JSONs (they store pass/fail, not outputs). The claim stands as the plan's recorded finding; flagging only so T-014/T-016 know its provenance is the plan text, not a raw-output diff in this repo. |
+| F-3 | NOTE | none (optional FIX-DOC) | README.md:55; README.md:316-318 | The hardware table shows the Stage-3-era kernel/driver (7.3.1 / 615.78.08) per `docs/environment.md`; run 2's changed kernel/driver (7.3.4 / 620.70.06) is disclosed in the Reproducibility section and Limitations. No contradiction and nothing claimed beyond the data; a one-line pointer in the table ("Stage 3 inventory; run 2 differs — see Reproducibility") would help skimmers but is not required. |
 
-No BLOCKER or MAJOR findings. The executor's report and my re-runs agree on every number,
-hash and verdict I checked.
+No BLOCKER, MAJOR or MINOR findings. Executor's acceptance run and my re-run agree exactly.
 
 ## Task verdict
 
@@ -64,18 +117,18 @@ accepted
 
 ## What I did not verify
 
-- The full telemetry/link re-derivation (3,556 sustained-generation samples, 2,657 measured-cell
-  rows, the two 0.5 s ramp rows): that is T-021's accepted evidence, ratified by DECISION E-009.
-  I relied on it and spot-checked the conditions log's gate output and fit/kernel numbers; I did
-  not re-filter the raw `telemetry/*.csv.gz` myself.
-- The gate's **before-rerun** output: I re-ran the final-state gate only; the before-rerun
-  verbatim output lives in the conditions log and was covered by T-021's review.
-- Figure SVG internal numbers beyond byte-identity to the frozen renderer's fresh output
-  (tool-generated; not independently re-derived from raw data).
-- The bootstrap/t-interval internals in `smallpc.stats` (frozen, previously reviewed). I
-  re-derived the S2 band rule and every row value, not the resampling itself.
-- The run-1 render's internal numbers: it is an excluded diagnostic; I verified it is preserved
-  unchanged, not re-analysed it.
-- Release-grade scrub (T-013's card); `SCRUB_CMD` here was a courtesy scan, not the release check.
-- T-007/T-021 work beyond what T-008's evidence leans on (their own review cycles cover them).
-- The executor's chat reasoning (not available to the reviewer, per protocol).
+- No measurement was re-run (T-010 is light; all acceptance items are cheap and were re-run).
+  The frozen analysis/tool outputs (`headline.md`, `repro-output.txt`, rendered reports) were
+  accepted as evidence — their underlying raw JSONL/telemetry was verified in T-007/T-008/T-021,
+  not re-derived here. In particular I did not re-derive the R7 link samples from
+  `data/raw/stage4-run2/telemetry/*.csv.gz` (I read the conditions log and caveats).
+- I compared every headline/S2/Stage-1/Stage-2 table and the provenance block in full, and
+  spot-checked prose numbers; I did not manually re-attach every one of the ~hundreds of
+  decimal tokens in the three docs beyond the checker's token-presence guarantee (F-1).
+- The "bit-identical" draft-1 claim was traced to the plan, not re-derived from raw outputs (F-2).
+- The WP10 interval-coverage simulation figures were read from plan §5.5, not re-simulated.
+- CHANGELOG work-package history was spot-checked (WP9/WP11/WP12/WP13 claims against the
+  progress log and decisions), not audited line-by-line against all 668 progress-log lines.
+- Figures/SVGs were not reviewed (T-009 scope, reviewed there); full CI was not re-run
+  (T-009 acceptance, 5× green); the clean-shell walkthrough is T-012, pending by design.
+- I did not read the executor's chat reasoning (not available to me, per protocol).

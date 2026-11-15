@@ -61,5 +61,68 @@
     },
     "finished_utc": "2026-11-15T09:03:49Z",
     "failures": 0
+  },
+  {
+    "task": "T-010",
+    "started_utc": "2026-11-15T09:05:28Z",
+    "git_commit": "f015f12605e32facef95ec07dd16c14a4119f4f5",
+    "items": [
+      {
+        "id": "A1",
+        "cmd": "! grep -rq 'TODO-T010' README.md reports/baseline-report.md reports/writeup.md",
+        "exit_code": 0,
+        "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "output_bytes": 0,
+        "elapsed_s": 0.0,
+        "verdict": "pass"
+      },
+      {
+        "id": "A2",
+        "cmd": "for f in README.md reports/baseline-report.md reports/writeup.md; do uv run python tools/check_doc_numbers.py \"$f\" || exit 1; done",
+        "exit_code": 0,
+        "output_sha256": "37689a87860393deb0b738c90a360f0367f35afcd80f7fa334ed4d9e9bb83e80",
+        "output_bytes": 213,
+        "elapsed_s": 0.2,
+        "verdict": "pass"
+      },
+      {
+        "id": "A3",
+        "cmd": "grep -qE '^#+ .*0\\.1\\.0' CHANGELOG.md",
+        "exit_code": 0,
+        "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "output_bytes": 0,
+        "elapsed_s": 0.0,
+        "verdict": "pass"
+      },
+      {
+        "id": "A4",
+        "verdict": "judgement",
+        "description": "The README covers every plan \u00a79 item; all three docs apply D1\u2013D9 and R1\u2013R4 correctly; S2 is stated as measured; nothing is claimed beyond the data."
+      }
+    ],
+    "evidence_files": {
+      "README.md": {
+        "exists": true,
+        "sha256": "5af8480bcb705b3352a116cbfa35e9795495923729775825442b85827ffa86ae",
+        "bytes": 24420
+      },
+      "reports/baseline-report.md": {
+        "exists": true,
+        "sha256": "47cdcf23dbb58dee1299af71177891cd1628f3c7cecc50eab4451a8ec0c3f9bd",
+        "bytes": 41774
+      },
+      "reports/writeup.md": {
+        "exists": true,
+        "sha256": "5dd9843f7cfae214f89ae6e67174990cabf26c46b62cbee95cafb4d98ca5b077",
+        "bytes": 9848
+      },
+      "CHANGELOG.md": {
+        "exists": true,
+        "sha256": "2f54fb2282ba11365f944723f9201ab98d97eee43247e1119a98e91016de71a1",
+        "bytes": 5912
+      }
+    },
+    "finished_utc": "2026-11-15T09:05:28Z",
+    "failures": 0
   }
 ]
