@@ -4,7 +4,8 @@
 
 > **FINAL (T-010).** Step 0 baseline. Stage 3 is the headline result; Stages 1 and 2 are
 > selection data; Stage 4's next-day reproducibility check (S2) passes 6 of 6 rows on run 2
-> (run 1 superseded, R5). The release (S5) is pending T-013/T-015/T-016. Every number here is
+> (run 1 superseded, R5). The release (S5) is pending the tag and publish (T-015/T-016);
+> the scrub and release checks passed (T-013). Every number here is
 > copied from a named repo file (declared in `sources:` comments) or marked as derived
 > (`derived:` comments); `tools/check_doc_numbers.py` verifies this.
 
@@ -40,7 +41,7 @@ The next-day reproducibility check (S2, Stage 4) passes: stock-64K and tuned-64K
 on a different day (run 2, 2026-11-14) land inside the allowed band on all 6 rows, every row
 on clean units (the Stage 4 section below). Run 1 is superseded (R5: its PCIe link ran at
 Gen3 x8 for the whole session); run 2 carries a kernel/driver confound (E-009). The release
-(S5) is pending.
+(S5) is pending the tag and publish (T-015/T-016); the scrub and release checks passed (T-013).
 
 Nothing here is a speed target met or missed: Step 0 has no hard speed targets (plan §2).
 Stages 1 and 2 were measured with the desktop apps open (a recorded deviation); Stages 3 and
@@ -542,8 +543,8 @@ T_turn_400 ratio 0.691 [0.655, 0.730]). Its eligibility table reads "output sani
 run" for both cells — a known render characteristic (the sanity union's keys are the Stage 2
 cell names, so no Stage 4 entry matches), not an S2 criterion; the S2 verdict comes from the
 repro tool (`reports/stage4-run2/caveats.md`). The second half of S2 — every recommended
-config launches from a clean shell using only the README commands — is the T-012 walkthrough,
-still pending.
+config launches from a clean shell using only the README commands — is the T-012 walkthrough:
+met, PASS 6/6 (T-012).
 
 ## 7. Flags and deviations
 
@@ -588,17 +589,18 @@ Recorded deviations and flags (from `docs/decisions.md`), carried into this repo
 
 <!-- sources: docs/plans/step-0-baseline.md, data/analysis/stage4/s2-summary.md, reports/stage4-run2/caveats.md -->
 
-Status against the plan's §2 success criteria. S2 is measured: the Stage 4 run-2
-re-measurement passes 6 of 6 rows; its clean-shell walkthrough (T-012) and S5 (release) are
-pending. Final acceptance is assessed in the completion report (T-014).
+Status against the plan's §2 success criteria. S2 is met: the Stage 4 run-2
+re-measurement passes 6 of 6 rows and the clean-shell walkthrough passes 6/6 (T-012).
+S5 (release) is pending the tag and publish (T-015/T-016); the scrub and release checks
+passed (T-013). Final acceptance is assessed in the completion report (T-014).
 
 | criterion | status | evidence / note |
 |---|---|---|
 | S1 Coverage | Stages 1–4 measured | Stage 1 screening (57 cells), Stage 2 feature experiments, Stage 3 final (6 cells, 5 reps), Stage 4 reproducibility (2 cells, 5 reps, run 2; run 1 superseded, R5); raw per-request JSONL committed under `data/raw/`. |
-| S2 Reproducibility | measured — PASS, 6 of 6 rows; clean-shell walkthrough pending T-012 | Stage 4 run 2 (`stage4-run2`, 2026-11-14): stock-64K and tuned-64K re-measured on a different day; every row inside the wider of its Stage 3 95% CI and ±5%, every row on clean units (the Stage 4 section; `data/analysis/stage4/s2-summary.md`). Run 1 superseded (R5); kernel/driver confound recorded (E-009). The README clean-shell launch of every recommended config is T-012, pending. |
+| S2 Reproducibility | met — PASS 6/6 rows; clean-shell walkthrough met: PASS 6/6 (T-012) | Stage 4 run 2 (`stage4-run2`, 2026-11-14): stock-64K and tuned-64K re-measured on a different day; every row inside the wider of its Stage 3 95% CI and ±5%, every row on clean units (the Stage 4 section; `data/analysis/stage4/s2-summary.md`). Run 1 superseded (R5); kernel/driver confound recorded (E-009). The README clean-shell launch of every recommended config passed in the T-012 walkthrough (6/6). |
 | S3 Decisions | met | Stock and tuned config for each of 32K/64K/128K (`configs/server/{stock,tuned}-{32k,64k,128k}.toml`); tuned chosen by the §3.3 rule (Stage 2 section); each launches via `scripts/launch-server.sh`. |
 | S4 Health checks | evidence recorded; deviations noted | MTP head tensor screen and acceptance (0.771 at 64K, draft 1); endpoints (`data/health/endpoints-2026-11-08.json`); sanity pass (Output sanity check section); env snapshot + warm-up every run. Deviations: 128K S4(d) headline on a flagged stock window (D1); Stages 1–2 apps-open. Full sub-item assessment in T-014. |
-| S5 Release | pending T-015/T-016 | Awaits the release checklist (§9): scrub and release checks (T-013), private repo, CI and tag v0.1.0 (T-015), publish (T-016). |
+| S5 Release | pending the tag and publish (T-015/T-016) | Scrub and release checks passed (T-013). Awaits the release checklist (§9): private repo, CI and tag v0.1.0 (T-015), publish (T-016). |
 
 ## 9. Sources and verification
 
