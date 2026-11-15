@@ -51,12 +51,11 @@ _(none)_
 | lane | lock | worktree | tasks |
 |---|---|---|---|
 | 1 | - | - | - |
-| 2 | - | yes | T-005, T-011, T-018 |
 
 ## Last events
 
-- 2026-11-15T11:07:32Z step-done T-011 — S6
 - 2026-11-15T11:07:32Z step-done T-011 — S7
 - 2026-11-15T11:07:32Z step-done T-011 — S8
 - 2026-11-15T11:07:32Z step-done T-011 — S9
 - 2026-11-15T11:13:01Z done T-011 — accept run at 2026-11-15T11:07:37Z
+- 2026-11-15T12:05:35Z lane-merged — lane 2
