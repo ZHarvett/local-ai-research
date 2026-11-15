@@ -14,7 +14,7 @@ from the main checkout; no live state was written by this task.
 main state with
 
 ```python
-merged = {**base, **task}          # scripts/_wf.py:2318
+merged = {**base, **task}  # scripts/_wf.py:2318
 ```
 
 so every lane field — including `status` — wins over main. A lane mirror keeps
@@ -54,7 +54,7 @@ terminal (`scripts/_wf.py:130`), so once the fold regressed T-005/T-018 to
 `parse_review_report` (`scripts/_wf.py:1913`) reads the report's verdict line:
 
 ```python
-m = re.search(r"^## Task verdict\s*\n+\s*(\S+)\s*$", text, re.M)   # line 1917
+m = re.search(r"^## Task verdict\s*\n+\s*(\S+)\s*$", text, re.M)  # line 1917
 ```
 
 `(\S+)\s*$` accepts a single bare token only. A verdict line such as
@@ -69,10 +69,10 @@ worktree the regex is line 1917 and the `if m:` is 1918.
 
 ```python
 if worktree.is_dir():
-    return worktree            # lines 1463-1464: existing worktree, no refresh
+    return worktree  # lines 1463-1464: existing worktree, no refresh
 ...
 if branch in branches:
-    _git(repo, "worktree", "add", str(worktree), branch)   # 1467-1468: old branch tip
+    _git(repo, "worktree", "add", str(worktree), branch)  # 1467-1468: old branch tip
 ```
 
 An existing worktree is returned as-is, and a recreated worktree reuses the old
@@ -219,3 +219,24 @@ edited, and S7 itself edits nothing but this recon file.
   `blocked_from`. T-022's S2–S4 scope does not cover these paths (the new
   restore-status keeps the foreign-lane guard for itself, which is not the
   F-2 fix); listed here for a future kit card.
+
+## 6. S8 — CI run
+
+`CI_CMD` (docs/recon/commands.env:43) ran detached via scripts/run-detached.sh
+(the suite can exceed the 8-minute foreground rule; it took 5:12).
+
+- Run 1, `data/logs/jobs/t022-ci-20261115T135729Z/`: exit 1 at
+  `ruff format --check` — this recon file's own fenced Python blocks had
+  comment spacing ruff format collapses (S1 text, first whole-repo format
+  check since). Fixed with `uv run ruff format docs/recon/T-022-kit-fixes.md`
+  (4 whitespace-only lines); `ruff check` had already passed.
+- Run 2, `data/logs/jobs/t022-ci-2-20261115T135819Z/`: exit 0.
+  `uv sync --frozen`, `ruff check`, `ruff format --check` (290 files),
+  `pytest -m "not gpu"`: **1103 passed, 2 deselected in 312.93s (0:05:12)**,
+  then `shellcheck scripts/*.sh` clean. Job logs are gitignored
+  (.gitignore:8 `data/logs/*/`); the status.json exit codes are the evidence.
+
+No progress-log entry (parallel-group rule, shared rule 6). No kit command was
+run against the live state beyond this task's own bookkeeping: restore-status,
+merge-lanes and the T-005/T-018 repair are left to the driver after the merge,
+per the card and E-013.
