@@ -1,5 +1,5 @@
 {
-  "checksum": "d8a1fc116452cb036d6690d4fdb94a80025a533d0dfa3b9b1a3f6e08e8a4f014",
+  "checksum": "fa518a12549a9269b041f06b91626ced03f8a1ecf8302417f0e9630ce10a7476",
   "created_utc": "2026-11-12T22:25:04Z",
   "escalations": {
     "E-001": {
@@ -1872,6 +1872,13 @@
       "seq": 255,
       "task": "T-010",
       "ts": "2026-11-15T09:02:38Z"
+    },
+    {
+      "detail": "accept run at 2026-11-15T09:03:49Z",
+      "event": "done",
+      "seq": 256,
+      "task": "T-010",
+      "ts": "2026-11-15T09:03:57Z"
     }
   ],
   "kit_version": "0.1.0",
@@ -2252,7 +2259,7 @@
       "resources": "light",
       "review": "post",
       "source": "plan",
-      "status": "in-progress",
+      "status": "done",
       "steps_done": [
         "S1",
         "S2"
