@@ -20,7 +20,7 @@ files; change them through the scripts only.
 | T-008 | S2 check and Stage 4 analysis | accepted ⚠ re-acknowledge (judgement) | 1 | post |
 | T-009 | Post-Stage-4 code fixes | done ⚠ re-acknowledge | 1 | none |
 | T-010 | Final README, report, write-up and changelog | accepted ⚠ re-acknowledge (judgement) | 1 | post |
-| T-011 | Plan v1.9, upstream drafts, methodology | ready ⚠ re-acknowledge | 2 | none |
+| T-011 | Plan v1.9, upstream drafts, methodology | done ⚠ re-acknowledge | 2 | none |
 | T-012 | README walkthrough from a clean shell | ready | 1 | none |
 | T-013 | Scrub and release checks | todo ⚠ re-acknowledge | 1 | post |
 | T-014 | Completion report and planning-chat review | todo | 1 | none |
@@ -36,7 +36,6 @@ files; change them through the scripts only.
 ## READY (grouped by lane)
 
 - lane 1: **T-012** README walkthrough from a clean shell
-- lane 2: **T-011** Plan v1.9, upstream drafts, methodology
 - lane 2: **T-022** Kit fixes: lane merge status and state riders
 
 ## Escalation queue
@@ -52,11 +51,12 @@ _(none)_
 | lane | lock | worktree | tasks |
 |---|---|---|---|
 | 1 | - | - | - |
+| 2 | - | yes | T-005, T-011, T-018 |
 
 ## Last events
 
-- 2026-11-15T10:51:52Z claimed T-011 — lane 2, pid 433504
-- 2026-11-15T10:51:52Z migrated-to-lane T-011 — lane 2
-- 2026-11-15T10:51:58Z started T-011 — lane 2
-- 2026-11-15T11:04:00Z lane-released — lane 2; reverted: T-011
-- 2026-11-15T11:04:29Z lane-merged — lane 2
+- 2026-11-15T11:07:32Z step-done T-011 — S6
+- 2026-11-15T11:07:32Z step-done T-011 — S7
+- 2026-11-15T11:07:32Z step-done T-011 — S8
+- 2026-11-15T11:07:32Z step-done T-011 — S9
+- 2026-11-15T11:13:01Z done T-011 — accept run at 2026-11-15T11:07:37Z
