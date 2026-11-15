@@ -20,7 +20,7 @@ files; change them through the scripts only.
 | T-008 | S2 check and Stage 4 analysis | accepted ⚠ re-acknowledge (judgement) | 1 | post |
 | T-009 | Post-Stage-4 code fixes | done ⚠ re-acknowledge | 1 | none |
 | T-010 | Final README, report, write-up and changelog | accepted ⚠ re-acknowledge (judgement) | 1 | post |
-| T-011 | Plan v1.9, upstream drafts, methodology | done ⚠ re-acknowledge | 2 | none |
+| T-011 | Plan v1.9, upstream drafts, methodology | ready ⚠ re-acknowledge | 2 | none |
 | T-012 | README walkthrough from a clean shell | ready | 1 | none |
 | T-013 | Scrub and release checks | todo ⚠ re-acknowledge | 1 | post |
 | T-014 | Completion report and planning-chat review | todo | 1 | none |
@@ -31,10 +31,13 @@ files; change them through the scripts only.
 | T-019 | Stage 4 pre-flight (no GPU) | accepted (judgement) | 1 | post |
 | T-020 | Restore and verify the PCIe Gen4 link (hands-on) | done (judgement) | 1 | none |
 | T-021 | Stage 4 session, run 2 | accepted (judgement) | 1 | post |
+| T-022 | Kit fixes: lane merge status and state riders | ready | 2 | post |
 
 ## READY (grouped by lane)
 
 - lane 1: **T-012** README walkthrough from a clean shell
+- lane 2: **T-011** Plan v1.9, upstream drafts, methodology
+- lane 2: **T-022** Kit fixes: lane merge status and state riders
 
 ## Escalation queue
 
@@ -52,8 +55,8 @@ _(none)_
 
 ## Last events
 
-- 2026-11-15T10:19:48Z unblocked T-011 — restored to in-progress
-- 2026-11-15T10:19:48Z note T-011 — decision E-012 recorded
-- 2026-11-15T10:25:57Z done T-011 — accept run at 2026-11-15T10:20:45Z
-- 2026-11-15T10:27:08Z lane-merged — lane 2
-- 2026-11-15T10:27:08Z ready T-012 — dependencies satisfied
+- 2026-11-15T10:47:32Z plan-added T-022 — new card in amended plan
+- 2026-11-15T10:47:32Z plan-changed T-013 — card changed; re-acknowledgement required
+- 2026-11-15T10:47:32Z plan-amended — sha256 5b16cefd7ae3…
+- 2026-11-15T10:47:32Z ready T-011 — dependencies satisfied
+- 2026-11-15T10:47:32Z ready T-022 — dependencies satisfied

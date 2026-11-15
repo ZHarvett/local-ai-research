@@ -1,5 +1,5 @@
 {
-  "checksum": "2d449a881e0005638949a3adcb7a38bf0c246f6e1da414680a55c5612f782693",
+  "checksum": "4602656bd95f9d6f190dc2f9c08650d582dfce49f18e35d20ae126427967fc3f",
   "created_utc": "2026-11-12T22:25:04Z",
   "escalations": {
     "E-001": {
@@ -2138,6 +2138,48 @@
       "seq": 292,
       "task": "T-012",
       "ts": "2026-11-15T10:27:08Z"
+    },
+    {
+      "detail": "card changed; re-acknowledgement required",
+      "event": "plan-changed",
+      "seq": 293,
+      "task": "T-011",
+      "ts": "2026-11-15T10:47:32Z"
+    },
+    {
+      "detail": "new card in amended plan",
+      "event": "plan-added",
+      "seq": 294,
+      "task": "T-022",
+      "ts": "2026-11-15T10:47:32Z"
+    },
+    {
+      "detail": "card changed; re-acknowledgement required",
+      "event": "plan-changed",
+      "seq": 295,
+      "task": "T-013",
+      "ts": "2026-11-15T10:47:32Z"
+    },
+    {
+      "detail": "sha256 5b16cefd7ae3\u2026",
+      "event": "plan-amended",
+      "seq": 296,
+      "task": null,
+      "ts": "2026-11-15T10:47:32Z"
+    },
+    {
+      "detail": "dependencies satisfied",
+      "event": "ready",
+      "seq": 297,
+      "task": "T-011",
+      "ts": "2026-11-15T10:47:32Z"
+    },
+    {
+      "detail": "dependencies satisfied",
+      "event": "ready",
+      "seq": 298,
+      "task": "T-022",
+      "ts": "2026-11-15T10:47:32Z"
     }
   ],
   "kit_version": "0.1.0",
@@ -2149,7 +2191,7 @@
     "P4"
   ],
   "plan_file": "PLAN.md",
-  "plan_sha256": "a0b45d9648316b65393d600a80dfacf223471fce8d2ef4119916b9816ab6a41a",
+  "plan_sha256": "5b16cefd7ae3f81408968444e5a1951e10779d43ab8c407eee9d07eaa25399ec",
   "review_cycles": {
     "T-005": 2,
     "T-007": 1,
@@ -2527,9 +2569,7 @@
       "title": "Final README, report, write-up and changelog"
     },
     "T-011": {
-      "blocked_from": null,
-      "blocked_reason": null,
-      "card_sha256": "4454048de0535e56b8cdd3d725d6f0969a0e1c413c5ede31a3e75a66eba94f71",
+      "card_sha256": "55905e9f6b7a414efed543bd9d5e5c1125687cdae68a6daaee669cff7bac70ef",
       "depends_on": [
         "T-008",
         "T-009"
@@ -2546,7 +2586,7 @@
       "resources": "light",
       "review": "none",
       "source": "plan",
-      "status": "done",
+      "status": "ready",
       "title": "Plan v1.9, upstream drafts, methodology"
     },
     "T-012": {
@@ -2568,11 +2608,12 @@
       "title": "README walkthrough from a clean shell"
     },
     "T-013": {
-      "card_sha256": "080bad60134f7a5468e9f555ae656e6cd423ef05f6436190461ce6ad4e8a184d",
+      "card_sha256": "2be7c910812741a2fa638df193d30692c82d2b8de53a8149151c4e7549ec4d6e",
       "depends_on": [
         "T-010",
         "T-011",
-        "T-012"
+        "T-012",
+        "T-022"
       ],
       "files_write": [
         "scripts/release-check.sh",
@@ -2769,6 +2810,25 @@
         "S5"
       ],
       "title": "Stage 4 session, run 2"
+    },
+    "T-022": {
+      "card_sha256": "de8dc50e3bf89931bbdae6c7eafd3626f5f5c1ba887cb81edf5c5ba0a3fd2029",
+      "depends_on": [],
+      "files_write": [
+        "scripts/_wf.py",
+        "scripts/wf.sh",
+        "tests/test_wf_lane_merge.py",
+        "docs/runbook-stage3.md",
+        "docs/recon/T-022-start.txt",
+        "docs/recon/T-022-kit-fixes.md"
+      ],
+      "lane": 2,
+      "phase": "P4",
+      "resources": "cpu-heavy",
+      "review": "post",
+      "source": "plan",
+      "status": "ready",
+      "title": "Kit fixes: lane merge status and state riders"
     }
   },
   "title": "Step 0, remaining work: Stage 4, release v0.1.0, completion report",
