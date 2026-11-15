@@ -3,8 +3,9 @@
 <!-- sources: reports/baseline-report.md, data/analysis/stage3/headline.md, docs/decisions.md, docs/plans/step-0-baseline.md, data/analysis/stage4/s2-summary.md, reports/stage4-run2/caveats.md, docs/recon/pcie-link.md -->
 
 > **FINAL (T-010).** A narrative companion to `reports/baseline-report.md`, which carries the
-> full tables, provenance and deviations. Stage 4 (next-day reproducibility) passes 6 of 6
-> rows on run 2; the v0.1.0 release checks are still pending. Every number here is copied
+> full tables, provenance and deviations. Stage 4 (reproducibility on a different day) passes
+> 6 of 6 rows on run 2; the clean-shell walkthrough (T-012) and the scrub and release checks
+> (T-013) pass; the v0.1.0 tag and publish are pending (T-015, T-016). Every number here is copied
 > from a named repo file (the `sources:` line above) or marked `derived:`;
 > `tools/check_doc_numbers.py` verifies this.
 
@@ -86,7 +87,8 @@ hit rate); and the workloads are popular public code the model may have seen in 
 **MTP draft length 2.** It fails the output sanity check deterministically at 32K and 64K:
 a repeated phrase, maximum 8-gram repeat 8 against the reference's 2. The rule stands,
 thresholds unchanged, so draft length 2 is excluded from every tuned config. Draft length 1
-is bit-identical to MTP off; draft length 3 passes. MTP overall helped only about 2 to 5% per
+was recorded as bit-identical to MTP off in the plan's greedy checks (the committed sanity files
+hold pass and fail only); draft length 3 passes. MTP overall helped only about 2 to 5% per
 turn (4.6% at 32K on the excluded draft-length-2 config, 2.4% at 64K on draft length 1), and
 costs 9 to 16% of prefill speed and 0.75 to 1.5 GiB of VRAM — so it joins a tuned config only
 at 64K. At 128K no MTP cell had the required VRAM margin.
@@ -131,7 +133,8 @@ conclusion is unchanged (0.712 [0.629, 0.807]). The 32K tuned KV type is the 8-b
 not a measured FP16 comparison. Expert-cache hit rates carry the caveats above. Five
 repetitions per cell support the turn-time claim, not fine decode differences. Stage 4's
 re-measurement passes (6 of 6 rows) but carries a kernel/driver confound and one superseded
-run (above); the clean-shell walkthrough and the release checks are still pending.
+run (above); the clean-shell walkthrough (T-012) and the release checks (T-013) pass; the tag
+and publish are pending (T-015, T-016).
 
 ## Sources
 

@@ -75,12 +75,13 @@ lowest. Stage 3 took about 2.1 hours; Stage 4 run 2 took 26.1 minutes plus a 9.2
   small and not robust to excluding swap-active units (tg@24K 1.089 [0.996, 1.190] → 1.057
   [0.859, 1.300] when 3 of 5 pairs are dropped); T_turn_400 conclusions unchanged.
 - **D7 — sanity file name** is `data/sanity/stage3-tuned.json` (runbook said `stage3-all.json`).
-- **D8 / E-006 / E-014 — history scrub, no rewrite.** The current tree has 0 findings in 4,564
-  files. The history scan (310 commits) finds exactly 6 known lines across four allowlisted
+- **D8 / E-006 / E-014 — history scrub, no rewrite.** The current tree has 0 findings. The
+  history scan finds exactly 6 known lines across four allowlisted
   commit×path pairs: `26faadd` and `dfcd7d9` × docs/decisions.md (the WP0 account-name occurrence
   and its removal side — **the E-014 pair, option A, recorded here per the decision's scope**),
   and `3f41e18` and `bc8e0c3` × docs/recon/loop-states.md. The account name is already public as
-  the author on every commit; history is not rewritten.
+  the author on every commit; history is not rewritten. File and commit counts are in
+  docs/recon/scrub-report.md; they change with every commit.
 - **D9 — hit-rate caveat.** Rates include warm-up and attempt-1 units of re-run windows, are
   decode-batch only (no prefill hit rate), and the workloads are public code the model may have
   seen in training.
@@ -109,8 +110,10 @@ lowest. Stage 3 took about 2.1 hours; Stage 4 run 2 took 26.1 minutes plus a 9.2
    Steps 3b and 7 should look at it before relying on draft lengths above 1.
 2. **#28619 comment draft** (`docs/upstream/llama-cpp-28619-comment-draft-state.md`), not filed.
    The upstream re-check (§8) now confirms the issue closed as completed on 2026-10-15 via merged
-   PR #30574 — the draft's "may already be fixed" premise is confirmed; planning chat decides
-   whether to file it as a confirmation or retire it.
+   PR #30574 — the draft's "may already be fixed" premise is confirmed. Decision (E-015): the
+   comment is retired and not filed. The issue is closed as completed (PR #30574, merged
+   2026-10-15) and the draft has no negative control. The draft stays in docs/upstream/ as a
+   record that the draft state survived save/restore on b12208 up to 8,192 tokens.
 3. **Unexplained VRAM residual**: 512–532 MiB (MTP cells) vs 337–363 MiB (without MTP) at every
    context; the 170 MiB difference is not a logged compute buffer and was not attributed.
 4. **Run 1's Gen4→Gen3 link drop has no proven cause**; the 2026-11-12 suspend/resume is the only
@@ -159,7 +162,7 @@ lowest. Stage 3 took about 2.1 hours; Stage 4 run 2 took 26.1 minutes plus a 9.2
 
 1. Replace "OpenCode or Claude Code" with OpenCode (control harness decided, WP7).
 2. Steps 3b/5: #28619 is fixed upstream (closed completed 2026-10-15, PR #30574 merged) — verify on
-   the build Step 3b pins; update or retire the comment draft (open issue 2).
+   the build Step 3b pins.
 3. Steps 3b/7: investigate the draft-length-2 repeated phrase before relying on draft lengths > 1;
    the issue draft is ready for Zack to file.
 4. Step 3b: `--moe-cache-audit` depends on PR #30594, still open — keep the router-hook fallback.
@@ -181,10 +184,10 @@ lowest. Stage 3 took about 2.1 hours; Stage 4 run 2 took 26.1 minutes plus a 9.2
 | 5 | unit tests local + CI green on GitHub | local done; **GitHub CI pending T-015** | T-009: `pytest -m "not gpu"` 1070 passed, 2 deselected; CI_CMD green 5×; no remote yet |
 | 6 | raw JSONL, env snapshots, microbenchmarks, health, report with CIs, exact commands | done | `data/raw/` (Stages 1–4, run 1 superseded kept), `data/env/`, `data/health/`, `reports/baseline-report.md`, `docs/recon/commands.env` |
 | 7 | provenance (tag, commit, flags; model repo/revision/SHA-256; harness versions) | done | `data/env/build-info.json`, `configs/model.toml`, `configs/harness.toml`; baseline report §2 |
-| 8 | data scrubbed; prompts as recipes only | done | T-013: `scripts/release-check.sh` exit 0 — 0 findings in 4,564 files; history: 4 allowlisted pairs (§3, D8/E-014); `docs/recon/scrub-report.md` |
-| 9 | write-up draft reviewed (GitHub only) | **in progress — this task's escalation** | planning-chat review of `docs/step-0-completion-report.md` + `reports/writeup.md` (E-015) |
+| 8 | data scrubbed; prompts as recipes only | done | T-013: `scripts/release-check.sh` exit 0 — 0 findings; history: 4 allowlisted pairs (§3, D8/E-014); `docs/recon/scrub-report.md` |
+| 9 | write-up draft reviewed (GitHub only) | done (E-015) | planning-chat review of this report and reports/writeup.md, E-015, edits listed in docs/decisions.md |
 | 10 | LICENSE (MIT) + LICENSE-DATA.md (CC BY 4.0) | done | release-check e) both present |
-| 11 | upstream bug drafts with evidence | done (not filed — Zack) | `docs/upstream/` two drafts (T-011) |
+| 11 | upstream bug drafts with evidence | done (the #28619 draft is retired; the draft-length-2 issue draft is not filed, Zack's choice) | `docs/upstream/` two drafts (T-011) |
 | 12 | progress log complete + completion report delivered | this report; delivery via the review | `docs/progress-log.md`; this file |
 
 **Success criteria (plan §2), final assessment:**
@@ -227,6 +230,5 @@ then by the 7-day rule); newest by publish time is 0.2.2-rc.3 (2026-11-13, `next
 
 ---
 
-*Checks run for this report: `tools/check_doc_numbers.py` on this file; `scripts/release-check.sh`
-(exit 0, T-013 state). The planning-chat review of this report and `reports/writeup.md` is the
-task's escalation; edits beyond the decision's list require a new decision.*
+*Reviewed by the planning chat (E-015) on 2026-11-15; the edits it listed are applied as recorded
+in docs/decisions.md.*
