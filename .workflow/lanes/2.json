@@ -1,5 +1,5 @@
 {
-  "checksum": "139323f5e4aa2795916dc6af0a564cc82fde3f5d106e49bf66ea1e117b024585",
+  "checksum": "4e5818385e7cfd13b5d9c7f0a8b2de6a6a6ea614461c675334ef1071e72da6e0",
   "events": [
     {
       "detail": "lane 2, pid 1807601",
@@ -294,6 +294,13 @@
       "seq": 41,
       "task": "T-022",
       "ts": "2026-11-15T13:14:37Z"
+    },
+    {
+      "detail": "E-013 (problem)",
+      "event": "escalated",
+      "seq": 42,
+      "task": "T-022",
+      "ts": "2026-11-15T13:27:45Z"
     }
   ],
   "lane": 2,
@@ -385,6 +392,8 @@
       "title": "Kit repair: leave blocked-decision after a review verdict"
     },
     "T-022": {
+      "blocked_from": "in-progress",
+      "blocked_reason": "escalation E-013",
       "card_sha256": "de8dc50e3bf89931bbdae6c7eafd3626f5f5c1ba887cb81edf5c5ba0a3fd2029",
       "claimed_by_lane": 2,
       "depends_on": [],
@@ -401,7 +410,7 @@
       "resources": "cpu-heavy",
       "review": "post",
       "source": "plan",
-      "status": "in-progress",
+      "status": "blocked-decision",
       "steps_done": [],
       "title": "Kit fixes: lane merge status and state riders"
     }
