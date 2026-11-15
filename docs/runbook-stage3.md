@@ -143,7 +143,7 @@ its **repetition time** is `measure` divided by the repetitions. Stock cells com
 | context | stock: fixed + 5 x repetition | tuned: fixed + 5 x repetition | canaries (start + end) | session |
 |---|---|---|---|---|
 | 32K  | 34.8 + 5 x (169.8 / 2 = 84.9) = **459** | 25.8 + 5 x (215.4 / 5 = 43.1) = **241** (`s2a-P6-32K-b4096-mtp0`) | 197.8 + 184.9 = **383** | 459 + 241 + 383 = 1,083 s = **18 min** |
-| 64K  | 37.9 + 5 x (306.5 / 2 = 153.3) = **804** | 25.7 + 5 x (377.6 / 5 = 75.5) = **403** (`s2b-P6-64K-b4096-mtp1-kvf16`) | 183.8 + 186.2 = **370** | 804 + 403 + 370 = 1,578 s = **26 min** |
+| 64K  | 37.9 + 5 x (306.5 / 2 = 153.3) = **804** | 25.7 + 5 x (377.6 / 5 = 75.5) = **403** (`s2b-P6-64K-b4096-mtp1-kvf16`) | 183.8 + 186.2 = **370** | 804 + 403 + 370 = 1,577 s = **26 min** |
 | 128K | 45.0 + 5 x (653.7 / 2 = 326.9) = **1,679** | 25.2 + 5 x (690.2 / 5 = 138.0) = **715** (`s2b-P6-128K-b4096-mtp0-kvf16`) | 182.9 + 193.6 = **376** | 1,679 + 715 + 376 = 2,771 s = **46 min** |
 
 - **Three Stage 3 sessions: 1,083 + 1,578 + 2,771 = 5,432 s = 90 min; with 10% for idle waits and cold loads 100 min (1.7 h).** No probing is needed (the cache sizes are fixed numbers in the files),

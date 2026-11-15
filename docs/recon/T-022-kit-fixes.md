@@ -139,11 +139,32 @@ S4 does.
 
 ## 3. Deferrals (S4)
 
-(to be filled in if a fix is left out)
+None. All three S4 fixes were applied, each well under 50 changed lines:
+(3) parser 2 lines, (4) worktree refresh 16 lines, (5) recompute_ready 10 lines.
+Total production diff (S2+S3+S4): `scripts/_wf.py` 91 insertions, 9 deletions;
+`scripts/wf.sh` unchanged (it is a thin dispatcher; `restore-status` is
+registered in `_wf.py`'s argparse). Under the card's ~200-line escalation
+threshold; the new test file is additional, as the card mandates tests for
+every fix (the T-018 precedent: its test file was 277 lines).
+
+Every fix was red/green verified: with the fix reverted, its new tests fail
+(S2: 6 of 7; S4: 5 of 10, the other 5 are controls that must pass both ways).
 
 ## 4. S6 — runbook figure check
 
-(to be filled in)
+Finding confirmed and fixed: `docs/runbook-stage3.md:146` (Stage 3, 64K row)
+said `804 + 403 + 370 = 1,578 s`; the sum of the row's own addends is 1,577
+(`python3 -c "print(804+403+370)"` → 1577). T-019 review r1 F-3
+(`reviews/T-019/r1-REVIEW_REPORT.md:86`) flagged exactly this, and r2
+(`reviews/T-019/r2-REVIEW_REPORT.md:113`) verified the addends against the
+source data ("804 + 403 + 370 = 1,577 s / 26 / 29 / 44 min. All match the
+doc."). The Stage 4 row (line 156) already used the correct 1,577 with the same
+addends. Changed that one number only (1,578 → 1,577 on line 146), per the card.
+
+Observation (not changed, per the card's "nothing else"): line 149 still reads
+"1,083 + 1,578 + 2,771 = 5,432 s = 90 min"; with the corrected 64K figure the
+grand total would be 5,431 s. The 1 s difference does not change the 90 min
+estimate. Left for a future docs card.
 
 ## 5. S7 — review-note application check
 
