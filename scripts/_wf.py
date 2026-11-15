@@ -455,6 +455,14 @@ def recompute_ready(owner: dict, repo: Path, owner_lane: int | None) -> bool:
     """todo -> ready for tasks in `owner` whose dependencies are satisfied, judged
     against the effective view (main state from disk + this owner's overlay)."""
     changed = False
+    # T-022 (E-005): the main state must not promote the todo placeholders of
+    # lane-owned tasks; the lane mirrors are the ownership authority.
+    lane_owned: set[str] = set()
+    if owner_lane is None:
+        for lane in lane_numbers(repo):
+            mirror = load_lane(repo, lane, from_mirror=True)
+            if mirror:
+                lane_owned.update(mirror.get("tasks", {}))
     for _ in range(3):
         if owner_lane is None:
             eff = effective_tasks(repo, owner)
@@ -468,6 +476,8 @@ def recompute_ready(owner: dict, repo: Path, owner_lane: int | None) -> bool:
             eff = tasks
         round_changed = False
         for tid, task in owner.get("tasks", {}).items():
+            if tid in lane_owned:
+                continue
             if task["status"] == "todo" and task_deps_satisfied(eff, task):
                 task["status"] = "ready"
                 append_event(owner, "ready", tid, "dependencies satisfied")
@@ -1464,14 +1474,23 @@ def ensure_lane_worktree(repo: Path, lane: int) -> Path:
     if lane == 1:
         return repo
     worktree = worktree_for_lane(repo, lane)
-    if worktree.is_dir():
-        return worktree
-    branch = f"lane-{lane}"
-    branches = _git(repo, "branch", "--format=%(refname:short)").splitlines()
-    if branch in branches:
-        _git(repo, "worktree", "add", str(worktree), branch)
-    else:
-        _git(repo, "worktree", "add", "-b", branch, str(worktree))
+    if not worktree.is_dir():
+        branch = f"lane-{lane}"
+        branches = _git(repo, "branch", "--format=%(refname:short)").splitlines()
+        if branch in branches:
+            _git(repo, "worktree", "add", str(worktree), branch)
+        else:
+            _git(repo, "worktree", "add", "-b", branch, str(worktree))
+    # T-022: refresh a stale worktree from main (T-018 recon §5); on conflict,
+    # abort and leave it as-is so the session can still merge main by hand.
+    behind = _git(worktree, "rev-list", "--count", "HEAD..main", check=False)
+    if behind.isdigit() and int(behind) > 0:
+        proc = subprocess.run(
+            ["git", "merge", "--no-edit", "main"], cwd=worktree, capture_output=True, text=True
+        )
+        if proc.returncode != 0:
+            subprocess.run(["git", "merge", "--abort"], cwd=worktree, capture_output=True)
+            print(f"lane {lane}: auto-merge of main conflicted; merge main by hand in the worktree")
     return worktree
 
 
@@ -1918,7 +1937,8 @@ def parse_review_report(path: Path) -> tuple[dict, list[dict]]:
     """Parse the report's task-verdict line and findings table rows."""
     text = path.read_text(encoding="utf-8")
     verdict = ""
-    m = re.search(r"^## Task verdict\s*\n+\s*(\S+)\s*$", text, re.M)
+    # T-022: allow one trailing parenthetical, e.g. "accepted (cycle 1, 3 findings)"
+    m = re.search(r"^## Task verdict\s*\n+\s*(\S+)(?:\s*\([^)]*\))?\s*$", text, re.M)
     if m:
         verdict = m.group(1)
     findings = []
