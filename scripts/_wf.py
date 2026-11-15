@@ -2057,6 +2057,53 @@ def cmd_unblock(repo: Path, args: argparse.Namespace) -> None:
     print(f"{args.task} unblocked -> {restore}")
 
 
+def cmd_restore_status(repo: Path, args: argparse.Namespace) -> None:
+    """T-022: repair a status a kit bug regressed (done -> accepted only), guarded
+    by the task's own accepted review-verdict event. Writes the status directly:
+    done -> accepted is deliberately outside TRANSITIONS, so no existing
+    transition changes."""
+    tid = args.task
+    if args.to != "accepted":
+        die(f"--to {args.to} is not a legal restore target (allowed: accepted)")
+    owner, owner_lane, task = find_task(repo, tid)
+    foreign_lane = owner_lane is not None and not in_main(repo)
+    if foreign_lane and lane_of_worktree(repo) != owner_lane:
+        die("this session runs in a worktree; only tasks owned by this lane may be changed here")
+    if task["status"] != "done":
+        die(f"task {tid} is {task['status']}, not done (restore-status repairs done -> accepted)")
+    events = all_events(repo, load_state(repo))
+    verdict = next(
+        (
+            e
+            for e in events
+            if e.get("event") == "review-verdict"
+            and e.get("task") == tid
+            and e.get("seq") == args.verdict_seq
+            and str(e.get("detail", "")).startswith("accepted")
+        ),
+        None,
+    )
+    if verdict is None:
+        die(f"no accepted review-verdict event with seq {args.verdict_seq} for {tid}")
+    # canonical event order is (ts, seq): merged logs duplicate lane events and
+    # lane/main seq spaces collide, so seq alone is not a safe ordering
+    vkey = (verdict.get("ts", ""), verdict.get("seq", 0))
+    if any(
+        e.get("event") == "review-opened"
+        and e.get("task") == tid
+        and (e.get("ts", ""), e.get("seq", 0)) > vkey
+        for e in events
+    ):
+        die(f"task {tid} has a review-opened later than verdict seq {args.verdict_seq}")
+    old = task["status"]
+    task["status"] = "accepted"
+    detail = f"{old} -> accepted (review-verdict seq {args.verdict_seq})"
+    append_event(owner, "status-restored", tid, detail)
+    recompute_ready(owner, repo, owner_lane)
+    save_owner(repo, owner, owner_lane)
+    print(f"{tid} restored: {detail}")
+
+
 def next_escalation_id(repo: Path) -> str:
     state = load_state(repo)
     ids = [int(k.split("-")[1]) for k in state.get("escalations", {}) if k.startswith("E-")]
@@ -2638,6 +2685,15 @@ def build_parser() -> argparse.ArgumentParser:
     s.add_argument("task")
     s.add_argument("--to", metavar="STATUS", default=None)
     s.set_defaults(fn=cmd_unblock)
+
+    s = sp(
+        "restore-status",
+        "repair a bug-regressed done -> accepted, guarded by a review-verdict event (T-022)",
+    )
+    s.add_argument("task")
+    s.add_argument("--to", metavar="STATUS", required=True)
+    s.add_argument("--verdict-seq", type=int, required=True)
+    s.set_defaults(fn=cmd_restore_status)
 
     s = sp("escalate", "create escalations/E-NNN.md and block the task")
     s.add_argument("--task", default="")
