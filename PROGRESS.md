@@ -22,8 +22,8 @@ files; change them through the scripts only.
 | T-010 | Final README, report, write-up and changelog | accepted ⚠ re-acknowledge (judgement) | 1 | post |
 | T-011 | Plan v1.9, upstream drafts, methodology | done ⚠ re-acknowledge | 2 | none |
 | T-012 | README walkthrough from a clean shell | done | 1 | none |
-| T-013 | Scrub and release checks | done ⚠ re-acknowledge (judgement) | 1 | post |
-| T-014 | Completion report and planning-chat review | todo | 1 | none |
+| T-013 | Scrub and release checks | accepted ⚠ re-acknowledge (judgement) | 1 | post |
+| T-014 | Completion report and planning-chat review | ready | 1 | none |
 | T-015 | Private repo, CI and tag v0.1.0 | todo | 1 | none |
 | T-016 | Publish v0.1.0 | todo | 1 | none |
 | T-017 | Unattended loop (wf-loop.sh) | accepted (judgement) | 3 | post |
@@ -35,7 +35,7 @@ files; change them through the scripts only.
 
 ## READY (grouped by lane)
 
-_(none)_
+- lane 1: **T-014** Completion report and planning-chat review
 
 ## Escalation queue
 
@@ -53,8 +53,8 @@ _(none)_
 
 ## Last events
 
-- 2026-11-15T14:47:14Z note T-013 — decision E-014 recorded
-- 2026-11-15T14:49:40Z resumed T-013 — from S3
-- 2026-11-15T14:53:53Z step-done T-013 — S3
 - 2026-11-15T14:55:15Z step-done T-013 — S4
 - 2026-11-15T14:55:15Z done T-013 — accept run at 2026-11-15T14:54:05Z
+- 2026-11-15T15:08:00Z review-opened T-013 — cycle 1
+- 2026-11-15T15:08:05Z review-verdict T-013 — accepted (cycle 1, 3 findings)
+- 2026-11-15T15:08:05Z ready T-014 — dependencies satisfied
