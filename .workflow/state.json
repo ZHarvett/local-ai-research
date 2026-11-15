@@ -1,5 +1,5 @@
 {
-  "checksum": "bbc105491194889dd95c2c4f008874f4b8af1fe23f8400dab97214469bf069b2",
+  "checksum": "c2c7da81476efdd634b1ef5e721d473a52bfc8f39985786025b635606b6c2b83",
   "created_utc": "2026-11-12T22:25:04Z",
   "escalations": {
     "E-001": {
@@ -95,7 +95,8 @@
     },
     "E-014": {
       "created_utc": "2026-11-15T14:41:08Z",
-      "status": "open",
+      "decided_utc": "2026-11-15T14:47:14Z",
+      "status": "decided",
       "task": "T-013",
       "type": "decision"
     }
@@ -3257,6 +3258,20 @@
       "seq": 450,
       "task": "T-013",
       "ts": "2026-11-15T14:41:08Z"
+    },
+    {
+      "detail": "restored to in-progress",
+      "event": "unblocked",
+      "seq": 451,
+      "task": "T-013",
+      "ts": "2026-11-15T14:47:14Z"
+    },
+    {
+      "detail": "decision E-014 recorded",
+      "event": "note",
+      "seq": 452,
+      "task": "T-013",
+      "ts": "2026-11-15T14:47:14Z"
     }
   ],
   "kit_version": "0.1.0",
@@ -3692,8 +3707,8 @@
       "title": "README walkthrough from a clean shell"
     },
     "T-013": {
-      "blocked_from": "in-progress",
-      "blocked_reason": "escalation E-014",
+      "blocked_from": null,
+      "blocked_reason": null,
       "card_sha256": "2be7c910812741a2fa638df193d30692c82d2b8de53a8149151c4e7549ec4d6e",
       "claimed_by_lane": 1,
       "depends_on": [
@@ -3713,7 +3728,7 @@
       "resources": "light",
       "review": "post",
       "source": "plan",
-      "status": "blocked-decision",
+      "status": "in-progress",
       "steps_done": [
         "S1",
         "S2"

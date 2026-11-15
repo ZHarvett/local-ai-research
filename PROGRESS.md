@@ -22,7 +22,7 @@ files; change them through the scripts only.
 | T-010 | Final README, report, write-up and changelog | accepted ⚠ re-acknowledge (judgement) | 1 | post |
 | T-011 | Plan v1.9, upstream drafts, methodology | done ⚠ re-acknowledge | 2 | none |
 | T-012 | README walkthrough from a clean shell | done | 1 | none |
-| T-013 | Scrub and release checks | blocked-decision ⚠ re-acknowledge | 1 | post |
+| T-013 | Scrub and release checks | in-progress ⚠ re-acknowledge | 1 | post |
 | T-014 | Completion report and planning-chat review | todo | 1 | none |
 | T-015 | Private repo, CI and tag v0.1.0 | todo | 1 | none |
 | T-016 | Publish v0.1.0 | todo | 1 | none |
@@ -39,7 +39,7 @@ _(none)_
 
 ## Escalation queue
 
-- **E-014** (decision, task T-013) — open
+_(none)_
 
 ## Review queue
 
@@ -53,8 +53,8 @@ _(none)_
 
 ## Last events
 
-- 2026-11-15T14:31:21Z claimed T-013 — lane 1, pid 579835
-- 2026-11-15T14:31:21Z started T-013 — lane 1
 - 2026-11-15T14:40:22Z step-done T-013 — S1
 - 2026-11-15T14:40:47Z step-done T-013 — S2
 - 2026-11-15T14:41:08Z escalated T-013 — E-014 (decision)
+- 2026-11-15T14:47:14Z unblocked T-013 — restored to in-progress
+- 2026-11-15T14:47:14Z note T-013 — decision E-014 recorded
