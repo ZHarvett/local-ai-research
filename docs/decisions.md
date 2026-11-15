@@ -1350,3 +1350,13 @@ Chosen option: A. T-011's evidence field becomes the plan file plus the two draf
 Reason: It is the same card/kit mismatch as E-010: the kit takes files as evidence. T-011's work is complete and committed and A1 to A6 passed, so the only change needed is the card's evidence field. No other card in the plan has a directory as evidence (checked for v1.7).
 Scope: T-011 only, a planning-chat plan amend to v1.7 that changes nothing but that evidence line. T-011's work stands in the lane-2 worktree (commits 24013d3, eb574f8, ee77b46; HEAD ee77b46): it must not be redone. The amend resets T-011's step state, so the executor marks S1 to S9 done with wf.sh step-done after checking the commits, and does not re-run any step: the plan edits (a) to (f) are insertions and are not safe to repeat. Then one accept re-run (about 5 minutes with the full CI), then wf.sh done, then merge-lanes 2.
 Rule: Every card's evidence entries must be files. Before any plan amend, check all cards for directory evidence and fix them together. A task whose committed steps survive a card amend gets its steps marked done by checking commits and using wf.sh step-done, never by re-running steps that are not idempotent. If any kit command in the sequence is refused, stop, change nothing by hand, and escalate with the exact output.
+
+---
+
+## DECISION E-013 (2026-11-15T13:38:03Z)
+
+DECISION E-013
+Chosen option: A — continue T-022 with no state change; extend the E-005 guard exception for T-022 only.
+Reason: Planning-chat ruling E-013. The three "done AND in lane 2" guard lines for T-005/T-011/T-018 are confirmed false positives (main and mirror agree, work already merged); they self-resolve when lane 2 merges. No measurement data, GPU work or release step is involved.
+Scope: T-022 lane-2 sessions (the executor and /review T-022) and the driver's step 1, until lane 2 is merged.
+Rule: Treat the guard as OK when EVERY GUARD line is exactly "GUARD: task T-NNN is in the main state as done AND in lane 2; run wf.sh merge-lanes 2" with T-NNN one of T-005, T-011, T-018, wf.sh status shows that task as done, and T-022 is in-progress, awaiting-gate or blocked-decision in lane 2. Any other GUARD line or task: stop as before. Do NOT run merge-lanes 2 while T-022 is active. The exception ends when lane 2 is merged.
