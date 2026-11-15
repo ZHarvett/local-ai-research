@@ -1,6 +1,6 @@
 # Step 0 Plan: Baseline Setup
 
-*Version 1.8 · 12 November 2026*
+*Version 1.9 · 15 November 2026*
 *Part of "Local AI on a Small PC" (project plan dated 5 November 2026). This file is the reference for Step 0. Any change produces a new version, recorded in §14.*
 
 ---
@@ -239,9 +239,17 @@ Stock-C against tuned-C for each C. These are the headline results, so gate G3 a
 - **Gate and quiet machine.** Each session is checked with `python -m smallpc.stage3 gate`: the runner's criteria a to e as in Stage 2, and the paging and swap stop rules (40% of windows, 1,024 MiB of swap growth) over the tuned cells' and the canaries' windows only. Stock windows are reported and never fail the gate. `scripts/check-quiet.sh` must exit 0 before every session. It lists process names only and blocks the apps named in `configs/quiet-check.toml`. A session whose check fails during the run keeps its data, marked "quiet condition violated", and the step lead decides.
 - **Reported figures.** Per context: T_turn_400, T_B with `predicted_n`, T_reread, PP_fresh and PP_inc per depth, TG per depth, TTFT, the VRAM breakdown, and the paired ratios tuned/stock with 95% CIs (§5.5), plus the swap sensitivity.
 
+**Stage 3 outcome (12 November, quiet machine).** The three sessions took about 2.1 hours (90 minutes of sessions plus 38 minutes of re-run passes). No stop condition applied. The headline results are in reports/baseline-report.md, and the step-lead decisions on them (D1–D9) are in docs/decisions.md.
+
 **Stage 4: Reproducibility** (a different day; WP13; about 30 minutes on a quiet machine)
 
 Stock-64K and tuned-64K, 5 repetitions each, in one session with canaries. S2 is checked with `report repro` on T_turn_400, fresh prefill at 32K and decode at 32K depth. If stock-64K has too few clean units on either day, S2 is evaluated for it on all units, and the report says so.
+
+Rules declared on 12 November 2026, before any Stage 4 data:
+- R1 Tuned-64K gets stock's fallback. If it has fewer than 5 clean units after its re-run, S2 is evaluated for it on all units, labelled as such, and recorded as an S4(d) deviation.
+- R2 If the Stage 4 gate fails only because of tuned-64K paging, and every flagged unit re-runs clean, the session is accepted with a recorded deviation: a docs/decisions.md line starting "- R2 applied: Stage 4". Any other gate failure is escalated.
+- R3 Stage 4 runs on 13 November 2026 or later. Since the Stage 3 session commit, the only changes under src/, configs/, scripts/, pyproject.toml and uv.lock are the kit's new scripts/wf.sh, scripts/wf-*.sh and scripts/_wf.py, and the only existing files changed by the kit install are CLAUDE.md and .gitignore. Check: `S3=$(cat docs/recon/stage3-commit.txt) && git cat-file -e "$S3^{commit}" && ! git diff --name-only "$S3" HEAD -- src configs scripts pyproject.toml uv.lock CLAUDE.md .gitignore | grep -vxE 'CLAUDE\.md|\.gitignore|scripts/wf(-[A-Za-z0-9_.-]+)?\.sh|scripts/_wf\.py'`
+- R4 An S2 failure is reported and escalated, never re-measured automatically.
 
 ### 5.5 Statistics
 
@@ -755,6 +763,8 @@ Deliverables: the config files and launch script required by the project plan, p
 
 ## 12. Working protocol with Claude Code
 
+*§12.1–12.3 are superseded from 12 November 2026: execution follows PLAN.md through the workflow kit (docs/WORKFLOW.md), and the merged CLAUDE.md is the session guide. The standard report (§12.4) and the progress-log format (§12.5) still apply.*
+
 ### 12.1 Prompt header
 
 Every message from me that contains a prompt starts with one line, for example:
@@ -824,6 +834,8 @@ Each entry records the date, WP, status, commit, key results (with numbers) and 
 - **Unexplained VRAM residual.** After the parser fix, the VRAM not accounted for by logged buffers is 512 to 532 MiB for MTP cells and 337 to 363 MiB without MTP, at every context size. The 170 MiB difference is not a compute buffer in the log and was not attributed.
 - **Host prompt cache on a 32 GB machine.** With the default `--cache-ram` of 8,192 MiB, a long-running server's host prompt cache plus a 20 GiB memory-mapped model pushed the machine into paging at 128K and 64K in Stage 1. Stage 2f measures smaller values. Step 1 and Step 5 should expect the same effect, and Step 5's plan to park states in host RAM competes for the same memory.
 - **Real agent turns.** Step 0's 3,000 + 400 turn is a standardised workload. Step 1 should report per-turn new tokens and generated tokens from real tasks, to show how far real use is from it.
+- **Stock pages at 32K too.** In Stage 3, one stock-32K repetition had 12,456 major faults and 6,321 MiB of swap growth with the default --cache-ram of 8192, so host-memory pressure is not limited to 64K and 128K.
+- **Idle desktop apps cost about 1%.** Stage 3 means on a quiet machine were 0.7 to 1.3% faster than the Stage 1 and 2 selection figures for the same configurations.
 
 ---
 
@@ -832,6 +844,7 @@ Each entry records the date, WP, status, commit, key results (with numbers) and 
 | Version | Date | Change |
 |---|---|---|
 | 1.0 | 6 Nov 2026 | Initial plan |
+| 1.9 | 15 Nov 2026 | After Stages 3 and 4 and the workflow-kit pilot: Stage 3 outcome and measured time, and the Stage 4 rules R1–R4 declared before its data (§5.4); §12.1–12.3 superseded by the workflow kit (§12); two notes for the executive chat (§13) |
 | 1.8 | 12 Nov 2026 | After WP13 part 1: three figures corrected against the data (1 flagged window of 80 not 100; MTP helped 2 to 5% not 3 to 5%; MTP costs 9 to 16% of prefill and 0.75 to 1.5 GiB of VRAM); the Stage 3 time estimate is 1.5 hours with up to 2.5 hours worst case; the Stage 3 gate command and the quiet-machine check are written into the Stage 3 rules (§5.4); the unexplained VRAM residual is noted for the executive chat (§13) |
 | 1.7 | 11 Nov 2026 | After Stage 2: the Stage 2 outcome, its human decisions and its deviations are recorded, including 2c and 2d not run and draft length 2 excluded by the sanity check (§5.4); Stage 3 and Stage 4 are written out with their rules declared before measurement, including how stock's paging is reported and when the headline may use all units (§5.4); WP13 is split into preparation, sessions and Stage 4 (WP13); G3 applies in full to Stages 3 and 4 (§7); two notes for the executive chat (§13) |
 | 1.6 | 10 Nov 2026 | After Stage 1: Stage 2 is written out with its decision rules declared before measurement (§5.4); a new first sub-stage, 2f, tests the host prompt cache size, because the paging seen in the 64K and 128K sessions tracked its growth; the Stage 2 estimate rises to 6 to 7 hours; WP12 is split into preparation, sessions and analysis (§5.4, WP12); a note on host-memory pressure for the executive chat (§13) |
