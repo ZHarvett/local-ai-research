@@ -1,5 +1,5 @@
 {
-  "checksum": "ea99235cf72cecdac7ada1e874b83c5aac4e3ae1ee2564a2482d82a16e7e3134",
+  "checksum": "57db4457b956a8268596b4c88d76a6d0378e8a56b8110c7a5f9790f31888dafb",
   "created_utc": "2026-11-12T22:25:04Z",
   "escalations": {
     "E-001": {
@@ -565,6 +565,13 @@
       "ts": "2026-11-13T11:44:41Z"
     },
     {
+      "detail": "lane 2, pid 1807601",
+      "event": "claimed",
+      "seq": 0,
+      "task": "T-005",
+      "ts": "2026-11-13T11:44:41Z"
+    },
+    {
       "detail": "lane 2",
       "event": "migrated-to-lane",
       "seq": 62,
@@ -626,6 +633,20 @@
       "seq": 1,
       "task": "T-005",
       "ts": "2026-11-13T11:44:46Z"
+    },
+    {
+      "detail": "lane 2",
+      "event": "started",
+      "seq": 1,
+      "task": "T-005",
+      "ts": "2026-11-13T11:44:46Z"
+    },
+    {
+      "detail": "S1",
+      "event": "step-done",
+      "seq": 2,
+      "task": "T-005",
+      "ts": "2026-11-13T11:51:21Z"
     },
     {
       "detail": "S1",
@@ -754,9 +775,9 @@
       "ts": "2026-11-13T12:02:11Z"
     },
     {
-      "detail": "S3",
+      "detail": "S2",
       "event": "step-done",
-      "seq": 4,
+      "seq": 3,
       "task": "T-005",
       "ts": "2026-11-13T12:02:11Z"
     },
@@ -787,6 +808,27 @@
       "seq": 4,
       "task": "T-005",
       "ts": "2026-11-13T12:02:11Z"
+    },
+    {
+      "detail": "S3",
+      "event": "step-done",
+      "seq": 4,
+      "task": "T-005",
+      "ts": "2026-11-13T12:02:11Z"
+    },
+    {
+      "detail": "S3",
+      "event": "step-done",
+      "seq": 4,
+      "task": "T-005",
+      "ts": "2026-11-13T12:02:11Z"
+    },
+    {
+      "detail": "accept run at 2026-11-13T12:02:32Z",
+      "event": "done",
+      "seq": 5,
+      "task": "T-005",
+      "ts": "2026-11-13T12:02:41Z"
     },
     {
       "detail": "accept run at 2026-11-13T12:02:32Z",
@@ -1559,6 +1601,13 @@
       "ts": "2026-11-14T16:00:11Z"
     },
     {
+      "detail": "lane 2, pid 19216",
+      "event": "claimed",
+      "seq": 6,
+      "task": "T-018",
+      "ts": "2026-11-14T16:00:11Z"
+    },
+    {
       "detail": "lane 2",
       "event": "migrated-to-lane",
       "seq": 181,
@@ -1594,6 +1643,20 @@
       "ts": "2026-11-14T16:00:15Z"
     },
     {
+      "detail": "lane 2",
+      "event": "started",
+      "seq": 7,
+      "task": "T-018",
+      "ts": "2026-11-14T16:00:15Z"
+    },
+    {
+      "detail": "S1: recon written; four defects confirmed at corrected lines; stale-worktree setup merge documented",
+      "event": "step-done",
+      "seq": 8,
+      "task": "T-018",
+      "ts": "2026-11-14T16:09:19Z"
+    },
+    {
       "detail": "S1: recon written; four defects confirmed at corrected lines; stale-worktree setup merge documented",
       "event": "step-done",
       "seq": 8,
@@ -1648,6 +1711,20 @@
       "seq": 9,
       "task": "T-018",
       "ts": "2026-11-14T16:11:34Z"
+    },
+    {
+      "detail": "S2: four changes in _wf.py only, 59 changed lines; smoke-tested on /tmp fixture",
+      "event": "step-done",
+      "seq": 9,
+      "task": "T-018",
+      "ts": "2026-11-14T16:11:34Z"
+    },
+    {
+      "detail": "S3: 12 tests (6 card scenarios + regression guards); 49 pass with test_wf_loop.py; ruff clean",
+      "event": "step-done",
+      "seq": 10,
+      "task": "T-018",
+      "ts": "2026-11-14T16:13:21Z"
     },
     {
       "detail": "S3: 12 tests (6 card scenarios + regression guards); 49 pass with test_wf_loop.py; ruff clean",
@@ -1702,6 +1779,20 @@
       "detail": "S4: decisions line, shellcheck/ruff/diff-scope verified, acceptance run 1 (0 failures), progress-log entry",
       "event": "step-done",
       "seq": 11,
+      "task": "T-018",
+      "ts": "2026-11-14T16:19:27Z"
+    },
+    {
+      "detail": "S4: decisions line, shellcheck/ruff/diff-scope verified, acceptance run 1 (0 failures), progress-log entry",
+      "event": "step-done",
+      "seq": 11,
+      "task": "T-018",
+      "ts": "2026-11-14T16:19:27Z"
+    },
+    {
+      "detail": "accept run at 2026-11-14T16:18:16Z",
+      "event": "done",
+      "seq": 12,
       "task": "T-018",
       "ts": "2026-11-14T16:19:27Z"
     },
@@ -2203,6 +2294,20 @@
       "ts": "2026-11-15T09:17:13Z"
     },
     {
+      "detail": "lane 2, pid 369553",
+      "event": "claimed",
+      "seq": 13,
+      "task": "T-011",
+      "ts": "2026-11-15T09:17:13Z"
+    },
+    {
+      "detail": "lane 2",
+      "event": "started",
+      "seq": 14,
+      "task": "T-011",
+      "ts": "2026-11-15T09:17:13Z"
+    },
+    {
       "detail": "lane 2",
       "event": "started",
       "seq": 14,
@@ -2252,6 +2357,20 @@
       "ts": "2026-11-15T09:21:52Z"
     },
     {
+      "detail": "S1",
+      "event": "step-done",
+      "seq": 15,
+      "task": "T-011",
+      "ts": "2026-11-15T09:21:52Z"
+    },
+    {
+      "detail": "S2",
+      "event": "step-done",
+      "seq": 16,
+      "task": "T-011",
+      "ts": "2026-11-15T09:22:02Z"
+    },
+    {
       "detail": "S2",
       "event": "step-done",
       "seq": 16,
@@ -2271,6 +2390,13 @@
       "seq": 16,
       "task": "T-011",
       "ts": "2026-11-15T09:22:02Z"
+    },
+    {
+      "detail": "S3",
+      "event": "step-done",
+      "seq": 17,
+      "task": "T-011",
+      "ts": "2026-11-15T09:22:14Z"
     },
     {
       "detail": "S3",
@@ -2315,6 +2441,20 @@
       "ts": "2026-11-15T09:22:23Z"
     },
     {
+      "detail": "S4",
+      "event": "step-done",
+      "seq": 18,
+      "task": "T-011",
+      "ts": "2026-11-15T09:22:23Z"
+    },
+    {
+      "detail": "S5",
+      "event": "step-done",
+      "seq": 19,
+      "task": "T-011",
+      "ts": "2026-11-15T09:22:34Z"
+    },
+    {
       "detail": "S5",
       "event": "step-done",
       "seq": 19,
@@ -2334,6 +2474,13 @@
       "seq": 19,
       "task": "T-011",
       "ts": "2026-11-15T09:22:34Z"
+    },
+    {
+      "detail": "S6",
+      "event": "step-done",
+      "seq": 20,
+      "task": "T-011",
+      "ts": "2026-11-15T09:22:44Z"
     },
     {
       "detail": "S6",
@@ -2378,6 +2525,20 @@
       "ts": "2026-11-15T09:30:43Z"
     },
     {
+      "detail": "S7",
+      "event": "step-done",
+      "seq": 21,
+      "task": "T-011",
+      "ts": "2026-11-15T09:30:43Z"
+    },
+    {
+      "detail": "S8: methodology.md written (plan \u00a75 prose, 6 decimals verified, scrub clean); environment.md left unchanged \u2014 A12 (docs/recon/T-001.md:259) found it EXISTS and not outdated (dated inventory snapshot, 2026-11-08)",
+      "event": "step-done",
+      "seq": 22,
+      "task": "T-011",
+      "ts": "2026-11-15T09:33:50Z"
+    },
+    {
       "detail": "S8: methodology.md written (plan \u00a75 prose, 6 decimals verified, scrub clean); environment.md left unchanged \u2014 A12 (docs/recon/T-001.md:259) found it EXISTS and not outdated (dated inventory snapshot, 2026-11-08)",
       "event": "step-done",
       "seq": 22,
@@ -2418,6 +2579,20 @@
       "seq": 23,
       "task": "T-011",
       "ts": "2026-11-15T09:34:23Z"
+    },
+    {
+      "detail": "S9: plan diff verified: 5 hunks, 14 insertions + 1 deletion, only edits (a)-(f); committed 24013d3 (plan), eb574f8 (drafts), ee77b46 (methodology); no progress-log entry per card (T-012 appends)",
+      "event": "step-done",
+      "seq": 23,
+      "task": "T-011",
+      "ts": "2026-11-15T09:34:23Z"
+    },
+    {
+      "detail": "E-012 (assumption-mismatch)",
+      "event": "escalated",
+      "seq": 24,
+      "task": "T-011",
+      "ts": "2026-11-15T09:42:01Z"
     },
     {
       "detail": "E-012 (assumption-mismatch)",
@@ -2483,6 +2658,20 @@
       "ts": "2026-11-15T10:19:48Z"
     },
     {
+      "detail": "restored to in-progress",
+      "event": "unblocked",
+      "seq": 25,
+      "task": "T-011",
+      "ts": "2026-11-15T10:19:48Z"
+    },
+    {
+      "detail": "decision E-012 recorded",
+      "event": "note",
+      "seq": 26,
+      "task": "T-011",
+      "ts": "2026-11-15T10:19:48Z"
+    },
+    {
       "detail": "decision E-012 recorded",
       "event": "note",
       "seq": 26,
@@ -2502,6 +2691,13 @@
       "seq": 26,
       "task": "T-011",
       "ts": "2026-11-15T10:19:48Z"
+    },
+    {
+      "detail": "accept run at 2026-11-15T10:20:45Z",
+      "event": "done",
+      "seq": 27,
+      "task": "T-011",
+      "ts": "2026-11-15T10:25:57Z"
     },
     {
       "detail": "accept run at 2026-11-15T10:20:45Z",
@@ -2623,6 +2819,13 @@
       "ts": "2026-11-15T11:07:10Z"
     },
     {
+      "detail": "lane 2, pid 435705",
+      "event": "claimed",
+      "seq": 28,
+      "task": "T-011",
+      "ts": "2026-11-15T11:07:10Z"
+    },
+    {
       "detail": "lane 2",
       "event": "migrated-to-lane",
       "seq": 332,
@@ -2637,9 +2840,30 @@
       "ts": "2026-11-15T11:07:17Z"
     },
     {
+      "detail": "lane 2",
+      "event": "started",
+      "seq": 29,
+      "task": "T-011",
+      "ts": "2026-11-15T11:07:17Z"
+    },
+    {
       "detail": "S1",
       "event": "step-done",
       "seq": 30,
+      "task": "T-011",
+      "ts": "2026-11-15T11:07:31Z"
+    },
+    {
+      "detail": "S1",
+      "event": "step-done",
+      "seq": 30,
+      "task": "T-011",
+      "ts": "2026-11-15T11:07:31Z"
+    },
+    {
+      "detail": "S2",
+      "event": "step-done",
+      "seq": 31,
       "task": "T-011",
       "ts": "2026-11-15T11:07:31Z"
     },
@@ -2658,6 +2882,20 @@
       "ts": "2026-11-15T11:07:31Z"
     },
     {
+      "detail": "S3",
+      "event": "step-done",
+      "seq": 32,
+      "task": "T-011",
+      "ts": "2026-11-15T11:07:31Z"
+    },
+    {
+      "detail": "S4",
+      "event": "step-done",
+      "seq": 33,
+      "task": "T-011",
+      "ts": "2026-11-15T11:07:31Z"
+    },
+    {
       "detail": "S4",
       "event": "step-done",
       "seq": 33,
@@ -2668,6 +2906,20 @@
       "detail": "S5",
       "event": "step-done",
       "seq": 34,
+      "task": "T-011",
+      "ts": "2026-11-15T11:07:32Z"
+    },
+    {
+      "detail": "S5",
+      "event": "step-done",
+      "seq": 34,
+      "task": "T-011",
+      "ts": "2026-11-15T11:07:32Z"
+    },
+    {
+      "detail": "S6",
+      "event": "step-done",
+      "seq": 35,
       "task": "T-011",
       "ts": "2026-11-15T11:07:32Z"
     },
@@ -2686,6 +2938,20 @@
       "ts": "2026-11-15T11:07:32Z"
     },
     {
+      "detail": "S7",
+      "event": "step-done",
+      "seq": 36,
+      "task": "T-011",
+      "ts": "2026-11-15T11:07:32Z"
+    },
+    {
+      "detail": "S8",
+      "event": "step-done",
+      "seq": 37,
+      "task": "T-011",
+      "ts": "2026-11-15T11:07:32Z"
+    },
+    {
       "detail": "S8",
       "event": "step-done",
       "seq": 37,
@@ -2698,6 +2964,20 @@
       "seq": 38,
       "task": "T-011",
       "ts": "2026-11-15T11:07:32Z"
+    },
+    {
+      "detail": "S9",
+      "event": "step-done",
+      "seq": 38,
+      "task": "T-011",
+      "ts": "2026-11-15T11:07:32Z"
+    },
+    {
+      "detail": "accept run at 2026-11-15T11:07:37Z",
+      "event": "done",
+      "seq": 39,
+      "task": "T-011",
+      "ts": "2026-11-15T11:13:01Z"
     },
     {
       "detail": "accept run at 2026-11-15T11:07:37Z",
@@ -2777,6 +3057,13 @@
       "ts": "2026-11-15T13:12:53Z"
     },
     {
+      "detail": "lane 2, pid 475053",
+      "event": "claimed",
+      "seq": 40,
+      "task": "T-022",
+      "ts": "2026-11-15T13:14:32Z"
+    },
+    {
       "detail": "lane 2",
       "event": "migrated-to-lane",
       "seq": 383,
@@ -2784,11 +3071,137 @@
       "ts": "2026-11-15T13:14:32Z"
     },
     {
+      "detail": "lane 2",
+      "event": "started",
+      "seq": 41,
+      "task": "T-022",
+      "ts": "2026-11-15T13:14:37Z"
+    },
+    {
+      "detail": "E-013 (problem)",
+      "event": "escalated",
+      "seq": 42,
+      "task": "T-022",
+      "ts": "2026-11-15T13:27:45Z"
+    },
+    {
       "detail": "/dev/shm/local-ai-research-machine.lock",
       "event": "machine-lock-released",
       "seq": 384,
       "task": null,
       "ts": "2026-11-15T13:29:48Z"
+    },
+    {
+      "detail": "restored to in-progress",
+      "event": "unblocked",
+      "seq": 43,
+      "task": "T-022",
+      "ts": "2026-11-15T13:38:03Z"
+    },
+    {
+      "detail": "decision E-013 recorded",
+      "event": "note",
+      "seq": 44,
+      "task": "T-022",
+      "ts": "2026-11-15T13:38:03Z"
+    },
+    {
+      "detail": "from S1",
+      "event": "resumed",
+      "seq": 45,
+      "task": "T-022",
+      "ts": "2026-11-15T13:39:10Z"
+    },
+    {
+      "detail": "S1",
+      "event": "step-done",
+      "seq": 46,
+      "task": "T-022",
+      "ts": "2026-11-15T13:40:07Z"
+    },
+    {
+      "detail": "S2",
+      "event": "step-done",
+      "seq": 47,
+      "task": "T-022",
+      "ts": "2026-11-15T13:45:38Z"
+    },
+    {
+      "detail": "S3",
+      "event": "step-done",
+      "seq": 48,
+      "task": "T-022",
+      "ts": "2026-11-15T13:48:34Z"
+    },
+    {
+      "detail": "S4",
+      "event": "step-done",
+      "seq": 49,
+      "task": "T-022",
+      "ts": "2026-11-15T13:51:49Z"
+    },
+    {
+      "detail": "S5",
+      "event": "step-done",
+      "seq": 50,
+      "task": "T-022",
+      "ts": "2026-11-15T13:52:28Z"
+    },
+    {
+      "detail": "S6",
+      "event": "step-done",
+      "seq": 51,
+      "task": "T-022",
+      "ts": "2026-11-15T13:54:24Z"
+    },
+    {
+      "detail": "S7",
+      "event": "step-done",
+      "seq": 52,
+      "task": "T-022",
+      "ts": "2026-11-15T13:56:52Z"
+    },
+    {
+      "detail": "S8",
+      "event": "step-done",
+      "seq": 53,
+      "task": "T-022",
+      "ts": "2026-11-15T14:04:33Z"
+    },
+    {
+      "detail": "accept run at 2026-11-15T14:04:42Z",
+      "event": "done",
+      "seq": 54,
+      "task": "T-022",
+      "ts": "2026-11-15T14:10:01Z"
+    },
+    {
+      "detail": "cycle 1",
+      "event": "review-opened",
+      "seq": 55,
+      "task": "T-022",
+      "ts": "2026-11-15T14:27:40Z"
+    },
+    {
+      "detail": "accepted (cycle 1, 2 findings)",
+      "event": "review-verdict",
+      "seq": 56,
+      "task": "T-022",
+      "ts": "2026-11-15T14:27:45Z"
+    },
+    {
+      "detail": "lane 2",
+      "event": "lane-merged",
+      "seq": 442,
+      "task": null,
+      "ts": "2026-11-15T14:29:55Z"
+    },
+    {
+      "detail": "dependencies satisfied",
+      "event": "ready",
+      "seq": 443,
+      "task": "T-013",
+      "ts": "2026-11-15T14:29:55Z"
     }
   ],
   "kit_version": "0.1.0",
@@ -3242,7 +3655,7 @@
       "resources": "light",
       "review": "post",
       "source": "plan",
-      "status": "todo",
+      "status": "ready",
       "title": "Scrub and release checks"
     },
     "T-014": {
@@ -3428,6 +3841,8 @@
       "title": "Stage 4 session, run 2"
     },
     "T-022": {
+      "blocked_from": null,
+      "blocked_reason": null,
       "card_sha256": "de8dc50e3bf89931bbdae6c7eafd3626f5f5c1ba887cb81edf5c5ba0a3fd2029",
       "depends_on": [],
       "files_write": [
@@ -3443,7 +3858,7 @@
       "resources": "cpu-heavy",
       "review": "post",
       "source": "plan",
-      "status": "todo",
+      "status": "accepted",
       "title": "Kit fixes: lane merge status and state riders"
     }
   },

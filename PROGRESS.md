@@ -22,7 +22,7 @@ files; change them through the scripts only.
 | T-010 | Final README, report, write-up and changelog | accepted ⚠ re-acknowledge (judgement) | 1 | post |
 | T-011 | Plan v1.9, upstream drafts, methodology | done ⚠ re-acknowledge | 2 | none |
 | T-012 | README walkthrough from a clean shell | done | 1 | none |
-| T-013 | Scrub and release checks | todo ⚠ re-acknowledge | 1 | post |
+| T-013 | Scrub and release checks | ready ⚠ re-acknowledge | 1 | post |
 | T-014 | Completion report and planning-chat review | todo | 1 | none |
 | T-015 | Private repo, CI and tag v0.1.0 | todo | 1 | none |
 | T-016 | Publish v0.1.0 | todo | 1 | none |
@@ -35,7 +35,7 @@ files; change them through the scripts only.
 
 ## READY (grouped by lane)
 
-_(none)_
+- lane 1: **T-013** Scrub and release checks
 
 ## Escalation queue
 
@@ -50,12 +50,11 @@ _(none)_
 | lane | lock | worktree | tasks |
 |---|---|---|---|
 | 1 | - | - | - |
-| 2 | - | yes | T-005, T-011, T-018, T-022 |
 
 ## Last events
 
-- 2026-11-15T13:56:52Z step-done T-022 — S7
-- 2026-11-15T14:04:33Z step-done T-022 — S8
 - 2026-11-15T14:10:01Z done T-022 — accept run at 2026-11-15T14:04:42Z
 - 2026-11-15T14:27:40Z review-opened T-022 — cycle 1
 - 2026-11-15T14:27:45Z review-verdict T-022 — accepted (cycle 1, 2 findings)
+- 2026-11-15T14:29:55Z lane-merged — lane 2
+- 2026-11-15T14:29:55Z ready T-013 — dependencies satisfied
