@@ -1,5 +1,5 @@
 {
-  "checksum": "4602656bd95f9d6f190dc2f9c08650d582dfce49f18e35d20ae126427967fc3f",
+  "checksum": "91ae1a897e0864c1c30cf2764b88fca7c7da459f8d5f7ede96afadfaeabe44bf",
   "created_utc": "2026-11-12T22:25:04Z",
   "escalations": {
     "E-001": {
@@ -2180,6 +2180,13 @@
       "seq": 298,
       "task": "T-022",
       "ts": "2026-11-15T10:47:32Z"
+    },
+    {
+      "detail": "lane 2",
+      "event": "migrated-to-lane",
+      "seq": 299,
+      "task": "T-011",
+      "ts": "2026-11-15T10:51:52Z"
     }
   ],
   "kit_version": "0.1.0",
@@ -2586,7 +2593,7 @@
       "resources": "light",
       "review": "none",
       "source": "plan",
-      "status": "ready",
+      "status": "todo",
       "title": "Plan v1.9, upstream drafts, methodology"
     },
     "T-012": {
