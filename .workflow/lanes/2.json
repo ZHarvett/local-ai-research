@@ -1,5 +1,5 @@
 {
-  "checksum": "553c10cd4a830367f383036463081bdfba269c1ffa80d6c54e9818aa6da3cff2",
+  "checksum": "80ef2aa9b77653094dba41410f907428a35d9edbbe76ab7c6e76a20bec2ad672",
   "events": [
     {
       "detail": "lane 2, pid 1807601",
@@ -196,6 +196,90 @@
       "seq": 27,
       "task": "T-011",
       "ts": "2026-11-15T10:25:57Z"
+    },
+    {
+      "detail": "lane 2, pid 435705",
+      "event": "claimed",
+      "seq": 28,
+      "task": "T-011",
+      "ts": "2026-11-15T11:07:10Z"
+    },
+    {
+      "detail": "lane 2",
+      "event": "started",
+      "seq": 29,
+      "task": "T-011",
+      "ts": "2026-11-15T11:07:17Z"
+    },
+    {
+      "detail": "S1",
+      "event": "step-done",
+      "seq": 30,
+      "task": "T-011",
+      "ts": "2026-11-15T11:07:31Z"
+    },
+    {
+      "detail": "S2",
+      "event": "step-done",
+      "seq": 31,
+      "task": "T-011",
+      "ts": "2026-11-15T11:07:31Z"
+    },
+    {
+      "detail": "S3",
+      "event": "step-done",
+      "seq": 32,
+      "task": "T-011",
+      "ts": "2026-11-15T11:07:31Z"
+    },
+    {
+      "detail": "S4",
+      "event": "step-done",
+      "seq": 33,
+      "task": "T-011",
+      "ts": "2026-11-15T11:07:31Z"
+    },
+    {
+      "detail": "S5",
+      "event": "step-done",
+      "seq": 34,
+      "task": "T-011",
+      "ts": "2026-11-15T11:07:32Z"
+    },
+    {
+      "detail": "S6",
+      "event": "step-done",
+      "seq": 35,
+      "task": "T-011",
+      "ts": "2026-11-15T11:07:32Z"
+    },
+    {
+      "detail": "S7",
+      "event": "step-done",
+      "seq": 36,
+      "task": "T-011",
+      "ts": "2026-11-15T11:07:32Z"
+    },
+    {
+      "detail": "S8",
+      "event": "step-done",
+      "seq": 37,
+      "task": "T-011",
+      "ts": "2026-11-15T11:07:32Z"
+    },
+    {
+      "detail": "S9",
+      "event": "step-done",
+      "seq": 38,
+      "task": "T-011",
+      "ts": "2026-11-15T11:07:32Z"
+    },
+    {
+      "detail": "accept run at 2026-11-15T11:07:37Z",
+      "event": "done",
+      "seq": 39,
+      "task": "T-011",
+      "ts": "2026-11-15T11:13:01Z"
     }
   ],
   "lane": 2,
@@ -226,9 +310,7 @@
       "title": "Baseline report draft and number checker"
     },
     "T-011": {
-      "blocked_from": null,
-      "blocked_reason": null,
-      "card_sha256": "4454048de0535e56b8cdd3d725d6f0969a0e1c413c5ede31a3e75a66eba94f71",
+      "card_sha256": "55905e9f6b7a414efed543bd9d5e5c1125687cdae68a6daaee669cff7bac70ef",
       "claimed_by_lane": 2,
       "depends_on": [
         "T-008",
@@ -242,6 +324,7 @@
       ],
       "lane": 2,
       "phase": "P4",
+      "plan_changed": true,
       "resources": "light",
       "review": "none",
       "source": "plan",
