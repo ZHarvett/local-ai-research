@@ -1,5 +1,5 @@
 {
-  "checksum": "dd53e50398779c2e2b70c2f5b24bc1e2035ea1fe21aac378878ef7d41debde71",
+  "checksum": "bbc105491194889dd95c2c4f008874f4b8af1fe23f8400dab97214469bf069b2",
   "created_utc": "2026-11-12T22:25:04Z",
   "escalations": {
     "E-001": {
@@ -92,6 +92,12 @@
       "status": "decided",
       "task": "T-022",
       "type": "problem"
+    },
+    "E-014": {
+      "created_utc": "2026-11-15T14:41:08Z",
+      "status": "open",
+      "task": "T-013",
+      "type": "decision"
     }
   },
   "events": [
@@ -3216,6 +3222,41 @@
       "seq": 445,
       "task": "T-018",
       "ts": "2026-11-15T14:30:26Z"
+    },
+    {
+      "detail": "lane 1, pid 579835",
+      "event": "claimed",
+      "seq": 446,
+      "task": "T-013",
+      "ts": "2026-11-15T14:31:21Z"
+    },
+    {
+      "detail": "lane 1",
+      "event": "started",
+      "seq": 447,
+      "task": "T-013",
+      "ts": "2026-11-15T14:31:21Z"
+    },
+    {
+      "detail": "S1",
+      "event": "step-done",
+      "seq": 448,
+      "task": "T-013",
+      "ts": "2026-11-15T14:40:22Z"
+    },
+    {
+      "detail": "S2",
+      "event": "step-done",
+      "seq": 449,
+      "task": "T-013",
+      "ts": "2026-11-15T14:40:47Z"
+    },
+    {
+      "detail": "E-014 (decision)",
+      "event": "escalated",
+      "seq": 450,
+      "task": "T-013",
+      "ts": "2026-11-15T14:41:08Z"
     }
   ],
   "kit_version": "0.1.0",
@@ -3651,7 +3692,10 @@
       "title": "README walkthrough from a clean shell"
     },
     "T-013": {
+      "blocked_from": "in-progress",
+      "blocked_reason": "escalation E-014",
       "card_sha256": "2be7c910812741a2fa638df193d30692c82d2b8de53a8149151c4e7549ec4d6e",
+      "claimed_by_lane": 1,
       "depends_on": [
         "T-010",
         "T-011",
@@ -3669,7 +3713,11 @@
       "resources": "light",
       "review": "post",
       "source": "plan",
-      "status": "ready",
+      "status": "blocked-decision",
+      "steps_done": [
+        "S1",
+        "S2"
+      ],
       "title": "Scrub and release checks"
     },
     "T-014": {

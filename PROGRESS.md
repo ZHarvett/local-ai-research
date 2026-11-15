@@ -22,7 +22,7 @@ files; change them through the scripts only.
 | T-010 | Final README, report, write-up and changelog | accepted ⚠ re-acknowledge (judgement) | 1 | post |
 | T-011 | Plan v1.9, upstream drafts, methodology | done ⚠ re-acknowledge | 2 | none |
 | T-012 | README walkthrough from a clean shell | done | 1 | none |
-| T-013 | Scrub and release checks | ready ⚠ re-acknowledge | 1 | post |
+| T-013 | Scrub and release checks | blocked-decision ⚠ re-acknowledge | 1 | post |
 | T-014 | Completion report and planning-chat review | todo | 1 | none |
 | T-015 | Private repo, CI and tag v0.1.0 | todo | 1 | none |
 | T-016 | Publish v0.1.0 | todo | 1 | none |
@@ -35,11 +35,11 @@ files; change them through the scripts only.
 
 ## READY (grouped by lane)
 
-- lane 1: **T-013** Scrub and release checks
+_(none)_
 
 ## Escalation queue
 
-_(none)_
+- **E-014** (decision, task T-013) — open
 
 ## Review queue
 
@@ -49,12 +49,12 @@ _(none)_
 
 | lane | lock | worktree | tasks |
 |---|---|---|---|
-| 1 | - | - | - |
+| 1 | pid 579835 | - | - |
 
 ## Last events
 
-- 2026-11-15T14:27:45Z review-verdict T-022 — accepted (cycle 1, 2 findings)
-- 2026-11-15T14:29:55Z lane-merged — lane 2
-- 2026-11-15T14:29:55Z ready T-013 — dependencies satisfied
-- 2026-11-15T14:30:26Z status-restored T-005 — done -> accepted (review-verdict seq 210)
-- 2026-11-15T14:30:26Z status-restored T-018 — done -> accepted (review-verdict seq 204)
+- 2026-11-15T14:31:21Z claimed T-013 — lane 1, pid 579835
+- 2026-11-15T14:31:21Z started T-013 — lane 1
+- 2026-11-15T14:40:22Z step-done T-013 — S1
+- 2026-11-15T14:40:47Z step-done T-013 — S2
+- 2026-11-15T14:41:08Z escalated T-013 — E-014 (decision)
