@@ -1,5 +1,5 @@
 {
-  "checksum": "3956f1b25cbb2128b9c56d8c85e5b0f0a48a7feb8558c9a3b1dec29c39691f8c",
+  "checksum": "553c10cd4a830367f383036463081bdfba269c1ffa80d6c54e9818aa6da3cff2",
   "events": [
     {
       "detail": "lane 2, pid 1807601",
@@ -175,6 +175,27 @@
       "seq": 24,
       "task": "T-011",
       "ts": "2026-11-15T09:42:01Z"
+    },
+    {
+      "detail": "restored to in-progress",
+      "event": "unblocked",
+      "seq": 25,
+      "task": "T-011",
+      "ts": "2026-11-15T10:19:48Z"
+    },
+    {
+      "detail": "decision E-012 recorded",
+      "event": "note",
+      "seq": 26,
+      "task": "T-011",
+      "ts": "2026-11-15T10:19:48Z"
+    },
+    {
+      "detail": "accept run at 2026-11-15T10:20:45Z",
+      "event": "done",
+      "seq": 27,
+      "task": "T-011",
+      "ts": "2026-11-15T10:25:57Z"
     }
   ],
   "lane": 2,
@@ -205,8 +226,8 @@
       "title": "Baseline report draft and number checker"
     },
     "T-011": {
-      "blocked_from": "in-progress",
-      "blocked_reason": "escalation E-012",
+      "blocked_from": null,
+      "blocked_reason": null,
       "card_sha256": "4454048de0535e56b8cdd3d725d6f0969a0e1c413c5ede31a3e75a66eba94f71",
       "claimed_by_lane": 2,
       "depends_on": [
@@ -224,7 +245,7 @@
       "resources": "light",
       "review": "none",
       "source": "plan",
-      "status": "blocked-decision",
+      "status": "done",
       "steps_done": [
         "S1",
         "S2",
