@@ -1,5 +1,5 @@
 {
-  "checksum": "5cd0244bde10707b23def9d4d21966fc9390dba0d0ba99a4cd83101a3c10e7cb",
+  "checksum": "a5abd5cabaa5b19b6ef099061bf1121f8fc91375edb49440653640622a9f280a",
   "created_utc": "2026-11-12T22:25:04Z",
   "escalations": {
     "E-001": {
@@ -81,7 +81,8 @@
     },
     "E-012": {
       "created_utc": "2026-11-15T09:42:01Z",
-      "status": "open",
+      "decided_utc": "2026-11-15T10:19:48Z",
+      "status": "decided",
       "task": "T-011",
       "type": "assumption-mismatch"
     }

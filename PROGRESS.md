@@ -20,7 +20,7 @@ files; change them through the scripts only.
 | T-008 | S2 check and Stage 4 analysis | accepted ⚠ re-acknowledge (judgement) | 1 | post |
 | T-009 | Post-Stage-4 code fixes | done ⚠ re-acknowledge | 1 | none |
 | T-010 | Final README, report, write-up and changelog | accepted ⚠ re-acknowledge (judgement) | 1 | post |
-| T-011 | Plan v1.9, upstream drafts, methodology | blocked-decision ⚠ re-acknowledge | 2 | none |
+| T-011 | Plan v1.9, upstream drafts, methodology | in-progress ⚠ re-acknowledge | 2 | none |
 | T-012 | README walkthrough from a clean shell | todo | 1 | none |
 | T-013 | Scrub and release checks | todo ⚠ re-acknowledge | 1 | post |
 | T-014 | Completion report and planning-chat review | todo | 1 | none |
@@ -38,7 +38,7 @@ _(none)_
 
 ## Escalation queue
 
-- **E-012** (assumption-mismatch, task T-011) — open
+_(none)_
 
 ## Review queue
 
@@ -53,8 +53,8 @@ _(none)_
 
 ## Last events
 
-- 2026-11-15T09:34:23Z step-done T-011 — S9: plan diff verified: 5 hunks, 14 insertions + 1 deletion, only edits (a)-(f); committed 24013d3 (plan), eb574f8 (drafts), ee77b46 (methodology); no progress-log entry per card (T-012 appends)
-- 2026-11-15T09:42:01Z escalated T-011 — E-012 (assumption-mismatch)
 - 2026-11-15T10:10:47Z plan-changed T-011 — card changed; re-acknowledgement required
 - 2026-11-15T10:10:47Z plan-amended — sha256 a0b45d964831…
 - 2026-11-15T10:10:47Z ready T-011 — dependencies satisfied
+- 2026-11-15T10:19:48Z unblocked T-011 — restored to in-progress
+- 2026-11-15T10:19:48Z note T-011 — decision E-012 recorded
