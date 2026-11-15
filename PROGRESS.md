@@ -20,8 +20,8 @@ files; change them through the scripts only.
 | T-008 | S2 check and Stage 4 analysis | accepted ⚠ re-acknowledge (judgement) | 1 | post |
 | T-009 | Post-Stage-4 code fixes | done ⚠ re-acknowledge | 1 | none |
 | T-010 | Final README, report, write-up and changelog | accepted ⚠ re-acknowledge (judgement) | 1 | post |
-| T-011 | Plan v1.9, upstream drafts, methodology | in-progress ⚠ re-acknowledge | 2 | none |
-| T-012 | README walkthrough from a clean shell | todo | 1 | none |
+| T-011 | Plan v1.9, upstream drafts, methodology | done ⚠ re-acknowledge | 2 | none |
+| T-012 | README walkthrough from a clean shell | ready | 1 | none |
 | T-013 | Scrub and release checks | todo ⚠ re-acknowledge | 1 | post |
 | T-014 | Completion report and planning-chat review | todo | 1 | none |
 | T-015 | Private repo, CI and tag v0.1.0 | todo | 1 | none |
@@ -34,7 +34,7 @@ files; change them through the scripts only.
 
 ## READY (grouped by lane)
 
-_(none)_
+- lane 1: **T-012** README walkthrough from a clean shell
 
 ## Escalation queue
 
@@ -49,12 +49,11 @@ _(none)_
 | lane | lock | worktree | tasks |
 |---|---|---|---|
 | 1 | - | - | - |
-| 2 | - | yes | T-005, T-011, T-018 |
 
 ## Last events
 
-- 2026-11-15T10:10:47Z plan-changed T-011 — card changed; re-acknowledgement required
-- 2026-11-15T10:10:47Z plan-amended — sha256 a0b45d964831…
-- 2026-11-15T10:10:47Z ready T-011 — dependencies satisfied
 - 2026-11-15T10:19:48Z unblocked T-011 — restored to in-progress
 - 2026-11-15T10:19:48Z note T-011 — decision E-012 recorded
+- 2026-11-15T10:25:57Z done T-011 — accept run at 2026-11-15T10:20:45Z
+- 2026-11-15T10:27:08Z lane-merged — lane 2
+- 2026-11-15T10:27:08Z ready T-012 — dependencies satisfied
