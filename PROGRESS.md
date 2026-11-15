@@ -4,7 +4,7 @@ Rendered by `wf-progress.sh render` from `.workflow/state.json` and the lane
 files; change them through the scripts only.
 
 **Plan:** Step 0, remaining work: Stage 4, release v0.1.0, completion report  
-**Phase:** P1
+**Phase:** P4
 
 ## Tasks
 
@@ -14,7 +14,7 @@ files; change them through the scripts only.
 | T-002 | Record Stage 3 decisions and merge CLAUDE.md | done | 1 | none |
 | T-003 | Reviewer calibration | done | 1 | none |
 | T-004 | README draft | done | 1 | none |
-| T-005 | Baseline report draft and number checker | done (judgement) | 2 | post |
+| T-005 | Baseline report draft and number checker | accepted (judgement) | 2 | post |
 | T-006 | Write-up draft | done | 1 | none |
 | T-007 | Stage 4 session | accepted ⚠ re-acknowledge (judgement) | 1 | post |
 | T-008 | S2 check and Stage 4 analysis | accepted ⚠ re-acknowledge (judgement) | 1 | post |
@@ -27,7 +27,7 @@ files; change them through the scripts only.
 | T-015 | Private repo, CI and tag v0.1.0 | todo | 1 | none |
 | T-016 | Publish v0.1.0 | todo | 1 | none |
 | T-017 | Unattended loop (wf-loop.sh) | accepted (judgement) | 3 | post |
-| T-018 | Kit repair: leave blocked-decision after a review verdict | done (judgement) | 2 | post |
+| T-018 | Kit repair: leave blocked-decision after a review verdict | accepted (judgement) | 2 | post |
 | T-019 | Stage 4 pre-flight (no GPU) | accepted (judgement) | 1 | post |
 | T-020 | Restore and verify the PCIe Gen4 link (hands-on) | done (judgement) | 1 | none |
 | T-021 | Stage 4 session, run 2 | accepted (judgement) | 1 | post |
@@ -53,8 +53,8 @@ _(none)_
 
 ## Last events
 
-- 2026-11-15T14:10:01Z done T-022 — accept run at 2026-11-15T14:04:42Z
-- 2026-11-15T14:27:40Z review-opened T-022 — cycle 1
 - 2026-11-15T14:27:45Z review-verdict T-022 — accepted (cycle 1, 2 findings)
 - 2026-11-15T14:29:55Z lane-merged — lane 2
 - 2026-11-15T14:29:55Z ready T-013 — dependencies satisfied
+- 2026-11-15T14:30:26Z status-restored T-005 — done -> accepted (review-verdict seq 210)
+- 2026-11-15T14:30:26Z status-restored T-018 — done -> accepted (review-verdict seq 204)
