@@ -1,5 +1,5 @@
 # Step 0, remaining work: Stage 4, release v0.1.0, completion report
-*Version 1.6 · 14 November 2026*
+*Version 1.8 · 15 November 2026*
 
 ## Shared rules
 
@@ -15,7 +15,7 @@ Context: Step 0 (baseline setup) of "Local AI on a Small PC". Reference plan: do
    - no heavy command while a measurement session runs;
    - nothing written outside the repo except /tmp and /dev/shm/local-ai-research-*.
 5. Nothing is pushed, tagged on a remote or made public outside T-015 and T-016.
-6. Each task ends with a commit and a docs/progress-log.md entry (plan §12.5). The exceptions are the parallel-group tasks T-004, T-005, T-010 and T-011: they don't touch the progress log, and T-006 and T-012 append their entries.
+6. Each task ends with a commit and a docs/progress-log.md entry (plan §12.5). The exceptions are the parallel-group tasks T-004, T-005, T-010, T-011 and T-022: they don't touch the progress log, and T-006 and T-012 append their entries.
 7. Escalate instead of working around a surprise, a failed precondition or an assumption mismatch.
 8. Carry these corrections into any text:
    - 1 flagged window of 80 (not 100) in the later Stage 2 sessions;
@@ -70,7 +70,7 @@ Context: Step 0 (baseline setup) of "Local AI on a Small PC". Reference plan: do
 - P1: Drafts, the first parallel pair: T-004 and T-005 in parallel, then T-006
 - P2: Stage 4 (13 Nov or later, quiet machine): T-019 (pre-flight, light), T-007 (run 1, invalid: PCIe link ran Gen3), T-020 (restore and verify the PCIe Gen4 link), T-021 (Stage 4 run 2), T-018 (kit repair, lane 2, needed to get T-021 out of its stuck review state), T-008 (S2 check on run 2)
 - P3: Post-Stage-4 code fixes: T-009
-- P4: Release: T-010 and T-011 in parallel, then T-012 to T-016
+- P4: Release: T-010 and T-011 in parallel, then T-012 to T-016; T-022 (kit fixes, lane 2) runs beside T-012 and must finish before T-013
 
 ## Task cards
 
@@ -586,7 +586,7 @@ acceptance:
   - expect: file_exists docs/environment.md
   - cmd: source docs/recon/commands.env && eval "$CI_CMD"
     expect: exit_code 0
-evidence: docs/plans/step-0-baseline.md, docs/upstream/
+evidence: docs/plans/step-0-baseline.md, docs/upstream/llama-cpp-mtp-draft2-repeated-phrase.md, docs/upstream/llama-cpp-28619-comment-draft-state.md, docs/methodology.md
 estimate: 60m
 decision_rights:
   - may: wording of the issue drafts and methodology.md
@@ -622,11 +622,53 @@ decision_rights:
   - may: how the README commands are extracted and logged
   - must_escalate: any README command that needed changing to work (FIX-DOC); any config that fails to launch
 
+### T-022 — Kit fixes: lane merge status and state riders
+id: T-022
+title: Kit fixes: lane merge status and state riders
+phase: P4
+depends_on: none
+lane: 2
+lane_reason: It changes only kit scripts, tests and one runbook line, needs no GPU, writes no shared log, and lane 1 is busy with the release chain.
+resources: cpu-heavy
+files_read: scripts/_wf.py, scripts/wf.sh, scripts/wf-loop.sh, tests/test_wf_unblock.py, docs/recon/T-018-kit-repair.md, docs/WORKFLOW.md, docs/decisions.md, reviews/T-005/, reviews/T-018/, docs/runbook-stage3.md, reports/baseline-report.md, README.md
+files_write: scripts/_wf.py, scripts/wf.sh, tests/test_wf_lane_merge.py, docs/runbook-stage3.md, docs/recon/T-022-start.txt, docs/recon/T-022-kit-fixes.md
+gates: none
+review: post
+preconditions:
+  - cmd: test -f scripts/_wf.py && ! pgrep -x llama-server
+    expect: exit_code 0
+steps:
+  - S1: Write `git rev-parse HEAD` to docs/recon/T-022-start.txt and commit. Then write docs/recon/T-022-kit-fixes.md with the problems and file:line evidence, re-reading the code and correcting any line number below that is wrong: (1) cmd_merge_lanes (about line 2316) folds a lane mirror into main with {**base, **task}, so a stale lane status such as done overwrites a more advanced main status; on 15 November the merge of lane 2 turned T-005 and T-018 from accepted back to done although their review-verdict events (seq 210 and seq 204) say accepted; (2) no kit command can restore a status that a bug like this has regressed; (3) the review-verdict parser misses a parenthetical such as "accepted (cycle 1, 3 findings)" (T-018 review F-3, about line 1918); (4) ensure_lane_worktree does not refresh a stale lane worktree from main (T-018 review F-3; the T-011 session merged main in by hand, T-018 recon section 5); (5) recompute_ready promotes the todo placeholder of a lane-owned task to ready (E-005). (redo-safe)
+  - S2: Fix (1): when folding a lane mirror into main, keep main's status if it is accepted, in-review, changes-requested, superseded or cancelled, and take the lane's other fields as before. Add a regression test for the T-005 and T-018 case. (redo-safe)
+  - S3: Add `wf.sh restore-status T-NNN --to accepted --verdict-seq N`. It works only if the task's status is done, the event log has a review-verdict event with that seq for that task whose text starts with "accepted", and no later review-open for that task exists. It writes an event that names the old status, the new status and the seq, and refuses everything else, including any other --to. Add tests for the accept and for each refusal. (redo-safe)
+  - S4: Fix (3), (4) and (5) in the smallest way that fits the code, each with a test. If a fix would need more than about 50 changed lines or would change behaviour that this card does not describe, leave it out, and record it in docs/recon/T-022-kit-fixes.md as deferred with the reason: a deferral is not an escalation. (redo-safe)
+  - S5: In tests/test_wf_lane_merge.py (new file; temporary state copies only, never the live .workflow/) cover every fix, run the kit's whole test set, then ruff and shellcheck on the changed files. (redo-safe)
+  - S6: Check the figure at docs/runbook-stage3.md:146 against its source; if the T-019 finding is right (1,578 should read 1,577), correct that one number and nothing else. (redo-safe)
+  - S7: Read-only check, recorded in docs/recon/T-022-kit-fixes.md: for each review note of T-005 (r2, F-1 to F-5, assigned to T-010) and T-018 (F-2), say whether it was applied in the current files, with the grep or line as evidence. Edit no file outside this card's files_write; unapplied notes are only listed. (redo-safe)
+  - S8: Run CI_CMD once, commit, and write no progress-log entry (the parallel-group rule). Do not run restore-status, wf.sh merge-lanes or anything else against the live state: the planning chat has the driver restore T-005 and T-018 after this lane is merged. (redo-safe)
+acceptance:
+  - cmd: uv run pytest -q tests/test_wf_lane_merge.py tests/test_wf_unblock.py
+    expect: exit_code 0
+  - cmd: shellcheck scripts/wf.sh
+    expect: exit_code 0
+  - cmd: uv run ruff check tests/test_wf_lane_merge.py && uv run ruff format --check tests/test_wf_lane_merge.py
+    expect: exit_code 0
+  - cmd: source docs/recon/commands.env && eval "$CI_CMD"
+    expect: exit_code 0
+  - cmd: grep -q 'restore-status' scripts/_wf.py && test -s docs/recon/T-022-kit-fixes.md && test -s docs/recon/T-022-start.txt
+    expect: exit_code 0
+  - expect: manual "Only scripts/_wf.py, scripts/wf.sh, the new test file, one number in the runbook and the two recon files changed by this task's own commits; the fold fix keeps accepted statuses; restore-status refuses everything except the verified done-to-accepted case; every deferral is recorded with a reason; the live state was not touched."
+evidence: docs/recon/T-022-kit-fixes.md, tests/test_wf_lane_merge.py
+estimate: 120m
+decision_rights:
+  - may: option names, message wording, how the tests build their temporary state, deferring a fix under S4
+  - must_escalate: any change beyond the named files; any need to touch live .workflow/ state; more than about 200 changed lines in total; any doubt that a change keeps the existing transitions legal
+
 ### T-013 — Scrub and release checks
 id: T-013
 title: Scrub and release checks
 phase: P4
-depends_on: T-010, T-011, T-012
+depends_on: T-010, T-011, T-012, T-022
 lane: 1
 resources: light
 files_read: docs/recon/T-001.md, docs/recon/commands.env, src/smallpc/, data/, reports/, docs/
