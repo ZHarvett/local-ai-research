@@ -34,6 +34,7 @@ fi
 # Binary files show no content, matching the scrub module's binary skip.
 # The allowlist is by commit and path, never by the matched string (D8):
 #   26faadd  WP0 occurrence in docs/decisions.md (D8)
+#   dfcd7d9  removal side of the WP0 occurrence, same path (D8; E-014 option A)
 #   3f41e18, bc8e0c3  docs/recon/loop-states.md introduction and fix
 #   (E-006 rule 4 follow-up, recorded in docs/decisions.md)
 if hist_out="$(uv run python - <<'PY'
@@ -45,6 +46,8 @@ from smallpc.scrub import Identity, _patterns
 
 ALLOW = {
     ("26faaddf78f2eec45341ec11c88d2299fa3b76c1", "docs/decisions.md"),
+    # removal side of the WP0 occurrence (D8; DECISION E-014 option A)
+    ("dfcd7d91a2961f3e0c0562d7dd21259dc218e4d2", "docs/decisions.md"),
     ("3f41e1829042bac27abcbd6daf385c79f05ddddc", "docs/recon/loop-states.md"),
     ("bc8e0c343a08ace4f180ca966cddd08def59d134", "docs/recon/loop-states.md"),
 }
