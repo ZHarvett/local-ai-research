@@ -147,6 +147,10 @@ TRANSITIONS: dict[str, set[str]] = {
 # each a legal transition out of blocked-decision in TRANSITIONS above.
 UNBLOCK_TO_TARGETS = ("done", "in-review", "changes-requested")
 
+# T-022: statuses only the main state advances (terminal or review-flow); a lane
+# mirror can be stale against them, so merge-lanes keeps main's value.
+MAIN_WINS_STATUSES = ("accepted", "in-review", "changes-requested", "superseded", "cancelled")
+
 BRIEF_REQUIRED_SECTIONS = (
     "## What happened",
     "## Why it cannot proceed",
@@ -2316,6 +2320,8 @@ def cmd_merge_lanes(repo: Path, args: argparse.Namespace) -> None:
     for tid, task in mirror.get("tasks", {}).items():
         base = state["tasks"].get(tid, {})
         merged = {**base, **task}
+        if base.get("status") in MAIN_WINS_STATUSES:
+            merged["status"] = base["status"]
         merged.pop("claimed_by_lane", None)
         merged.pop("steps_done", None)
         state["tasks"][tid] = merged
