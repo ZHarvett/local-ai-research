@@ -1,14 +1,16 @@
 # Local AI on a Small PC
 
-<!-- sources: docs/plans/step-0-baseline.md, docs/environment.md, data/env/build-info.json, configs/model.toml, configs/machine.toml, configs/harness.toml, configs/server/stock-32k.toml, configs/server/stock-64k.toml, configs/server/stock-128k.toml, configs/server/tuned-32k.toml, configs/server/tuned-64k.toml, configs/server/tuned-128k.toml, scripts/build-llama.sh, scripts/launch-server.sh, scripts/stop-server.sh, scripts/run-detached.sh, scripts/run-sweep.sh, docs/runbook-stage3.md, docs/runbook-stage2.md, data/analysis/stage3/headline.md, docs/stage2-summary.md, docs/decisions.md, docs/progress-log.md, docs/recon/commands.env, pyproject.toml, LICENSE, LICENSE-DATA.md -->
+<!-- sources: docs/plans/step-0-baseline.md, docs/environment.md, data/env/build-info.json, configs/model.toml, configs/machine.toml, configs/harness.toml, configs/server/stock-32k.toml, configs/server/stock-64k.toml, configs/server/stock-128k.toml, configs/server/tuned-32k.toml, configs/server/tuned-64k.toml, configs/server/tuned-128k.toml, scripts/build-llama.sh, scripts/launch-server.sh, scripts/stop-server.sh, scripts/run-detached.sh, scripts/run-sweep.sh, docs/runbook-stage3.md, docs/runbook-stage2.md, data/analysis/stage3/headline.md, docs/stage2-summary.md, docs/decisions.md, docs/progress-log.md, docs/recon/commands.env, pyproject.toml, LICENSE, LICENSE-DATA.md, data/analysis/stage4/s2-summary.md, data/analysis/stage4/repro-output.txt, reports/stage4-run2/caveats.md, docs/stage4-run2-conditions.md, docs/recon/pcie-link.md -->
 
 Measured, reproducible baselines for running **Ornith-1.5-35B-A3B** (a 35B mixture-of-experts
 coding model, Q4_K_M GGUF) with **mainline llama.cpp** on a **16 GB RTX 5060 Ti** desktop:
 stock vs tuned `llama-server` configurations at 32K, 64K and 128K context, plus pinned
 OpenCode and dsh harness setups.
 
-**Status: work in progress.** Stage 3 (the final stock-vs-tuned comparison) is measured.
-Stage 4 (next-day reproducibility) and the v0.1.0 release checks are still pending. <!-- TODO-T010 -->
+**Status: work in progress.** Stages 1–4 are measured: Stage 3 is the final stock-vs-tuned
+comparison, and Stage 4's next-day reproducibility check (S2) passes 6 of 6 rows on run 2
+(run 1 is superseded — see [Reproducibility](#reproducibility-stage-4)). The v0.1.0 release
+checks (clean-shell walkthrough, scrub, tag) are still pending.
 
 ## What this is
 
@@ -169,7 +171,7 @@ bash scripts/stop-server.sh <run-id>    # SIGINT, then SIGKILL after --timeout S
 
 ## Rerunning the sweep on your own 12–16 GB machine
 
-<!-- sources: configs/machine.toml, scripts/launch-server.sh, docs/runbook-stage3.md, docs/runbook-stage2.md, docs/progress-log.md, docs/decisions.md -->
+<!-- sources: configs/machine.toml, scripts/launch-server.sh, docs/runbook-stage3.md, docs/runbook-stage2.md, docs/progress-log.md, docs/decisions.md, docs/stage4-run2-conditions.md -->
 
 1. **Edit `configs/machine.toml`.** Set the absolute paths (`llama_server`, `models_dir`,
    `slot_save_dir`), the `host`/`port` and the GPU `index` (exported as `CUDA_VISIBLE_DEVICES`).
@@ -218,12 +220,14 @@ a recorded minor deviation — decision D7 in `docs/decisions.md`.)
 
 **Time budget.** The three Stage 3 sessions took 18.4, 26.4 and 45.9 minutes; the re-run passes
 8.2, 11.6 and 17.8 minutes — about 2.1 hours in all. <!-- derived: (18.4 + 26.4 + 45.9 + 8.2 + 11.6 + 17.8) min / 60 = 2.14 h, from docs/progress-log.md "WP13 (part 2, Stage 3)" -->
-Stage 4 (one 64K session on a different day) is estimated at 26–29 minutes, upper bound 44 with
-a worst-case re-run pass (`docs/runbook-stage3.md` §7). <!-- TODO-T010 -->
+Stage 4 (one 64K session on a different day) took 26.1 minutes plus a 9.2-minute re-run pass
+in run 2, the S2 run (`docs/stage4-run2-conditions.md`); the runbook estimate was 26–29 minutes,
+upper bound 44 with a worst-case re-run pass (`docs/runbook-stage3.md` §7). Run 1 (superseded,
+R5) took 38.3 + 13.6 minutes (`docs/progress-log.md`, T-007).
 
 ## Results
 
-<!-- sources: data/analysis/stage3/headline.md, docs/decisions.md, docs/plans/step-0-baseline.md, docs/stage2-summary.md, docs/progress-log.md -->
+<!-- sources: data/analysis/stage3/headline.md, docs/decisions.md, docs/plans/step-0-baseline.md, docs/stage2-summary.md, docs/progress-log.md, data/analysis/stage4/s2-summary.md, data/analysis/stage4/repro-output.txt, reports/stage4-run2/caveats.md, docs/stage4-run2-conditions.md, docs/recon/pcie-link.md -->
 
 Stage 3 measured the six released configs on a quiet machine: one session per context, stock
 and tuned paired in the same session, 5 repetitions each, start and end canaries, one
@@ -262,7 +266,7 @@ Notes on the headline rules (decisions D1–D3 in `docs/decisions.md`):
   means the headline is the all-units comparison, labelled "includes paging-flagged stock
   windows", with the clean-units figures beside it (table above); S4(d) is recorded as a
   deviation for this context. `data/analysis/stage3/headline.md` is authoritative; the rendered
-  report still labels stock-128K "not reportable (n < 5)" until that rendering is fixed.
+  report (`reports/stage3`) applies the same §5.4 headline rule (the rendering was fixed in T-009).
 - **32K swap sensitivity (D3).** Excluding the units whose window shows more than 64 MiB of
   llama-server swap growth removes 3 of the 5 paired units. The point estimates barely move
   (`T_turn_400` 0.712 [0.629, 0.807]), but the wider intervals mean the **32K decode gain is
@@ -281,15 +285,43 @@ Only the 64K tuned config keeps MTP (draft length 1). In the later Stage 2 sessi
 of 80 was flagged (`docs/decisions.md`, "Corrections to plan v1.7"). The full Stage 2 outcome
 table is `docs/stage2-summary.md`.
 
-### Reproducibility (Stage 4) <!-- TODO-T010 -->
+### Reproducibility (Stage 4)
 
-Stage 4 re-measures stock-64K and tuned-64K on a different day. The S2 check requires each
-re-measured mean (`T_turn_400`, fresh prefill at 32K, decode at 32K depth) to fall inside its
-original 95% CI or within 5%, whichever is wider. **Pending — results will be added here.** <!-- TODO-T010 -->
+Stage 4 re-measured stock-64K and tuned-64K on a different day (2026-11-14, session
+`stage4-run2`, 5 repetitions per cell with canaries, quiet machine, clean committed tree).
+The S2 check requires each re-measured mean (`T_turn_400`, fresh prefill at 32K, decode at
+32K depth) to fall inside its original 95% CI or within 5%, whichever is wider.
+**Result: PASS — 6 of 6 rows**, every row evaluated on clean units (both cells 5 clean of 5
+on both days; the R1 all-units fallback was not triggered). Summary:
+`data/analysis/stage4/s2-summary.md`; verbatim tool output: `data/analysis/stage4/repro-output.txt`.
+
+| cell | metric | Stage 3 mean [95% CI] | allowed range (wider of CI, ±5%) | Stage 4 mean | result |
+|---|---|---|---|---|---|
+| stock-64K | T_turn_400 (s) | 9.288 [9.238, 9.338] | [8.824, 9.753] | 9.100 | PASS |
+| stock-64K | fresh prefill 32K (tok/s) | 844.155 [840.328, 847.982] | [801.947, 886.363] | 853.861 | PASS |
+| stock-64K | decode at 32K depth (tok/s) | 73.881 [73.792, 73.970] | [70.187, 77.575] | 75.936 | PASS |
+| tuned-64K | T_turn_400 (s) | 6.413 [6.003, 6.824] | [6.003, 6.824] | 6.296 | PASS |
+| tuned-64K | fresh prefill 32K (tok/s) | 2024.852 [2001.669, 2048.034] | [1923.609, 2126.094] | 2000.895 | PASS |
+| tuned-64K | decode at 32K depth (tok/s) | 91.644 [85.476, 97.812] | [85.476, 97.812] | 93.459 | PASS |
+
+Two rows pass inside the Stage 3 CI itself (tuned-64K `T_turn_400` and decode); the other
+four pass inside the wider ±5% band. Caveats (`reports/stage4-run2/caveats.md`):
+
+- **Run 1 is superseded (R5).** The first Stage 4 session (`stage4`) ran with the GPU's PCIe
+  link at Gen3 x8 instead of Gen4 x8 for the whole session, so it is invalid for S2. It is
+  kept as an excluded diagnostic, never deleted (`reports/stage4/`,
+  `data/analysis/stage4-run1-superseded/`). The link was restored and verified at Gen4 x8
+  under load before run 2 (`docs/recon/pcie-link.md`); every sample in run 2's measured cell
+  windows read "4, 8" (R7, as clarified by decision E-009).
+- **Changed kernel and driver (E-009).** Run 2 ran on kernel 7.3.4-1-cachyos, driver
+  620.70.06; Stage 3 ran on 7.3.1-1-cachyos / 615.78.08. S2 passed on the changed kernel and
+  driver; the comparison carries this confound. No re-measure — the data stands.
+- The second half of S2 — every recommended config launches from a clean shell using only
+  the README commands — is the T-012 walkthrough, still pending.
 
 ## Limitations
 
-<!-- sources: docs/plans/step-0-baseline.md, docs/decisions.md, docs/stage2-summary.md, docs/progress-log.md, data/analysis/stage3/headline.md -->
+<!-- sources: docs/plans/step-0-baseline.md, docs/decisions.md, docs/stage2-summary.md, docs/progress-log.md, data/analysis/stage3/headline.md, reports/stage4-run2/caveats.md -->
 
 - **The standardised turn is not real agent use.** Every configuration is compared on the same
   fixed turn: 3,000 new prompt tokens appended to a cached context, then 400 generated tokens
@@ -297,8 +329,11 @@ original 95% CI or within 5%, whichever is wider. **Pending — results will be 
   harness smoke tasks only prove the harnesses work and are never representative (plan §3.4).
   Task-success measurement is Step 1.
 - **Stages 1–2 ran with desktop apps open** (and idle), as a recorded deviation; only Stages 3
-  and 4 enforce the full quiet-machine gate. <!-- TODO-T010 --> For context, every Stage 3 mean is within 1.3% of
+  and 4 enforce the full quiet-machine gate. For context, every Stage 3 mean is within 1.3% of
   the Stage 1/2 selection data (`docs/progress-log.md`, WP13 part 2).
+- **Stage 4 carries a kernel/driver confound and one superseded run.** The reproducibility
+  pass ran on a changed kernel and driver, and run 1 (PCIe Gen3 x8) is excluded — see
+  [Reproducibility (Stage 4)](#reproducibility-stage-4).
 - **MTP draft length 2 produces degenerate repetition.** It fails the output sanity check
   deterministically at 32K and 64K on four different placement/KV/context configs (an 8-gram
   repeats 8 times on sanity prompt r0; the reference repeats it 2 times). MTP off and draft

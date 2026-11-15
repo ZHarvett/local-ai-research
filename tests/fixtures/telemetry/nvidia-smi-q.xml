@@ -1,4 +1,4 @@
-<?xml version="1.0" ?>
+<?xml version='1.0' ?>
 <nvidia_smi_log>
 	<driver_version>000.00</driver_version>
 	<cuda_version>13.4</cuda_version>

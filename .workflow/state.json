@@ -1,5 +1,5 @@
 {
-  "checksum": "c9b5e977589c113b5c23971563b1bc51ead9e4696f8272e67a85669000d8be8c",
+  "checksum": "b44312ec1cdaa03bf2a257652e6a575996a0ba4005478d7bd2b3a9bcd2815ffd",
   "created_utc": "2026-11-12T22:25:04Z",
   "escalations": {
     "E-001": {
@@ -57,6 +57,27 @@
       "status": "decided",
       "task": "T-008",
       "type": "decision"
+    },
+    "E-009": {
+      "created_utc": "2026-11-14T17:39:18Z",
+      "decided_utc": "2026-11-14T18:07:36Z",
+      "status": "decided",
+      "task": "T-021",
+      "type": "decision"
+    },
+    "E-010": {
+      "created_utc": "2026-11-14T20:59:43Z",
+      "decided_utc": "2026-11-14T22:15:23Z",
+      "status": "decided",
+      "task": "T-009",
+      "type": "assumption-mismatch"
+    },
+    "E-011": {
+      "created_utc": "2026-11-14T22:06:38Z",
+      "decided_utc": "2026-11-14T22:15:23Z",
+      "status": "decided",
+      "task": "T-009",
+      "type": "assumption-mismatch"
     }
   },
   "events": [
@@ -502,6 +523,13 @@
       "ts": "2026-11-13T11:44:41Z"
     },
     {
+      "detail": "lane 2, pid 1807601",
+      "event": "claimed",
+      "seq": 0,
+      "task": "T-005",
+      "ts": "2026-11-13T11:44:41Z"
+    },
+    {
       "detail": "lane 2",
       "event": "migrated-to-lane",
       "seq": 62,
@@ -535,6 +563,20 @@
       "seq": 1,
       "task": "T-017",
       "ts": "2026-11-13T11:44:46Z"
+    },
+    {
+      "detail": "lane 2",
+      "event": "started",
+      "seq": 1,
+      "task": "T-005",
+      "ts": "2026-11-13T11:44:46Z"
+    },
+    {
+      "detail": "S1",
+      "event": "step-done",
+      "seq": 2,
+      "task": "T-005",
+      "ts": "2026-11-13T11:51:21Z"
     },
     {
       "detail": "S1",
@@ -607,11 +649,32 @@
       "ts": "2026-11-13T12:02:11Z"
     },
     {
+      "detail": "S2",
+      "event": "step-done",
+      "seq": 3,
+      "task": "T-005",
+      "ts": "2026-11-13T12:02:11Z"
+    },
+    {
       "detail": "S3",
       "event": "step-done",
       "seq": 4,
       "task": "T-005",
       "ts": "2026-11-13T12:02:11Z"
+    },
+    {
+      "detail": "S3",
+      "event": "step-done",
+      "seq": 4,
+      "task": "T-005",
+      "ts": "2026-11-13T12:02:11Z"
+    },
+    {
+      "detail": "accept run at 2026-11-13T12:02:32Z",
+      "event": "done",
+      "seq": 5,
+      "task": "T-005",
+      "ts": "2026-11-13T12:02:41Z"
     },
     {
       "detail": "accept run at 2026-11-13T12:02:32Z",
@@ -1326,6 +1389,510 @@
       "seq": 180,
       "task": "T-018",
       "ts": "2026-11-14T15:58:43Z"
+    },
+    {
+      "detail": "lane 2, pid 19216",
+      "event": "claimed",
+      "seq": 6,
+      "task": "T-018",
+      "ts": "2026-11-14T16:00:11Z"
+    },
+    {
+      "detail": "lane 2",
+      "event": "migrated-to-lane",
+      "seq": 181,
+      "task": "T-018",
+      "ts": "2026-11-14T16:00:11Z"
+    },
+    {
+      "detail": "lane 2",
+      "event": "started",
+      "seq": 7,
+      "task": "T-018",
+      "ts": "2026-11-14T16:00:15Z"
+    },
+    {
+      "detail": "S1: recon written; four defects confirmed at corrected lines; stale-worktree setup merge documented",
+      "event": "step-done",
+      "seq": 8,
+      "task": "T-018",
+      "ts": "2026-11-14T16:09:19Z"
+    },
+    {
+      "detail": "S2: four changes in _wf.py only, 59 changed lines; smoke-tested on /tmp fixture",
+      "event": "step-done",
+      "seq": 9,
+      "task": "T-018",
+      "ts": "2026-11-14T16:11:34Z"
+    },
+    {
+      "detail": "S3: 12 tests (6 card scenarios + regression guards); 49 pass with test_wf_loop.py; ruff clean",
+      "event": "step-done",
+      "seq": 10,
+      "task": "T-018",
+      "ts": "2026-11-14T16:13:21Z"
+    },
+    {
+      "detail": "S4: decisions line, shellcheck/ruff/diff-scope verified, acceptance run 1 (0 failures), progress-log entry",
+      "event": "step-done",
+      "seq": 11,
+      "task": "T-018",
+      "ts": "2026-11-14T16:19:27Z"
+    },
+    {
+      "detail": "accept run at 2026-11-14T16:18:16Z",
+      "event": "done",
+      "seq": 12,
+      "task": "T-018",
+      "ts": "2026-11-14T16:19:27Z"
+    },
+    {
+      "detail": "lane 2",
+      "event": "lane-merged",
+      "seq": 195,
+      "task": null,
+      "ts": "2026-11-14T16:22:58Z"
+    },
+    {
+      "detail": "blocked-decision -> changes-requested",
+      "event": "unblocked",
+      "seq": 196,
+      "task": "T-021",
+      "ts": "2026-11-14T16:23:06Z"
+    },
+    {
+      "detail": "disposition F-1: accept",
+      "event": "note",
+      "seq": 197,
+      "task": "T-021",
+      "ts": "2026-11-14T17:30:39Z"
+    },
+    {
+      "detail": "disposition F-2: escalate",
+      "event": "note",
+      "seq": 198,
+      "task": "T-021",
+      "ts": "2026-11-14T17:30:39Z"
+    },
+    {
+      "detail": "disposition F-3: accept",
+      "event": "note",
+      "seq": 199,
+      "task": "T-021",
+      "ts": "2026-11-14T17:30:39Z"
+    },
+    {
+      "detail": "disposition F-4: accept",
+      "event": "note",
+      "seq": 200,
+      "task": "T-021",
+      "ts": "2026-11-14T17:30:40Z"
+    },
+    {
+      "detail": "disposition F-5: accept",
+      "event": "note",
+      "seq": 201,
+      "task": "T-021",
+      "ts": "2026-11-14T17:30:40Z"
+    },
+    {
+      "detail": "disposition F-6: accept",
+      "event": "note",
+      "seq": 202,
+      "task": "T-021",
+      "ts": "2026-11-14T17:30:40Z"
+    },
+    {
+      "detail": "cycle 1",
+      "event": "review-opened",
+      "seq": 203,
+      "task": "T-018",
+      "ts": "2026-11-14T17:35:23Z"
+    },
+    {
+      "detail": "accepted (cycle 1, 3 findings)",
+      "event": "review-verdict",
+      "seq": 204,
+      "task": "T-018",
+      "ts": "2026-11-14T17:35:27Z"
+    },
+    {
+      "detail": "E-009 (decision)",
+      "event": "escalated",
+      "seq": 205,
+      "task": "T-021",
+      "ts": "2026-11-14T17:39:18Z"
+    },
+    {
+      "detail": "restored to changes-requested",
+      "event": "unblocked",
+      "seq": 206,
+      "task": "T-021",
+      "ts": "2026-11-14T18:07:36Z"
+    },
+    {
+      "detail": "decision E-009 recorded",
+      "event": "note",
+      "seq": 207,
+      "task": "T-021",
+      "ts": "2026-11-14T18:07:36Z"
+    },
+    {
+      "detail": "sha256 a3d02a2a84ef\u2026",
+      "event": "plan-amended",
+      "seq": 208,
+      "task": null,
+      "ts": "2026-11-14T19:15:22Z"
+    },
+    {
+      "detail": "cycle 2",
+      "event": "review-opened",
+      "seq": 209,
+      "task": "T-005",
+      "ts": "2026-11-14T19:49:43Z"
+    },
+    {
+      "detail": "accepted (cycle 2, 5 findings)",
+      "event": "review-verdict",
+      "seq": 210,
+      "task": "T-005",
+      "ts": "2026-11-14T19:49:43Z"
+    },
+    {
+      "detail": "cycle 2",
+      "event": "review-opened",
+      "seq": 211,
+      "task": "T-021",
+      "ts": "2026-11-14T19:58:41Z"
+    },
+    {
+      "detail": "accepted (cycle 2, 2 findings)",
+      "event": "review-verdict",
+      "seq": 212,
+      "task": "T-021",
+      "ts": "2026-11-14T20:15:26Z"
+    },
+    {
+      "detail": "dependencies satisfied",
+      "event": "ready",
+      "seq": 213,
+      "task": "T-008",
+      "ts": "2026-11-14T20:15:26Z"
+    },
+    {
+      "detail": "lane 1, pid 116395",
+      "event": "claimed",
+      "seq": 214,
+      "task": "T-008",
+      "ts": "2026-11-14T20:16:47Z"
+    },
+    {
+      "detail": "lane 1",
+      "event": "started",
+      "seq": 215,
+      "task": "T-008",
+      "ts": "2026-11-14T20:16:47Z"
+    },
+    {
+      "detail": "S1",
+      "event": "step-done",
+      "seq": 216,
+      "task": "T-008",
+      "ts": "2026-11-14T20:17:54Z"
+    },
+    {
+      "detail": "S2",
+      "event": "step-done",
+      "seq": 217,
+      "task": "T-008",
+      "ts": "2026-11-14T20:20:28Z"
+    },
+    {
+      "detail": "S3",
+      "event": "step-done",
+      "seq": 218,
+      "task": "T-008",
+      "ts": "2026-11-14T20:23:54Z"
+    },
+    {
+      "detail": "S4",
+      "event": "step-done",
+      "seq": 219,
+      "task": "T-008",
+      "ts": "2026-11-14T20:23:55Z"
+    },
+    {
+      "detail": "accept run at 2026-11-14T20:25:10Z",
+      "event": "done",
+      "seq": 220,
+      "task": "T-008",
+      "ts": "2026-11-14T20:25:47Z"
+    },
+    {
+      "detail": "cycle 1",
+      "event": "review-opened",
+      "seq": 221,
+      "task": "T-008",
+      "ts": "2026-11-14T20:34:49Z"
+    },
+    {
+      "detail": "accepted (cycle 1, 0 findings)",
+      "event": "review-verdict",
+      "seq": 222,
+      "task": "T-008",
+      "ts": "2026-11-14T20:34:49Z"
+    },
+    {
+      "detail": "dependencies satisfied",
+      "event": "ready",
+      "seq": 223,
+      "task": "T-009",
+      "ts": "2026-11-14T20:34:49Z"
+    },
+    {
+      "detail": "lane 1, pid 120069",
+      "event": "claimed",
+      "seq": 224,
+      "task": "T-009",
+      "ts": "2026-11-14T20:37:07Z"
+    },
+    {
+      "detail": "lane 1",
+      "event": "started",
+      "seq": 225,
+      "task": "T-009",
+      "ts": "2026-11-14T20:37:07Z"
+    },
+    {
+      "detail": "S1",
+      "event": "step-done",
+      "seq": 226,
+      "task": "T-009",
+      "ts": "2026-11-14T20:38:00Z"
+    },
+    {
+      "detail": "S2",
+      "event": "step-done",
+      "seq": 227,
+      "task": "T-009",
+      "ts": "2026-11-14T20:51:09Z"
+    },
+    {
+      "detail": "E-010 (assumption-mismatch)",
+      "event": "escalated",
+      "seq": 228,
+      "task": "T-009",
+      "ts": "2026-11-14T20:59:43Z"
+    },
+    {
+      "detail": "/dev/shm/local-ai-research-machine.lock",
+      "event": "machine-lock-released",
+      "seq": 229,
+      "task": null,
+      "ts": "2026-11-14T21:35:33Z"
+    },
+    {
+      "detail": "card changed; re-acknowledgement required",
+      "event": "plan-changed",
+      "seq": 230,
+      "task": "T-009",
+      "ts": "2026-11-14T22:01:12Z"
+    },
+    {
+      "detail": "card changed; re-acknowledgement required",
+      "event": "plan-changed",
+      "seq": 231,
+      "task": "T-010",
+      "ts": "2026-11-14T22:01:12Z"
+    },
+    {
+      "detail": "sha256 9cf384e43275\u2026",
+      "event": "plan-amended",
+      "seq": 232,
+      "task": null,
+      "ts": "2026-11-14T22:01:12Z"
+    },
+    {
+      "detail": "dependencies satisfied",
+      "event": "ready",
+      "seq": 233,
+      "task": "T-009",
+      "ts": "2026-11-14T22:01:12Z"
+    },
+    {
+      "detail": "E-011 (assumption-mismatch)",
+      "event": "escalated",
+      "seq": 234,
+      "task": "T-009",
+      "ts": "2026-11-14T22:06:39Z"
+    },
+    {
+      "detail": "restored to ready",
+      "event": "unblocked",
+      "seq": 235,
+      "task": "T-009",
+      "ts": "2026-11-14T22:15:23Z"
+    },
+    {
+      "detail": "decision E-010 recorded",
+      "event": "note",
+      "seq": 236,
+      "task": "T-009",
+      "ts": "2026-11-14T22:15:23Z"
+    },
+    {
+      "detail": "re-block so E-011 can be recorded",
+      "event": "blocked",
+      "seq": 237,
+      "task": "T-009",
+      "ts": "2026-11-14T22:15:23Z"
+    },
+    {
+      "detail": "restored to ready",
+      "event": "unblocked",
+      "seq": 238,
+      "task": "T-009",
+      "ts": "2026-11-14T22:15:23Z"
+    },
+    {
+      "detail": "decision E-011 recorded",
+      "event": "note",
+      "seq": 239,
+      "task": "T-009",
+      "ts": "2026-11-14T22:15:23Z"
+    },
+    {
+      "detail": "lane 1, pid 109446",
+      "event": "claimed",
+      "seq": 240,
+      "task": "T-009",
+      "ts": "2026-11-14T22:17:00Z"
+    },
+    {
+      "detail": "lane 1",
+      "event": "started",
+      "seq": 241,
+      "task": "T-009",
+      "ts": "2026-11-14T22:17:00Z"
+    },
+    {
+      "detail": "S1",
+      "event": "step-done",
+      "seq": 242,
+      "task": "T-009",
+      "ts": "2026-11-14T22:17:17Z"
+    },
+    {
+      "detail": "S2",
+      "event": "step-done",
+      "seq": 243,
+      "task": "T-009",
+      "ts": "2026-11-14T22:17:17Z"
+    },
+    {
+      "detail": "S3",
+      "event": "step-done",
+      "seq": 244,
+      "task": "T-009",
+      "ts": "2026-11-14T22:20:54Z"
+    },
+    {
+      "detail": "S4",
+      "event": "step-done",
+      "seq": 245,
+      "task": "T-009",
+      "ts": "2026-11-14T22:37:49Z"
+    },
+    {
+      "detail": "S5",
+      "event": "step-done",
+      "seq": 246,
+      "task": "T-009",
+      "ts": "2026-11-14T22:39:24Z"
+    },
+    {
+      "detail": "S6",
+      "event": "step-done",
+      "seq": 247,
+      "task": "T-009",
+      "ts": "2026-11-14T22:40:22Z"
+    },
+    {
+      "detail": "S7",
+      "event": "step-done",
+      "seq": 248,
+      "task": "T-009",
+      "ts": "2026-11-14T22:46:32Z"
+    },
+    {
+      "detail": "accept run at 2026-11-14T22:46:49Z",
+      "event": "done",
+      "seq": 249,
+      "task": "T-009",
+      "ts": "2026-11-14T23:15:06Z"
+    },
+    {
+      "detail": "dependencies satisfied",
+      "event": "ready",
+      "seq": 250,
+      "task": "T-010",
+      "ts": "2026-11-14T23:15:06Z"
+    },
+    {
+      "detail": "dependencies satisfied",
+      "event": "ready",
+      "seq": 251,
+      "task": "T-011",
+      "ts": "2026-11-14T23:15:06Z"
+    },
+    {
+      "detail": "lane 1, pid 365187",
+      "event": "claimed",
+      "seq": 252,
+      "task": "T-010",
+      "ts": "2026-11-15T08:50:56Z"
+    },
+    {
+      "detail": "lane 1",
+      "event": "started",
+      "seq": 253,
+      "task": "T-010",
+      "ts": "2026-11-15T08:51:00Z"
+    },
+    {
+      "detail": "S1",
+      "event": "step-done",
+      "seq": 254,
+      "task": "T-010",
+      "ts": "2026-11-15T09:01:18Z"
+    },
+    {
+      "detail": "S2",
+      "event": "step-done",
+      "seq": 255,
+      "task": "T-010",
+      "ts": "2026-11-15T09:02:38Z"
+    },
+    {
+      "detail": "accept run at 2026-11-15T09:03:49Z",
+      "event": "done",
+      "seq": 256,
+      "task": "T-010",
+      "ts": "2026-11-15T09:03:57Z"
+    },
+    {
+      "detail": "cycle 1",
+      "event": "review-opened",
+      "seq": 257,
+      "task": "T-010",
+      "ts": "2026-11-15T09:13:27Z"
+    },
+    {
+      "detail": "accepted (cycle 1, 0 findings)",
+      "event": "review-verdict",
+      "seq": 258,
+      "task": "T-010",
+      "ts": "2026-11-15T09:14:23Z"
     }
   ],
   "kit_version": "0.1.0",
@@ -1337,13 +1904,16 @@
     "P4"
   ],
   "plan_file": "PLAN.md",
-  "plan_sha256": "fed612c8820c8a182df0e181b7cc345db47629e65f2dfda2337b71a59d3114d5",
+  "plan_sha256": "9cf384e432759b79eccd1d175d1ee5faa61ccaffc7c3a31ff3413669f7346c87",
   "review_cycles": {
-    "T-005": 1,
+    "T-005": 2,
     "T-007": 1,
+    "T-008": 1,
+    "T-010": 1,
     "T-017": 2,
+    "T-018": 1,
     "T-019": 2,
-    "T-021": 1
+    "T-021": 2
   },
   "review_dispositions": {
     "T-017": [
@@ -1397,6 +1967,50 @@
         "finding": "F-2",
         "reason": "MINOR DECIDE: card-interpretation question reserved to the planning chat \u2014 whether a transient P8 FAIL, resolved mid-session by the owning lane's own legitimate commits (bc8e0c3/1ba3bf9) before any escalation was filed, triggers card S3's 'if any check FAILs, escalate once' clause. Verified the review's facts: the FAIL was real at de6d586, the re-check passed, ca1d5ad touches only T-019's own files, and \u00a72.9 documents the reading that the clause attaches to the final Result. DECIDE findings are never resolved inline; escalating with options (a) ratify \u00a72.9's reading (recommended, optional one-line precedent in docs/decisions.md) or (b) require a retroactive escalation brief. No re-measurement or code change implied.",
         "severity": "MINOR"
+      }
+    ],
+    "T-021": [
+      {
+        "action_taken": "accept",
+        "cycle": 1,
+        "finding": "F-1",
+        "reason": "MAJOR FIX-DOC, independently verified from committed raw data: data/raw/stage4-run2/events.jsonl 14:40:31Z warning fit_changed_explicit_placement on tuned-64K (fit_succeeded false, fit_intervened true, required_reduction_mib 18, offloaded_layers [42,42], tensor_overrides_to_cpu true) \u2014 the session's only warning; every other session has exactly one code_commit_changed. startup_excerpt: projected 14766 MiB vs 15772 MiB free (stage3-64K and stage4: 15803), 1024 MiB target missed by 18 MiB, 'context size set by user to 65536 -> no change', 'tensor_buft_overrides already set by user, abort'. argv, resolved config, props and measured VRAM byte/value-identical to run 1 (loaded 14934, after_warmup_used 15280, peak 15292, min_free 1019). Fix: add the warning, comparison table, startup lines, identity check and driver-confound link to docs/stage4-run2-conditions.md; name it in the T-008 handoff. No re-measure, no re-analysis of measurements.",
+        "severity": "MAJOR"
+      },
+      {
+        "action_taken": "escalate",
+        "cycle": 1,
+        "finding": "F-2",
+        "reason": "MAJOR DECIDE: the scope of R7's 'while a server is generating' is a rule interpretation the card's decision_rights.must_escalate reserves to the planning chat ('any stop rule firing, including R7'); the executor resolved the poll-3 ambiguity inline without an escalation brief. Reviewer's re-derivation, independently reproduced by me from committed telemetry: 3,556 sustained-generation samples (P1, >=50 W, >=2500 MHz) and all 2,657 measured-cell samples Gen4 x8; exactly two util>0 non-Gen4 rows session-wide, both idle-to-load ramps in re-run canaries (15:01:21.726Z util 94% gen 2 P5 9.92 W; 15:07:42.999Z util 26% gen 2 P5 9.77 W), link back at Gen4 within one 0.5 s sample. Escalating with option A (ratify under-load reading; reviewer recommendation) and option B (strict reading); reviewer orders no RE-MEASURE. A5's link clause stays ESCALATE until the ruling; R6 makes the interpretation consequential.",
+        "severity": "MAJOR"
+      },
+      {
+        "action_taken": "accept",
+        "cycle": 1,
+        "finding": "F-3",
+        "reason": "MINOR FIX-DOC, reproduced: uv run python tools/check_doc_numbers.py docs/stage4-run2-conditions.md exit 1, 20 of 61 unverified. Fix: add data/raw/stage4-run2/session.json, events.jsonl and the six cells/*.json to the sources line (precondition literals 27.93/28.47/0.03/0.84 are in the cell preconditions, measure times in phases_s, drift in session.json); derived markers on the rounded drift figures 0.00406/0.00373 and the rounded poll GiB line; note that the remaining poll readings are live observations with no committed repo source (run 1's accepted log has the same pattern, 45 of 75).",
+        "severity": "MINOR"
+      },
+      {
+        "action_taken": "accept",
+        "cycle": 1,
+        "finding": "F-4",
+        "reason": "MINOR FIX-DOC, verified in the run-2 cells/*.json vram blocks: the quoted 1,019/1,353/1,355/1,329 MiB are min_free_mib (whole-cell minimum); after_warmup_min_free_mib is 1031 (tuned), 1355 (stock a1), 1355 (stock a2), 1329 (canaries). Fix: relabel the end-summary line to min_free_mib and quote the after-warmup figures beside the two that differ. Not material to eligibility: every figure far above the 512 MiB floor (runbook).",
+        "severity": "MINOR"
+      },
+      {
+        "action_taken": "accept",
+        "cycle": 1,
+        "finding": "F-5",
+        "reason": "NOTE FIX-DOC, verified at src/smallpc/sweep/records.py:225-227 (incomplete batches dropped) and src/smallpc/sweep/status.py:80-84,107 (flag counts and request totals from complete batches only): poll rows are timestamped at poll start and sweep-status counts only complete batches, so poll 2's '64 requests, flags none' is correct \u2014 the stock repetition-2 batch (7 requests) only becomes visible when its last request lands at 14:48:37Z, after poll 2. Fix: one-line convention note in the polls section so the next reviewer does not raise a false MAJOR.",
+        "severity": "NOTE"
+      },
+      {
+        "action_taken": "accept",
+        "cycle": 1,
+        "finding": "F-6",
+        "reason": "NOTE FIX-DOC: the finding itself requires no T-021 file change (pre-existing design; .gitignore:8 excludes data/logs/*/ and the job status.json substance is already quoted in the conditions log). Accepting and recording the carry-forward to T-013/T-015 in this session's progress-log entry: the release archive will not contain the job logs behind gate criterion (a); the release tasks must quote them from the conditions log or rule on the exclusion.",
+        "severity": "NOTE"
       }
     ]
   },
@@ -1578,6 +2192,7 @@
     },
     "T-008": {
       "card_sha256": "c394c8b4667740a65b7b371dd7bbfe0ddfcb431d750ffd71f57223a1ce526d50",
+      "claimed_by_lane": 1,
       "depends_on": [
         "T-021"
       ],
@@ -1594,11 +2209,20 @@
       "resources": "light",
       "review": "post",
       "source": "plan",
-      "status": "todo",
+      "status": "accepted",
+      "steps_done": [
+        "S1",
+        "S2",
+        "S3",
+        "S4"
+      ],
       "title": "S2 check and Stage 4 analysis"
     },
     "T-009": {
-      "card_sha256": "ca9adfa7e6e005925c4c7f7fcd906244af4de9b5b7683e5e4c9ddd8a451cd0c9",
+      "blocked_from": null,
+      "blocked_reason": null,
+      "card_sha256": "a1182b70a3c57ecb615edb3c5723ddc7c3c8225f15605e65c8959f560c14b6ee",
+      "claimed_by_lane": 1,
       "depends_on": [
         "T-008"
       ],
@@ -1606,20 +2230,32 @@
         "tests/",
         "src/smallpc/",
         "reports/stage3/",
-        "reports/stage4/",
+        "reports/stage4-run2/",
+        "docs/recon/stage4-preflight.md",
         "docs/recon/T-009-start.txt",
         "docs/progress-log.md"
       ],
       "lane": 1,
       "phase": "P3",
+      "plan_changed": true,
       "resources": "cpu-heavy",
       "review": "none",
       "source": "plan",
-      "status": "todo",
+      "status": "done",
+      "steps_done": [
+        "S1",
+        "S2",
+        "S3",
+        "S4",
+        "S5",
+        "S6",
+        "S7"
+      ],
       "title": "Post-Stage-4 code fixes"
     },
     "T-010": {
-      "card_sha256": "2c44695f110d784ac1fa8661441da00a6fc5f62eb9bfaba3c85c10989dc0a8db",
+      "card_sha256": "fbfdd311bad7f60e1cdab5d5ea87957f767846f7f3be6c891cac37f5aba98d5b",
+      "claimed_by_lane": 1,
       "depends_on": [
         "T-004",
         "T-005",
@@ -1634,10 +2270,15 @@
       ],
       "lane": 1,
       "phase": "P4",
+      "plan_changed": true,
       "resources": "light",
       "review": "post",
       "source": "plan",
-      "status": "todo",
+      "status": "accepted",
+      "steps_done": [
+        "S1",
+        "S2"
+      ],
       "title": "Final README, report, write-up and changelog"
     },
     "T-011": {
@@ -1657,7 +2298,7 @@
       "resources": "light",
       "review": "none",
       "source": "plan",
-      "status": "todo",
+      "status": "ready",
       "title": "Plan v1.9, upstream drafts, methodology"
     },
     "T-012": {
@@ -1794,7 +2435,7 @@
       "resources": "light",
       "review": "post",
       "source": "plan",
-      "status": "ready",
+      "status": "accepted",
       "title": "Kit repair: leave blocked-decision after a review verdict"
     },
     "T-019": {
@@ -1851,6 +2492,8 @@
       "title": "Restore and verify the PCIe Gen4 link (hands-on)"
     },
     "T-021": {
+      "blocked_from": null,
+      "blocked_reason": null,
       "card_sha256": "32c807e3f2c0381ee1ce3b0e9c5dd54ae7d84315292e60e1bacf7976eeb60d8a",
       "claimed_by_lane": 1,
       "depends_on": [
@@ -1869,7 +2512,7 @@
       "resources": "exclusive-machine",
       "review": "post",
       "source": "plan",
-      "status": "blocked-decision",
+      "status": "accepted",
       "steps_done": [
         "S1",
         "S2",

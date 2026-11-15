@@ -6,7 +6,7 @@ PCIe link ran at Gen3 x8 for the whole session); its data and conditions log (`d
 Gate G3 applies in full: the desktop apps are closed (`scripts/check-quiet.sh`, blocklist in `configs/quiet-check.toml`). Only
 process **names** are recorded, never window titles, URLs or command-line arguments. Template: `docs/stage4-conditions.md`.
 
-<!-- sources: docs/runbook-stage3.md, docs/stage4-conditions.md, scripts/check-quiet.sh, configs/sweeps/stage4.toml, docs/recon/pcie-link.md, docs/decisions.md -->
+<!-- sources: docs/runbook-stage3.md, docs/stage4-conditions.md, scripts/check-quiet.sh, configs/sweeps/stage4.toml, docs/recon/pcie-link.md, docs/decisions.md, data/raw/stage4-run2/session.json, data/raw/stage4-run2/events.jsonl, data/raw/stage4-run2/cells/tuned-64K-f9b81a84.json, data/raw/stage4-run2/cells/stock-64K-22dc1178.json, data/raw/stage4-run2/cells/canary-start-debea778.json, data/raw/stage4-run2/cells/canary-end-debea778.json, data/raw/stage4-run2/cells/canary-rerun-start-debea778.json, data/raw/stage4-run2/cells/canary-rerun-end-debea778.json, data/raw/stage3-64K/cells/tuned-64K-f9b81a84.json, data/raw/stage4/cells/tuned-64K-f9b81a84.json -->
 
 ## Session stage4-run2 (stock-64K and tuned-64K), 2026-11-14 local (14:28 UTC), before the start
 - `scripts/check-quiet.sh` output, verbatim (exit code 0):
@@ -58,6 +58,14 @@ process **names** are recorded, never window titles, URLs or command-line argume
   `cell_order` tuned-64K, stock-64K (same seeded shuffle as run 1).
 
 ## Session stage4-run2, polls (quiet check + sweep-status + light sample + R7 link sample, ~7 min cadence)
+Poll-row convention (added post-review, cycle-1 F-5): each row is timestamped at poll start, and `sweep-status` counts
+only complete batches — `src/smallpc/sweep/records.py` drops a batch until its last request lands, and
+`src/smallpc/sweep/status.py` counts requests and flags from those complete batches only. So poll 2's "64 requests,
+flags none" is correct even though the stock repetition-2 requests were already being written: that batch (7 requests)
+becomes visible only when its last request lands at 14:48:37Z, after poll 2 and before poll 3. The poll-time readings
+(power draw, per-process CPU, swap, MemAvailable, GPU MiB, pids, process counts) are live observations recorded verbatim
+here; they have no committed repo source, so `tools/check_doc_numbers.py` leaves them unverified — the same pattern as
+run 1's accepted log (added post-review, cycle-1 F-3).
 - 14:39:12Z: QUIET (exit 0; 420 processes; busy 10.9% over 10 s, llama-server decoding — informational; the runner's idle
   gate applies at cell preconditions, as in run 1's loaded polls). **Link (R7): 5 of 5 samples "4, 8"** while generating
   (utilization.gpu 93%, power.draw 75.91 W). `state=running`, tuned-64K repetition 4 (A@32768); canary-start complete.
@@ -92,10 +100,57 @@ process **names** are recorded, never window titles, URLs or command-line argume
   rule fired. Idle readings are recorded here as idle and never averaged into the data. The session reached `state=complete`
   at 14:56:54Z, before any stop decision would have been actionable. If the review reads R7 more strictly (any non-4, 8
   sample at a generating poll, regardless of per-sample load), this entry is the escalation point.
+  **Resolved:** this entry became escalation E-009 (`escalations/E-009.md`); decided 2026-11-14T18:07:36Z, option A
+  (ratify the under-load reading) — see the R7 ruling section below (added post-decision, cycle-1 F-2).
 - 14:56:54Z: `state=complete`, runner exited (job `status.json`: `"exit_code": 0, "state": "done"`, end 14:56:54Z),
   cells 2/2, drift main no flag. Duration 26.1 min (14:30:49Z to 14:56:54Z; runbook estimate 26 min, 29 min with 10%). <!-- derived: job status.json start/end -->
   Request flags: 7 `paging`, all stock-64K repetition 2 (0-indexed), attempt 1 (`records.jsonl`); tuned-64K 0 flags,
   canaries 0 flags. Stock paging is reported only and never fails the gate (runbook §1.5, §4f).
+
+## Session stage4-run2, the tuned-64K fit warning (added post-review, cycle-1 F-1)
+- The session's one warning (`data/raw/stage4-run2/events.jsonl`, 14:40:31Z, cell tuned-64K):
+  `kind: fit_changed_explicit_placement`, `explicit_placement: true`, `fit_setting: "default (on)"`, `fit_succeeded: false`,
+  `fit_intervened: true`, `required_reduction_mib: 18`, `offloaded_layers: [42, 42]`, `tensor_overrides_to_cpu: true`.
+  No other session has this warning: stage3-32K, stage3-64K, stage3-128K and run 1 (`stage4`) each have exactly one
+  `code_commit_changed` warning in their `events.jsonl`; run 2 has none of those (the code commit did not change).
+- What happened, from the server's own log (`data/raw/stage4-run2/cells/tuned-64K-f9b81a84.json` `startup_excerpt`, verbatim):
+  ```
+  0.00.531.658 I common_params_fit_impl: projected to use 14766 MiB of device memory vs. 15772 MiB of free device memory
+  0.00.531.661 I common_params_fit_impl: cannot meet free memory target of 1024 MiB, need to reduce device memory by 18 MiB
+  0.00.531.661 I common_params_fit_impl: context size set by user to 65536 -> no change
+  0.00.531.706 W common_fit_params: failed to fit params to free device memory: model_params::tensor_buft_overrides already set by user, abort
+  ```
+  The fit pass wanted to free 18 MiB to keep its 1024 MiB free-memory target, could not shrink the user-set context, and
+  aborted because the user's tensor overrides already fix the placement. **Nothing changed: the launched server is
+  identical to run 1's** (identity check below). This is not a placement change and not a data-validity problem.
+- Cross-session comparison (tuned-64K `startup_excerpt` in each session's `cells/tuned-64K-f9b81a84.json`; stage3-64K and
+  run 1 both log `projected to use 14766 MiB of device memory vs. 15803 MiB of free device memory` with
+  `no changes needed`, `placement_check.fit_succeeded: true`):
+  | session | projected use | CUDA free at launch | headroom | fit result |
+  |---|---|---|---|---|
+  | stage3-64K | 14766 MiB | 15803 MiB | 1037 MiB | succeeded, no change needed |
+  | stage4 (run 1) | 14766 MiB | 15803 MiB | 1037 MiB | succeeded, no change needed |
+  | stage4-run2 | 14766 MiB | 15772 MiB | 1006 MiB | 18 MiB short of the 1024 MiB target → aborted |
+  <!-- derived: headroom = CUDA free at launch - projected use; 18 = 1024 - 1006 -->
+- Identity check (from the committed cell records and resolved configs):
+  - `argv` identical across stage3-64K, stage4 and stage4-run2 (33 items; direct comparison of the three
+    `cells/tuned-64K-f9b81a84.json` records).
+  - `resolved/tuned-64K.toml` and `resolved/stock-64K.toml` byte-identical across the three sessions (`cmp`);
+    `resolved_config` in the cell records equal.
+  - Offload 42→42 (`offloaded_layers [42, 42]`; `offloaded 42/42 layers to GPU` in the startup excerpt), `props` equal
+    (`n_ctx_per_slot 65536`), same build `12208 (57d04820d)`.
+  - Measured VRAM equals run 1's exactly: loaded 14,934 MiB, after-warmup used 15,280 MiB, peak 15,292 MiB, min free
+    1,019 MiB (`vram` in both sessions' `cells/tuned-64K-f9b81a84.json`); stage3-64K differs by 2 MiB (peak 15,290,
+    min free 1,021).
+- Why it is nevertheless material: the projected usage is unchanged, but CUDA-reported free device memory fell 31 MiB <!-- derived: 15803 - 15772 -->
+  (15803 → 15772) while `nvidia-smi` memory.used before launch went the other way (3 MiB → 2 MiB,
+  `vram.before_launch_mib` in the same records). That is a driver-level change in reported/reserved device memory — a
+  concrete, measurable manifestation of the kernel/driver confound recorded above (615.78.08 → 620.70.06,
+  `docs/recon/pcie-link.md`). Correlation, not proven causation: the old driver was not tested, and no such test should
+  run without a decision.
+- Handoff to T-008: this warning and the 31 MiB free-memory drop are part of the session's condition record; the S2
+  comparison carries the kernel/driver confound with this as a second concrete symptom. No re-measure; the data stands
+  (review cycle 1, finding F-1).
 
 ## Session stage4-run2, gate before the re-run (S3)
 - `GATE_CMD` with `SESSION=stage4-run2` (`docs/recon/commands.env`), exit 0: **PASS (a to f)**. Verbatim:
@@ -128,7 +183,7 @@ process **names** are recorded, never window titles, URLs or command-line argume
   Re-run `state=running` (pid 11147), canary-rerun-end repetition 113 (A@16384); the re-run stock unit and
   canary-rerun-start already done (records: 118 requests, 6 cell records). Request flags unchanged: 7 `paging`, all
   attempt-1 — no new flags on the attempt-2 stock window or the re-run canaries. MemAvailable 26.6 GiB (27,866,304 kB, <!-- derived: kB / 1048576 -->
-  server loaded). Swap in use 404 MiB (413,572 kB). GPU 14,982 MiB, only the project's llama-server (pid 11655).
+  server loaded). Swap in use 404 MiB (413,572 kB). GPU 14,982 MiB, only the project's llama-server (pid 11655). <!-- derived: 413,572 kB / 1024, rounded -->
   Top CPU (names): llama-server 117%, python 17.6%, claude 0.8%, ghostty 0.2%. ETA ~0 min. No stop rule fired.
 - Ended 15:08:49Z (9.2 min; started 14:59:35Z), runner exit 0 (job `status.json`: `"exit_code": 0, "state": "done"`), <!-- derived: rerun job start/end -->
   state complete. Units re-run: 1 (stock-64K repetition 2, paging). Result: the attempt-2 window is clean — 0 major
@@ -159,16 +214,52 @@ process **names** are recorded, never window titles, URLs or command-line argume
     next: PASS: run the one `--rerun-flagged` pass for this session (only if a unit is flagged), then the next session
   ```
 
+## Session stage4-run2, R7 ruling E-009 (added post-decision, cycle-1 F-2)
+- Ruling: DECISION E-009 (2026-11-14T18:07:36Z, `docs/decisions.md`, option A) ratifies the under-load reading:
+  R7 applies to sustained generation; run 2 stands as the S2 run; no re-measure; T-008 proceeds on it. The clarified
+  rule is the `- R7 clarified:` line in `docs/decisions.md`; the poll-3 investigation entry above became escalation
+  E-009 (`escalations/E-009.md`).
+- Telemetry verification, re-derived from the committed `data/raw/stage4-run2/telemetry/*.csv.gz` (7 cell instances,
+  3,805 data rows; reproduced by the cycle-1 review and again when applying the ruling):
+  - Sustained generation (P-state P1, power at or above 50 W, gr clock at or above 2500 MHz): 3,556 samples, every
+    one "4, 8". <!-- derived: telemetry rows with gpu_pstate P1 and gpu_power_w >= 50 and gpu_clock_gr_mhz >= 2500; pcie_gen/pcie_width columns -->
+  - Every sample of the three measured cell instances is Gen4 x8: stock-64K-i0 1,544 rows, stock-64K-i1 342 rows,
+    tuned-64K-i0 771 rows = 2,657 rows, no exception at any utilization. <!-- derived: row counts and pcie_gen/pcie_width columns of stock-64K-22dc1178-i0/i1 and tuned-64K-f9b81a84-i0 telemetry -->
+  - Poll 3's exact sequence is machine-confirmed: canary-end telemetry shows util 0.0 from 14:55:41.474Z to <!-- derived: canary-end-debea778-i0.csv.gz, t_utc/gpu_util_pct/pcie_gen columns -->
+    14:55:46.476Z, gen 4→2 at 14:55:43.975Z and 2→1 at 14:55:45.976Z, back to 4 at 14:55:46.977Z — sampling that at <!-- derived: same file and columns -->
+    1 s yields 4, 2, 2, 1, 4, the sequence logged at poll 3.
+  - Count note: the cycle-1 review's session total "4,091 rows" does not reproduce — the committed run-2 telemetry
+    holds 3,805 data rows (3,812 lines including the 7 CSV headers). The substantive counts above do reproduce. <!-- derived: line counts of data/raw/stage4-run2/telemetry/*.csv.gz minus one header line per file -->
+- The two ramp rows — the only rows session-wide with util > 0 and gen ≠ 4, both in re-run canary cells, both
+  idle-to-load ramps (evidence from the cycle-1 review that the executor did not have at poll 3):
+  - `canary-rerun-start-debea778-i0.csv.gz` 15:01:21.726Z: util 94%, gen 2, width 8, power 9.92 W, P5, gr clock <!-- derived: named telemetry file, t_utc/gpu_util_pct/pcie_gen/pcie_width/gpu_power_w/gpu_pstate/gpu_clock_gr_mhz columns -->
+    1012 MHz. The four preceding rows are util 0 with power decaying 34.8 → 23.85 → 23.85 → 10.22 W; the next 0.5 s <!-- derived: same file and columns; 0.5 s = t_epoch cadence -->
+    sample (15:01:22.226Z) is gen 4, 28.5 W, P1, 2820 MHz, util 96%. <!-- derived: same file and columns -->
+  - `canary-rerun-end-debea778-i0.csv.gz` 15:07:42.999Z: util 26%, gen 2, width 8, power 9.77 W, P5, gr clock <!-- derived: named telemetry file, same columns as the ramp row above -->
+    577 MHz; previous row util 0 / gen 2 / 10.12 W; next sample (15:07:43.499Z) gen 4, 32.61 W, P1, util 96%. <!-- derived: same file and columns -->
+  - `utilization.gpu` is a trailing average: it reads high while power, clock and P-state still show an idle card,
+    and the link re-negotiates to Gen4 within one 0.5 s sample. Under the clarified R7 these are transition <!-- derived: 0.5 s = telemetry t_epoch cadence; ramp interpretation per DECISION E-009 -->
+    artefacts that do not count; neither row is inside a measured cell window (canaries are link/health checks,
+    not S2 data).
+- Process note (per E-009): the executor's poll-3 reading was substantively right, but the card's
+  `decision_rights.must_escalate` reserves R7 to the planning chat ("any stop rule firing, including R7"); the
+  executor should have filed an escalation brief on the ambiguity instead of resolving it inline. Recorded, no
+  penalty, no change to the data; any future R7 ambiguity is escalated, never resolved by the executor.
+- Evidence wording per the ruling (A5's link clause is read this way; no plan amendment): every sample in the
+  measured cell windows read "4, 8"; non-(4,8) samples occurred only at idle and at the two 0.5 s ramp rows above. <!-- derived: 0.5 s = telemetry t_epoch cadence; wording per DECISION E-009 Scope -->
+
 ## Session stage4-run2, end summary
 - Duration: main 26.1 min (14:30:49Z to 14:56:54Z), re-run 9.2 min (14:59:35Z to 15:08:49Z); both runners exit 0; <!-- derived: job status.json start/end pairs -->
   inhibit active for both (tags `smallpc-sweep-stage4-run2-1794666649`, `smallpc-sweep-stage4-run2-1794668375`, not refused).
 - Start provenance (`session.json` git): commit `c4bdc4db4a4378282c68bd858a718ece74710c09`, `"dirty": false`,
   `"dirty_paths": []`; `allow_dirty: false`. R3 re-verified at that HEAD before the launch (PASS). The re-run ran at the
-  same code commit `c4bdc4d` (no "code commit changed" warning, unlike run 1).
+  same code commit `c4bdc4d` (no "code commit changed" warning, unlike run 1). The session's one warning —
+  `fit_changed_explicit_placement` on tuned-64K, benign, the launched server identical to run 1's — is recorded in its
+  own section above (added post-review, cycle-1 F-1).
 - Cells: 4 of 4 complete (canary-start, tuned-64K, stock-64K, canary-end) plus the attempt-2 stock instance and the two
   re-run canaries. Flags: stock-64K 7 request flags, all `paging` (repetition 2, attempt 1 — every request of that
-  repetition); tuned-64K none; canaries none. Drift: no flag (main `pp_fresh_16k` relative difference 0.00406, rerun
-  0.00373, threshold 0.05; `session.json`). Idle waits 0.0 s at all seven preconditions (27.93 to 28.47 GiB
+  repetition); tuned-64K none; canaries none. Drift: no flag (main `pp_fresh_16k` relative difference 0.00406, rerun <!-- derived: 0.004064964 (session.json drift.main pp_fresh_16k relative_difference) rounded to 5 decimals -->
+  0.00373, threshold 0.05; `session.json`). Idle waits 0.0 s at all seven preconditions (27.93 to 28.47 GiB <!-- derived: 0.003733887 (session.json drift.rerun pp_fresh_16k relative_difference) rounded to 5 decimals -->
   MemAvailable, all `ok: true`, busy 0.03 to 0.84%), 1 attempt per cell, no retries.
 - Measured phase times (`cells/*.json` instances, attempt 1): stock-64K measure 750.30 s / 5 repetitions (150.1 s per <!-- derived: measure / 5 -->
   repetition; the runbook's Stage 1 basis was 153.3), tuned-64K measure 373.05 s / 5 (74.6 s per repetition; Stage 2 <!-- derived: measure / 5 -->
@@ -176,17 +267,22 @@ process **names** are recorded, never window titles, URLs or command-line argume
   Run 2's pace matches the runbook bases, unlike run 1 (stock 239.4 s, tuned 100.0 s per repetition,
   `docs/stage4-conditions.md`) — recorded as measured; run 1 is the excluded diagnostic (R5), and the kernel/driver
   confound above applies to any comparison.
-- Lowest min free VRAM (after warmup): 1,019 MiB (tuned-64K); stock-64K 1,353 MiB (attempt 1) / 1,355 MiB (attempt 2);
-  canaries 1,329 MiB.
+- Lowest min free VRAM (`min_free_mib`, the minimum over the whole cell — relabelled post-review, cycle-1 F-4; the
+  previous wording said "after warmup"): 1,019 MiB (tuned-64K; `after_warmup_min_free_mib` 1,031 MiB); stock-64K
+  1,353 MiB (attempt 1; after warmup 1,355 MiB) / 1,355 MiB (attempt 2); canaries 1,329 MiB (same after warmup).
+  Every figure is far above the 512 MiB eligibility floor (runbook §5); the tuned cell's window minima (1,019 to
+  1,021 MiB) are consistent.
 - Quiet check at the start, before the re-run, at the end and at 4 polls (14:39, 14:47, 14:55, 15:06Z): QUIET each time
   (exit 0); no quiet condition violated. Highest CPU busy at a poll 20.2% (15:06Z, llama-server decoding);
-  lowest MemAvailable at a poll 20.4 GiB (14:47Z, stock server loaded — the accepted Stage 3 / run 1 loaded-dip
+  lowest MemAvailable at a poll 20.4 GiB (14:47Z, stock server loaded — the accepted Stage 3 / run 1 loaded-dip <!-- derived: 21,420,728 kB / 1048576, rounded (poll 2) -->
   pattern); lowest at a cell's preconditions 27.93 GiB.
 - Stock windows paging-flagged (reported only): 1 of 5 (repetition 2; largest swap growth 2,752 MiB, most major faults
   5,562); its attempt-2 re-run is clean (0 major faults, 0.0 MiB swap activity). Tuned and canary windows: 0 of 11
   attempt-1 flagged (0 of 17 including the re-run canaries) — no MTP file-page faulting this run (run 1 and Stage 3 64K
   had it; D2). No stop rule fired at any point.
-- Link (R7) summary: every confirmed-generation sample read "4, 8" — poll 1 5/5 (93% util), poll 2 5/5 (97%),
-  poll-3 investigation burst 5/5 (38–65%), re-run poll 5/5 (per-sample util 0/0/0/98/98%). Non-4, 8 readings occurred
-  only at 0% utilization (idle gaps and the idle end state), the documented idle downshift; see the R7 investigation
-  entry above. Nothing was averaged into the data.
+- Link (R7) summary, read per DECISION E-009 (R7 clarified; updated post-decision, cycle-1 F-2): every sample in the
+  measured cell windows read "4, 8" (telemetry verification in the E-009 ruling section above). Poll samples: poll 1
+  5/5 (93% util), poll 2 5/5 (97%), poll-3 investigation burst 5/5 (38–65%), re-run poll 5/5 (per-sample util
+  0/0/0/98/98%). Non-(4,8) samples occurred only at idle (0% utilization gaps and the idle end state, the documented
+  idle downshift) and at two 0.5 s idle-to-load ramp rows in the re-run canaries (E-009 ruling section). <!-- derived: 0.5 s = telemetry t_epoch cadence, data/raw/stage4-run2/telemetry/*.csv.gz -->
+  Nothing was averaged into the data.

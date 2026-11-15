@@ -144,6 +144,124 @@ Mode **final**: a cell needs at least 5 clean repetitions, a complete status, at
 
 Geometric mean of per-repetition ratios (candidate / stock, repetitions that are clean in both cells) with a 95% interval, shown for 2 or more pairs: the wider of the percentile-bootstrap CI (10,000 resamples) and a t-interval on the log ratios, back-transformed. A T_turn_400 ratio below 1 means the candidate is faster; PP_fresh and TG ratios above 1 mean it is faster.
 
+## Headline (plan §5.4)
+
+The clean-units and all-units versions agree in every context (sign, and whether each interval excludes 1.0).
+
+### 32K: stock-32K and tuned-32K
+
+**Headline: clean units** (5 clean, paired units).
+
+> RESULTS. Only cells with at least 5 clean repetitions are reportable.
+
+| metric | tuned / stock, geometric mean [95% CI] (paired units) | reading |
+|---|---|---|
+| t_turn_400 | 0.705 [0.672, 0.739] (n=5) | lower is faster |
+| t_reread | 0.378 [0.375, 0.381] (n=5) | lower is faster |
+| pp_fresh at 8K | 2.686 [2.671, 2.700] (n=5) | higher is faster |
+| pp_fresh at 16K | 2.664 [2.644, 2.684] (n=5) | higher is faster |
+| pp_fresh at 24K | 2.621 [2.586, 2.657] (n=5) | higher is faster |
+| tg at 8K | 1.173 [1.101, 1.249] (n=5) | higher is faster |
+| tg at 16K | 1.142 [1.089, 1.197] (n=5) | higher is faster |
+| tg at 24K | 1.089 [0.996, 1.190] (n=5) | higher is faster |
+| ttft at 8K | 0.431 [0.423, 0.440] (n=5) | lower is faster |
+| ttft at 16K | 0.451 [0.428, 0.475] (n=5) | lower is faster |
+| ttft at 24K | 0.455 [0.448, 0.462] (n=5) | lower is faster |
+
+Same comparison on all units (flagged units included):
+
+> RESULTS. Only cells with at least 5 clean repetitions are reportable.
+
+| metric | tuned / stock, geometric mean [95% CI] (paired units) | reading |
+|---|---|---|
+| t_turn_400 | 0.705 [0.672, 0.739] (n=5) | lower is faster |
+| t_reread | 0.378 [0.375, 0.381] (n=5) | lower is faster |
+| pp_fresh at 8K | 2.686 [2.671, 2.700] (n=5) | higher is faster |
+| pp_fresh at 16K | 2.664 [2.644, 2.684] (n=5) | higher is faster |
+| pp_fresh at 24K | 2.621 [2.586, 2.657] (n=5) | higher is faster |
+| tg at 8K | 1.173 [1.101, 1.249] (n=5) | higher is faster |
+| tg at 16K | 1.142 [1.089, 1.197] (n=5) | higher is faster |
+| tg at 24K | 1.089 [0.996, 1.190] (n=5) | higher is faster |
+| ttft at 8K | 0.431 [0.423, 0.440] (n=5) | lower is faster |
+| ttft at 16K | 0.451 [0.428, 0.475] (n=5) | lower is faster |
+| ttft at 24K | 0.455 [0.448, 0.462] (n=5) | lower is faster |
+
+### 64K: stock-64K and tuned-64K
+
+**Headline: clean units** (5 clean, paired units).
+
+> RESULTS. Only cells with at least 5 clean repetitions are reportable.
+
+| metric | tuned / stock, geometric mean [95% CI] (paired units) | reading |
+|---|---|---|
+| t_turn_400 | 0.690 [0.649, 0.734] (n=5) | lower is faster |
+| t_reread | 0.423 [0.419, 0.427] (n=5) | lower is faster |
+| pp_fresh at 16K | 2.488 [2.459, 2.516] (n=5) | higher is faster |
+| pp_fresh at 32K | 2.399 [2.366, 2.431] (n=5) | higher is faster |
+| pp_fresh at 48K | 2.304 [2.287, 2.322] (n=5) | higher is faster |
+| tg at 16K | 1.225 [1.143, 1.313] (n=5) | higher is faster |
+| tg at 32K | 1.239 [1.158, 1.325] (n=5) | higher is faster |
+| tg at 48K | 1.213 [1.095, 1.343] (n=5) | higher is faster |
+| ttft at 16K | 0.479 [0.476, 0.482] (n=5) | lower is faster |
+| ttft at 32K | 0.506 [0.502, 0.510] (n=5) | lower is faster |
+| ttft at 48K | 0.551 [0.515, 0.590] (n=5) | lower is faster |
+
+Same comparison on all units (flagged units included):
+
+> RESULTS. Only cells with at least 5 clean repetitions are reportable.
+
+| metric | tuned / stock, geometric mean [95% CI] (paired units) | reading |
+|---|---|---|
+| t_turn_400 | 0.690 [0.649, 0.734] (n=5) | lower is faster |
+| t_reread | 0.423 [0.419, 0.427] (n=5) | lower is faster |
+| pp_fresh at 16K | 2.488 [2.459, 2.516] (n=5) | higher is faster |
+| pp_fresh at 32K | 2.399 [2.366, 2.431] (n=5) | higher is faster |
+| pp_fresh at 48K | 2.304 [2.287, 2.322] (n=5) | higher is faster |
+| tg at 16K | 1.225 [1.143, 1.313] (n=5) | higher is faster |
+| tg at 32K | 1.239 [1.158, 1.325] (n=5) | higher is faster |
+| tg at 48K | 1.213 [1.095, 1.343] (n=5) | higher is faster |
+| ttft at 16K | 0.479 [0.476, 0.482] (n=5) | lower is faster |
+| ttft at 32K | 0.506 [0.502, 0.510] (n=5) | lower is faster |
+| ttft at 48K | 0.551 [0.515, 0.590] (n=5) | lower is faster |
+
+### 128K: stock-128K and tuned-128K
+
+**Headline: all units, labelled "includes paging-flagged stock windows".** S4(d) deviation for this context: the headline rests on 1 stock unit(s) with an unresolved flag (stage3-128K:3: paging) because stock-128K has 4 clean and tuned-128K 5 clean unit(s) (4 paired; at least 5 needed for the clean-units headline). Rule S4(d): No selected or recommended configuration, and no headline number, rests on a measurement with an unresolved flag.
+
+> RESULTS. Only cells with at least 5 clean repetitions are reportable.
+
+| metric | tuned / stock, geometric mean [95% CI] (paired units) | reading |
+|---|---|---|
+| t_turn_400 | 0.706 [0.679, 0.735] (n=5) | lower is faster |
+| t_reread | 0.382 [0.381, 0.384] (n=5) | lower is faster |
+| pp_fresh at 32K | 2.926 [2.904, 2.949] (n=5) | higher is faster |
+| pp_fresh at 64K | 2.701 [2.689, 2.712] (n=5) | higher is faster |
+| pp_fresh at 96K | 2.487 [2.475, 2.500] (n=5) | higher is faster |
+| tg at 32K | 1.143 [1.100, 1.189] (n=5) | higher is faster |
+| tg at 64K | 1.136 [1.074, 1.202] (n=5) | higher is faster |
+| tg at 96K | 1.125 [1.046, 1.209] (n=5) | higher is faster |
+| ttft at 32K | 0.418 [0.412, 0.424] (n=5) | lower is faster |
+| ttft at 64K | 0.473 [0.466, 0.480] (n=5) | lower is faster |
+| ttft at 96K | 0.521 [0.516, 0.526] (n=5) | lower is faster |
+
+Clean-units figures beside it:
+
+> RESULTS. Only cells with at least 5 clean repetitions are reportable.
+
+| metric | tuned / stock, geometric mean [95% CI] (paired units) | reading |
+|---|---|---|
+| t_turn_400 | 0.711 [0.673, 0.750] (n=4) | lower is faster |
+| t_reread | 0.382 [0.380, 0.384] (n=4) | lower is faster |
+| pp_fresh at 32K | 2.932 [2.909, 2.955] (n=4) | higher is faster |
+| pp_fresh at 64K | 2.703 [2.690, 2.717] (n=4) | higher is faster |
+| pp_fresh at 96K | 2.487 [2.469, 2.506] (n=4) | higher is faster |
+| tg at 32K | 1.141 [1.078, 1.208] (n=4) | higher is faster |
+| tg at 64K | 1.123 [1.049, 1.202] (n=4) | higher is faster |
+| tg at 96K | 1.107 [1.017, 1.204] (n=4) | higher is faster |
+| ttft at 32K | 0.416 [0.411, 0.422] (n=4) | lower is faster |
+| ttft at 64K | 0.472 [0.464, 0.480] (n=4) | lower is faster |
+| ttft at 96K | 0.521 [0.514, 0.528] (n=4) | lower is faster |
+
 ## Swap sensitivity
 
 Every results table and paired comparison, recomputed without the clean units whose window shows more than 64 MiB of llama-server swap growth (`swap_activity_mib`, plan §5.5 and §5.6). Swap activity is a note, not a flag: the numbers in the other sections keep those units.
@@ -270,13 +388,13 @@ These units are not in any headline number above. Flagged units stay here with t
 
 ## Appendix: cells below 5 clean repetitions
 
-Cells with fewer than 5 clean repetitions are not reportable in the tables above (§5.5). Their figures here use clean units only. A Stage 3 stock cell in this list has its headline computed on all units and labelled by `python -m smallpc.stage3 headline` (plan §5.4, "Headline rule"); read the headline there.
+Cells with fewer than 5 clean repetitions are excluded from the clean-units tables above (§5.5); their figures here use clean units only. A Stage 3 stock cell in this list may still carry its context's headline on all units, labelled "includes paging-flagged stock windows" (plan §5.4, "Headline rule"): see the Headline section above, or run `python -m smallpc.stage3 headline`.
 
 > RESULTS. Only cells with at least 5 clean repetitions are reportable.
 
 | cell | context | n_clean/n_total | T_turn_400 (s) |
 |---|---|---|---|
-| stock-128K | 128K | 4/5 not reportable (n < 5) | 11.19 [11.13, 11.25] |
+| stock-128K | 128K | 4/5 | 11.19 [11.13, 11.25] |
 
 ## Figures
 

@@ -609,13 +609,15 @@ def test_hard_precondition_failures_abort_at_once(tmp_path, free_port, msg):
     assert len([e for e in events(sess) if e["event"] == "precondition"]) == 1
 
 
-def test_busy_port_and_missing_binary_abort_the_session(tmp_path, free_port):
+def test_busy_port_and_missing_binary_abort_the_session(tmp_path):
     import socket
 
+    # A blocker port of our own: the free_port reservation is held for the whole test (A13),
+    # so a plain bind on it would fail before the session even starts.
     with socket.socket() as s:
-        s.bind(("127.0.0.1", free_port))
+        s.bind(("127.0.0.1", 0))
         s.listen()
-        sess, code, _ = run_session(tmp_path, free_port, reps=1)
+        sess, code, _ = run_session(tmp_path, s.getsockname()[1], reps=1)
     assert code == 1  # launch refused: not a did_not_fit
     _, cells = read_records(sess)
     assert not [c for c in cells if c["status"] == "did_not_fit"]

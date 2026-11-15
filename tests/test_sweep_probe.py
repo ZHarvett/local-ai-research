@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import json
 import random
+import time
 
 import pytest
 
@@ -186,6 +187,15 @@ MAX_FIT = 8704  # largest multiple of 256 with 6,655 + c + 512 <= 16,000
 def probe_env(tmp_path, port, behavior=None):
     env = make_env(tmp_path, port, {**BEHAVIOR, **(behavior or {})}, total_mib=16000.0)
     env.settle_s = 0.12  # the 20 Hz fake sampler needs a moment to see the end of the request
+    # make_env's sleep only records; the probe reads the sampler's rows right after the
+    # settle, so without a real wait the rows race the sampler thread (A13). Record AND wait.
+    sleeps: list[float] = []
+
+    def sleep(s):
+        sleeps.append(s)
+        time.sleep(s)
+
+    env.sleep = sleep
     return env
 
 

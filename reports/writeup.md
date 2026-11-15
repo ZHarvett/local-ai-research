@@ -1,11 +1,12 @@
 # What a 16 GB GPU actually does with a 35B MoE model
 
-<!-- sources: reports/baseline-report.md, data/analysis/stage3/headline.md, docs/decisions.md, docs/plans/step-0-baseline.md -->
+<!-- sources: reports/baseline-report.md, data/analysis/stage3/headline.md, docs/decisions.md, docs/plans/step-0-baseline.md, data/analysis/stage4/s2-summary.md, reports/stage4-run2/caveats.md, docs/recon/pcie-link.md -->
 
-> **DRAFT (T-006).** A narrative companion to `reports/baseline-report.md`, which carries the
-> full tables, provenance and deviations. Stage 4 (next-day reproducibility) and the v0.1.0
-> release are not done yet. <!-- TODO-T010 --> Every number here is copied from a named repo
-> file (the `sources:` line above) or marked `derived:`; `tools/check_doc_numbers.py` verifies this.
+> **FINAL (T-010).** A narrative companion to `reports/baseline-report.md`, which carries the
+> full tables, provenance and deviations. Stage 4 (next-day reproducibility) passes 6 of 6
+> rows on run 2; the v0.1.0 release checks are still pending. Every number here is copied
+> from a named repo file (the `sources:` line above) or marked `derived:`;
+> `tools/check_doc_numbers.py` verifies this.
 
 ## The problem
 
@@ -57,6 +58,16 @@ The 128K headline uses all units and says so (decision D1, the declared §5.4 ru
 window stayed paging-flagged after its re-run, leaving only 4 clean paired units. The
 clean-units figure stands beside it — 0.711 [0.673, 0.750] (n=4) — and the two versions agree
 in sign and in whether each interval excludes 1.0. This is a recorded S4(d) deviation.
+
+**The numbers reproduce.** Stage 4 re-measured stock-64K and tuned-64K on a different day
+(2026-11-14): all 6 S2 rows pass — each re-measured mean inside its Stage 3 95% CI or within
+±5%, whichever is wider (stock-64K T_turn_400 9.100 s against 9.288 [9.238, 9.338]; tuned-64K
+6.296 s against 6.413 [6.003, 6.824]). The first attempt never counted: its PCIe link ran at
+Gen3 x8 for the whole session, so run 1 is superseded and kept as an excluded diagnostic
+(R5). The link was restored and verified at Gen4 x8 under load before run 2, whose measured
+cell windows all read "4, 8" (R7). Run 2 also ran on a changed kernel and driver
+(7.3.4-1-cachyos / 620.70.06 vs Stage 3's 7.3.1-1-cachyos / 615.78.08): the comparison carries
+that confound, and the data stands (E-009).
 
 **What the tuned configs change.** All experts move to host RAM (`-cmoe`), and the freed VRAM
 becomes a probed max-fit expert cache: 11,520 / 9,472 / 8,704 MiB at 32K / 64K / 128K. Batch
@@ -112,18 +123,21 @@ the default is already 8 in all 82 Stage 1 server logs.
 
 One machine, one GPU, one model and quantisation, one pinned llama.cpp build. The turn is a
 standardised synthetic workload (3,000 + 400 tokens), not a real agent task; Step 1 measures
-real turns. Stages 1 and 2 ran with desktop apps open (a recorded deviation); Stage 3 was
-quiet. The 128K headline includes a paging-flagged stock window (labelled above). The 32K
+real turns. Stages 1 and 2 ran with desktop apps open (a recorded deviation); Stages 3 and 4
+were quiet. The 128K headline includes a paging-flagged stock window (labelled above). The 32K
 decode gain is small and not robust to excluding swap-active units: tg at 24K moves from
 1.089 [0.996, 1.190] to 1.057 [0.859, 1.300] when 3 of 5 pairs are dropped; the T_turn_400
 conclusion is unchanged (0.712 [0.629, 0.807]). The 32K tuned KV type is the 8-bit default,
 not a measured FP16 comparison. Expert-cache hit rates carry the caveats above. Five
-repetitions per cell support the turn-time claim, not fine decode differences. Stage 4
-(next-day reproducibility) and the release checks are still pending. <!-- TODO-T010 -->
+repetitions per cell support the turn-time claim, not fine decode differences. Stage 4's
+re-measurement passes (6 of 6 rows) but carries a kernel/driver confound and one superseded
+run (above); the clean-shell walkthrough and the release checks are still pending.
 
 ## Sources
 
 Full tables, provenance hashes, flags and deviations: `reports/baseline-report.md`. Headline
-numbers: `data/analysis/stage3/headline.md` (authoritative per decision D1). Decisions and
-corrections: `docs/decisions.md`. Method: `docs/plans/step-0-baseline.md` (§3, §5). Verify
-every decimal number with `uv run python tools/check_doc_numbers.py reports/writeup.md`.
+numbers: `data/analysis/stage3/headline.md` (authoritative per decision D1). Stage 4 S2:
+`data/analysis/stage4/s2-summary.md`, with the run-2 caveats in `reports/stage4-run2/caveats.md`
+and the link evidence in `docs/recon/pcie-link.md`. Decisions and corrections:
+`docs/decisions.md`. Method: `docs/plans/step-0-baseline.md` (§3, §5). Verify every decimal
+number with `uv run python tools/check_doc_numbers.py reports/writeup.md`.

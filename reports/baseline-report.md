@@ -1,12 +1,12 @@
 # Baseline report — Ornith-1.5-35B-A3B (Q4) on a 16 GB RTX 5060 Ti
 
-<!-- sources: data/analysis/stage3/headline.md, data/analysis/stage3/headline.json, reports/stage3/report.md, data/sanity/stage3-tuned.json, docs/stage2-summary.md, reports/stage1/select-screening.md, reports/stage2/report.md, docs/decisions.md, docs/plans/step-0-baseline.md, data/env/build-info.json, configs/model.toml, configs/harness.toml, configs/machine.toml -->
+<!-- sources: data/analysis/stage3/headline.md, data/analysis/stage3/headline.json, reports/stage3/report.md, data/sanity/stage3-tuned.json, docs/stage2-summary.md, reports/stage1/select-screening.md, reports/stage2/report.md, docs/decisions.md, docs/plans/step-0-baseline.md, data/env/build-info.json, configs/model.toml, configs/harness.toml, configs/machine.toml, data/analysis/stage4/s2-summary.md, data/analysis/stage4/repro-output.txt, reports/stage4-run2/report.md, reports/stage4-run2/caveats.md, docs/stage4-run2-conditions.md, docs/recon/pcie-link.md, docs/recon/stage4-session-run2.txt, docs/progress-log.md -->
 
-> **DRAFT (T-005).** Step 0 baseline. Stage 3 is the headline result; Stages 1 and 2 are
-> selection data. The reproducibility check (S2, Stage 4) and the release (S5) are not yet
-> done and are marked `<!-- TODO-T010 -->` below; T-010 finalises this report. Every number
-> here is copied from a named repo file (declared in `sources:` comments) or marked as
-> derived (`derived:` comments); `tools/check_doc_numbers.py` verifies this.
+> **FINAL (T-010).** Step 0 baseline. Stage 3 is the headline result; Stages 1 and 2 are
+> selection data; Stage 4's next-day reproducibility check (S2) passes 6 of 6 rows on run 2
+> (run 1 superseded, R5). The release (S5) is pending T-013/T-015/T-016. Every number here is
+> copied from a named repo file (declared in `sources:` comments) or marked as derived
+> (`derived:` comments); `tools/check_doc_numbers.py` verifies this.
 
 ## 1. Summary
 
@@ -36,9 +36,15 @@ S4(d) deviation for 128K, not a judgement call.
 
 Fresh prefill is roughly 2.3–2.9× faster tuned than stock and decode roughly 1.1–1.2× faster at the measured depths <!-- derived: range of pp_fresh ratios 2.304–2.926 and tg ratios 1.089–1.239 in headline.md --> (Stage 3 below). The tuned configuration adds the expert cache (`-cmoe --moe-cache-mib`), a single slot (`-np 1`) and batch/ubatch 4096; MTP is enabled at 64K only.
 
+The next-day reproducibility check (S2, Stage 4) passes: stock-64K and tuned-64K re-measured
+on a different day (run 2, 2026-11-14) land inside the allowed band on all 6 rows, every row
+on clean units (the Stage 4 section below). Run 1 is superseded (R5: its PCIe link ran at
+Gen3 x8 for the whole session); run 2 carries a kernel/driver confound (E-009). The release
+(S5) is pending.
+
 Nothing here is a speed target met or missed: Step 0 has no hard speed targets (plan §2).
-Stages 1 and 2 were measured with the desktop apps open (a recorded deviation); Stage 3 was
-measured on a quiet machine.
+Stages 1 and 2 were measured with the desktop apps open (a recorded deviation); Stages 3 and
+4 were measured on a quiet machine.
 
 ## 2. Setup and provenance
 
@@ -83,6 +89,8 @@ base repo revision   10fbf86fed7ecee4a061f8b499a618f46001cac1
 harness lockfile     d21af6e8f2daea1e6903e42b81268f4fde9385fbade49e78eec7d190e79ccb77
 Stage 3 sessions     stage3-32K 80964618df · stage3-64K a80b2dd31a · stage3-128K b5b7396231
 Stage 3 spec sha256  41a0e384d622fcb2 (configs/sweeps/stage3.toml, all three sessions)
+Stage 4 run 2        stage4-run2 c4bdc4db4a (the S2 run, R5; run 1 stage4 superseded)
+Stage 4 spec sha256  6a11e6b13d8f94de (configs/sweeps/stage4.toml, runs 1 and 2)
 ```
 
 The three Stage 3 session commits differ only by data and re-run commits; one code state
@@ -476,9 +484,70 @@ reference cells (P1-32K-b2048, P1-64K-b2048, P1-128K-b2048) also pass.
 
 No tuned cell was ineligible and no sanity failure occurred in Stage 3.
 
-## 6. Flags and deviations
+## 6. Stage 4 — reproducibility (S2, quiet machine)
 
-<!-- sources: docs/decisions.md, data/analysis/stage3/headline.md -->
+<!-- sources: data/analysis/stage4/s2-summary.md, data/analysis/stage4/repro-output.txt, reports/stage4-run2/report.md, reports/stage4-run2/caveats.md, docs/stage4-run2-conditions.md, docs/decisions.md, docs/recon/pcie-link.md, docs/progress-log.md -->
+
+Stage 4 re-measured the two 64K cells (stock-64K, tuned-64K) on a different day: session
+`stage4-run2`, 2026-11-14, 5 repetitions per cell with start and end canaries, from a clean
+committed tree (`c4bdc4d`), on a quiet machine (gate G3 in full). The main session took
+26.1 minutes plus one re-run pass of 9.2 minutes. The gate passed (a to f) before and after
+the re-run; R2 was not needed — tuned-64K had no paging flags at all this run.
+
+**Run 1 is superseded (R5, decision E-008).** The first Stage 4 session (`stage4`,
+2026-11-13 UTC) ran with the GPU's PCIe link at Gen3 x8 instead of Gen4 x8 for the whole
+session. It is invalid for S2, marked superseded, never deleted, and kept as an excluded
+diagnostic: the render in `reports/stage4/` and its S2 outputs (overall FAIL, 5 of 6 rows) in
+`data/analysis/stage4-run1-superseded/`. The link was restored and verified at Gen4 x8 under
+load before run 2 (T-020, `docs/recon/pcie-link.md`). Run 2 is the only re-run (R6). Every
+sample in run 2's measured cell windows read "4, 8" (R7 as clarified by E-009); the only
+non-(4,8) samples were idle downshifts and two 0.5 s idle-to-load ramp rows in the re-run
+canaries — recorded, never averaged into the data.
+
+**S2 verdict: PASS — 6 of 6 rows**, every row evaluated on clean units. The check requires
+each re-measured mean (`T_turn_400`, fresh prefill at 32K, decode at 32K depth) to fall
+inside its Stage 3 95% CI or within ±5% of the Stage 3 mean, whichever is wider. Verbatim
+tool output: `data/analysis/stage4/repro-output.txt` (`REPRO_CMD` from
+`docs/recon/commands.env` with `SESSION=stage4-run2`, exit 0).
+
+| cell | metric | Stage 3 mean [95% CI] | allowed range (wider of CI, ±5%) | Stage 4 mean | unit set | result |
+|---|---|---|---|---|---|---|
+| stock-64K | T_turn_400 (s) | 9.288 [9.238, 9.338] | [8.824, 9.753] | 9.100 | clean | PASS |
+| stock-64K | fresh prefill 32K (tok/s) | 844.155 [840.328, 847.982] | [801.947, 886.363] | 853.861 | clean | PASS |
+| stock-64K | decode at 32K depth (tok/s) | 73.881 [73.792, 73.970] | [70.187, 77.575] | 75.936 | clean | PASS |
+| tuned-64K | T_turn_400 (s) | 6.413 [6.003, 6.824] | [6.003, 6.824] | 6.296 | clean | PASS |
+| tuned-64K | fresh prefill 32K (tok/s) | 2024.852 [2001.669, 2048.034] | [1923.609, 2126.094] | 2000.895 | clean | PASS |
+| tuned-64K | decode at 32K depth (tok/s) | 91.644 [85.476, 97.812] | [85.476, 97.812] | 93.459 | clean | PASS |
+
+Two rows pass inside the Stage 3 CI itself (tuned-64K T_turn_400 and decode, whose CIs are
+wider than ±5%); the other four pass inside the wider ±5% band.
+
+**R1 (all-units fallback): not triggered.** Both cells have 5 clean units of 5 on both days
+(Stage 3 64K and run 2 after its one re-run pass). Run 2's only flagged unit was stock-64K
+repetition 2 attempt 1 (paging; 5,562 major faults, 2,752 MiB swap growth — reported only,
+stock never fails the gate); its attempt-2 re-run on a fresh server is clean. No S4(d)
+deviation arises from R1.
+
+**Kernel/driver confound (E-009).** Run 2 ran on kernel `7.3.4-1-cachyos`, NVIDIA driver
+`620.70.06`; Stage 3 (and run 1) ran on `7.3.1-1-cachyos` / `615.78.08`. S2 passed on the
+changed kernel and driver; the comparison carries this confound. A second concrete symptom:
+the tuned-64K fit pass was 18 MiB short of its free-memory target and aborted — the launched
+server is identical to run 1's (argv, resolved configs, offload and VRAM identity checks) —
+alongside a 31 MiB drop in CUDA-reported free device memory at launch (15,803 → 15,772 MiB).
+Correlation, not proven causation; no re-measure, the data stands
+(`docs/stage4-run2-conditions.md`, `reports/stage4-run2/caveats.md`).
+
+The rendered run-2 report is `reports/stage4-run2/report.md` (headline: clean units, 5 paired;
+T_turn_400 ratio 0.691 [0.655, 0.730]). Its eligibility table reads "output sanity check not
+run" for both cells — a known render characteristic (the sanity union's keys are the Stage 2
+cell names, so no Stage 4 entry matches), not an S2 criterion; the S2 verdict comes from the
+repro tool (`reports/stage4-run2/caveats.md`). The second half of S2 — every recommended
+config launches from a clean shell using only the README commands — is the T-012 walkthrough,
+still pending.
+
+## 7. Flags and deviations
+
+<!-- sources: docs/decisions.md, data/analysis/stage3/headline.md, data/analysis/stage4/s2-summary.md, reports/stage4-run2/caveats.md -->
 
 Recorded deviations and flags (from `docs/decisions.md`), carried into this report:
 
@@ -494,36 +563,44 @@ Recorded deviations and flags (from `docs/decisions.md`), carried into this repo
 - **D7, sanity file name.** `data/sanity/stage3-tuned.json` (not the runbook's `stage3-all.json`).
 - **D9, hit-rate caveat.** Hit rates include warm-up and the attempt-1 units of re-run windows;
   decode-batch only (the Expert-cache hit rates section).
+- **R5 / E-008, Stage 4 run 1 superseded.** Run 1's PCIe link ran at Gen3 x8 for the whole
+  session; it is invalid for S2, kept as an excluded diagnostic, never deleted. Run 2 is the
+  S2 run and the only re-run (R6); every sample in its measured cell windows read Gen4 x8
+  (R7 as clarified by E-009). The Stage 4 section.
+- **E-009, kernel/driver confound.** S2 passed on a changed kernel and driver (7.3.4-1-cachyos
+  / 620.70.06 vs Stage 3's 7.3.1-1-cachyos / 615.78.08), with the fit-warning second symptom
+  recorded (the Stage 4 section). No re-measure; the data stands.
 - **Stages 1 and 2 apps-open.** Gate G3 not met for the selection stages; a recorded deviation.
-  Stage 3 ran quiet (G3 in full).
+  Stages 3 and 4 ran quiet (G3 in full).
 - **Stage 2 plan deviations.** 2c (`--load-mode dio`) not run; 2d (threads) skipped (default 8).
   MTP draft length 2 excluded by the sanity rule (8-gram failure), thresholds unchanged.
 - **32K tuned KV type.** 8-bit as measured (the default), not a 2b result (Stage 2 section).
 - **D4 / D5 (tooling, not data).** Five test literals edited to "1.8" (commit 422eada) accepted;
-  the flakiness of `tests/test_sweep_probe.py` is fixed before release (T-009). Neither changes
-  a measured number.
+  T-009 made the tests read the plan version from the plan file (D4) and fixed the
+  `tests/test_sweep_probe.py` flakiness (D5: port-reservation and sampler-settle races in the
+  tests). Neither changes a measured number.
 - **Corrections carried into the text** (card T-005 shared rule 8; `docs/decisions.md` WP13):
   1 flagged window of 80 (not 100) in the later Stage 2 sessions; MTP helped about 2 to 5% per
   turn (not 3 to 5%), costs 9 to 16% of prefill speed and 0.75 to 1.5 GiB of VRAM; Stage 3 took
   about 2.1 hours (90 minutes of sessions plus 38 minutes of re-runs) <!-- derived: (90+38)/60; planning-chat correction, card T-005 shared rule 8 -->.
 
-## 7. Step 0 success criteria (S1–S5)
+## 8. Step 0 success criteria (S1–S5)
 
-<!-- sources: docs/plans/step-0-baseline.md -->
+<!-- sources: docs/plans/step-0-baseline.md, data/analysis/stage4/s2-summary.md, reports/stage4-run2/caveats.md -->
 
-Status against the plan's §2 success criteria. S2 (reproducibility) awaits Stage 4 and S5
-(release) awaits the release tasks; both are marked `<!-- TODO-T010 -->` for T-010 to finalise.
-Final acceptance is assessed in the completion report (T-014).
+Status against the plan's §2 success criteria. S2 is measured: the Stage 4 run-2
+re-measurement passes 6 of 6 rows; its clean-shell walkthrough (T-012) and S5 (release) are
+pending. Final acceptance is assessed in the completion report (T-014).
 
 | criterion | status | evidence / note |
 |---|---|---|
-| S1 Coverage | Stages 1–3 measured | Stage 1 screening (57 cells), Stage 2 feature experiments, Stage 3 final (6 cells, 5 reps); raw per-request JSONL committed under `data/raw/`. Stage 4 pending. |
-| S2 Reproducibility | <!-- TODO-T010 --> | Awaits Stage 4 (T-007/T-008): stock-64K and tuned-64K re-measured on a different day, plus the README clean-shell walkthrough (T-012). |
+| S1 Coverage | Stages 1–4 measured | Stage 1 screening (57 cells), Stage 2 feature experiments, Stage 3 final (6 cells, 5 reps), Stage 4 reproducibility (2 cells, 5 reps, run 2; run 1 superseded, R5); raw per-request JSONL committed under `data/raw/`. |
+| S2 Reproducibility | measured — PASS, 6 of 6 rows; clean-shell walkthrough pending T-012 | Stage 4 run 2 (`stage4-run2`, 2026-11-14): stock-64K and tuned-64K re-measured on a different day; every row inside the wider of its Stage 3 95% CI and ±5%, every row on clean units (the Stage 4 section; `data/analysis/stage4/s2-summary.md`). Run 1 superseded (R5); kernel/driver confound recorded (E-009). The README clean-shell launch of every recommended config is T-012, pending. |
 | S3 Decisions | met | Stock and tuned config for each of 32K/64K/128K (`configs/server/{stock,tuned}-{32k,64k,128k}.toml`); tuned chosen by the §3.3 rule (Stage 2 section); each launches via `scripts/launch-server.sh`. |
 | S4 Health checks | evidence recorded; deviations noted | MTP head tensor screen and acceptance (0.771 at 64K, draft 1); endpoints (`data/health/endpoints-2026-11-08.json`); sanity pass (Output sanity check section); env snapshot + warm-up every run. Deviations: 128K S4(d) headline on a flagged stock window (D1); Stages 1–2 apps-open. Full sub-item assessment in T-014. |
-| S5 Release | <!-- TODO-T010 --> | Awaits the release checklist (§9) and tag v0.1.0 (T-013/T-015/T-016). |
+| S5 Release | pending T-015/T-016 | Awaits the release checklist (§9): scrub and release checks (T-013), private repo, CI and tag v0.1.0 (T-015), publish (T-016). |
 
-## 8. Sources and verification
+## 9. Sources and verification
 
 Every table above carries a `sources:` comment naming the file(s) its numbers come from;
 derived numbers carry a `derived:` comment. The marker syntax is:
@@ -542,6 +619,8 @@ uv run python tools/check_doc_numbers.py reports/baseline-report.md
 Primary sources: `data/analysis/stage3/headline.md` (Stage 3 headline, authoritative per D1),
 `reports/stage3/report.md` (VRAM, hit rates, excluded diagnostics), `data/sanity/stage3-tuned.json`
 (sanity), `docs/stage2-summary.md` and `reports/stage1/select-screening.md` (selection data),
-`docs/decisions.md` (deviations and corrections), `docs/plans/step-0-baseline.md` (method),
-`data/env/build-info.json`, `configs/model.toml`, `configs/harness.toml`, `configs/machine.toml`
-(provenance).
+`data/analysis/stage4/s2-summary.md` and `data/analysis/stage4/repro-output.txt` (Stage 4 S2),
+`reports/stage4-run2/report.md` and `reports/stage4-run2/caveats.md` (run-2 render and caveats),
+`docs/stage4-run2-conditions.md` (run-2 machine conditions), `docs/decisions.md` (deviations
+and corrections), `docs/plans/step-0-baseline.md` (method), `data/env/build-info.json`,
+`configs/model.toml`, `configs/harness.toml`, `configs/machine.toml` (provenance).

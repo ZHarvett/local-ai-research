@@ -58,18 +58,21 @@ def test_dry_run_needs_no_binary_lock_or_port(sandbox):
     # Missing binary, lock held by someone else, configured port busy: --dry-run still prints.
     lock = sandbox["tmp"] / "locks/gpu.lock"
     lock.parent.mkdir(parents=True)
-    sandbox["tmp"].joinpath("machine.toml").write_text(
-        f'[paths]\nllama_server="/nonexistent/llama-server"\nmodels_dir="{sandbox["tmp"]}"\n'
-        f'slot_save_dir="/dev/shm/local-ai-research-slots"\n[server]\nport={sandbox["port"]}\n'
-    )
+    # A blocker port of our own: the free_port reservation is held for the whole test (A13),
+    # so a plain bind on it would fail here.
     with open(lock, "w") as fh, socket.socket() as s:
         fcntl.flock(fh, fcntl.LOCK_EX)
-        s.bind(("127.0.0.1", sandbox["port"]))
+        s.bind(("127.0.0.1", 0))
         s.listen()
+        port = s.getsockname()[1]
+        sandbox["tmp"].joinpath("machine.toml").write_text(
+            f'[paths]\nllama_server="/nonexistent/llama-server"\nmodels_dir="{sandbox["tmp"]}"\n'
+            f'slot_save_dir="/dev/shm/local-ai-research-slots"\n[server]\nport={port}\n'
+        )
         r = run([*sandbox["launch"], "--dry-run", sandbox["cfg"]], env=sandbox["env"])
     assert r.returncode == 0, r.stderr
     assert r.stdout.startswith("/nonexistent/llama-server ")
-    assert f"--port {sandbox['port']}" in r.stdout
+    assert f"--port {port}" in r.stdout
     assert not sandbox["logs"].exists(), "--dry-run must not create run directories"
 
 
@@ -190,9 +193,16 @@ def test_server_dying_at_start_is_reported(sandbox):
 
 
 def test_refuses_busy_port(sandbox):
+    # A blocker port of our own: the free_port reservation is held for the whole test (A13),
+    # so a plain bind on it would fail here.
     with socket.socket() as s:
-        s.bind(("127.0.0.1", sandbox["port"]))
+        s.bind(("127.0.0.1", 0))
         s.listen()
+        port = s.getsockname()[1]
+        sandbox["tmp"].joinpath("machine.toml").write_text(
+            f'[paths]\nllama_server="{FAKE}"\nmodels_dir="{sandbox["tmp"]}"\n'
+            f'slot_save_dir="/dev/shm/local-ai-research-slots"\n[server]\nport={port}\n'
+        )
         r = run([*sandbox["launch"], "--run-id", "t7", sandbox["cfg"]], env=sandbox["env"])
     assert r.returncode != 0 and "already in use" in r.stderr
     assert not (sandbox["logs"] / "t7").exists()

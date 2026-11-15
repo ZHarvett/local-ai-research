@@ -1,5 +1,5 @@
 # Step 0, remaining work: Stage 4, release v0.1.0, completion report
-*Version 1.4 · 14 November 2026*
+*Version 1.6 · 14 November 2026*
 
 ## Shared rules
 
@@ -21,6 +21,7 @@ Context: Step 0 (baseline setup) of "Local AI on a Small PC". Reference plan: do
    - 1 flagged window of 80 (not 100) in the later Stage 2 sessions;
    - MTP helped about 2 to 5% per turn (not 3 to 5%), and costs 9 to 16% of prefill speed and 0.75 to 1.5 GiB of VRAM;
    - Stage 3 took about 2.1 hours (90 minutes of sessions plus 38 minutes of re-runs).
+9. Standing delegation to the driver (the /drive command), from v1.5 on 14 November 2026. The driver may decide an open escalation itself, without the planning chat, only if ALL of these hold: (a) the brief names a recommended option and states high confidence; (b) that option is reversible and touches only docs, wording, bookkeeping, tests, or kit tooling that an approved task already covers; (c) it does not touch measurement data, a decision to re-measure, the S1 to S5 criteria or their wording, rules R1 to R7 or how they are read, the plan's cards, dependencies or gates, the scrub, release or publish steps, anything outside the repo, git history, secrets, or the code freeze; (d) no option in the brief is described as irreversible or costly to undo. At most 3 such decisions per /drive run and 1 per task. The driver records the decision with the words "Decided by driver under rule 9" in its Reason and lists every one in its report. Anything else goes to the planning chat. The planning chat may overrule any such decision later; that is a new decision, never a rewrite.
 
 **Stage 3 decisions (planning chat, 12 November 2026)**
 
@@ -480,7 +481,7 @@ depends_on: T-008
 lane: 1
 resources: cpu-heavy
 files_read: docs/recon/T-001.md, docs/recon/commands.env, tests/, src/smallpc/, data/analysis/stage3/headline.md, data/analysis/stage4/
-files_write: tests/, src/smallpc/, reports/stage3/, reports/stage4/, docs/recon/T-009-start.txt, docs/progress-log.md
+files_write: tests/, src/smallpc/, reports/stage3/, reports/stage4-run2/, docs/recon/stage4-preflight.md, docs/recon/T-009-start.txt, docs/progress-log.md
 gates: none
 review: none
 preconditions:
@@ -490,10 +491,19 @@ steps:
   - S2: Fix the flakiness of tests/test_sweep_probe.py according to A13's diagnosis, changing tests/ only. (redo-safe)
   - S3: Make the tests read the plan version from the header of docs/plans/step-0-baseline.md instead of a literal. (redo-safe)
   - S4: In the report-rendering module that A8 identified, make the rendered report apply the §5.4 headline rule: clean units if both cells have at least 5 clean paired units, otherwise all units with the label "includes paging-flagged stock windows" and the clean figures beside it, consistent with headline.md. Add a test for the 4-of-5 stock case. Fix the figures: the prefill and decode y-axes start at 0, and the predicted_n labels sit clear of the whiskers. (redo-safe)
-  - S5: Re-render reports/stage3/ and reports/stage4/ with REPORT_CMD. Only the rendering may change, not any number. (redo-safe)
-  - S6: Run CI_CMD 5 times, commit, and append the progress-log entry. (redo-safe)
+  - S5: Re-render reports/stage3/ with the combined command in that report's own provenance line (--sessions data/raw/stage3-32K data/raw/stage3-64K data/raw/stage3-128K), and re-render reports/stage4-run2/ with REPORT_CMD and SESSION=stage4-run2, as T-021 S3 did. Never touch reports/stage4/: it is the superseded run-1 diagnostic (R5). Only the rendering may change, not any number. (redo-safe)
+  - S6: Format docs/recon/stage4-preflight.md with `uv run ruff format docs/recon/stage4-preflight.md`; CI_CMD's format check flags the Python block inside it (E-010). It is a formatting-only change: check with git diff that no number, no `<!-- sources -->` line and no non-whitespace word changed, and touch no other docs file. (redo-safe)
+  - S7: Run CI_CMD once to confirm it is green, commit, and append the progress-log entry. The five-run stability check is done by the five acceptance items below, each running CI_CMD once. (redo-safe)
 acceptance:
-  - cmd: source docs/recon/commands.env && for i in 1 2 3 4 5; do eval "$CI_CMD" || exit 1; done
+  - cmd: source docs/recon/commands.env && eval "$CI_CMD"
+    expect: exit_code 0
+  - cmd: source docs/recon/commands.env && eval "$CI_CMD"
+    expect: exit_code 0
+  - cmd: source docs/recon/commands.env && eval "$CI_CMD"
+    expect: exit_code 0
+  - cmd: source docs/recon/commands.env && eval "$CI_CMD"
+    expect: exit_code 0
+  - cmd: source docs/recon/commands.env && eval "$CI_CMD"
     expect: exit_code 0
   - cmd: grep -rq 'includes paging-flagged stock windows' reports/stage3 && ! grep -rq 'not reportable' reports/stage3
     expect: exit_code 0
@@ -501,10 +511,12 @@ acceptance:
     expect: exit_code 0
   - cmd: ! grep -rnE 'version.{0,20}"1\.[0-9]"' tests/
     expect: exit_code 0
-evidence: reports/stage3/, reports/stage4/
+  - cmd: test -z "$(git diff --name-only "$(cat docs/recon/T-009-start.txt)" HEAD -- reports/stage4)"
+    expect: exit_code 0
+evidence: reports/stage3/report.md, reports/stage4-run2/report.md
 estimate: 90m
 decision_rights:
-  - may: implementation details in tests/ and in the report-rendering module
+  - may: implementation details in tests/ and in the report-rendering module; the formatting-only change to docs/recon/stage4-preflight.md
   - must_escalate: any change to measurement, statistics or headline code; any change under data/; a re-rendered number that differs from headline.md or the repro output; a flakiness cause found in src/
 
 ### T-010 — Final README, report, write-up and changelog
@@ -514,7 +526,7 @@ phase: P4
 depends_on: T-004, T-005, T-006, T-009
 lane: 1
 resources: light
-files_read: data/analysis/stage4/, reports/stage3/, reports/stage4/, docs/decisions.md, docs/plans/step-0-baseline.md
+files_read: data/analysis/stage4/, reports/stage3/, reports/stage4-run2/, docs/decisions.md, docs/plans/step-0-baseline.md
 files_write: README.md, reports/baseline-report.md, reports/writeup.md, CHANGELOG.md
 gates: none
 review: post

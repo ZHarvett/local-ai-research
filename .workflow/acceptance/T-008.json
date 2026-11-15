@@ -1,0 +1,112 @@
+[
+  {
+    "task": "T-008",
+    "started_utc": "2026-11-14T20:25:10Z",
+    "git_commit": "a52bd82a6e0163ced32a73f20733558512aa454e",
+    "items": [
+      {
+        "id": "A1",
+        "cmd": "source docs/recon/commands.env && SESSION=\"$(cat docs/recon/stage4-session-run2.txt)\" && eval \"$REPRO_CMD\"",
+        "exit_code": 0,
+        "output_sha256": "10ff296c9b692042c28987224f79233a6323de273a9dbe4ab81a5f866d6384e2",
+        "output_bytes": 1092,
+        "elapsed_s": 0.4,
+        "verdict": "pass"
+      },
+      {
+        "id": "A2",
+        "verdict": "pass",
+        "path": "overall",
+        "value": "PASS"
+      },
+      {
+        "id": "A3",
+        "cmd": "uv run python tools/check_doc_numbers.py data/analysis/stage4/s2-summary.md",
+        "exit_code": 0,
+        "output_sha256": "fc7893b10a0e2ec6c86c7a9e729dab06811ce047bb83f807de28991113dfac3b",
+        "output_bytes": 86,
+        "elapsed_s": 0.0,
+        "verdict": "pass"
+      },
+      {
+        "id": "A4",
+        "verdict": "judgement",
+        "description": "The S2 rows match repro-output.txt, and R1 is applied only if tuned-64K had fewer than 5 clean units."
+      }
+    ],
+    "evidence_files": {
+      "data/analysis/stage4/repro-output.txt": {
+        "exists": true,
+        "sha256": "10ff296c9b692042c28987224f79233a6323de273a9dbe4ab81a5f866d6384e2",
+        "bytes": 1092
+      },
+      "data/analysis/stage4/s2-summary.md": {
+        "exists": true,
+        "sha256": "8d46940332a50e2d3d75894d6d2d458f58e124f64e8e4727fec41961d1d08897",
+        "bytes": 4966
+      },
+      "data/analysis/stage4/s2-summary.json": {
+        "exists": true,
+        "sha256": "831a466b0f00621be2e2797d5a4b788bdac86d1cf082d3db63e68093821967e0",
+        "bytes": 1559
+      }
+    },
+    "finished_utc": "2026-11-14T20:25:11Z",
+    "failures": 0
+  },
+  {
+    "task": "T-008",
+    "started_utc": "2026-11-14T20:29:52Z",
+    "git_commit": "c9e94200454e1f3eb89366e33f2ad274cb9b3507",
+    "items": [
+      {
+        "id": "A1",
+        "cmd": "source docs/recon/commands.env && SESSION=\"$(cat docs/recon/stage4-session-run2.txt)\" && eval \"$REPRO_CMD\"",
+        "exit_code": 0,
+        "output_sha256": "10ff296c9b692042c28987224f79233a6323de273a9dbe4ab81a5f866d6384e2",
+        "output_bytes": 1092,
+        "elapsed_s": 0.4,
+        "verdict": "pass"
+      },
+      {
+        "id": "A2",
+        "verdict": "pass",
+        "path": "overall",
+        "value": "PASS"
+      },
+      {
+        "id": "A3",
+        "cmd": "uv run python tools/check_doc_numbers.py data/analysis/stage4/s2-summary.md",
+        "exit_code": 0,
+        "output_sha256": "fc7893b10a0e2ec6c86c7a9e729dab06811ce047bb83f807de28991113dfac3b",
+        "output_bytes": 86,
+        "elapsed_s": 0.0,
+        "verdict": "pass"
+      },
+      {
+        "id": "A4",
+        "verdict": "judgement",
+        "description": "The S2 rows match repro-output.txt, and R1 is applied only if tuned-64K had fewer than 5 clean units."
+      }
+    ],
+    "evidence_files": {
+      "data/analysis/stage4/repro-output.txt": {
+        "exists": true,
+        "sha256": "10ff296c9b692042c28987224f79233a6323de273a9dbe4ab81a5f866d6384e2",
+        "bytes": 1092
+      },
+      "data/analysis/stage4/s2-summary.md": {
+        "exists": true,
+        "sha256": "8d46940332a50e2d3d75894d6d2d458f58e124f64e8e4727fec41961d1d08897",
+        "bytes": 4966
+      },
+      "data/analysis/stage4/s2-summary.json": {
+        "exists": true,
+        "sha256": "831a466b0f00621be2e2797d5a4b788bdac86d1cf082d3db63e68093821967e0",
+        "bytes": 1559
+      }
+    },
+    "finished_utc": "2026-11-14T20:29:52Z",
+    "failures": 0
+  }
+]

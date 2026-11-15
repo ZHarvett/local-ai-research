@@ -51,6 +51,7 @@ import json
 import os
 import random
 import signal
+import socket
 import sys
 import threading
 import time
@@ -359,7 +360,16 @@ def on_sigint(*_):
     os._exit(0)
 
 
+class Server(ThreadingHTTPServer):
+    """SO_REUSEPORT: the free_port fixture holds a bound, non-listening reservation on this
+    port for the whole test (A13 TOCTOU fix); join it instead of racing it."""
+
+    def server_bind(self):
+        self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
+        super().server_bind()
+
+
 signal.signal(signal.SIGINT, signal.SIG_IGN if BEHAVIOR.get("ignore_sigint") else on_sigint)
 log(f"srv  server_on_li: listening on http://{host}:{port}")
 log("srv  update_slots: all slots are idle")
-ThreadingHTTPServer((host, port), Handler).serve_forever()
+Server((host, port), Handler).serve_forever()

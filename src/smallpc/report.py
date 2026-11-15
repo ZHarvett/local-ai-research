@@ -222,6 +222,7 @@ def fig_depth_lines(res: dict, label: str, metric: str, ylabel: str, title: str)
         ax.set_xticks(sorted({d / 1024 for c in cells for d in c["depths"]}))
         ax.set_xlabel("prompt length / depth (K tokens)")
         ax.set_ylabel(ylabel)
+        ax.set_ylim(bottom=0)  # speed axes start at 0 (D9)
         _legend(ax, handles, n_other)
     return _finish(fig)
 
@@ -247,6 +248,8 @@ def fig_turn_times(res: dict, label: str) -> str:
             _no_data(ax, f"{ctx}: no clean repetitions")
             continue
         h = 0.38
+        xmax = max(r[2]["ci"][1] if r[2]["ci"] else r[2]["mean"] for r in rows) * 1.5
+        pad = 0.02 * xmax  # predicted_n labels sit clear of the whisker caps (D9)
         for i, (_name, tt, tb, pn) in enumerate(rows):
             for off, s, col in ((-h / 2, tt, SERIES[0]), (h / 2, tb, SERIES[1])):
                 err = (s["ci"][1] - s["ci"][0]) / 2 if s["ci"] else 0
@@ -254,13 +257,13 @@ def fig_turn_times(res: dict, label: str) -> str:
                         error_kw={"ecolor": INK, "lw": 0.8, "capsize": 2})  # fmt: skip
             if pn is not None:
                 end = tb["mean"] + ((tb["ci"][1] - tb["ci"][0]) / 2 if tb["ci"] else 0)
-                ax.text(end, i + h / 2, f"  predicted_n {pn:.0f}", va="center", fontsize=6.5,
+                ax.text(end + pad, i + h / 2, f"predicted_n {pn:.0f}", va="center", fontsize=6.5,
                         color=MUTED)  # fmt: skip
         ax.set_yticks(range(len(rows)), [r[0] for r in rows], fontsize=7)
         ax.invert_yaxis()
         ax.set_xlabel("seconds")
         ax.set_title(ctx, fontsize=9, loc="left")
-        ax.set_xlim(0, max(r[2]["ci"][1] if r[2]["ci"] else r[2]["mean"] for r in rows) * 1.5)
+        ax.set_xlim(0, xmax)
         handles = [
             plt.Rectangle((0, 0), 1, 1, color=SERIES[0], label="T_turn_400 (estimate)"),
             plt.Rectangle((0, 0), 1, 1, color=SERIES[1], label="T_B (measured)"),
@@ -374,18 +377,21 @@ def _table(banner: str, header: list[str], rows: list[list[str]]) -> list[str]:
     return out
 
 
-def _n_cell(c: dict) -> str:
+def _n_cell(c: dict, mark_small: bool = True) -> str:
     txt = f"{c['n_clean']}/{c['n_total']}"
-    return txt + (f" {labels.NOT_REPORTABLE}" if c["n_clean"] < labels.MIN_REPORTABLE_N else "")
+    small = mark_small and c["n_clean"] < labels.MIN_REPORTABLE_N
+    return txt + (f" {labels.NOT_REPORTABLE}" if small else "")
 
 
-def results_rows(c: dict, depths: list[int], rerun_units: dict[str, int]) -> list[str]:
+def results_rows(
+    c: dict, depths: list[int], rerun_units: dict[str, int], mark_small: bool = True
+) -> list[str]:
     if c["status"] in ("did_not_fit", "not_applicable") or not c["n_total"]:
         why = f"{c['status']}" + (f" ({c['reason']})" if c["reason"] else "")
         return (
             [c["name"], why] + ["-"] * (2 * len(depths) + 5) + [", ".join(c["unit_flags"]) or "-"]
         )
-    cols = [c["name"], _n_cell(c)]
+    cols = [c["name"], _n_cell(c, mark_small)]
     for metric in ("pp_fresh", "tg"):
         for d in depths:
             blk = c["depth_metrics"].get(str(d))
@@ -611,8 +617,65 @@ def plan_version(root: Path | None = None) -> str:
     return "unknown"
 
 
+def render_headline_section(hl: dict, ban: str) -> list[str]:
+    """The plan §5.4 headline per context, from the frozen Stage 3 headline pipeline's result
+    (``smallpc.stage3.headline.headline``): the same choice, numbers and wording as headline.md.
+    Clean units if both cells have at least 5 clean paired units; otherwise all units, labelled,
+    with the clean-units figures beside it (T-009 S4, D1)."""
+    from .stage3 import render_md  # lazy: render_md imports this module at load time
+
+    def ratio_table(table: dict) -> list[str]:
+        # same package family: the exact formatter that renders headline.md's ratio tables
+        return [f"> {ban}", ""] + render_md._ratio_rows(table) + [""]  # noqa: SLF001
+
+    L: list[str] = ["## Headline (plan §5.4)", ""]
+    if hl["disagreeing_contexts"]:
+        L.append(
+            "**The clean-units and all-units versions disagree** (sign, or one interval excludes "
+            "1.0 and the other does not) in: "
+            + ", ".join(hl["disagreeing_contexts"])
+            + ". "
+            + " ".join(
+                hl["contexts"][c]["disagreement"]["statement"] for c in hl["disagreeing_contexts"]
+            )
+        )
+    else:
+        L.append(
+            "The clean-units and all-units versions agree in every context (sign, and whether "
+            "each interval excludes 1.0)."
+        )
+    if hl["human_decision_needed"]:
+        L += ["", "**Human decision needed:**"] + [f"- {h}" for h in hl["human_decision_needed"]]
+    if hl["problems"]:
+        L += ["", "**Problems:** " + "; ".join(hl["problems"])]
+    L.append("")
+    for ctx, e in hl["contexts"].items():
+        h = e["headline"]
+        L += [f"### {ctx}: {e['stock_cell']} and {e['tuned_cell']}", ""]
+        if e["disagreement"]["disagree"]:
+            L += [e["disagreement"]["statement"], ""]
+        if h["choice"] is None:
+            L += [f"**Headline:** none. {h['note']}", ""]
+        elif h["choice"] == "clean":
+            L += [f"**Headline: clean units** ({e['paired_clean_units']} clean, paired units).", ""]
+            L += ratio_table(e["ratios"]["clean"])
+            L += ["Same comparison on all units (flagged units included):", ""]
+            L += ratio_table(e["ratios"]["all"])
+        else:
+            L += [f'**Headline: all units, labelled "{h["label"]}".** {h["deviation"]}', ""]
+            L += ratio_table(e["ratios"]["all"])
+            L += ["Clean-units figures beside it:", ""] + ratio_table(e["ratios"]["clean"])
+    return L
+
+
 def render_report(
-    res: dict, label: str, *, command: str, plan: str, sanity: dict | None = None
+    res: dict,
+    label: str,
+    *,
+    command: str,
+    plan: str,
+    sanity: dict | None = None,
+    headline_result: dict | None = None,
 ) -> str:
     ban = labels.banner(label)
     mode = "final" if label == "results" else "screening"
@@ -740,7 +803,11 @@ def render_report(
             + [f"TG {kk(d)} (tok/s)" for d in depths]
             + ["T_turn_400 (s)", "T_B (s)", "T_reread (s)", "TTFT (s)", "acceptance", "flags"]
         )
-        L += _table(ban, header, [results_rows(c, depths, rerun_units) for c in shown])
+        L += _table(
+            ban,
+            header,
+            [results_rows(c, depths, rerun_units, mark_small=label != "results") for c in shown],
+        )
         A(
             "Values are mean [95% CI] over clean repetitions. T_turn_400, T_B, T_reread and TTFT "
             "are means over the depths of §5.3 per repetition. T_turn_400 is an estimate (400 "
@@ -794,6 +861,8 @@ def render_report(
     else:
         A("No context has both a stock cell and a candidate with clean repetitions.")
     A("")
+    if headline_result is not None:
+        L += render_headline_section(headline_result, ban)
     L += render_swap_sensitivity(res, ban)
     # ------------------------------------------------------------------ VRAM
     A("## VRAM breakdown")
@@ -918,10 +987,11 @@ def render_report(
         A("## Appendix: cells below 5 clean repetitions")
         A("")
         A(
-            "Cells with fewer than 5 clean repetitions are not reportable in the tables above "
-            "(§5.5). Their figures here use clean units only. A Stage 3 stock cell in this list "
-            "has its headline computed on all units and labelled by `python -m smallpc.stage3 "
-            'headline` (plan §5.4, "Headline rule"); read the headline there.'
+            "Cells with fewer than 5 clean repetitions are excluded from the clean-units tables "
+            "above (§5.5); their figures here use clean units only. A Stage 3 stock cell in this "
+            "list may still carry its context's headline on all units, labelled \"includes "
+            'paging-flagged stock windows" (plan §5.4, "Headline rule"): see the Headline section '
+            "above, or run `python -m smallpc.stage3 headline`."
         )
         A("")
     else:
@@ -939,7 +1009,7 @@ def render_report(
         [
             c["name"],
             c["context_label"] or "-",
-            _n_cell(c),
+            _n_cell(c, mark_small=label != "results"),
             f_stats(c["rep_metrics"]["t_turn_400_mean"]["stats"]),
         ]
         for c in sorted(small, key=lambda c: (c["context"] or 0, c["name"]))
@@ -960,12 +1030,33 @@ def render_report(
 def cmd_render(a: argparse.Namespace) -> int:
     res = analysis.analyse(a.sessions)
     sanity = json.loads(a.sanity.read_text()) if a.sanity else None
+    hl = None
+    if a.label == "results":
+        # The §5.4 headline comes from the frozen Stage 3 headline pipeline, so the report's
+        # headline numbers are exactly headline.md's (T-009 S4). Sessions that tool refuses
+        # (allow-dirty, functional-test, incomplete) keep the plain report.
+        from .stage2 import eligibility
+        from .stage3 import headline as stage3_headline
+
+        try:
+            hl = stage3_headline.headline(
+                a.sessions, sanity=sanity, sanity_path=str(a.sanity) if a.sanity else None
+            )
+        except eligibility.Refused:
+            hl = None
     command = (
         "python -m smallpc.report render --sessions "
         + " ".join(str(p) for p in a.sessions)
         + f" --out {a.out} --label {a.label}"
     )
-    md = render_report(res, a.label, command=command, plan=a.plan or plan_version(), sanity=sanity)
+    md = render_report(
+        res,
+        a.label,
+        command=command,
+        plan=a.plan or plan_version(),
+        sanity=sanity,
+        headline_result=hl,
+    )
     out = Path(a.out)
     (out / "figures").mkdir(parents=True, exist_ok=True)
     (out / "report.md").write_text(md)

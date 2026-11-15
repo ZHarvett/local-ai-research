@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import importlib.util
 
-from conftest import REPO
+from conftest import REPO, plan_version_from_header
 
 spec = importlib.util.spec_from_file_location(
     "stage2_final_selection", REPO / "tools" / "stage2_final_selection.py"
@@ -16,7 +16,7 @@ RESULT = {"mode": "final", "min_clean": 5, "contexts": {}}
 PROV = {
     "sessions": [{"session_id": "s", "spec_path": "a.toml", "spec_sha256": "ab" * 32,
                   "session_git_commit": "c" * 40}],
-    "plan_version": "1.6", "code": {"commit": "d" * 40, "dirty": False},
+    "plan_version": plan_version_from_header(), "code": {"commit": "d" * 40, "dirty": False},
     "llama_cpp_commit": "e" * 40, "rule_text": ["line one\n\nline two"],
 }  # fmt: skip
 
@@ -28,4 +28,5 @@ def test_build_adds_provenance_sanity_and_rule_text():
     assert obj["sanity_file"]["sha256"] == "f" * 64 and obj["provenance"] is PROV
     assert obj["mode"] == "final"
     assert "## Provenance" in md and "data/sanity/all.json" in md and "| s | a.toml |" in md
-    assert "> line one" in md and "> line two" in md and "plan version: 1.6" in md
+    assert "> line one" in md and "> line two" in md
+    assert f"plan version: {plan_version_from_header()}" in md

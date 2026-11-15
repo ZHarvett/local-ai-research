@@ -7,7 +7,7 @@ import json
 
 import pytest
 
-from conftest import REPO
+from conftest import REPO, plan_version_from_header
 from fixture_session import CellSpec, RepSpec, build_session
 from smallpc.stage2 import eligibility
 from smallpc.stage3 import cli, headline, rules
@@ -221,7 +221,8 @@ def test_swap_sensitivity_without_heavy_units_has_nothing_to_remove(tmp_path):
 def test_provenance_names_sessions_commit_plan_rules_and_config_files(tmp_path):
     res, d = run(tmp_path, [stock(), tuned()])
     p = res["provenance"]
-    assert p["plan_version"] == "1.8" and p["sessions"][0]["session_id"] == "stage3-32K"
+    assert p["plan_version"] == plan_version_from_header()
+    assert p["sessions"][0]["session_id"] == "stage3-32K"
     assert p["code"]["commit"] and set(p["rule_text"]) == set(rules.RULE_NAMES) | {"Stage 4"}
     assert p["rule_text"]["Headline rule"].startswith(
         "- **Headline rule.** The headline for a context is"

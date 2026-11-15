@@ -1,0 +1,104 @@
+[
+  {
+    "task": "T-009",
+    "started_utc": "2026-11-14T22:46:49Z",
+    "git_commit": "e5c352afe8f0d1111aa01c143e77cc4fb30b0cb7",
+    "items": [
+      {
+        "id": "A1",
+        "cmd": "source docs/recon/commands.env && eval \"$CI_CMD\"",
+        "exit_code": 0,
+        "output_sha256": "4ac922a9c2ae362a6a793def9723d8b451c6dc15aa2eacbc4f32edfb15f997ed",
+        "output_bytes": 5497,
+        "elapsed_s": 304.8,
+        "verdict": "pass"
+      },
+      {
+        "id": "A2",
+        "cmd": "source docs/recon/commands.env && eval \"$CI_CMD\"",
+        "exit_code": 0,
+        "output_sha256": "7c19456455a83b0b32de06dbeff14bad385e2592251130f2b181dfdef8c0bcae",
+        "output_bytes": 5497,
+        "elapsed_s": 306.2,
+        "verdict": "pass"
+      },
+      {
+        "id": "A3",
+        "cmd": "source docs/recon/commands.env && eval \"$CI_CMD\"",
+        "exit_code": 0,
+        "output_sha256": "210967651c659b1fd0236ec5f9273e5db2cf5f193a4288caba8f033b50c23627",
+        "output_bytes": 5497,
+        "elapsed_s": 304.7,
+        "verdict": "pass"
+      },
+      {
+        "id": "A4",
+        "cmd": "source docs/recon/commands.env && eval \"$CI_CMD\"",
+        "exit_code": 0,
+        "output_sha256": "e16ef1db1a836fe02cd9b4f20ea73baa29cb9996731c65f58df669443dac3ed3",
+        "output_bytes": 5497,
+        "elapsed_s": 305.1,
+        "verdict": "pass"
+      },
+      {
+        "id": "A5",
+        "cmd": "source docs/recon/commands.env && eval \"$CI_CMD\"",
+        "exit_code": 0,
+        "output_sha256": "9824e7424b9d6ea0a416a139358eef4577d3d94093feb276f527b9a79efc9780",
+        "output_bytes": 5497,
+        "elapsed_s": 303.1,
+        "verdict": "pass"
+      },
+      {
+        "id": "A6",
+        "cmd": "grep -rq 'includes paging-flagged stock windows' reports/stage3 && ! grep -rq 'not reportable' reports/stage3",
+        "exit_code": 0,
+        "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "output_bytes": 0,
+        "elapsed_s": 0.0,
+        "verdict": "pass"
+      },
+      {
+        "id": "A7",
+        "cmd": "! git diff --name-only \"$(cat docs/recon/T-009-start.txt)\" HEAD -- data src configs scripts | grep -vE '^src/smallpc/report(\\.py|/)'",
+        "exit_code": 0,
+        "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "output_bytes": 0,
+        "elapsed_s": 0.0,
+        "verdict": "pass"
+      },
+      {
+        "id": "A8",
+        "cmd": "! grep -rnE 'version.{0,20}\"1\\.[0-9]\"' tests/",
+        "exit_code": 0,
+        "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "output_bytes": 0,
+        "elapsed_s": 0.0,
+        "verdict": "pass"
+      },
+      {
+        "id": "A9",
+        "cmd": "test -z \"$(git diff --name-only \"$(cat docs/recon/T-009-start.txt)\" HEAD -- reports/stage4)\"",
+        "exit_code": 0,
+        "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "output_bytes": 0,
+        "elapsed_s": 0.0,
+        "verdict": "pass"
+      }
+    ],
+    "evidence_files": {
+      "reports/stage3/report.md": {
+        "exists": true,
+        "sha256": "b9ffb2e4a8e5e3b9afd2e4b05bd32c6a71c5f5163330fadd119b4f643a3a59de",
+        "bytes": 23601
+      },
+      "reports/stage4-run2/report.md": {
+        "exists": true,
+        "sha256": "0a14586c335af15b67d1d34a08add15e155ceb23c60cadb998d7b44da718782c",
+        "bytes": 10347
+      }
+    },
+    "finished_utc": "2026-11-14T23:12:13Z",
+    "failures": 0
+  }
+]
