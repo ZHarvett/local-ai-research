@@ -147,6 +147,10 @@ TRANSITIONS: dict[str, set[str]] = {
 # each a legal transition out of blocked-decision in TRANSITIONS above.
 UNBLOCK_TO_TARGETS = ("done", "in-review", "changes-requested")
 
+# T-022: statuses only the main state advances (terminal or review-flow); a lane
+# mirror can be stale against them, so merge-lanes keeps main's value.
+MAIN_WINS_STATUSES = ("accepted", "in-review", "changes-requested", "superseded", "cancelled")
+
 BRIEF_REQUIRED_SECTIONS = (
     "## What happened",
     "## Why it cannot proceed",
@@ -451,6 +455,14 @@ def recompute_ready(owner: dict, repo: Path, owner_lane: int | None) -> bool:
     """todo -> ready for tasks in `owner` whose dependencies are satisfied, judged
     against the effective view (main state from disk + this owner's overlay)."""
     changed = False
+    # T-022 (E-005): the main state must not promote the todo placeholders of
+    # lane-owned tasks; the lane mirrors are the ownership authority.
+    lane_owned: set[str] = set()
+    if owner_lane is None:
+        for lane in lane_numbers(repo):
+            mirror = load_lane(repo, lane, from_mirror=True)
+            if mirror:
+                lane_owned.update(mirror.get("tasks", {}))
     for _ in range(3):
         if owner_lane is None:
             eff = effective_tasks(repo, owner)
@@ -464,6 +476,8 @@ def recompute_ready(owner: dict, repo: Path, owner_lane: int | None) -> bool:
             eff = tasks
         round_changed = False
         for tid, task in owner.get("tasks", {}).items():
+            if tid in lane_owned:
+                continue
             if task["status"] == "todo" and task_deps_satisfied(eff, task):
                 task["status"] = "ready"
                 append_event(owner, "ready", tid, "dependencies satisfied")
@@ -1460,14 +1474,23 @@ def ensure_lane_worktree(repo: Path, lane: int) -> Path:
     if lane == 1:
         return repo
     worktree = worktree_for_lane(repo, lane)
-    if worktree.is_dir():
-        return worktree
-    branch = f"lane-{lane}"
-    branches = _git(repo, "branch", "--format=%(refname:short)").splitlines()
-    if branch in branches:
-        _git(repo, "worktree", "add", str(worktree), branch)
-    else:
-        _git(repo, "worktree", "add", "-b", branch, str(worktree))
+    if not worktree.is_dir():
+        branch = f"lane-{lane}"
+        branches = _git(repo, "branch", "--format=%(refname:short)").splitlines()
+        if branch in branches:
+            _git(repo, "worktree", "add", str(worktree), branch)
+        else:
+            _git(repo, "worktree", "add", "-b", branch, str(worktree))
+    # T-022: refresh a stale worktree from main (T-018 recon §5); on conflict,
+    # abort and leave it as-is so the session can still merge main by hand.
+    behind = _git(worktree, "rev-list", "--count", "HEAD..main", check=False)
+    if behind.isdigit() and int(behind) > 0:
+        proc = subprocess.run(
+            ["git", "merge", "--no-edit", "main"], cwd=worktree, capture_output=True, text=True
+        )
+        if proc.returncode != 0:
+            subprocess.run(["git", "merge", "--abort"], cwd=worktree, capture_output=True)
+            print(f"lane {lane}: auto-merge of main conflicted; merge main by hand in the worktree")
     return worktree
 
 
@@ -1914,7 +1937,8 @@ def parse_review_report(path: Path) -> tuple[dict, list[dict]]:
     """Parse the report's task-verdict line and findings table rows."""
     text = path.read_text(encoding="utf-8")
     verdict = ""
-    m = re.search(r"^## Task verdict\s*\n+\s*(\S+)\s*$", text, re.M)
+    # T-022: allow one trailing parenthetical, e.g. "accepted (cycle 1, 3 findings)"
+    m = re.search(r"^## Task verdict\s*\n+\s*(\S+)(?:\s*\([^)]*\))?\s*$", text, re.M)
     if m:
         verdict = m.group(1)
     findings = []
@@ -2051,6 +2075,53 @@ def cmd_unblock(repo: Path, args: argparse.Namespace) -> None:
         detail=detail,
     )
     print(f"{args.task} unblocked -> {restore}")
+
+
+def cmd_restore_status(repo: Path, args: argparse.Namespace) -> None:
+    """T-022: repair a status a kit bug regressed (done -> accepted only), guarded
+    by the task's own accepted review-verdict event. Writes the status directly:
+    done -> accepted is deliberately outside TRANSITIONS, so no existing
+    transition changes."""
+    tid = args.task
+    if args.to != "accepted":
+        die(f"--to {args.to} is not a legal restore target (allowed: accepted)")
+    owner, owner_lane, task = find_task(repo, tid)
+    foreign_lane = owner_lane is not None and not in_main(repo)
+    if foreign_lane and lane_of_worktree(repo) != owner_lane:
+        die("this session runs in a worktree; only tasks owned by this lane may be changed here")
+    if task["status"] != "done":
+        die(f"task {tid} is {task['status']}, not done (restore-status repairs done -> accepted)")
+    events = all_events(repo, load_state(repo))
+    verdict = next(
+        (
+            e
+            for e in events
+            if e.get("event") == "review-verdict"
+            and e.get("task") == tid
+            and e.get("seq") == args.verdict_seq
+            and str(e.get("detail", "")).startswith("accepted")
+        ),
+        None,
+    )
+    if verdict is None:
+        die(f"no accepted review-verdict event with seq {args.verdict_seq} for {tid}")
+    # canonical event order is (ts, seq): merged logs duplicate lane events and
+    # lane/main seq spaces collide, so seq alone is not a safe ordering
+    vkey = (verdict.get("ts", ""), verdict.get("seq", 0))
+    if any(
+        e.get("event") == "review-opened"
+        and e.get("task") == tid
+        and (e.get("ts", ""), e.get("seq", 0)) > vkey
+        for e in events
+    ):
+        die(f"task {tid} has a review-opened later than verdict seq {args.verdict_seq}")
+    old = task["status"]
+    task["status"] = "accepted"
+    detail = f"{old} -> accepted (review-verdict seq {args.verdict_seq})"
+    append_event(owner, "status-restored", tid, detail)
+    recompute_ready(owner, repo, owner_lane)
+    save_owner(repo, owner, owner_lane)
+    print(f"{tid} restored: {detail}")
 
 
 def next_escalation_id(repo: Path) -> str:
@@ -2316,6 +2387,8 @@ def cmd_merge_lanes(repo: Path, args: argparse.Namespace) -> None:
     for tid, task in mirror.get("tasks", {}).items():
         base = state["tasks"].get(tid, {})
         merged = {**base, **task}
+        if base.get("status") in MAIN_WINS_STATUSES:
+            merged["status"] = base["status"]
         merged.pop("claimed_by_lane", None)
         merged.pop("steps_done", None)
         state["tasks"][tid] = merged
@@ -2632,6 +2705,15 @@ def build_parser() -> argparse.ArgumentParser:
     s.add_argument("task")
     s.add_argument("--to", metavar="STATUS", default=None)
     s.set_defaults(fn=cmd_unblock)
+
+    s = sp(
+        "restore-status",
+        "repair a bug-regressed done -> accepted, guarded by a review-verdict event (T-022)",
+    )
+    s.add_argument("task")
+    s.add_argument("--to", metavar="STATUS", required=True)
+    s.add_argument("--verdict-seq", type=int, required=True)
+    s.set_defaults(fn=cmd_restore_status)
 
     s = sp("escalate", "create escalations/E-NNN.md and block the task")
     s.add_argument("--task", default="")
