@@ -1,5 +1,5 @@
 {
-  "checksum": "b20d317e0ffcdd7d151afc241b7b838a17534315ca4bd9c95e8a7c75a8d24d9e",
+  "checksum": "60e7bc4ac24b37f90cf5d74302aa17dc7b08e11a6287d146d27c3a7cb6d10c45",
   "events": [
     {
       "detail": "lane 2, pid 1807601",
@@ -357,6 +357,13 @@
       "seq": 50,
       "task": "T-022",
       "ts": "2026-11-15T13:52:28Z"
+    },
+    {
+      "detail": "S6",
+      "event": "step-done",
+      "seq": 51,
+      "task": "T-022",
+      "ts": "2026-11-15T13:54:24Z"
     }
   ],
   "lane": 2,
@@ -472,7 +479,8 @@
         "S2",
         "S3",
         "S4",
-        "S5"
+        "S5",
+        "S6"
       ],
       "title": "Kit fixes: lane merge status and state riders"
     }

@@ -168,4 +168,54 @@ estimate. Left for a future docs card.
 
 ## 5. S7 — review-note application check
 
-(to be filled in)
+Read-only check of every T-005 r2 note (F-1 to F-5, assigned to T-010) and
+T-018 r1 F-2 against the current files. Line numbers are the current worktree's
+(T-010 restructured the report, so the review's old line numbers shifted).
+Unapplied notes are only listed; no file outside this card's files_write was
+edited, and S7 itself edits nothing but this recon file.
+
+### T-005 r2 (reviews/T-005/r2-REVIEW_REPORT.md:129-133)
+
+- **F-1 (MINOR, FIX-DOC): NOT applied.** The S1–S5 table is now §8; its sources
+  comment (`reports/baseline-report.md:589`) names the plan,
+  `data/analysis/stage4/s2-summary.md` and `reports/stage4-run2/caveats.md`. The
+  S4 row (line 600) still cites MTP acceptance 0.771, and
+  `grep -l "0.771" docs/plans/step-0-baseline.md data/analysis/stage4/s2-summary.md
+  reports/stage4-run2/caveats.md` matches none of them; the value lives in
+  `data/analysis/stage3/headline.md:123` and `docs/stage2-summary.md:29`, neither
+  named in §8's sources. The attribution gap survives the restructure in a new
+  shape (the suggested fix was to add headline.md to the table's sources).
+- **F-2 (NOTE, optional): NOT applied.** The restated "0.75 to 1.5 GiB" is now
+  at `reports/baseline-report.md:584`; the derived marker on that line covers
+  only `(90+38)/60` (the 2.1 h figure). The GiB derivation itself is still
+  properly marked at line 181 (`768 MiB = 0.75 GiB … 1,536 MiB = 1.5 GiB`).
+- **F-3 (NOTE, action NONE): no action was required; boundaries unchanged.**
+  `tools/check_doc_numbers.py:29` `NUMBER_RE` still requires a decimal point
+  (integers unchecked), and `source_numbers` (lines 78-88) still matches
+  whole-file, not per-table — exactly the documented limits.
+- **F-4 (NOTE, T-010 scope): applied.** `grep -n "Stage 4 pending\|TODO-T010"
+  reports/baseline-report.md` → no matches; §8's S2 row (line 599) now records
+  Stage 4 run 2 PASS 6 of 6 with the run-2 sources named.
+- **F-5 (NOTE, all three optional): NOT applied (all three).**
+  (a) the stock-128K all-units header (line 370) still reads verbatim
+  "n_clean 5, n_total 5" with no clarifying parenthetical; the section still
+  correctly gives the clean basis (lines 363, 381: n_clean 4).
+  (b) no reconciliation note: `grep -n "server-reported\|reconcil"
+  reports/baseline-report.md` → no matches; probed 9,472/8,704 (lines 167-168)
+  and server-reported 9,471/8,701 (lines 415-427) stand side by side unexplained.
+  (c) line 37's "decode roughly 1.1–1.2×" has no "(point estimates)" addition;
+  the D3 caveat still stands in §5 (line 266).
+
+### T-018 r1 F-2 (reviews/T-018/r1-REVIEW_REPORT.md:28)
+
+- **F-2 (NOTE, FIX-CODE, "a future kit card"): NOT applied (both edges).**
+  (a) `cmd_decision`'s pre-check (`scripts/_wf.py:2202`, comment at 2217)
+  validates status and restore target before writing, but still not lane
+  ownership: run from another lane's worktree it would write docs/decisions.md
+  and mark the escalation decided before `mutate` dies on the foreign-lane
+  check. (b) `cmd_review_verdict` (`scripts/_wf.py:1969`) still sets
+  `blocked_from` unconditionally for a blocked-decision verdict, so a verdict
+  issued directly on an already-blocked task overwrites the existing
+  `blocked_from`. T-022's S2–S4 scope does not cover these paths (the new
+  restore-status keeps the foreign-lane guard for itself, which is not the
+  F-2 fix); listed here for a future kit card.
