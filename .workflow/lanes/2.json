@@ -1,5 +1,5 @@
 {
-  "checksum": "80ef2aa9b77653094dba41410f907428a35d9edbbe76ab7c6e76a20bec2ad672",
+  "checksum": "139323f5e4aa2795916dc6af0a564cc82fde3f5d106e49bf66ea1e117b024585",
   "events": [
     {
       "detail": "lane 2, pid 1807601",
@@ -280,6 +280,20 @@
       "seq": 39,
       "task": "T-011",
       "ts": "2026-11-15T11:13:01Z"
+    },
+    {
+      "detail": "lane 2, pid 475053",
+      "event": "claimed",
+      "seq": 40,
+      "task": "T-022",
+      "ts": "2026-11-15T13:14:32Z"
+    },
+    {
+      "detail": "lane 2",
+      "event": "started",
+      "seq": 41,
+      "task": "T-022",
+      "ts": "2026-11-15T13:14:37Z"
     }
   ],
   "lane": 2,
@@ -369,6 +383,27 @@
         "S4"
       ],
       "title": "Kit repair: leave blocked-decision after a review verdict"
+    },
+    "T-022": {
+      "card_sha256": "de8dc50e3bf89931bbdae6c7eafd3626f5f5c1ba887cb81edf5c5ba0a3fd2029",
+      "claimed_by_lane": 2,
+      "depends_on": [],
+      "files_write": [
+        "scripts/_wf.py",
+        "scripts/wf.sh",
+        "tests/test_wf_lane_merge.py",
+        "docs/runbook-stage3.md",
+        "docs/recon/T-022-start.txt",
+        "docs/recon/T-022-kit-fixes.md"
+      ],
+      "lane": 2,
+      "phase": "P4",
+      "resources": "cpu-heavy",
+      "review": "post",
+      "source": "plan",
+      "status": "in-progress",
+      "steps_done": [],
+      "title": "Kit fixes: lane merge status and state riders"
     }
   },
   "version": 1
