@@ -1,5 +1,5 @@
 {
-  "checksum": "a652831ddddfa9cea8e4a45b9388453c8b1d76143da62eacbc283b690d51e5a7",
+  "checksum": "8ab16c2f14853100ed9a149005e66b3eb34fbe81ce9da4966ca9a68265c52eaf",
   "created_utc": "2026-11-12T22:25:04Z",
   "escalations": {
     "E-001": {
@@ -85,6 +85,12 @@
       "status": "decided",
       "task": "T-011",
       "type": "assumption-mismatch"
+    },
+    "E-013": {
+      "created_utc": "2026-11-15T13:27:45Z",
+      "status": "open",
+      "task": "T-022",
+      "type": "problem"
     }
   },
   "events": [
@@ -2768,6 +2774,20 @@
       "seq": 382,
       "task": "T-012",
       "ts": "2026-11-15T13:12:53Z"
+    },
+    {
+      "detail": "lane 2",
+      "event": "migrated-to-lane",
+      "seq": 383,
+      "task": "T-022",
+      "ts": "2026-11-15T13:14:32Z"
+    },
+    {
+      "detail": "/dev/shm/local-ai-research-machine.lock",
+      "event": "machine-lock-released",
+      "seq": 384,
+      "task": null,
+      "ts": "2026-11-15T13:29:48Z"
     }
   ],
   "kit_version": "0.1.0",
@@ -3421,7 +3441,7 @@
       "resources": "cpu-heavy",
       "review": "post",
       "source": "plan",
-      "status": "ready",
+      "status": "todo",
       "title": "Kit fixes: lane merge status and state riders"
     }
   },

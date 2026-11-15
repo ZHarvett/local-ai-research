@@ -31,15 +31,15 @@ files; change them through the scripts only.
 | T-019 | Stage 4 pre-flight (no GPU) | accepted (judgement) | 1 | post |
 | T-020 | Restore and verify the PCIe Gen4 link (hands-on) | done (judgement) | 1 | none |
 | T-021 | Stage 4 session, run 2 | accepted (judgement) | 1 | post |
-| T-022 | Kit fixes: lane merge status and state riders | ready | 2 | post |
+| T-022 | Kit fixes: lane merge status and state riders | blocked-decision | 2 | post |
 
 ## READY (grouped by lane)
 
-- lane 2: **T-022** Kit fixes: lane merge status and state riders
+_(none)_
 
 ## Escalation queue
 
-_(none)_
+- **E-013** (problem, task T-022) — open
 
 ## Review queue
 
@@ -50,11 +50,12 @@ _(none)_
 | lane | lock | worktree | tasks |
 |---|---|---|---|
 | 1 | - | - | - |
+| 2 | - | yes | T-005, T-011, T-018, T-022 |
 
 ## Last events
 
-- 2026-11-15T12:58:58Z gate-release T-012 — Zack said go
-- 2026-11-15T12:59:44Z resumed T-012 — from S1
-- 2026-11-15T13:09:40Z step-done T-012 — S1
-- 2026-11-15T13:12:23Z step-done T-012 — S2
-- 2026-11-15T13:12:53Z done T-012 — accept run at 2026-11-15T13:12:23Z
+- 2026-11-15T13:14:32Z claimed T-022 — lane 2, pid 475053
+- 2026-11-15T13:14:32Z migrated-to-lane T-022 — lane 2
+- 2026-11-15T13:14:37Z started T-022 — lane 2
+- 2026-11-15T13:27:45Z escalated T-022 — E-013 (problem)
+- 2026-11-15T13:29:48Z machine-lock-released — /dev/shm/local-ai-research-machine.lock
