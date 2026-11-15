@@ -1,0 +1,73 @@
+[
+  {
+    "task": "T-022",
+    "started_utc": "2026-11-15T14:04:42Z",
+    "git_commit": "cf1c7e4162f226f28e4be810650cef045f5275b4",
+    "items": [
+      {
+        "id": "A1",
+        "cmd": "uv run pytest -q tests/test_wf_lane_merge.py tests/test_wf_unblock.py",
+        "exit_code": 0,
+        "output_sha256": "db491dcf47d84065e4367a9ddecc56bd31ee352d91d82766a4428b5069786092",
+        "output_bytes": 99,
+        "elapsed_s": 2.9,
+        "verdict": "pass"
+      },
+      {
+        "id": "A2",
+        "cmd": "shellcheck scripts/wf.sh",
+        "exit_code": 0,
+        "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "output_bytes": 0,
+        "elapsed_s": 0.0,
+        "verdict": "pass"
+      },
+      {
+        "id": "A3",
+        "cmd": "uv run ruff check tests/test_wf_lane_merge.py && uv run ruff format --check tests/test_wf_lane_merge.py",
+        "exit_code": 0,
+        "output_sha256": "ce04ce92b16073000b77c97a42c00b98b96305692d9d5ed4dcfa5a9ca9ea62d6",
+        "output_bytes": 44,
+        "elapsed_s": 0.0,
+        "verdict": "pass"
+      },
+      {
+        "id": "A4",
+        "cmd": "source docs/recon/commands.env && eval \"$CI_CMD\"",
+        "exit_code": 0,
+        "output_sha256": "f629ac841c21d3de864008450c3a81aedf8b47263a5aba56fb192ed4cbcc0603",
+        "output_bytes": 5604,
+        "elapsed_s": 301.7,
+        "verdict": "pass"
+      },
+      {
+        "id": "A5",
+        "cmd": "grep -q 'restore-status' scripts/_wf.py && test -s docs/recon/T-022-kit-fixes.md && test -s docs/recon/T-022-start.txt",
+        "exit_code": 0,
+        "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "output_bytes": 0,
+        "elapsed_s": 0.0,
+        "verdict": "pass"
+      },
+      {
+        "id": "A6",
+        "verdict": "judgement",
+        "description": "Only scripts/_wf.py, scripts/wf.sh, the new test file, one number in the runbook and the two recon files changed by this task's own commits; the fold fix keeps accepted statuses; restore-status refuses everything except the verified done-to-accepted case; every deferral is recorded with a reason; the live state was not touched."
+      }
+    ],
+    "evidence_files": {
+      "docs/recon/T-022-kit-fixes.md": {
+        "exists": true,
+        "sha256": "4e675e27d2edca0d3d0eee8304289e4d791de1795eecb2a097b3f42187a1a6c5",
+        "bytes": 13855
+      },
+      "tests/test_wf_lane_merge.py": {
+        "exists": true,
+        "sha256": "6a15fa3ed5a4fe3c09faf3344593d35b52bae3802ead51a6498309a38ca40761",
+        "bytes": 12643
+      }
+    },
+    "finished_utc": "2026-11-15T14:09:47Z",
+    "failures": 0
+  }
+]
