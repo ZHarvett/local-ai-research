@@ -1,5 +1,5 @@
 {
-  "checksum": "3d840ed38c9dd4b7fa4f8cb315ffecfc3106ea37eaeb82f2457634e150f4f3da",
+  "checksum": "d38f4978b5f0f9ab7a2648f84ea5a53a63ee40bebaf8601c54a3f4b42136ea45",
   "created_utc": "2026-11-12T22:25:04Z",
   "escalations": {
     "E-001": {
@@ -102,7 +102,8 @@
     },
     "E-015": {
       "created_utc": "2026-11-15T15:21:59Z",
-      "status": "open",
+      "decided_utc": "2026-11-15T17:09:33Z",
+      "status": "decided",
       "task": "T-014",
       "type": "decision"
     }
@@ -3362,6 +3363,20 @@
       "seq": 464,
       "task": "T-014",
       "ts": "2026-11-15T15:21:59Z"
+    },
+    {
+      "detail": "restored to in-progress",
+      "event": "unblocked",
+      "seq": 465,
+      "task": "T-014",
+      "ts": "2026-11-15T17:09:33Z"
+    },
+    {
+      "detail": "decision E-015 recorded",
+      "event": "note",
+      "seq": 466,
+      "task": "T-014",
+      "ts": "2026-11-15T17:09:33Z"
     }
   ],
   "kit_version": "0.1.0",
@@ -3829,8 +3844,8 @@
       "title": "Scrub and release checks"
     },
     "T-014": {
-      "blocked_from": "in-progress",
-      "blocked_reason": "escalation E-015",
+      "blocked_from": null,
+      "blocked_reason": null,
       "card_sha256": "dfa079547a2067e2f7e61ac054561af8d0edb17660b1c8d9265df91a75c3600b",
       "claimed_by_lane": 1,
       "depends_on": [
@@ -3847,7 +3862,7 @@
       "resources": "light",
       "review": "none",
       "source": "plan",
-      "status": "blocked-decision",
+      "status": "in-progress",
       "steps_done": [
         "S1",
         "S2"

@@ -23,7 +23,7 @@ files; change them through the scripts only.
 | T-011 | Plan v1.9, upstream drafts, methodology | done ⚠ re-acknowledge | 2 | none |
 | T-012 | README walkthrough from a clean shell | done | 1 | none |
 | T-013 | Scrub and release checks | accepted ⚠ re-acknowledge (judgement) | 1 | post |
-| T-014 | Completion report and planning-chat review | blocked-decision | 1 | none |
+| T-014 | Completion report and planning-chat review | in-progress | 1 | none |
 | T-015 | Private repo, CI and tag v0.1.0 | todo | 1 | none |
 | T-016 | Publish v0.1.0 | todo | 1 | none |
 | T-017 | Unattended loop (wf-loop.sh) | accepted (judgement) | 3 | post |
@@ -39,7 +39,7 @@ _(none)_
 
 ## Escalation queue
 
-- **E-015** (decision, task T-014) — open
+_(none)_
 
 ## Review queue
 
@@ -49,12 +49,12 @@ _(none)_
 
 | lane | lock | worktree | tasks |
 |---|---|---|---|
-| 1 | pid 585671 | - | - |
+| 1 | - | - | - |
 
 ## Last events
 
-- 2026-11-15T15:09:54Z claimed T-014 — lane 1, pid 585671
-- 2026-11-15T15:09:54Z started T-014 — lane 1
 - 2026-11-15T15:13:23Z step-done T-014 — S1
 - 2026-11-15T15:20:57Z step-done T-014 — S2
 - 2026-11-15T15:21:59Z escalated T-014 — E-015 (decision)
+- 2026-11-15T17:09:33Z unblocked T-014 — restored to in-progress
+- 2026-11-15T17:09:33Z note T-014 — decision E-015 recorded
