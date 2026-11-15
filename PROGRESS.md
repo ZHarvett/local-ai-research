@@ -31,7 +31,7 @@ files; change them through the scripts only.
 | T-019 | Stage 4 pre-flight (no GPU) | accepted (judgement) | 1 | post |
 | T-020 | Restore and verify the PCIe Gen4 link (hands-on) | done (judgement) | 1 | none |
 | T-021 | Stage 4 session, run 2 | accepted (judgement) | 1 | post |
-| T-022 | Kit fixes: lane merge status and state riders | in-progress | 2 | post |
+| T-022 | Kit fixes: lane merge status and state riders | done (judgement) | 2 | post |
 
 ## READY (grouped by lane)
 
@@ -54,8 +54,8 @@ _(none)_
 
 ## Last events
 
-- 2026-11-15T13:14:37Z started T-022 — lane 2
-- 2026-11-15T13:27:45Z escalated T-022 — E-013 (problem)
-- 2026-11-15T13:29:48Z machine-lock-released — /dev/shm/local-ai-research-machine.lock
-- 2026-11-15T13:38:03Z unblocked T-022 — restored to in-progress
-- 2026-11-15T13:38:03Z note T-022 — decision E-013 recorded
+- 2026-11-15T13:52:28Z step-done T-022 — S5
+- 2026-11-15T13:54:24Z step-done T-022 — S6
+- 2026-11-15T13:56:52Z step-done T-022 — S7
+- 2026-11-15T14:04:33Z step-done T-022 — S8
+- 2026-11-15T14:10:01Z done T-022 — accept run at 2026-11-15T14:04:42Z
