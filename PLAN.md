@@ -1,5 +1,5 @@
 # Step 0, remaining work: Stage 4, release v0.1.0, completion report
-*Version 1.6 · 14 November 2026*
+*Version 1.7 · 15 November 2026*
 
 ## Shared rules
 
@@ -586,7 +586,7 @@ acceptance:
   - expect: file_exists docs/environment.md
   - cmd: source docs/recon/commands.env && eval "$CI_CMD"
     expect: exit_code 0
-evidence: docs/plans/step-0-baseline.md, docs/upstream/
+evidence: docs/plans/step-0-baseline.md, docs/upstream/llama-cpp-mtp-draft2-repeated-phrase.md, docs/upstream/llama-cpp-28619-comment-draft-state.md, docs/methodology.md
 estimate: 60m
 decision_rights:
   - may: wording of the issue drafts and methodology.md

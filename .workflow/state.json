@@ -1,5 +1,5 @@
 {
-  "checksum": "d0a92c29c4eda12d2db73af6a154381088e1a8d3305c1973c60010d4df332ff4",
+  "checksum": "5cd0244bde10707b23def9d4d21966fc9390dba0d0ba99a4cd83101a3c10e7cb",
   "created_utc": "2026-11-12T22:25:04Z",
   "escalations": {
     "E-001": {
@@ -1906,6 +1906,27 @@
       "seq": 259,
       "task": "T-011",
       "ts": "2026-11-15T09:17:13Z"
+    },
+    {
+      "detail": "card changed; re-acknowledgement required",
+      "event": "plan-changed",
+      "seq": 260,
+      "task": "T-011",
+      "ts": "2026-11-15T10:10:47Z"
+    },
+    {
+      "detail": "sha256 a0b45d964831\u2026",
+      "event": "plan-amended",
+      "seq": 261,
+      "task": null,
+      "ts": "2026-11-15T10:10:47Z"
+    },
+    {
+      "detail": "dependencies satisfied",
+      "event": "ready",
+      "seq": 262,
+      "task": "T-011",
+      "ts": "2026-11-15T10:10:47Z"
     }
   ],
   "kit_version": "0.1.0",
@@ -1917,7 +1938,7 @@
     "P4"
   ],
   "plan_file": "PLAN.md",
-  "plan_sha256": "9cf384e432759b79eccd1d175d1ee5faa61ccaffc7c3a31ff3413669f7346c87",
+  "plan_sha256": "a0b45d9648316b65393d600a80dfacf223471fce8d2ef4119916b9816ab6a41a",
   "review_cycles": {
     "T-005": 2,
     "T-007": 1,
@@ -2295,7 +2316,7 @@
       "title": "Final README, report, write-up and changelog"
     },
     "T-011": {
-      "card_sha256": "4454048de0535e56b8cdd3d725d6f0969a0e1c413c5ede31a3e75a66eba94f71",
+      "card_sha256": "55905e9f6b7a414efed543bd9d5e5c1125687cdae68a6daaee669cff7bac70ef",
       "depends_on": [
         "T-008",
         "T-009"
@@ -2308,10 +2329,11 @@
       ],
       "lane": 2,
       "phase": "P4",
+      "plan_changed": true,
       "resources": "light",
       "review": "none",
       "source": "plan",
-      "status": "todo",
+      "status": "ready",
       "title": "Plan v1.9, upstream drafts, methodology"
     },
     "T-012": {
