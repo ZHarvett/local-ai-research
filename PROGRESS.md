@@ -21,7 +21,7 @@ files; change them through the scripts only.
 | T-009 | Post-Stage-4 code fixes | done ⚠ re-acknowledge | 1 | none |
 | T-010 | Final README, report, write-up and changelog | accepted ⚠ re-acknowledge (judgement) | 1 | post |
 | T-011 | Plan v1.9, upstream drafts, methodology | done ⚠ re-acknowledge | 2 | none |
-| T-012 | README walkthrough from a clean shell | in-progress | 1 | none |
+| T-012 | README walkthrough from a clean shell | done | 1 | none |
 | T-013 | Scrub and release checks | todo ⚠ re-acknowledge | 1 | post |
 | T-014 | Completion report and planning-chat review | todo | 1 | none |
 | T-015 | Private repo, CI and tag v0.1.0 | todo | 1 | none |
@@ -49,12 +49,12 @@ _(none)_
 
 | lane | lock | worktree | tasks |
 |---|---|---|---|
-| 1 | pid 466967 | - | - |
+| 1 | - | - | - |
 
 ## Last events
 
-- 2026-11-15T12:06:29Z claimed T-012 — lane 1, pid 466967
-- 2026-11-15T12:06:29Z started T-012 — lane 1
-- 2026-11-15T12:10:54Z gate-wait T-012 — The GPU is needed for about 15 minutes. Make sure no game or other GPU job is running; the machine doesn't need to be quiet. Reply go.
-- 2026-11-15T12:58:58Z machine-lock-released — /dev/shm/local-ai-research-machine.lock
 - 2026-11-15T12:58:58Z gate-release T-012 — Zack said go
+- 2026-11-15T12:59:44Z resumed T-012 — from S1
+- 2026-11-15T13:09:40Z step-done T-012 — S1
+- 2026-11-15T13:12:23Z step-done T-012 — S2
+- 2026-11-15T13:12:53Z done T-012 — accept run at 2026-11-15T13:12:23Z

@@ -1,5 +1,5 @@
 {
-  "checksum": "f8bb3d31f0f7a7e0ec3cf6d61aa9aa5d8664d194e4dbd1804196c4f8441a578a",
+  "checksum": "a652831ddddfa9cea8e4a45b9388453c8b1d76143da62eacbc283b690d51e5a7",
   "created_utc": "2026-11-12T22:25:04Z",
   "escalations": {
     "E-001": {
@@ -2740,6 +2740,34 @@
       "seq": 378,
       "task": "T-012",
       "ts": "2026-11-15T12:58:58Z"
+    },
+    {
+      "detail": "from S1",
+      "event": "resumed",
+      "seq": 379,
+      "task": "T-012",
+      "ts": "2026-11-15T12:59:44Z"
+    },
+    {
+      "detail": "S1",
+      "event": "step-done",
+      "seq": 380,
+      "task": "T-012",
+      "ts": "2026-11-15T13:09:40Z"
+    },
+    {
+      "detail": "S2",
+      "event": "step-done",
+      "seq": 381,
+      "task": "T-012",
+      "ts": "2026-11-15T13:12:23Z"
+    },
+    {
+      "detail": "accept run at 2026-11-15T13:12:23Z",
+      "event": "done",
+      "seq": 382,
+      "task": "T-012",
+      "ts": "2026-11-15T13:12:53Z"
     }
   ],
   "kit_version": "0.1.0",
@@ -3166,8 +3194,11 @@
       "resources": "gpu",
       "review": "none",
       "source": "plan",
-      "status": "in-progress",
-      "steps_done": [],
+      "status": "done",
+      "steps_done": [
+        "S1",
+        "S2"
+      ],
       "title": "README walkthrough from a clean shell"
     },
     "T-013": {
