@@ -144,5 +144,84 @@
     },
     "finished_utc": "2026-11-15T10:25:47Z",
     "failures": 0
+  },
+  {
+    "task": "T-011",
+    "started_utc": "2026-11-15T11:07:37Z",
+    "git_commit": "218f0163900a544f69fe3c7007400b64e8fcd94e",
+    "items": [
+      {
+        "id": "A1",
+        "cmd": "grep -q '^\\*Version 1\\.9 \u00b7 ' docs/plans/step-0-baseline.md && grep -qE '^\\| 1\\.9 \\|' docs/plans/step-0-baseline.md",
+        "exit_code": 0,
+        "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "output_bytes": 0,
+        "elapsed_s": 0.0,
+        "verdict": "pass"
+      },
+      {
+        "id": "A2",
+        "cmd": "grep -qF 'Stage 3 outcome (12 November, quiet machine)' docs/plans/step-0-baseline.md && grep -qF 'Rules declared on 12 November 2026' docs/plans/step-0-baseline.md && grep -qF '\u00a712.1\u201312.3 are superseded' docs/plans/step-0-baseline.md && grep -qF 'Stock pages at 32K too' docs/plans/step-0-baseline.md",
+        "exit_code": 0,
+        "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "output_bytes": 0,
+        "elapsed_s": 0.0,
+        "verdict": "pass"
+      },
+      {
+        "id": "A3",
+        "cmd": "test \"$(ls docs/upstream/*.md | wc -l)\" -ge 2",
+        "exit_code": 0,
+        "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "output_bytes": 0,
+        "elapsed_s": 0.0,
+        "verdict": "pass"
+      },
+      {
+        "id": "A4",
+        "verdict": "pass",
+        "path": "/mnt/data/local-ai-research/.workflow/worktrees/lane-2/docs/methodology.md",
+        "sha256": "677eaa0a3864a61fb6751376a6785d0ed636195c171c63c1a76356cb768599af"
+      },
+      {
+        "id": "A5",
+        "verdict": "pass",
+        "path": "/mnt/data/local-ai-research/.workflow/worktrees/lane-2/docs/environment.md",
+        "sha256": "51d4e9cf7fc1da449d9a7950e85d209d4787585488c70bee607b83ed941176d7"
+      },
+      {
+        "id": "A6",
+        "cmd": "source docs/recon/commands.env && eval \"$CI_CMD\"",
+        "exit_code": 0,
+        "output_sha256": "1699b55663b98bce1765c3b55ecb2df63be2a115988d27408b76c5fb4e89cff1",
+        "output_bytes": 6891,
+        "elapsed_s": 315.1,
+        "verdict": "pass"
+      }
+    ],
+    "evidence_files": {
+      "docs/plans/step-0-baseline.md": {
+        "exists": true,
+        "sha256": "f32b09319e42fe40434176e916a2b3418d01d85735f95bee505435c858351739",
+        "bytes": 80348
+      },
+      "docs/upstream/llama-cpp-mtp-draft2-repeated-phrase.md": {
+        "exists": true,
+        "sha256": "ae0947cc0a3496f01684c8a42681a0a55242bb0d8353d6090c0cb4ba12234c7f",
+        "bytes": 7461
+      },
+      "docs/upstream/llama-cpp-28619-comment-draft-state.md": {
+        "exists": true,
+        "sha256": "ca6383d513cb283b6deb9da585969a68520a6020791b2bd98ec2a6a28e40dc65",
+        "bytes": 4423
+      },
+      "docs/methodology.md": {
+        "exists": true,
+        "sha256": "677eaa0a3864a61fb6751376a6785d0ed636195c171c63c1a76356cb768599af",
+        "bytes": 13242
+      }
+    },
+    "finished_utc": "2026-11-15T11:12:52Z",
+    "failures": 0
   }
 ]
