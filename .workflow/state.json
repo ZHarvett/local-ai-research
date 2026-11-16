@@ -1,5 +1,5 @@
 {
-  "checksum": "5d71a62d148a5091ba9ff7d7358e1b9f7b3f1ca8415e00e2a61e83f94ccb4cc9",
+  "checksum": "e221c17be87a799c7968a6410c5df5093f66f0d3d7352b359cd6b62cfe2b743b",
   "created_utc": "2026-11-12T22:25:04Z",
   "escalations": {
     "E-001": {
@@ -3552,6 +3552,27 @@
       "seq": 490,
       "task": "T-016",
       "ts": "2026-11-16T19:28:18Z"
+    },
+    {
+      "detail": "Zack said go",
+      "event": "gate-release",
+      "seq": 491,
+      "task": "T-016",
+      "ts": "2026-11-16T19:46:11Z"
+    },
+    {
+      "detail": "from S1",
+      "event": "resumed",
+      "seq": 492,
+      "task": "T-016",
+      "ts": "2026-11-16T19:47:08Z"
+    },
+    {
+      "detail": "S1",
+      "event": "step-done",
+      "seq": 493,
+      "task": "T-016",
+      "ts": "2026-11-16T19:49:49Z"
     }
   ],
   "kit_version": "0.1.0",
@@ -4090,8 +4111,10 @@
       "resources": "light",
       "review": "none",
       "source": "plan",
-      "status": "awaiting-gate",
-      "steps_done": [],
+      "status": "in-progress",
+      "steps_done": [
+        "S1"
+      ],
       "title": "Publish v0.1.0"
     },
     "T-017": {

@@ -2,12 +2,12 @@
 
 <!-- sources: reports/baseline-report.md, reports/writeup.md, data/analysis/stage3/headline.md, data/analysis/stage4/s2-summary.md, docs/decisions.md, docs/plans/step-0-baseline.md, docs/progress-log.md, README.md, CHANGELOG.md, configs/harness.toml, configs/model.toml, data/env/build-info.json, data/health/endpoints-2026-11-08.json, docs/recon/scrub-report.md -->
 
-> **For the executive (planning) chat.** Step 0 (baseline setup) is complete except the release
-> itself: criteria S1–S4 hold with recorded deviations; S5 (tag v0.1.0 and publish) is pending
-> T-015/T-016. Full tables, provenance hashes and per-depth figures: `reports/baseline-report.md`;
+> **For the executive (planning) chat.** Step 0 (baseline setup) is complete: criteria S1–S5
+> hold with recorded deviations; tag v0.1.0 and the public release were published 2026-11-16
+> (T-015/T-016). Full tables, provenance hashes and per-depth figures: `reports/baseline-report.md`;
 > narrative: `reports/writeup.md`. Every decimal number here is copied from a named repo file
 > (the `sources:` line) or marked `derived:`; `tools/check_doc_numbers.py` verifies this.
-> Date: 2026-11-15. Plan: `docs/plans/step-0-baseline.md` v1.9.
+> Date: 2026-11-15; §7 statuses updated 2026-11-16 by T-016. Plan: `docs/plans/step-0-baseline.md` v1.9.
 
 ## 1. What was built
 
@@ -177,11 +177,11 @@ lowest. Stage 3 took about 2.1 hours; Stage 4 run 2 took 26.1 minutes plus a 9.2
 
 | # | item | status | evidence |
 |---|---|---|---|
-| 1 | v0.1.0 tagged + CHANGELOG entry | **pending T-015** (entry exists) | `CHANGELOG.md` v0.1.0 entry (T-010); tag not yet created |
+| 1 | v0.1.0 tagged + CHANGELOG entry | done (T-015) | `CHANGELOG.md` v0.1.0 entry (T-010); annotated tag v0.1.0 on `6c83c15` pushed to origin (T-015 S4); T-016 precheck `git ls-remote origin refs/tags/v0.1.0` PASS |
 | 2 | README coverage (5 bullets) | done | `README.md` (T-010); T-010 review A4 checked all five §9 bullets |
 | 3 | stock+tuned configs 32K/64K/128K + launch script | done | `configs/server/` six files; T-012 launched all six from a clean shell |
 | 4 | sweep/analysis scripts documented, parameterised | done | README rerun guide, `configs/sweeps/` TOML specs, `docs/methodology.md` |
-| 5 | unit tests local + CI green on GitHub | local done; **GitHub CI pending T-015** | T-009: `pytest -m "not gpu"` 1070 passed, 2 deselected; CI_CMD green 5×; no remote yet |
+| 5 | unit tests local + CI green on GitHub | done (T-015/T-016) | T-009: `pytest -m "not gpu"` 1070 passed, 2 deselected; CI_CMD green 5× locally; GitHub CI run 43937943935 on tag commit `6c83c15` success (T-015); newest main run 43939214824 on `10d0767` success (T-016 S1, `gh run list`, 2026-11-16) |
 | 6 | raw JSONL, env snapshots, microbenchmarks, health, report with CIs, exact commands | done | `data/raw/` (Stages 1–4, run 1 superseded kept), `data/env/`, `data/health/`, `reports/baseline-report.md`, `docs/recon/commands.env` |
 | 7 | provenance (tag, commit, flags; model repo/revision/SHA-256; harness versions) | done | `data/env/build-info.json`, `configs/model.toml`, `configs/harness.toml`; baseline report §2 |
 | 8 | data scrubbed; prompts as recipes only | done | T-013: `scripts/release-check.sh` exit 0 — 0 findings; history: 4 allowlisted pairs (§3, D8/E-014); `docs/recon/scrub-report.md` |
@@ -198,7 +198,7 @@ lowest. Stage 3 took about 2.1 hours; Stage 4 run 2 took 26.1 minutes plus a 9.2
 | S2 Reproducibility | met | 6/6 rows PASS on run 2 (`data/analysis/stage4/s2-summary.md`); clean-shell walkthrough 6/6 PASS, all 45 link samples "4, 8" (`data/health/readme-walkthrough.log`, T-012) |
 | S3 Decisions | met | six configs, tuned chosen by the §3.3 rule; each launches via `scripts/launch-server.sh` |
 | S4 Health checks | met, deviations recorded | (a) tensor screen: no known broken-head signature (`data/health/model-check.json`); acceptance 0.771 ≥ 0.5 on the code workload (Stage 2a), WP5 greedy 0.886 <!-- derived: 0.8855507868383404 rounded to 3 decimals, data/health/endpoints-2026-11-08.json -->; (b) Appendix B endpoints work (`data/health/endpoints-2026-11-08.json`); (c) greedy MTP on/off divergences all near-tie (top-2 gap < 0.5 nats, same file); (d) env snapshot + warm-up every run; the 128K headline's flagged window is the declared D1/S4(d) deviation, labelled, clean figures beside it; (e) both smoke tasks PASS (WP7, `data/harness/`) |
-| S5 Release | **pending T-015/T-016** | checklist above; scrub and release checks already pass (T-013) |
+| S5 Release | met (T-015/T-016) | repo PUBLIC and release v0.1.0 "v0.1.0: Step 0 baseline" published 2026-11-16T19:32:44Z, not draft (`gh repo view` / `gh release view`, T-016 S1; Zack ran the two publish commands at the gate); checklist rows 1 and 5 done; scrub and release checks pass (T-013) |
 
 ## 8. Upstream re-check (read-only, 2026-11-15)
 
