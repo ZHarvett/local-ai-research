@@ -1,5 +1,5 @@
 {
-  "checksum": "7824fdb58077d006833285423cc6a013d244204eda0271d47e2bd297ee677938",
+  "checksum": "f92f35fe38eee67f3db4bbde6240fccc794083c3c383a79a9c53f3c4c20ef948",
   "created_utc": "2026-11-12T22:25:04Z",
   "escalations": {
     "E-001": {
@@ -3426,6 +3426,13 @@
       "seq": 473,
       "task": "T-015",
       "ts": "2026-11-16T17:20:04Z"
+    },
+    {
+      "detail": "gh is already logged in as ZHarvett (HTTPS, scopes repo+workflow). Your 'go' confirms that Claude Code may create the PRIVATE repo ZHarvett/local-ai-research, push main (HEAD 5caf7c4), and later push annotated tag v0.1.0. Reply 'go' to proceed (or run: bash scripts/wf.sh gate-release T-015).",
+      "event": "gate-wait",
+      "seq": 474,
+      "task": "T-015",
+      "ts": "2026-11-16T17:20:19Z"
     }
   ],
   "kit_version": "0.1.0",
@@ -3930,12 +3937,13 @@
         "reports/release-notes-v0.1.0.md",
         "docs/progress-log.md"
       ],
+      "gate_message": "gh is already logged in as ZHarvett (HTTPS, scopes repo+workflow). Your 'go' confirms that Claude Code may create the PRIVATE repo ZHarvett/local-ai-research, push main (HEAD 5caf7c4), and later push annotated tag v0.1.0. Reply 'go' to proceed (or run: bash scripts/wf.sh gate-release T-015).",
       "lane": 1,
       "phase": "P4",
       "resources": "light",
       "review": "none",
       "source": "plan",
-      "status": "in-progress",
+      "status": "awaiting-gate",
       "steps_done": [
         "S1"
       ],

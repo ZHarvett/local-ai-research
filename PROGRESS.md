@@ -24,7 +24,7 @@ files; change them through the scripts only.
 | T-012 | README walkthrough from a clean shell | done | 1 | none |
 | T-013 | Scrub and release checks | accepted ⚠ re-acknowledge (judgement) | 1 | post |
 | T-014 | Completion report and planning-chat review | done | 1 | none |
-| T-015 | Private repo, CI and tag v0.1.0 | in-progress | 1 | none |
+| T-015 | Private repo, CI and tag v0.1.0 | awaiting-gate | 1 | none |
 | T-016 | Publish v0.1.0 | todo | 1 | none |
 | T-017 | Unattended loop (wf-loop.sh) | accepted (judgement) | 3 | post |
 | T-018 | Kit repair: leave blocked-decision after a review verdict | accepted (judgement) | 2 | post |
@@ -53,8 +53,8 @@ _(none)_
 
 ## Last events
 
-- 2026-11-15T17:12:53Z done T-014 — accept run at 2026-11-15T17:12:35Z
 - 2026-11-15T17:12:53Z ready T-015 — dependencies satisfied
 - 2026-11-16T17:11:12Z claimed T-015 — lane 1, pid 56020
 - 2026-11-16T17:11:12Z started T-015 — lane 1
 - 2026-11-16T17:20:04Z step-done T-015 — S1
+- 2026-11-16T17:20:19Z gate-wait T-015 — gh is already logged in as ZHarvett (HTTPS, scopes repo+workflow). Your 'go' confirms that Claude Code may create the PRIVATE repo ZHarvett/local-ai-research, push main (HEAD 5caf7c4), and later push annotated tag v0.1.0. Reply 'go' to proceed (or run: bash scripts/wf.sh gate-release T-015).
