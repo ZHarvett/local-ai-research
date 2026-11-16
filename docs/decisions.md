@@ -1395,3 +1395,22 @@ Rule: A report that goes into a release gets its status wording checked against 
 
 - H1 (human-directed, Zack, 2026-11-16): history rewritten once before the first push to remove Co-Authored-By trailers naming Claude; D8 otherwise stands; mapping in docs/provenance/commit-map.txt; trees verified identical.
 - H2 (human-directed, Zack, 2026-11-16, per E-016): two environment-dependent tests made CI-safe in tests/test_report.py and tests/test_sandbox.py; no src, configs or scripts change.
+
+---
+
+## DECISION E-016 (2026-11-16T19:04:26Z)
+
+DECISION E-016
+Chosen option: A, modified. No new card and no plan change. The fix is a human-directed commit (H2) made by Zack's Claude Code session before this decision is recorded, and then T-015 resumes. Options B (CI-only deselect) and C (tag despite red CI) are rejected.
+Reason: The diagnosis in the brief is sound. All three failures are the tests' own environment assumptions on the GitHub runner, not product bugs. Option B would permanently blind CI to these checks and C contradicts acceptance A3. A new card needs a plan import, and the amend path is known to reset finished tasks; a human-directed commit (as for H1 and the baseline-report edit) avoids that. The guard may also flag a test edit made inside T-015, whose files_write names no tests.
+Scope:
+1. Before this decision is recorded, Zack's Claude Code session edits ONLY tests/test_report.py and tests/test_sandbox.py, as a rule 2 exception limited to those two files:
+   a. tests/test_report.py::test_report_and_new_files_contain_no_username_hostname_or_home_path: keep Identity.current() everywhere. Do NOT switch to a synthetic identity (that would stop the test from guarding the real account name). Wrap only the committed-source scan in a plain `if os.environ.get("GITHUB_ACTIONS") != "true":` block, with a comment: on the runner the account name is the ordinary word "runner", which appears legitimately in the code, and the real-name check is done by scripts/release-check.sh on the author's machine. The generated-report assertions stay active on CI. Use a conditional block, not pytest.skip, so the test still passes and reports its earlier assertions.
+   b. tests/test_sandbox.py: add a skip condition to ONLY test_environment_is_not_inherited_and_home_is_hidden and test_repo_is_read_only_but_state_and_rw_paths_are_writable: skip when the repo path is under /home, reason "repo under /home: state binds punch through the /home tmpfs". Skip, do not adapt the assertions.
+   c. No change to src/, configs/, scripts/ (including _sandbox.sh), .github/workflows/ci.yml, pyproject.toml, uv.lock or any other test. The telemetry warning (src/smallpc/telemetry.py:333) is left alone.
+   d. Before committing: show that test (a) fails with LOGNAME=runner USER=runner and no GITHUB_ACTIONS (31 findings) and passes with GITHUB_ACTIONS=true; show the full CI_CMD green on the measurement machine; run scripts/release-check.sh. If the sandbox skip cannot be checked from a clone under /home because of the permission wall, state that, and do not work around it.
+   e. Commit message: "tests: make environment-dependent tests CI-safe (H2, E-016)". No trailers or mention of Claude. Append one line to docs/decisions.md: "- H2 (human-directed, Zack, 2026-11-16, per E-016): two environment-dependent tests made CI-safe in tests/test_report.py and tests/test_sandbox.py; no src, configs or scripts change."
+2. After recording, T-015 resumes. As an exception to S3's no-fixes wording, push main once with plain `git push origin main` (no force). This also carries the earlier bookkeeping commits. Then S3: wait for CI on the pushed HEAD. S4: if green, tag that HEAD v0.1.0 and push the tag. S5: progress-log entry naming E-016, the H2 commit hash and the CI run URL, then push. Acceptance A1 to A4 are unchanged.
+3. If CI is red again, escalate with the failing test names and log excerpts. No further fixes are authorised under this decision.
+4. Recorded, not fixed in Step 0: the telemetry thread warning and the fact that CI does not exercise the two /home-assuming sandbox tests (they run locally). Both go to the kit-riders / Step 1 notes.
+Rule: A CI failure that comes from the runner's environment is fixed in the test's assumptions, never by weakening CI or the release criteria. A test that guards a real identity keeps using the real identity where it exists.

@@ -1,5 +1,5 @@
 {
-  "checksum": "4a65a25cd2035fa1e0f1e6f85c74b0d71f2bfc1b49539d925014d270a1962758",
+  "checksum": "0a0dbd94cc7475723d7ea806839bda9fc5b4f20701e4cb1e9bdcdbbb24b78d84",
   "created_utc": "2026-11-12T22:25:04Z",
   "escalations": {
     "E-001": {
@@ -109,7 +109,8 @@
     },
     "E-016": {
       "created_utc": "2026-11-16T18:20:18Z",
-      "status": "open",
+      "decided_utc": "2026-11-16T19:04:26Z",
+      "status": "decided",
       "task": "T-015",
       "type": "decision"
     }
@@ -3467,6 +3468,20 @@
       "seq": 478,
       "task": "T-015",
       "ts": "2026-11-16T18:20:18Z"
+    },
+    {
+      "detail": "restored to in-progress",
+      "event": "unblocked",
+      "seq": 479,
+      "task": "T-015",
+      "ts": "2026-11-16T19:04:26Z"
+    },
+    {
+      "detail": "decision E-016 recorded",
+      "event": "note",
+      "seq": 480,
+      "task": "T-015",
+      "ts": "2026-11-16T19:04:26Z"
     }
   ],
   "kit_version": "0.1.0",
@@ -3962,8 +3977,8 @@
       "title": "Completion report and planning-chat review"
     },
     "T-015": {
-      "blocked_from": "in-progress",
-      "blocked_reason": "escalation E-016",
+      "blocked_from": null,
+      "blocked_reason": null,
       "card_sha256": "31059113fc56b81055bbe16def0a1f4fc07d92ee1e18278f66a2c9805163a249",
       "claimed_by_lane": 1,
       "depends_on": [
@@ -3979,7 +3994,7 @@
       "resources": "light",
       "review": "none",
       "source": "plan",
-      "status": "blocked-decision",
+      "status": "in-progress",
       "steps_done": [
         "S1",
         "S2"
