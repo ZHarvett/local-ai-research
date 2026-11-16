@@ -1,5 +1,5 @@
 {
-  "checksum": "e221c17be87a799c7968a6410c5df5093f66f0d3d7352b359cd6b62cfe2b743b",
+  "checksum": "1734d1ac0dfd20b06cedc4270150acadaa2d78910858486c41923d914cdad6d9",
   "created_utc": "2026-11-12T22:25:04Z",
   "escalations": {
     "E-001": {
@@ -3573,6 +3573,20 @@
       "seq": 493,
       "task": "T-016",
       "ts": "2026-11-16T19:49:49Z"
+    },
+    {
+      "detail": "S2",
+      "event": "step-done",
+      "seq": 494,
+      "task": "T-016",
+      "ts": "2026-11-16T19:52:21Z"
+    },
+    {
+      "detail": "accept run at 2026-11-16T19:52:12Z",
+      "event": "done",
+      "seq": 495,
+      "task": "T-016",
+      "ts": "2026-11-16T19:52:21Z"
     }
   ],
   "kit_version": "0.1.0",
@@ -4111,9 +4125,10 @@
       "resources": "light",
       "review": "none",
       "source": "plan",
-      "status": "in-progress",
+      "status": "done",
       "steps_done": [
-        "S1"
+        "S1",
+        "S2"
       ],
       "title": "Publish v0.1.0"
     },

@@ -1,0 +1,45 @@
+[
+  {
+    "task": "T-016",
+    "started_utc": "2026-11-16T19:52:12Z",
+    "git_commit": "6bc1ee4cc4e12fa04ccd4640be06dd8ee3bdd300",
+    "items": [
+      {
+        "id": "A1",
+        "cmd": "gh repo view ZHarvett/local-ai-research --json visibility -q .visibility",
+        "exit_code": 0,
+        "output_sha256": "8527237af6b385af12588efa04d55fc5b8ef313c54dabaf7493970bd5e6745fa",
+        "output_bytes": 7,
+        "elapsed_s": 0.5,
+        "verdict": "pass"
+      },
+      {
+        "id": "A2",
+        "cmd": "gh release view v0.1.0 --repo ZHarvett/local-ai-research --json tagName -q .tagName",
+        "exit_code": 0,
+        "output_sha256": "d0b4f9120ba026c00fa23cb84b4e1620a2e6436592e58155a5151653179572c0",
+        "output_bytes": 7,
+        "elapsed_s": 1.0,
+        "verdict": "pass"
+      },
+      {
+        "id": "A3",
+        "cmd": "grep -q 'Step 0 complete' docs/progress-log.md && test -z \"$(git status --porcelain -- docs)\"",
+        "exit_code": 0,
+        "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "output_bytes": 0,
+        "elapsed_s": 0.0,
+        "verdict": "pass"
+      }
+    ],
+    "evidence_files": {
+      "docs/step-0-completion-report.md": {
+        "exists": true,
+        "sha256": "78b46256c2ef1d88e14f8e2f1e56edaa2fcabd3fe802ba67b3963011abd41ae3",
+        "bytes": 19812
+      }
+    },
+    "finished_utc": "2026-11-16T19:52:13Z",
+    "failures": 0
+  }
+]

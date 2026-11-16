@@ -4,7 +4,7 @@ Rendered by `wf-progress.sh render` from `.workflow/state.json` and the lane
 files; change them through the scripts only.
 
 **Plan:** Step 0, remaining work: Stage 4, release v0.1.0, completion report  
-**Phase:** P4
+**Phase:** -
 
 ## Tasks
 
@@ -25,7 +25,7 @@ files; change them through the scripts only.
 | T-013 | Scrub and release checks | accepted ⚠ re-acknowledge (judgement) | 1 | post |
 | T-014 | Completion report and planning-chat review | done | 1 | none |
 | T-015 | Private repo, CI and tag v0.1.0 | done | 1 | none |
-| T-016 | Publish v0.1.0 | in-progress | 1 | none |
+| T-016 | Publish v0.1.0 | done | 1 | none |
 | T-017 | Unattended loop (wf-loop.sh) | accepted (judgement) | 3 | post |
 | T-018 | Kit repair: leave blocked-decision after a review verdict | accepted (judgement) | 2 | post |
 | T-019 | Stage 4 pre-flight (no GPU) | accepted (judgement) | 1 | post |
@@ -49,12 +49,12 @@ _(none)_
 
 | lane | lock | worktree | tasks |
 |---|---|---|---|
-| 1 | pid 124518 | - | - |
+| 1 | - | - | - |
 
 ## Last events
 
-- 2026-11-16T19:27:47Z started T-016 — lane 1
-- 2026-11-16T19:28:18Z gate-wait T-016 — Publish v0.1.0. Zack must run (or do both on github.com): gh repo edit ZHarvett/local-ai-research --visibility public --accept-visibility-change-consequences ; gh release create v0.1.0 --repo ZHarvett/local-ai-research --title "v0.1.0: Step 0 baseline" --notes-file reports/release-notes-v0.1.0.md . Optionally file the drafts in docs/upstream/ now. Then reply go.
 - 2026-11-16T19:46:11Z gate-release T-016 — Zack said go
 - 2026-11-16T19:47:08Z resumed T-016 — from S1
 - 2026-11-16T19:49:49Z step-done T-016 — S1
+- 2026-11-16T19:52:21Z step-done T-016 — S2
+- 2026-11-16T19:52:21Z done T-016 — accept run at 2026-11-16T19:52:12Z
