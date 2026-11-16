@@ -33,9 +33,9 @@ fi
 # committer name/email, full message) is scanned via the custom format.
 # Binary files show no content, matching the scrub module's binary skip.
 # The allowlist is by commit and path, never by the matched string (D8):
-#   26faadd  WP0 occurrence in docs/decisions.md (D8)
-#   dfcd7d9  removal side of the WP0 occurrence, same path (D8; E-014 option A)
-#   3f41e18, bc8e0c3  docs/recon/loop-states.md introduction and fix
+#   174edac  WP0 occurrence in docs/decisions.md (D8)
+#   326f866  removal side of the WP0 occurrence, same path (D8; E-014 option A)
+#   88854e0, 40e8669  docs/recon/loop-states.md introduction and fix
 #   (E-006 rule 4 follow-up, recorded in docs/decisions.md)
 if hist_out="$(uv run python - <<'PY'
 import re
@@ -45,11 +45,11 @@ import sys
 from smallpc.scrub import Identity, _patterns
 
 ALLOW = {
-    ("26faaddf78f2eec45341ec11c88d2299fa3b76c1", "docs/decisions.md"),
+    ("174edac7563f2bd3e950a514640ca71ee466f28f", "docs/decisions.md"),
     # removal side of the WP0 occurrence (D8; DECISION E-014 option A)
-    ("dfcd7d91a2961f3e0c0562d7dd21259dc218e4d2", "docs/decisions.md"),
-    ("3f41e1829042bac27abcbd6daf385c79f05ddddc", "docs/recon/loop-states.md"),
-    ("bc8e0c343a08ace4f180ca966cddd08def59d134", "docs/recon/loop-states.md"),
+    ("326f866c78f5b47ff796fefc96626c6e4931d92f", "docs/decisions.md"),
+    ("88854e03aca554759ae66a32a8b5d7493d85c95f", "docs/recon/loop-states.md"),
+    ("40e8669d5f3babf2f5386b310966c01f92109fba", "docs/recon/loop-states.md"),
 }
 
 pats = _patterns(Identity.current())
