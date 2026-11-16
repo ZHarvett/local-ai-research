@@ -53,8 +53,8 @@ _(none)_
 
 ## Last events
 
-- 2026-11-16T18:05:11Z resumed T-015 — from S2
 - 2026-11-16T18:07:07Z step-done T-015 — S2
 - 2026-11-16T18:20:18Z escalated T-015 — E-016 (decision)
 - 2026-11-16T19:04:26Z unblocked T-015 — restored to in-progress
 - 2026-11-16T19:04:26Z note T-015 — decision E-016 recorded
+- 2026-11-16T19:06:45Z resumed T-015 — from S3
