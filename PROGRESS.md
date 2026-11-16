@@ -25,7 +25,7 @@ files; change them through the scripts only.
 | T-013 | Scrub and release checks | accepted ⚠ re-acknowledge (judgement) | 1 | post |
 | T-014 | Completion report and planning-chat review | done | 1 | none |
 | T-015 | Private repo, CI and tag v0.1.0 | done | 1 | none |
-| T-016 | Publish v0.1.0 | ready | 1 | none |
+| T-016 | Publish v0.1.0 | awaiting-gate | 1 | none |
 | T-017 | Unattended loop (wf-loop.sh) | accepted (judgement) | 3 | post |
 | T-018 | Kit repair: leave blocked-decision after a review verdict | accepted (judgement) | 2 | post |
 | T-019 | Stage 4 pre-flight (no GPU) | accepted (judgement) | 1 | post |
@@ -35,7 +35,7 @@ files; change them through the scripts only.
 
 ## READY (grouped by lane)
 
-- lane 1: **T-016** Publish v0.1.0
+_(none)_
 
 ## Escalation queue
 
@@ -49,12 +49,12 @@ _(none)_
 
 | lane | lock | worktree | tasks |
 |---|---|---|---|
-| 1 | - | - | - |
+| 1 | pid 124518 | - | - |
 
 ## Last events
 
-- 2026-11-16T19:18:14Z step-done T-015 — S3
-- 2026-11-16T19:18:30Z step-done T-015 — S4
-- 2026-11-16T19:22:54Z step-done T-015 — S5
 - 2026-11-16T19:25:26Z done T-015 — accept run at 2026-11-16T19:24:29Z
 - 2026-11-16T19:25:26Z ready T-016 — dependencies satisfied
+- 2026-11-16T19:27:47Z claimed T-016 — lane 1, pid 124518
+- 2026-11-16T19:27:47Z started T-016 — lane 1
+- 2026-11-16T19:28:18Z gate-wait T-016 — Publish v0.1.0. Zack must run (or do both on github.com): gh repo edit ZHarvett/local-ai-research --visibility public --accept-visibility-change-consequences ; gh release create v0.1.0 --repo ZHarvett/local-ai-research --title "v0.1.0: Step 0 baseline" --notes-file reports/release-notes-v0.1.0.md . Optionally file the drafts in docs/upstream/ now. Then reply go.

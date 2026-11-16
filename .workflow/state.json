@@ -1,5 +1,5 @@
 {
-  "checksum": "18fee66184676d571de2ba48c2a0eef37597e7b2cc127b7155f8b191a24ae580",
+  "checksum": "5d71a62d148a5091ba9ff7d7358e1b9f7b3f1ca8415e00e2a61e83f94ccb4cc9",
   "created_utc": "2026-11-12T22:25:04Z",
   "escalations": {
     "E-001": {
@@ -3531,6 +3531,27 @@
       "seq": 487,
       "task": "T-016",
       "ts": "2026-11-16T19:25:26Z"
+    },
+    {
+      "detail": "lane 1, pid 124518",
+      "event": "claimed",
+      "seq": 488,
+      "task": "T-016",
+      "ts": "2026-11-16T19:27:47Z"
+    },
+    {
+      "detail": "lane 1",
+      "event": "started",
+      "seq": 489,
+      "task": "T-016",
+      "ts": "2026-11-16T19:27:47Z"
+    },
+    {
+      "detail": "Publish v0.1.0. Zack must run (or do both on github.com): gh repo edit ZHarvett/local-ai-research --visibility public --accept-visibility-change-consequences ; gh release create v0.1.0 --repo ZHarvett/local-ai-research --title \"v0.1.0: Step 0 baseline\" --notes-file reports/release-notes-v0.1.0.md . Optionally file the drafts in docs/upstream/ now. Then reply go.",
+      "event": "gate-wait",
+      "seq": 490,
+      "task": "T-016",
+      "ts": "2026-11-16T19:28:18Z"
     }
   ],
   "kit_version": "0.1.0",
@@ -4055,6 +4076,7 @@
     },
     "T-016": {
       "card_sha256": "166a9fd37d2c6f5c9c8280493befba5e5fa1b3f186548db536cf5cef42a8de13",
+      "claimed_by_lane": 1,
       "depends_on": [
         "T-015"
       ],
@@ -4062,12 +4084,14 @@
         "docs/progress-log.md",
         "docs/step-0-completion-report.md"
       ],
+      "gate_message": "Publish v0.1.0. Zack must run (or do both on github.com): gh repo edit ZHarvett/local-ai-research --visibility public --accept-visibility-change-consequences ; gh release create v0.1.0 --repo ZHarvett/local-ai-research --title \"v0.1.0: Step 0 baseline\" --notes-file reports/release-notes-v0.1.0.md . Optionally file the drafts in docs/upstream/ now. Then reply go.",
       "lane": 1,
       "phase": "P4",
       "resources": "light",
       "review": "none",
       "source": "plan",
-      "status": "ready",
+      "status": "awaiting-gate",
+      "steps_done": [],
       "title": "Publish v0.1.0"
     },
     "T-017": {
