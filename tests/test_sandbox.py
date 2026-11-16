@@ -29,6 +29,10 @@ def _bwrap_works() -> bool:
 
 
 needs_bwrap = pytest.mark.skipif(not _bwrap_works(), reason="bubblewrap unavailable here")
+needs_repo_not_under_home = pytest.mark.skipif(
+    REPO.is_relative_to("/home"),
+    reason="repo under /home: state binds punch through the /home tmpfs",
+)
 
 
 def sandbox(*args, env=None):
@@ -73,6 +77,7 @@ def test_rw_outside_repo_and_scratch_is_refused(tmp_path):
 
 
 @needs_bwrap
+@needs_repo_not_under_home
 def test_environment_is_not_inherited_and_home_is_hidden():
     r = sandbox(
         "--",
@@ -89,6 +94,7 @@ def test_environment_is_not_inherited_and_home_is_hidden():
 
 
 @needs_bwrap
+@needs_repo_not_under_home
 def test_repo_is_read_only_but_state_and_rw_paths_are_writable():
     scratch = REPO / "third_party/harness-state/pytest-rw"
     scratch.mkdir(parents=True, exist_ok=True)

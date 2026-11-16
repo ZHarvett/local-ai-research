@@ -1394,3 +1394,4 @@ Write-up, reports/writeup.md:
 Rule: A report that goes into a release gets its status wording checked against the kit state at review time, and counts that change with every commit (files, commits scanned) are not written into prose; they are cited from the scrub report instead. A claim the repo cannot re-derive is worded as recorded, not as measured here.
 
 - H1 (human-directed, Zack, 2026-11-16): history rewritten once before the first push to remove Co-Authored-By trailers naming Claude; D8 otherwise stands; mapping in docs/provenance/commit-map.txt; trees verified identical.
+- H2 (human-directed, Zack, 2026-11-16, per E-016): two environment-dependent tests made CI-safe in tests/test_report.py and tests/test_sandbox.py; no src, configs or scripts change.
