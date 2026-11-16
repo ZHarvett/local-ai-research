@@ -1392,3 +1392,5 @@ Write-up, reports/writeup.md:
  reports/baseline-report.md has the same stale "pending" wording but is not in T-014's files_write. Zack updates it himself as a human-directed documentation commit before this decision is recorded; T-014's progress-log entry records that commit hash. T-014 does not touch that file.
  docs/upstream/ drafts stay untouched in the repo. The #28619 draft is retired; whether to file the draft-length-2 issue draft is Zack's choice at T-016.
 Rule: A report that goes into a release gets its status wording checked against the kit state at review time, and counts that change with every commit (files, commits scanned) are not written into prose; they are cited from the scrub report instead. A claim the repo cannot re-derive is worded as recorded, not as measured here.
+
+- H1 (human-directed, Zack, 2026-11-16): history rewritten once before the first push to remove Co-Authored-By trailers naming Claude; D8 otherwise stands; mapping in docs/provenance/commit-map.txt; trees verified identical.
