@@ -1,5 +1,5 @@
 {
-  "checksum": "96b44123f93f30cb9935aeab7a29915a21edd0dfeedef4affc3a4f794f192cff",
+  "checksum": "7824fdb58077d006833285423cc6a013d244204eda0271d47e2bd297ee677938",
   "created_utc": "2026-11-12T22:25:04Z",
   "escalations": {
     "E-001": {
@@ -3405,6 +3405,27 @@
       "seq": 470,
       "task": "T-015",
       "ts": "2026-11-15T17:12:53Z"
+    },
+    {
+      "detail": "lane 1, pid 56020",
+      "event": "claimed",
+      "seq": 471,
+      "task": "T-015",
+      "ts": "2026-11-16T17:11:12Z"
+    },
+    {
+      "detail": "lane 1",
+      "event": "started",
+      "seq": 472,
+      "task": "T-015",
+      "ts": "2026-11-16T17:11:12Z"
+    },
+    {
+      "detail": "S1",
+      "event": "step-done",
+      "seq": 473,
+      "task": "T-015",
+      "ts": "2026-11-16T17:20:04Z"
     }
   ],
   "kit_version": "0.1.0",
@@ -3901,6 +3922,7 @@
     },
     "T-015": {
       "card_sha256": "31059113fc56b81055bbe16def0a1f4fc07d92ee1e18278f66a2c9805163a249",
+      "claimed_by_lane": 1,
       "depends_on": [
         "T-014"
       ],
@@ -3913,7 +3935,10 @@
       "resources": "light",
       "review": "none",
       "source": "plan",
-      "status": "ready",
+      "status": "in-progress",
+      "steps_done": [
+        "S1"
+      ],
       "title": "Private repo, CI and tag v0.1.0"
     },
     "T-016": {
