@@ -1,5 +1,5 @@
 {
-  "checksum": "da008de99978817294bc0fdb81fac562c0798bc59cef34ac201f3a3070221ab2",
+  "checksum": "18fee66184676d571de2ba48c2a0eef37597e7b2cc127b7155f8b191a24ae580",
   "created_utc": "2026-11-12T22:25:04Z",
   "escalations": {
     "E-001": {
@@ -3496,6 +3496,41 @@
       "seq": 482,
       "task": "T-015",
       "ts": "2026-11-16T19:09:33Z"
+    },
+    {
+      "detail": "S3",
+      "event": "step-done",
+      "seq": 483,
+      "task": "T-015",
+      "ts": "2026-11-16T19:18:14Z"
+    },
+    {
+      "detail": "S4",
+      "event": "step-done",
+      "seq": 484,
+      "task": "T-015",
+      "ts": "2026-11-16T19:18:30Z"
+    },
+    {
+      "detail": "S5",
+      "event": "step-done",
+      "seq": 485,
+      "task": "T-015",
+      "ts": "2026-11-16T19:22:54Z"
+    },
+    {
+      "detail": "accept run at 2026-11-16T19:24:29Z",
+      "event": "done",
+      "seq": 486,
+      "task": "T-015",
+      "ts": "2026-11-16T19:25:26Z"
+    },
+    {
+      "detail": "dependencies satisfied",
+      "event": "ready",
+      "seq": 487,
+      "task": "T-016",
+      "ts": "2026-11-16T19:25:26Z"
     }
   ],
   "kit_version": "0.1.0",
@@ -4008,10 +4043,13 @@
       "resources": "light",
       "review": "none",
       "source": "plan",
-      "status": "in-progress",
+      "status": "done",
       "steps_done": [
         "S1",
-        "S2"
+        "S2",
+        "S3",
+        "S4",
+        "S5"
       ],
       "title": "Private repo, CI and tag v0.1.0"
     },
@@ -4029,7 +4067,7 @@
       "resources": "light",
       "review": "none",
       "source": "plan",
-      "status": "todo",
+      "status": "ready",
       "title": "Publish v0.1.0"
     },
     "T-017": {

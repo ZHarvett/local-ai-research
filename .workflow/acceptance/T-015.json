@@ -1,0 +1,107 @@
+[
+  {
+    "task": "T-015",
+    "started_utc": "2026-11-16T19:22:54Z",
+    "git_commit": "208a7675484f27631106bbe5067fe758b48d97d3",
+    "items": [
+      {
+        "id": "A1",
+        "cmd": "gh repo view ZHarvett/local-ai-research --json visibility -q .visibility",
+        "exit_code": 0,
+        "output_sha256": "5a37c4c07de94b80b9f24789a389dff0fa652c08e6dab79350d3b17c2f434515",
+        "output_bytes": 8,
+        "elapsed_s": 0.5,
+        "verdict": "pass"
+      },
+      {
+        "id": "A2",
+        "cmd": "test \"$(git rev-parse 'v0.1.0^{commit}')\" = \"$(git ls-remote origin 'refs/tags/v0.1.0^{}' | cut -f1)\"",
+        "exit_code": 0,
+        "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "output_bytes": 0,
+        "elapsed_s": 1.0,
+        "verdict": "pass"
+      },
+      {
+        "id": "A3",
+        "cmd": "gh run list --repo ZHarvett/local-ai-research --commit \"$(git rev-parse 'v0.1.0^{commit}')\" --json conclusion -q '.[0].conclusion'",
+        "exit_code": 0,
+        "output_sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+        "output_bytes": 1,
+        "elapsed_s": 1.0,
+        "verdict": "fail",
+        "reason": "no match for /^success$/"
+      },
+      {
+        "id": "A4",
+        "cmd": "uv run python tools/check_doc_numbers.py reports/release-notes-v0.1.0.md",
+        "exit_code": 0,
+        "output_sha256": "7b3052c776e01b12c3f56d447f2fda6f76868b8e9b1e46782ebb26fdad96e67a",
+        "output_bytes": 83,
+        "elapsed_s": 0.0,
+        "verdict": "pass"
+      }
+    ],
+    "evidence_files": {
+      "reports/release-notes-v0.1.0.md": {
+        "exists": true,
+        "sha256": "d9d9bf05d073e6a8e7a6f5ab60c699d5765dc892ff081ff310b3d61f8f830441",
+        "bytes": 4334
+      }
+    },
+    "finished_utc": "2026-11-16T19:22:57Z",
+    "failures": 1
+  },
+  {
+    "task": "T-015",
+    "started_utc": "2026-11-16T19:24:29Z",
+    "git_commit": "208a7675484f27631106bbe5067fe758b48d97d3",
+    "items": [
+      {
+        "id": "A1",
+        "cmd": "gh repo view ZHarvett/local-ai-research --json visibility -q .visibility",
+        "exit_code": 0,
+        "output_sha256": "5a37c4c07de94b80b9f24789a389dff0fa652c08e6dab79350d3b17c2f434515",
+        "output_bytes": 8,
+        "elapsed_s": 0.9,
+        "verdict": "pass"
+      },
+      {
+        "id": "A2",
+        "cmd": "test \"$(git rev-parse 'v0.1.0^{commit}')\" = \"$(git ls-remote origin 'refs/tags/v0.1.0^{}' | cut -f1)\"",
+        "exit_code": 0,
+        "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "output_bytes": 0,
+        "elapsed_s": 1.0,
+        "verdict": "pass"
+      },
+      {
+        "id": "A3",
+        "cmd": "gh run list --repo ZHarvett/local-ai-research --commit \"$(git rev-parse 'v0.1.0^{commit}')\" --json conclusion -q '.[0].conclusion'",
+        "exit_code": 0,
+        "output_sha256": "81b2bd4ea98c8db66554fbc8d7637a1a69a130f331feb732b75caab4c4868fd5",
+        "output_bytes": 8,
+        "elapsed_s": 1.0,
+        "verdict": "pass"
+      },
+      {
+        "id": "A4",
+        "cmd": "uv run python tools/check_doc_numbers.py reports/release-notes-v0.1.0.md",
+        "exit_code": 0,
+        "output_sha256": "7b3052c776e01b12c3f56d447f2fda6f76868b8e9b1e46782ebb26fdad96e67a",
+        "output_bytes": 83,
+        "elapsed_s": 0.0,
+        "verdict": "pass"
+      }
+    ],
+    "evidence_files": {
+      "reports/release-notes-v0.1.0.md": {
+        "exists": true,
+        "sha256": "d9d9bf05d073e6a8e7a6f5ab60c699d5765dc892ff081ff310b3d61f8f830441",
+        "bytes": 4334
+      }
+    },
+    "finished_utc": "2026-11-16T19:24:32Z",
+    "failures": 0
+  }
+]
